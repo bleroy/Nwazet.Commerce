@@ -1,0 +1,8 @@
+﻿@{
+    var productId = (int) Model.ProductId;
+}
+
+@using (Html.BeginFormAntiForgeryPost(Url.Action("Add", "ShoppingCart", new { area = "Nwazet.Commerce", id = productId}), FormMethod.Post, new {@class = "addtocart" })) {
+    <input name="quantity" value="1" class="addtocart-quantity" type="number" />
+    <button type="submit" class="addtocart-button">@T("Add to cart")</button>
+}

@@ -1,0 +1,55 @@
+﻿@using Nwazet.Commerce.Models
+@using Orchard.ContentManagement
+@{
+    var items = (IList<dynamic>)Model.ShopItems;
+    var subtotal = (decimal) Model.Subtotal;
+    var root = HttpContext.Current.Request.ApplicationPath;
+}
+@if (items.Any()) { 
+    using(Html.BeginFormAntiForgeryPost(Url.Action("Update", "ShoppingCart", new { area = "Nwazet.Commerce" }))) {
+        <h1><a href="@Url.Action("Index", "ShoppingCart", new {area = "NWazet.Commerce"})">@T("Your Cart")</a></h1>
+        <ul>
+            @for (var i = 0; i < items.Count; i++) {
+                var item = items[i];
+                var product = (IProduct) item.Product;
+                var contentItem = (IContent) item.Product;
+                var title = item.Title;
+                string imageUrl = (item.ProductImage != null ? item.ProductImage.Url : null);
+                var quantity = (int)item.Quantity;
+                var unitPrice = (double)item.Price;
+                var totalPrice = quantity * unitPrice;
+                <li>
+                    @if (imageUrl != null) {
+                        <a href="@Url.ItemDisplayUrl(contentItem)" class="product-image-link"><img src="@(root + Href(imageUrl))" alt="@title" class="product-image"/></a>
+                        <a href="@Url.ItemDisplayUrl(contentItem)" class="product-name">@title</a>
+                    }
+                    else {
+                        <a href="@Url.ItemDisplayUrl(contentItem)">@title</a>
+                    }
+                    <span class="action"><a class="delete" href="#">@T("Remove")</a></span>
+                    <span class="price">
+                        <input name="@string.Format("items[{0}].ProductId", i)" type="hidden" value="@product.Id" />
+                        <span class="numeric">
+                            <input name="@string.Format("items[{0}].Quantity", i)" type="number" class="quantity" value="@quantity" />
+                        </span>
+                        <span class="numeric">@totalPrice.ToString("c")</span>
+                    </span>
+                </li>
+            }
+        </ul>
+        <div class="total">
+            <button name="command" value="Update" type="submit" class="update-button">@T("Update All")</button>
+            <span class="numeric label">@T("Subtotal:")</span>
+            <span class="numeric subtotal">@subtotal.ToString("c")</span>
+        </div>
+        <span class="explanation">@T("Tax and shipping will be calculated at checkout.")</span>
+    }
+    <ul class="checkout">
+    @foreach (var checkoutButton in Model.CheckoutButtons) {
+        checkoutButton.IsMiniCart = true;
+        <li>
+            @Display(checkoutButton)
+        </li>
+    }
+    </ul>
+}

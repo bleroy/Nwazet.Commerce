@@ -1,0 +1,14 @@
+﻿<Placement>
+  <Place Parts_Product_Edit="Content:3.1"/>
+  <Place Parts_Product="Content:3.1"/>
+  <Place Parts_Product_AddButton="Content:3.2"/>
+  <Place ShoppingCartWidget="Content:0" />
+  <Place Parts_GoogleCheckout="Content:3.3"/>
+  <Place Parts_GoogleCheckout_Settings="Content:5"/>
+  <Place Parts_WeightBasedShippingMethod_Edit="Content:2"/>
+  <Match DisplayType="SummaryAdmin">
+    <Place Parts_Product="-"/>
+    <Place Parts_Product_AddButton="-"/>
+    <Place Parts_GoogleCheckout="-"/>
+  </Match>
+</Placement>

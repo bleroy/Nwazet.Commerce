@@ -1,0 +1,55 @@
+@using Nwazet.Commerce.ViewModels
+@model ShippingMethodIndexViewModel
+
+@{
+    var index = 0;
+
+	var pageSizes = new List<int?>() { 10, 50, 100 };
+	var defaultPageSize = WorkContext.CurrentSite.PageSize;
+	if(!pageSizes.Contains(defaultPageSize)) { 
+		pageSizes.Add(defaultPageSize);
+	}
+}
+
+<h1>@Html.TitleForPage(T("Manage Shipping Methods").Text) </h1>
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.ValidationSummary()
+    <div class="manage">
+        @foreach(var provider in Model.ShippingMethodProviders) {
+            @Html.ActionLink(
+                T("Add a new {0}", provider.Name).Text,
+                "Create", "Admin",
+                new {
+                        Area = "Contents",
+                        Id = provider.ContentTypeName,
+                        ReturnUrl = Url.Action(
+                            "Index", "ShippingAdmin",
+                            new { Area = "Nwazet.Commerce" })
+                },
+                new { @class = "button primaryAction" })
+        }
+    </div>
+
+    <fieldset>		
+        <table class="items">
+            <thead>
+                <tr>
+                    <th scope="col">@T("Name")</th>
+                    <th scope="col" class="actions">&nbsp;</th>
+                </tr>
+            </thead>
+            @foreach (var method in Model.ShippingMethods) { 
+                <tr>
+                    <td>
+                        @Html.ItemEditLinkWithReturnUrl(method.Name, method) 
+                    </td>
+                    <td>
+                        @Html.ItemRemoveLink(method) 
+                    </td>
+                </tr>
+                index++;
+            }
+        </table>
+	@Display(Model.Pager)
+    </fieldset>
+} 

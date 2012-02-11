@@ -1,0 +1,75 @@
+﻿@using Nwazet.Commerce.Models
+@using Orchard.ContentManagement
+@{
+    Script.Require("jQuery");
+    Script.Include("shoppingcart.js");
+    var items = (IList<dynamic>)Model.ShopItems;
+    var subtotal = (decimal) Model.Subtotal;
+}
+@if (!items.Any())
+{
+    <p>@T("You don't have any items in your shopping cart.")</p>
+}
+else { 
+    <article class="shoppingcart">
+        @using(Html.BeginFormAntiForgeryPost(Url.Action("Update", "ShoppingCart", new { area = "Nwazet.Commerce" }))) {
+            <table>
+                <thead>
+                    <tr>
+                        <td colspan="2">@T("Article")</td>
+                        <td class="numeric">@T("Unit Price")</td>
+                        <td class="numeric">@T("Quantity")</td>
+                        <td class="numeric">@T("Total Price")</td>
+                        <td class="action"></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var i = 0; i < items.Count; i++) {
+                        var item = items[i];
+                        var product = (IProduct) item.Product;
+                        var contentItem = (IContent) item.Product;
+                        var title = item.Title;
+                        string imageUrl = (item.ProductImage != null ? item.ProductImage.Url : null);
+                        var quantity = (int)item.Quantity;
+                        var unitPrice = (double)item.Price;
+                        var totalPrice = quantity*unitPrice;
+                        <tr>
+                            @if (imageUrl != null) {
+                                <td>
+                                    <a href="@Url.ItemDisplayUrl(contentItem)" class="product-image-link"><img src="@Href(imageUrl)" alt="@title" class="product-image"/></a>
+                                </td><td>
+                                    <a href="@Url.ItemDisplayUrl(contentItem)" class="product-name">@title</a>
+                                </td>
+                            }
+                            else {
+                                <td colspan="2"><a href="@Url.ItemDisplayUrl(contentItem)">@title</a></td>
+                            }
+                            <td class="numeric">@unitPrice.ToString("c")</td>
+                            <td class="numeric">
+                                <input name="@string.Format("items[{0}].ProductId", i)" type="hidden" value="@product.Id" />
+                                <input name="@string.Format("items[{0}].Quantity", i)" type="number" class="quantity" value="@quantity" />
+                            </td>
+                            <td class="numeric">@totalPrice.ToString("c")</td>
+                            <td class="action"><a class="delete" href="#">@T("Remove")</a></td>
+                        </tr>
+                    }
+            
+                </tbody>
+                <tfoot>
+                    <tr class="total">
+                        <td class="numeric label" colspan="4">@T("Subtotal:")</td>
+                        <td class="numeric">@subtotal.ToString("c")</td>
+                        <td><button name="command" value="Update" type="submit" class="update-button">@T("Update All")</button></td>
+                    </tr>
+                </tfoot>
+            </table>
+        }
+        <ul class="checkout">
+        @foreach (var checkoutButton in Model.CheckoutButtons) {
+            <li>
+                @Display(checkoutButton)
+            </li>
+        }
+        </ul>
+    </article>
+}

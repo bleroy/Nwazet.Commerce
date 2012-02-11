@@ -1,0 +1,14 @@
+﻿@model Nwazet.Commerce.Models.ProductPart
+<fieldset>
+    <label class="sub" for="Sku">@T("Sku")</label><br />
+    @Html.TextBoxFor(m => m.Sku, new { @class = "text" })<br />
+    <label class="sub" for="Price">@T("Price")</label><br />
+    @Html.TextBoxFor(m => m.Price, new { @class = "text" })<br />
+    <label class="sub" for="Weight">@T("Weight")</label><br />
+    @Html.TextBoxFor(m => m.Weight, new { @class = "text" })<br />
+    <label class="sub" for="ShippingCost">@T("Shipping Cost")</label><br />
+    @Html.TextBoxFor(m => m.ShippingCost, new { @class = "text" })<br />
+    <span class="hint">@T("Specify a shipping cost if you want the shipping cost to be fixed. Otherwise, leave this empty and only specify the weight. The shipping will be computed based on the shipping provider that the customer will pick.")</span><br/>
+    @Html.CheckBoxFor(m => m.IsDigital)
+    <label class="sub" for="IsDigital">@T("digital product")</label><br />
+</fieldset>

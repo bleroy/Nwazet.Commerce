@@ -1,0 +1,23 @@
+Name: Nwazet Commerce
+AntiForgery: enabled
+Author: Bertrand Le Roy, Sipke Schoorstra
+Website: http://nwazet.com
+Version: 1.4
+OrchardVersion: 1.4
+Description: Commerce for small online businesses
+Features:
+    Nwazet.Commerce:
+        Name: Nwazet Commerce
+        Description: Commerce for small online businesses
+        Category: Commerce
+        Dependencies: Orchard.Fields
+    Nwazet.Shipping:
+        Name: Nwazet Shipping
+        Description: Define shipping options to work with Nwazet Commerce
+        Category: Commerce
+        Dependencies: Nwazet.Commerce
+    Google.Checkout:
+        Name: Google Checkout
+        Description: Google Checkout part that can be added to any content type
+        Category: Commerce
+        Dependencies: Nwazet.Commerce, Nwazet.Shipping

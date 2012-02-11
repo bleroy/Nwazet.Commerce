@@ -1,0 +1,7 @@
+﻿@{
+    if (Layout.IsCartPage != true) {
+        Script.Require("jQuery");
+        Script.Include("shoppingcart.js");
+        <div class="minicart" data-url="@Url.Action("NakedCart", "ShoppingCart", new {area="Nwazet.Commerce"})"></div>
+    }
+}

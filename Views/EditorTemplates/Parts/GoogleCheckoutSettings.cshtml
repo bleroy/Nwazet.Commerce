@@ -1,0 +1,14 @@
+﻿@model Nwazet.Commerce.Models.GoogleCheckoutSettingsPartRecord
+<fieldset>
+    <label class="sub" for="MerchantId">@T("Google Checkout Merchant Id")</label><br />
+    @Html.TextBoxFor(m => m.MerchantId, new { @class = "text" })<br />
+    <label class="sub" for="AnalyticsId">@T("Google Analytics Id")</label><br />
+    @Html.TextBoxFor(m => m.AnalyticsId, new { @class = "text" })<br />
+    <label class="sub" for="Currency">@T("Currency")</label><br />
+    @Html.TextBoxFor(m => m.Currency, new { @class = "text" })<br />
+    <label class="sub" for="WeightUnit">@T("Shipping Weight Unit")</label><br />
+    @Html.TextBoxFor(m => m.WeightUnit, new { @class = "text" })<br />
+    
+    @Html.CheckBoxFor(m => m.UseSandbox)
+    <label class="sub" for="UseSandbox">@T("Use Sandbox")</label><br />
+</fieldset>
