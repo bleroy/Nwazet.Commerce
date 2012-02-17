@@ -3,13 +3,13 @@ using Orchard.Localization;
 using Orchard.UI.Navigation;
 
 namespace Nwazet.Commerce.Menus {
-    [OrchardFeature("Nwazet.Shipping")]
-    public class ShippingAdminMenu : INavigationProvider {
+    [OrchardFeature("Nwazet.Commerce")]
+    public class ProductAdminMenu : INavigationProvider {
         public string MenuName {
             get { return "admin"; }
         }
 
-        public ShippingAdminMenu() {
+        public ProductAdminMenu() {
             T = NullLocalizer.Instance;
         }
 
@@ -24,9 +24,9 @@ namespace Nwazet.Commerce.Menus {
                     .LinkToFirstChild(true)
 
                     .Add(subItem => subItem
-                        .Caption(T("Shipping Methods"))
-                        .Position("2.3")
-                        .Action("Index", "ShippingAdmin", new { area = "Nwazet.Commerce" })
+                        .Caption(T("Products"))
+                        .Position("2.0")
+                        .Action("List", "ProductAdmin", new { area = "Nwazet.Commerce" })
                     )
                 );
         }
