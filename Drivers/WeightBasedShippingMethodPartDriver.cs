@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
-using Nwazet.Commerce.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;

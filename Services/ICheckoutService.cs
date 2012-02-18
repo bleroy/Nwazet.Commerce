@@ -4,6 +4,11 @@ using Orchard;
 
 namespace Nwazet.Commerce.Services {
     public interface ICheckoutService : IDependency {
-        dynamic BuildCheckoutButtonShape(IEnumerable<dynamic> productShapes, IEnumerable<ShoppingCartQuantityProduct> productQuantities);
+        dynamic BuildCheckoutButtonShape(
+            IEnumerable<dynamic> productShapes, 
+            IEnumerable<ShoppingCartQuantityProduct> productQuantities,
+            IEnumerable<dynamic> shippingMethodShapes,
+            IEnumerable<string> custom 
+            );
     }
 }
