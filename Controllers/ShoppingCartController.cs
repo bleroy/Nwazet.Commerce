@@ -18,20 +18,26 @@ namespace Nwazet.Commerce.Controllers {
         private readonly dynamic _shapeFactory;
         private readonly IContentManager _contentManager;
         private readonly IWorkContextAccessor _wca;
-        private readonly IEnumerable<ICheckoutService> _checkoutServices; 
+        private readonly IEnumerable<ICheckoutService> _checkoutServices;
+        private readonly IEnumerable<IShippingMethodProvider> _shippingMethodProviders;
+        private readonly IEnumerable<IExtraCartInfoProvider> _extraCartInfoProviders; 
 
         public ShoppingCartController(
             IShoppingCart shoppingCart,
             IShapeFactory shapeFactory,
             IContentManager contentManager,
             IWorkContextAccessor wca,
-            IEnumerable<ICheckoutService> checkoutServices) {
+            IEnumerable<ICheckoutService> checkoutServices,
+            IEnumerable<IShippingMethodProvider> shippingMethodProviders,
+            IEnumerable<IExtraCartInfoProvider> extraCartInfoProviders) {
 
+            _shippingMethodProviders = shippingMethodProviders;
             _shoppingCart = shoppingCart;
             _shapeFactory = shapeFactory;
             _contentManager = contentManager;
             _wca = wca;
             _checkoutServices = checkoutServices;
+            _extraCartInfoProviders = extraCartInfoProviders;
         }
 
         [HttpPost]
@@ -44,6 +50,7 @@ namespace Nwazet.Commerce.Controllers {
         }
 
         [Themed]
+        [OutputCache(Duration = 0)]
         public ActionResult Index() {
             _wca.GetContext().Layout.IsCartPage = true;
             return new ShapeResult(this, BuildCartShape());
@@ -67,8 +74,28 @@ namespace Nwazet.Commerce.Controllers {
                     Weight: productQuantity.Product.Weight)).ToList();
             shape.ShopItems = productShapes;
 
+            var validShippingMethods = _shippingMethodProviders
+                .SelectMany(p => p.GetShippingMethods())
+                .Select(
+                    m => _shapeFactory.ShippingMethod(
+                        Price: m.ComputePrice(productQuantities),
+                        DisplayName: _contentManager.GetItemMetadata(m).DisplayText,
+                        Name: m.Name,
+                        ShippingCompany: m.ShippingCompany,
+                        IncludedShippingAreas: m.IncludedShippingAreas == null ? null : m.IncludedShippingAreas.Split(','),
+                        ExcludedShippingAreas: m.ExcludedShippingAreas == null ? null : m.ExcludedShippingAreas.Split(',')
+                             ))
+                .Where(x => x.Price >= 0)
+                .ToList();
+
+            var custom = _extraCartInfoProviders == null ? null :
+                _extraCartInfoProviders
+                    .SelectMany(p => p.GetExtraCartInfo())
+                    .ToList();
+
             var checkoutShapes = _checkoutServices.Select(
-                service => service.BuildCheckoutButtonShape(productShapes, productQuantities)
+                service => service.BuildCheckoutButtonShape(
+                    productShapes, productQuantities, validShippingMethods, custom)
                 );
             shape.CheckoutButtons = checkoutShapes;
 
@@ -81,6 +108,7 @@ namespace Nwazet.Commerce.Controllers {
             return shape;
         }
 
+        [OutputCache(Duration = 0)]
         public ActionResult NakedCart() {
             return new ShapePartialResult(this, BuildCartShape(true));
         }
@@ -102,6 +130,7 @@ namespace Nwazet.Commerce.Controllers {
             return RedirectToAction("Index");
         }
 
+        [OutputCache(Duration = 0)]
         public ActionResult GetItems() {
             var products = _shoppingCart.GetProducts();
 

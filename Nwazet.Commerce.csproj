@@ -60,6 +60,7 @@
   <ItemGroup>
     <Content Include="Content\menu.nwazet-commerce.png" />
     <Content Include="LICENSE.txt" />
+    <Content Include="Scripts\referral.js" />
     <Content Include="Scripts\shoppingcart.js" />
     <Content Include="Styles\menu.nwazet-commerce-admin.css" />
     <Content Include="Web.config" />
@@ -86,6 +87,7 @@
     <Compile Include="Drivers\ProductPartDriver.cs" />
     <Compile Include="Drivers\ShoppingCartWidgetDriver.cs" />
     <Compile Include="Drivers\WeightBasedShippingMethodPartDriver.cs" />
+    <Compile Include="Filters\ReferrerFilter.cs" />
     <Compile Include="Handlers\WeightBasedShippingMethodPartHandler.cs" />
     <Compile Include="Handlers\GoogleCheckoutSettingsPartHandler.cs" />
     <Compile Include="Handlers\ProductPartHandler.cs" />
@@ -110,7 +112,9 @@
     <Compile Include="Models\ShoppingCartWidgetPart.cs" />
     <Compile Include="Routes\Routes.cs" />
     <Compile Include="Services\CoreShippingAreas.cs" />
+    <Compile Include="Services\IExtraCartInfoProvider.cs" />
     <Compile Include="Services\IShippingMethodProvider.cs" />
+    <Compile Include="Services\ReferrerCartInfoProvider.cs" />
     <Compile Include="Services\ShippingMethodFilter.cs" />
     <Compile Include="Services\ICheckoutService.cs" />
     <Compile Include="Services\IGoogleCheckoutService.cs" />
@@ -141,6 +145,7 @@
     <None Include="Views\ShoppingCart.cshtml" />
     <None Include="Views\ShoppingCartWidget.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -11,7 +11,6 @@ Available model properties:
         ShippingCost
     ShippingMethods
         Price
-        Currency
         DisplayName
         Name
         ShippingCompany
@@ -22,6 +21,7 @@ Available model properties:
     MerchantId
     AnalyticsId
     UseSandbox
+    Custom
 *@
 @{
     var includedAreaToGoogleFormatString = new Dictionary<string, KeyValuePair<string, string>> {
@@ -75,13 +75,19 @@ Available model properties:
         <input type="hidden" name="@("item_quantity_" + i)" value="@product.Quantity"/>
         <input type="hidden" name="@("item_merchant_id_" + i)" value="@Model.MerchantId"/>
     }
-    @{ i = 0; }
+    @{
+        var custom = Model.Custom as IEnumerable<string>;
+        if (custom != null && custom.Any()) {
+            <input type="hidden" name="comment" value="@string.Join("; ", custom)"/>
+        }
+        i = 0;
+    }
     @foreach (var shippingMethod in Model.ShippingMethods) {
         i++;
         var j = 0;
         <input type="hidden" name="@("ship_method_name_" + i)" value="@shippingMethod.DisplayName" />
         <input type="hidden" name="@("ship_method_price_" + i)" value="@shippingMethod.Price" />
-        <input type="hidden" name="@("ship_method_currency_" + i)" value="@shippingMethod.Currency" />
+        <input type="hidden" name="@("ship_method_currency_" + i)" value="@Model.Currency" />
         if (shippingMethod.IncludedShippingAreas != null) {
             foreach (var area in shippingMethod.IncludedShippingAreas) {
                 j++;
