@@ -12,11 +12,15 @@
     });
 
     var mini = $(".minicart");
-    mini.load(mini.data("url"));
+    mini.load(mini.data("url"), onload).parent().hide();
 
     function miniLoad(form) {
-        mini.load(form.attr("action"), form.serializeArray());
+        mini.load(form.attr("action"), form.serializeArray(), onload);
         return false;
+    }
+
+    function onload(text) {
+        mini.parent().toggle(text.trim().length > 0);
     }
 
     $(".minicart .delete").live("click", function () {
