@@ -20,7 +20,7 @@ Features:
         Name: Google Checkout
         Description: Google Checkout part that can be added to any content type
         Category: Commerce
-        Dependencies: Nwazet.Commerce, Nwazet.Shipping
+        Dependencies: Nwazet.Shipping
     Nwazet.Referrals:
         Name: Nwazet Referrals
         Description: Keeps track of the domain the user came from, in order to honor partner referral fees.
