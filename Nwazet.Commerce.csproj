@@ -122,6 +122,7 @@
     <Compile Include="Services\IShippingAreaProvider.cs" />
     <Compile Include="Services\IShippingMethod.cs" />
     <Compile Include="Services\WeightBasedShippingMethodProvider.cs" />
+    <Compile Include="Tokens\CommentTokens.cs" />
     <Compile Include="ViewModels\ShippingMethodIndexViewModel.cs" />
     <Compile Include="ViewModels\UpdateShoppingCartItemViewModel.cs" />
   </ItemGroup>
