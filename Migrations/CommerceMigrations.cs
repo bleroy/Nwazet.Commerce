@@ -25,7 +25,12 @@ namespace Nwazet.Commerce.Migrations {
             ContentDefinitionManager.AlterTypeDefinition("Product", cfg => cfg
               .WithPart("Product")
               .WithPart("CommonPart")
-              .WithPart("RoutePart")
+              .WithPart("TitlePart")
+              .WithPart("AutoroutePart", builder => builder
+                  .WithSetting("AutorouteSettings.AllowCustomPattern", "true")
+                  .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "false")
+                  .WithSetting("AutorouteSettings.PatternDefinitions", "[{Name:'Title', Pattern: '{Content.Slug}', Description: 'my-product'}]")
+                  .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
               .WithPart("BodyPart")
               .WithPart("ProductPart")
               .WithPart("CommentsPart")

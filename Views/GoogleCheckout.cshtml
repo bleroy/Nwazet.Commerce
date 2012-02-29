@@ -37,7 +37,7 @@ Available model properties:
         "https://sandbox.google.com/checkout/api/checkout/v2/checkoutForm/Merchant/{0}" :
         "https://checkout.google.com/api/checkout/v2/checkoutForm/Merchant/{0}",
         Model.MerchantId);
-    var analyticsId = Model.AnalyticsId;
+    var analyticsId = Model.AnalyticsId as string;
     var analyticsOn = !(isMini || String.IsNullOrWhiteSpace(analyticsId));
     if (analyticsOn) {
         using (Script.Foot()) {
