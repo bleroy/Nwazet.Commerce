@@ -33,7 +33,6 @@ namespace Nwazet.Commerce.Migrations {
                   .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
               .WithPart("BodyPart")
               .WithPart("ProductPart")
-              .WithPart("CommentsPart")
               .WithPart("TagsPart")
               .Creatable()
               .Indexed());
