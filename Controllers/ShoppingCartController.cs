@@ -8,6 +8,7 @@ using Orchard;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions;
+using Orchard.Fields.Fields;
 using Orchard.Mvc;
 using Orchard.Themes;
 
@@ -65,9 +66,9 @@ namespace Nwazet.Commerce.Controllers {
                     Quantity: productQuantity.Quantity,
                     Product: productQuantity.Product,
                     Sku: productQuantity.Product.Sku,
-                    Title: productQuantity.Product is IContent ? _contentManager.GetItemMetadata((IContent)productQuantity.Product).DisplayText : productQuantity.Product.Sku,
-                    ContentItem: (productQuantity.Product is IContent ? ((IContent)productQuantity.Product).ContentItem : null),
-                    ProductImage: ((dynamic)productQuantity.Product).Product.ProductImage,
+                    Title: _contentManager.GetItemMetadata(productQuantity.Product).DisplayText,
+                    ContentItem: (productQuantity.Product).ContentItem,
+                    ProductImage: ((MediaPickerField)productQuantity.Product.Fields.FirstOrDefault(f => f.Name == "ProductImage")),
                     IsDigital: productQuantity.Product.IsDigital,
                     Price: productQuantity.Product.Price,
                     ShippingCost: productQuantity.Product.ShippingCost,
