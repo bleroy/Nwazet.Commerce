@@ -159,6 +159,7 @@
     <None Include="Views\Parts\Product.AddButton.cshtml" />
     <None Include="Views\ShoppingCart.cshtml" />
     <None Include="Views\ShoppingCartWidget.cshtml" />
+    <Content Include="Views\TitleWithLink.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
