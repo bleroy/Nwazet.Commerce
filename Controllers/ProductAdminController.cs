@@ -38,19 +38,17 @@ namespace Nwazet.Commerce.Controllers {
 
         public ActionResult List(ListContentsViewModel model, PagerParameters pagerParameters) {
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
-            var query = _contentManager.Query<ProductPart>(VersionOptions.Latest);
+            var query = _contentManager.Query<ProductPart, ProductPartRecord>(VersionOptions.Latest);
 
             switch (model.Options.OrderBy) {
                 case ContentsOrder.Modified:
-                    //query = query.OrderByDescending<ContentPartRecord, int>(ci => ci.ContentItemRecord.Versions.Single(civr => civr.Latest).Id);
-                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.ModifiedUtc);
+                    query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.ModifiedUtc);
                     break;
                 case ContentsOrder.Published:
-                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.PublishedUtc);
+                    query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.PublishedUtc);
                     break;
                 case ContentsOrder.Created:
-                    //query = query.OrderByDescending<ContentPartRecord, int>(ci => ci.Id);
-                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.CreatedUtc);
+                    query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.CreatedUtc);
                     break;
             }
 

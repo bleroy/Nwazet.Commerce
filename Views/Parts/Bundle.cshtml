@@ -1,0 +1,8 @@
+﻿<h3 class="bundle title">@T("Products included in this bundle:")</h3>
+<ul class="bundle">
+@foreach(var product in Model.Products) {
+    <li class="product">
+        @Display(product)
+    </li>
+}
+</ul>

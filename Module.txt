@@ -11,6 +11,11 @@ Features:
         Description: Commerce for small online businesses
         Category: Commerce
         Dependencies: Orchard.Fields
+    Nwazet.Bundles:
+        Name: Nwazet Bundles
+        Description: Product bundles are products made of a set of products
+        Category: Commerce
+        Dependencies: Nwazet.Commerce
     Nwazet.Shipping:
         Name: Nwazet Shipping
         Description: Define shipping options to work with Nwazet Commerce

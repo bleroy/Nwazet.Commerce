@@ -62,6 +62,7 @@
     <Content Include="LICENSE.txt" />
     <Content Include="Scripts\referral.js" />
     <Content Include="Scripts\shoppingcart.js" />
+    <Content Include="Styles\bundle.nwazet-commerce-admin.css" />
     <Content Include="Styles\menu.nwazet-commerce-admin.css" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
@@ -83,19 +84,25 @@
     <Compile Include="Controllers\ProductAdminController.cs" />
     <Compile Include="Controllers\ShippingAdminController.cs" />
     <Compile Include="Controllers\ShoppingCartController.cs" />
+    <Compile Include="Drivers\BundlePartDriver.cs" />
     <Compile Include="Drivers\GoogleCheckoutSettingsPartDriver.cs" />
     <Compile Include="Drivers\ProductPartDriver.cs" />
     <Compile Include="Drivers\ShoppingCartWidgetDriver.cs" />
     <Compile Include="Drivers\WeightBasedShippingMethodPartDriver.cs" />
     <Compile Include="Filters\ReferrerFilter.cs" />
+    <Compile Include="Handlers\BundlePartHandler.cs" />
     <Compile Include="Handlers\WeightBasedShippingMethodPartHandler.cs" />
     <Compile Include="Handlers\GoogleCheckoutSettingsPartHandler.cs" />
     <Compile Include="Handlers\ProductPartHandler.cs" />
     <Compile Include="Menus\ProductAdminMenu.cs" />
     <Compile Include="Menus\ShippingAdminMenu.cs" />
+    <Compile Include="Migrations\BundleMigrations.cs" />
     <Compile Include="Migrations\CommerceMigrations.cs" />
     <Compile Include="Migrations\ShippingMigrations.cs" />
     <Compile Include="Migrations\GoogleCheckoutMigrations.cs" />
+    <Compile Include="Models\BundlePart.cs" />
+    <Compile Include="Models\BundlePartRecord.cs" />
+    <Compile Include="Models\BundleProductsRecord.cs" />
     <Compile Include="Models\WeightBasedShippingMethodPart.cs" />
     <Compile Include="Models\WeightBasedShippingMethodPartRecord.cs" />
     <Compile Include="Models\GoogleCheckoutSettingsPart.cs" />
@@ -111,6 +118,7 @@
     <Compile Include="Models\ShoppingCartQuantityProduct.cs" />
     <Compile Include="Models\ShoppingCartWidgetPart.cs" />
     <Compile Include="Routes\Routes.cs" />
+    <Compile Include="Services\BundleService.cs" />
     <Compile Include="Services\CoreShippingAreas.cs" />
     <Compile Include="Services\IExtraCartInfoProvider.cs" />
     <Compile Include="Services\IShippingMethodProvider.cs" />
@@ -123,6 +131,7 @@
     <Compile Include="Services\IShippingMethod.cs" />
     <Compile Include="Services\WeightBasedShippingMethodProvider.cs" />
     <Compile Include="Tokens\CommentTokens.cs" />
+    <Compile Include="ViewModels\BundleViewModel.cs" />
     <Compile Include="ViewModels\ShippingMethodIndexViewModel.cs" />
     <Compile Include="ViewModels\UpdateShoppingCartItemViewModel.cs" />
   </ItemGroup>
@@ -141,6 +150,11 @@
     <Content Include="Views\ShippingAdmin\Index.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\WeightBasedShippingMethod.cshtml" />
     <Content Include="Views\ProductAdmin\List.cshtml" />
+    <Content Include="Views\Parts\Bundle.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\Bundle.cshtml" />
+    <Content Include="Views\MediaPickerProductImageSummaryAdmin.cshtml" />
+    <Content Include="Views\ProductSummaryAdmin.cshtml" />
+    <Content Include="Views\MediaPickerProductImageThumbnail.cshtml" />
     <None Include="Views\ShoppingCart.Summary.cshtml" />
     <None Include="Views\Parts\Product.AddButton.cshtml" />
     <None Include="Views\ShoppingCart.cshtml" />

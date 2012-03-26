@@ -1,0 +1,18 @@
+﻿@using Orchard.Utility.Extensions;
+@{
+    Style.Include("bundle.nwazet-commerce-admin.css");
+    string name = Model.ContentField.Name;
+    string url = Model.ContentField.Url;
+}
+@if (!String.IsNullOrWhiteSpace(url)) {
+    <a href="@Href(url)" target="_blank" class="product-image"><img src="@Href(url)" alt="@Model.ContentField.AlternateText" class="media-picker-field media-picker-field-@name.HtmlClassify()"/></a>
+}
+@* Other available properties
+
+    Alternate Text: @Model.ContentField.AlternateText
+    Class: @Model.ContentField.Class
+    Style: @Model.ContentField.Style
+    Alignment @Model.ContentField.Alignment
+    Width: @Model.ContentField.Width
+    Height: @Model.ContentField.Height
+*@
