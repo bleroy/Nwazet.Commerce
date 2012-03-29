@@ -30,6 +30,7 @@ namespace Nwazet.Commerce.Drivers {
 
         //GET
         protected override DriverResult Editor(ProductPart part, dynamic shapeHelper) {
+            part.Weight = Math.Round(part.Weight, 3);
             return ContentShape("Parts_Product_Edit",
                 () => shapeHelper.EditorTemplate(
                     TemplateName: "Parts/Product",
