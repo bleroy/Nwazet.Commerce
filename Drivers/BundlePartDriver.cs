@@ -24,8 +24,7 @@ namespace Nwazet.Commerce.Drivers {
         }
 
         protected override DriverResult Display(BundlePart part, string displayType, dynamic shapeHelper) {
-            var products = _contentManager.GetMany<ProductPart>(
-                part.ProductIds, VersionOptions.Published, QueryHints.Empty);
+            var products = _bundleService.GetProductsFor(part);
             return ContentShape(
                 "Parts_Bundle",
                 () => shapeHelper.Parts_Bundle(

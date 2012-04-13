@@ -1,0 +1,31 @@
+﻿@{Script.Include("inventory.js");}
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        $(function () {
+            $(".bundle.inventory .remove").click(function () {
+                $.post("", {
+                        bundleId: $(this).data("id"),
+                        __RequestVerificationToken: $("input[name=__RequestVerificationToken]").val()
+                    }, function(data) {
+                        for (var sku in data) {
+                            $(".inventory .value." + sku)
+                                .data("inventory", data[sku])
+                                .slideUp(function() {
+                                    var that = $(this);
+                                    that.html(that.data("inventory")).slideDown();
+                                });
+                        }
+                    });
+                return false;
+            });
+        });
+    </script>
+}
+@if (Model.Inventory != null) {
+    <div class="bundle inventory">
+        @T("Inventory:") <span class="value @Model.ContentPart.ContentItem.ProductPart.Sku">@Model.Inventory</span>
+        <a class="remove" href="#"
+           data-id="@Model.ContentPart.ContentItem.Id"
+           data-url="@Url.Action("RemoveOne", "BundleAdmin", new {area = "Nwazet.Commerce"})">@T("Remove one")</a>
+    </div>
+}

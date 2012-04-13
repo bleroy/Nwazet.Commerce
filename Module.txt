@@ -2,7 +2,7 @@ Name: Nwazet Commerce
 AntiForgery: enabled
 Author: Bertrand Le Roy, Sipke Schoorstra
 Website: http://nwazet.com
-Version: 1.4.1
+Version: 1.4.2
 OrchardVersion: 1.4
 Description: Commerce for small online businesses
 Features:

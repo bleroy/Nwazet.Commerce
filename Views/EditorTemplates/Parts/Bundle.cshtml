@@ -14,7 +14,7 @@
                        name="@Html.FieldNameFor(m => m.Products[productIndex].IsChecked)"
                        id="@Html.FieldNameFor(m => m.Products[productIndex].IsChecked)"
                     @if (productEntry.IsChecked) {<text>checked="checked"</text>}/>
-                <a href="@(Url.ItemDisplayUrl(productEntry.Product))">@productEntry.DisplayText</a>
+                <a href="@(Url.ItemEditUrl(productEntry.Product))">@productEntry.DisplayText</a>
             </label>
             @{productIndex++;}
         </li>

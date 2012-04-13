@@ -2,7 +2,7 @@
 @using Orchard.ContentManagement
 @{
     Script.Require("jQuery");
-    Script.Include("shoppingcart.js");
+    Script.Include("shoppingcart.js", "shoppingcart.min.js");
     var items = (IList<dynamic>)Model.ShopItems;
     var subtotal = (decimal) Model.Subtotal;
 }

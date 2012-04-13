@@ -60,8 +60,25 @@
   <ItemGroup>
     <Content Include="Content\menu.nwazet-commerce.png" />
     <Content Include="LICENSE.txt" />
-    <Content Include="Scripts\referral.js" />
-    <Content Include="Scripts\shoppingcart.js" />
+    <Content Include="Scripts\inventory.js" />
+    <Content Include="Scripts\referral.js">
+      <Generator>GoogleClosureCompiler</Generator>
+      <LastGenOutput>referral.min.js</LastGenOutput>
+    </Content>
+    <Content Include="Scripts\referral.min.js">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>referral.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\shoppingcart.js">
+      <Generator>GoogleClosureCompiler</Generator>
+      <LastGenOutput>shoppingcart.min.js</LastGenOutput>
+    </Content>
+    <Content Include="Scripts\shoppingcart.min.js">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>shoppingcart.js</DependentUpon>
+    </Content>
     <Content Include="Styles\bundle.nwazet-commerce-admin.css" />
     <Content Include="Styles\menu.nwazet-commerce-admin.css" />
     <Content Include="Web.config" />
@@ -85,6 +102,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\BundleAdminController.cs" />
     <Compile Include="Controllers\ProductAdminController.cs" />
     <Compile Include="Controllers\ShippingAdminController.cs" />
     <Compile Include="Controllers\ShoppingCartController.cs" />
@@ -159,6 +177,7 @@
     <Content Include="Views\MediaPickerProductImageSummaryAdmin.cshtml" />
     <Content Include="Views\ProductSummaryAdmin.cshtml" />
     <Content Include="Views\MediaPickerProductImageThumbnail.cshtml" />
+    <Content Include="Views\BundleSummaryAdmin.cshtml" />
     <None Include="Views\ShoppingCart.Summary.cshtml" />
     <None Include="Views\Parts\Product.AddButton.cshtml" />
     <None Include="Views\ShoppingCart.cshtml" />

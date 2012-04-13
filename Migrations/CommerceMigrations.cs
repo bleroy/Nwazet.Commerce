@@ -58,5 +58,21 @@ namespace Nwazet.Commerce.Migrations {
 
             return 3;
         }
+
+        public int UpdateFrom3() {
+            SchemaBuilder.AlterTable("ProductPartRecord", table => table
+                .AddColumn<int>("Inventory", c => c.WithDefault(0)));
+
+            return 4;
+        }
+
+        public int UpdateFrom4() {
+            SchemaBuilder.AlterTable("ProductPartRecord", table => table
+                .AddColumn<string>("OutOfStockMessage"));
+            SchemaBuilder.AlterTable("ProductPartRecord", table => table
+                .AddColumn<bool>("AllowBackOrder", c => c.WithDefault(true)));
+
+            return 5;
+        }
     }
 }

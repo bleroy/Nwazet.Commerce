@@ -11,6 +11,7 @@ namespace Nwazet.Commerce.Services {
     public interface IBundleService : IDependency {
         void UpdateBundleProducts(ContentItem item, IEnumerable<ProductEntry> products);
         IEnumerable<IContent> GetProducts();
+        IEnumerable<ProductPart> GetProductsFor(BundlePart bundle);
         BundleViewModel BuildEditorViewModel(BundlePart part);
         void AddProduct(int product, BundlePartRecord record);
     }
@@ -68,6 +69,10 @@ namespace Nwazet.Commerce.Services {
                 .List<ProductPart>()
                 .Where(p => !p.Has<BundlePart>());
         }
+
+        public IEnumerable<ProductPart> GetProductsFor(BundlePart bundle) {
+            return _contentManager.GetMany<ProductPart>(bundle.ProductIds, VersionOptions.Published, QueryHints.Empty);
+        } 
 
         public BundleViewModel BuildEditorViewModel(BundlePart part) {
             var bundleProducts = part.ProductIds.ToLookup(p => p);

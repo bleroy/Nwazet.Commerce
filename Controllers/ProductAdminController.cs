@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Nwazet.Commerce.Models;
+using Nwazet.Commerce.Services;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
@@ -19,15 +21,18 @@ namespace Nwazet.Commerce.Controllers {
     public class ProductAdminController : Controller {
         private readonly IContentManager _contentManager;
         private readonly ISiteService _siteService;
+        private readonly IWorkContextAccessor _wca;
 
         public ProductAdminController(
             IOrchardServices services,
             IContentManager contentManager,
             ISiteService siteService,
+            IWorkContextAccessor wca,
             IShapeFactory shapeFactory) {
             Services = services;
             _contentManager = contentManager;
             _siteService = siteService;
+            _wca = wca;
             T = NullLocalizer.Instance;
             Shape = shapeFactory;
         }
@@ -67,5 +72,27 @@ namespace Nwazet.Commerce.Controllers {
             return View((object)viewModel);
         }
 
+        [HttpPost]
+        public ActionResult RemoveOne(int id) {
+            var product = _contentManager.Get<ProductPart>(id);
+            product.Inventory--;
+            Dictionary<string, int> newInventory;
+            IBundleService bundleService;
+            if (_wca.GetContext().TryResolve(out bundleService)) {
+                var affectedBundles = _contentManager.Query<BundlePart, BundlePartRecord>()
+                    .Where(b => b.Products.Any(p => p.ContentItemRecord.Id == product.Id))
+                    .WithQueryHints(new QueryHints().ExpandParts<ProductPart>())
+                    .List();
+                newInventory = affectedBundles.ToDictionary(
+                    b => b.As<ProductPart>().Sku,
+                    b => bundleService.GetProductsFor(b).Min(p => p.Inventory));
+            } else {
+                newInventory = new Dictionary<string, int>(1);
+            }
+            newInventory.Add(product.Sku, product.Inventory);
+            return new JsonResult {
+                Data = newInventory
+            };
+        }
     }
 }
