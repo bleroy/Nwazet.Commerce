@@ -125,6 +125,8 @@
     <Compile Include="Models\BundlePart.cs" />
     <Compile Include="Models\BundlePartRecord.cs" />
     <Compile Include="Models\BundleProductsRecord.cs" />
+    <Compile Include="Models\ProductPartQuantity.cs" />
+    <Compile Include="Models\ProductQuantity.cs" />
     <Compile Include="Models\WeightBasedShippingMethodPart.cs" />
     <Compile Include="Models\WeightBasedShippingMethodPartRecord.cs" />
     <Compile Include="Models\GoogleCheckoutSettingsPart.cs" />

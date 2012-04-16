@@ -1,5 +1,11 @@
 ﻿.bundle li {
     display: inline-block;
+    margin-right: 10px;
+}
+
+.bundle li input {
+    width: 3em;
+    vertical-align: baseline;
 }
 
 .product-image {

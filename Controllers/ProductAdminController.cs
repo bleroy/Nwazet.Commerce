@@ -85,7 +85,7 @@ namespace Nwazet.Commerce.Controllers {
                     .List();
                 newInventory = affectedBundles.ToDictionary(
                     b => b.As<ProductPart>().Sku,
-                    b => bundleService.GetProductsFor(b).Min(p => p.Inventory));
+                    b => bundleService.GetProductQuantitiesFor(b).Min(p => p.Product.Inventory / p.Quantity));
             } else {
                 newInventory = new Dictionary<string, int>(1);
             }

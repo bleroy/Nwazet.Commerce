@@ -9,11 +9,11 @@
         <li>
             <input type="hidden" value="@productEntry.ProductId"
                 name="@Html.FieldNameFor(m => m.Products[productIndex].ProductId)"/>
-            <label for="@Html.FieldNameFor(m => m.Products[productIndex].IsChecked)">
-                <input type="checkbox" value="true"
-                       name="@Html.FieldNameFor(m => m.Products[productIndex].IsChecked)"
-                       id="@Html.FieldNameFor(m => m.Products[productIndex].IsChecked)"
-                    @if (productEntry.IsChecked) {<text>checked="checked"</text>}/>
+            <label for="@Html.FieldNameFor(m => m.Products[productIndex].Quantity)">
+                <input type="number" min="0"
+                    value="@productEntry.Quantity"
+                    name="@Html.FieldNameFor(m => m.Products[productIndex].Quantity)"
+                    id="@Html.FieldNameFor(m => m.Products[productIndex].Quantity)"/>
                 <a href="@(Url.ItemEditUrl(productEntry.Product))">@productEntry.DisplayText</a>
             </label>
             @{productIndex++;}

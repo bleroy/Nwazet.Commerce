@@ -9,7 +9,7 @@ namespace Nwazet.Commerce.ViewModels {
     public class ProductEntry {
         public int ProductId { get; set; }
         public IContent Product { get; set; }
-        public bool IsChecked { get; set; }
+        public int Quantity { get; set; }
         public string DisplayText { get; set; }
     }
 }

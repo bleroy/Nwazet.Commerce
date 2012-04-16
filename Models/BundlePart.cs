@@ -9,5 +9,16 @@ namespace Nwazet.Commerce.Models {
         public IEnumerable<int> ProductIds {
             get { return Record.Products.Select(p => p.ContentItemRecord.Id); }
         }
+
+        public IEnumerable<ProductQuantity> ProductQuantities {
+            get {
+                return
+                    Record.Products.Select(
+                        p => new ProductQuantity {
+                            Quantity = p.Quantity,
+                            ProductId = p.ContentItemRecord.Id
+                        });
+            }
+        }
     }
 }

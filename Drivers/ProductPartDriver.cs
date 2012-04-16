@@ -52,7 +52,12 @@ namespace Nwazet.Commerce.Drivers {
             IBundleService bundleService;
             var inventory = part.Inventory;
             if (_wca.GetContext().TryResolve(out bundleService) && part.Has<BundlePart>()) {
-                inventory = bundleService.GetProductsFor(part.As<BundlePart>()).Min(p => p.Inventory);
+                var bundlePart = part.As<BundlePart>();
+                if (!bundlePart.ProductIds.Any()) return 0;
+                part.Inventory = inventory =
+                    bundleService
+                    .GetProductQuantitiesFor(bundlePart)
+                    .Min(p => p.Product.Inventory / p.Quantity);
             }
             return inventory;
         }

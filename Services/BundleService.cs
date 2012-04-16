@@ -11,9 +11,9 @@ namespace Nwazet.Commerce.Services {
     public interface IBundleService : IDependency {
         void UpdateBundleProducts(ContentItem item, IEnumerable<ProductEntry> products);
         IEnumerable<IContent> GetProducts();
-        IEnumerable<ProductPart> GetProductsFor(BundlePart bundle);
+        IEnumerable<ProductPartQuantity> GetProductQuantitiesFor(BundlePart bundle);
         BundleViewModel BuildEditorViewModel(BundlePart part);
-        void AddProduct(int product, BundlePartRecord record);
+        void AddProduct(int quantity, int product, BundlePartRecord record);
     }
 
     [OrchardFeature("Nwazet.Bundles")]
@@ -34,33 +34,36 @@ namespace Nwazet.Commerce.Services {
             var oldProducts = _bundleProductsRepository.Fetch(
                 r => r.BundlePartRecord == record);
             var lookupNew = products
-                .Where(e => e.IsChecked)
-                .Select(e => e.ProductId)
-                .ToDictionary(r => r, r => false);
+                .Where(e => e.Quantity > 0)
+                .ToDictionary(r => r.ProductId, r => r.Quantity);
             // Delete the products that are no longer there
-            // and mark the ones that should stay
+            // and updtes the ones that should stay
             foreach (var bundleProductRecord in oldProducts) {
-                if (lookupNew.ContainsKey(bundleProductRecord.ContentItemRecord.Id)) {
-                    lookupNew[bundleProductRecord.ContentItemRecord.Id] = true;
+                var key = bundleProductRecord.ContentItemRecord.Id;
+                if (lookupNew.ContainsKey(key)) {
+                    bundleProductRecord.Quantity = lookupNew[key];
+                    _bundleProductsRepository.Update(bundleProductRecord);
+                    lookupNew.Remove(key);
                 }
                 else {
                     _bundleProductsRepository.Delete(bundleProductRecord);
                 }
             }
             // Add the new products
-            foreach (var product in lookupNew
-                .Where(kvp => !kvp.Value)
-                .Select(kvp => kvp.Key)) {
+            foreach (var productQuantity in lookupNew
+                .Where(kvp => kvp.Value > 0)
+                .Select(kvp => new ProductQuantity {ProductId = kvp.Key, Quantity = kvp.Value})) {
 
-                AddProduct(product, record);
+                AddProduct(productQuantity.Quantity, productQuantity.ProductId, record);
             }
         }
 
-        public void AddProduct(int product, BundlePartRecord record) {
+        public void AddProduct(int quantity, int product, BundlePartRecord record) {
             _bundleProductsRepository.Create(
                 new BundleProductsRecord {
                     BundlePartRecord = record,
-                    ContentItemRecord = _contentManager.Get(product).Record
+                    ContentItemRecord = _contentManager.Get(product).Record,
+                    Quantity = quantity
                 });
         }
 
@@ -70,22 +73,29 @@ namespace Nwazet.Commerce.Services {
                 .Where(p => !p.Has<BundlePart>());
         }
 
-        public IEnumerable<ProductPart> GetProductsFor(BundlePart bundle) {
-            return _contentManager.GetMany<ProductPart>(bundle.ProductIds, VersionOptions.Published, QueryHints.Empty);
+        public IEnumerable<ProductPartQuantity> GetProductQuantitiesFor(BundlePart bundle) {
+            var quantities = bundle.ProductQuantities.ToDictionary(q => q.ProductId, q => q.Quantity);
+            var parts = _contentManager.GetMany<ProductPart>(quantities.Keys, VersionOptions.Published, QueryHints.Empty);
+            return parts.Select(p => new ProductPartQuantity {
+                Product = p,
+                Quantity = quantities[p.ContentItem.Id]
+            }).ToList();
         } 
 
         public BundleViewModel BuildEditorViewModel(BundlePart part) {
-            var bundleProducts = part.ProductIds.ToLookup(p => p);
+            var bundleProductQuantities = part.ProductQuantities.ToDictionary(pq => pq.ProductId, pq => pq.Quantity);
             return new BundleViewModel {
                 Products = GetProducts()
                     .Select(
                         p => new ProductEntry {
                             ProductId = p.ContentItem.Id,
                             Product = p,
-                            IsChecked = bundleProducts.Contains(p.Id),
+                            Quantity = bundleProductQuantities.ContainsKey(p.Id) ? bundleProductQuantities[p.Id] : 0,
                             DisplayText = _contentManager.GetItemMetadata(p).DisplayText
                         }
-                    ).ToList()
+                    )
+                    .OrderBy(vm => vm.DisplayText)
+                    .ToList()
             };
         }
     }

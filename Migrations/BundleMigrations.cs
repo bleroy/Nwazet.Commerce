@@ -55,5 +55,12 @@ namespace Nwazet.Commerce.Migrations {
 
             return 1;
         }
+
+        public int UpdateFrom1() {
+            SchemaBuilder.AlterTable(
+                "BundleProductsRecord",
+                table => table.AddColumn<int>("Quantity", column => column.WithDefault(1)));
+            return 2;
+        }
     }
 }

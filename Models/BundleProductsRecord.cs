@@ -7,5 +7,6 @@ namespace Nwazet.Commerce.Models {
         public virtual int Id { get; set; }
         public virtual BundlePartRecord BundlePartRecord { get; set; }
         public virtual ContentItemRecord ContentItemRecord { get; set; }
+        public virtual int Quantity { get; set; }
     }
 }

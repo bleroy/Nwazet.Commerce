@@ -1,7 +1,8 @@
-﻿@{Script.Include("inventory.js");}
+﻿@using Nwazet.Commerce.Models
+@{Script.Include("inventory.js");}
 <div class="price">@T("Price:") <span class="value">@Model.Price.ToString("C")</span></div>
 <div class="sku">@T("Sku:") <span class="value">@Model.Sku</span></div>
-@if (Model.Inventory != null) {
+@if (Model.Inventory != null && !Model.ContentPart.ContentItem.Has(typeof(BundlePart))) {
     <div class="product inventory">
         @T("Inventory:") <span class="value @Model.Sku">@Model.Inventory</span>
         <a class="remove" href="#"

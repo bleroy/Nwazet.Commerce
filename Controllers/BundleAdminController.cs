@@ -21,12 +21,12 @@ namespace Nwazet.Commerce.Controllers {
         [HttpPost]
         public ActionResult RemoveOne(int id) {
             var bundle = _contentManager.Get<BundlePart>(id);
-            var products = _bundleService.GetProductsFor(bundle);
-            foreach (var productPart in products) {
-                productPart.Inventory--;
+            var products = _bundleService.GetProductQuantitiesFor(bundle);
+            foreach (var productPartQuantity in products) {
+                productPartQuantity.Product.Inventory -= productPartQuantity.Quantity;
             }
-            var newInventory = products.ToDictionary(p => p.Sku, p => p.Inventory);
-            newInventory.Add(bundle.As<ProductPart>().Sku, products.Min(p => p.Inventory));
+            var newInventory = products.ToDictionary(p => p.Product.Sku, p => p.Product.Inventory);
+            newInventory.Add(bundle.As<ProductPart>().Sku, products.Min(p => p.Product.Inventory / p.Quantity));
             return new JsonResult {
                 Data = newInventory
             };

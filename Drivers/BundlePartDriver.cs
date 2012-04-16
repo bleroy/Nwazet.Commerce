@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Globalization;
+using System.Linq;
 using System.Xml.Linq;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
@@ -24,13 +25,14 @@ namespace Nwazet.Commerce.Drivers {
         }
 
         protected override DriverResult Display(BundlePart part, string displayType, dynamic shapeHelper) {
-            var products = _bundleService.GetProductsFor(part);
+            var products = _bundleService.GetProductQuantitiesFor(part);
+            var productShapes = products.Select(
+                p => _contentManager.BuildDisplay(p.Product, "Thumbnail").Quantity(p.Quantity));
             return ContentShape(
                 "Parts_Bundle",
                 () => shapeHelper.Parts_Bundle(
                     ContentPart: part,
-                    Products: products.Select(
-                    p => _contentManager.BuildDisplay(p, "Thumbnail"))));
+                    Products: productShapes));
         }
 
         protected override DriverResult Editor(BundlePart part, dynamic shapeHelper) {
@@ -52,21 +54,26 @@ namespace Nwazet.Commerce.Drivers {
         }
 
         protected override void Importing(BundlePart part, ImportContentContext context) {
-            var bundledProducts =
+            var productQuantities =
                 context.Data.Element("BundlePart").Elements("Product")
-                    .Select(e => context.GetItemFromSession(e.Attribute("id").Value));
-            foreach (var bundledProduct in bundledProducts) {
-                _bundleService.AddProduct(bundledProduct.Id, part.Record);
+                    .Select(e => new ProductQuantity {
+                        ProductId = context.GetItemFromSession(e.Attribute("id").Value).Id,
+                        Quantity = int.Parse(e.Attribute("quantity").Value, CultureInfo.InvariantCulture)
+                    });
+            foreach (var productQuantity in productQuantities) {
+                _bundleService.AddProduct(productQuantity.Quantity, productQuantity.ProductId, part.Record);
             }
         }
 
         protected override void Exporting(BundlePart part, ExportContentContext context) {
             var elt = context.Element("BundlePart");
-            foreach (var productId in part.ProductIds) {
+            foreach (var productQuantity in part.ProductQuantities) {
                 var productElement = new XElement("Product");
                 productElement.SetAttributeValue("id",
                     context.ContentManager.GetItemMetadata(
-                    context.ContentManager.Get(productId)).Identity);
+                    context.ContentManager.Get(productQuantity.ProductId)).Identity);
+                productElement.SetAttributeValue("quantity",
+                    productQuantity.Quantity.ToString(CultureInfo.InvariantCulture));
                 elt.Add(productElement);
             }
         }
