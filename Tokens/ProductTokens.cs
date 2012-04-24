@@ -1,16 +1,10 @@
-﻿using System;
+using System;
 using Nwazet.Commerce.Models;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
-using Orchard.Events;
 using Orchard.Localization;
 
 namespace Nwazet.Commerce.Tokens {
-    public interface ITokenProvider : IEventHandler {
-        void Describe(dynamic context);
-        void Evaluate(dynamic context);
-    }
-
     [OrchardFeature("Nwazet.Commerce")]
     public class ProductTokens : ITokenProvider {
         private readonly IContentManager _contentManager;

@@ -4,7 +4,7 @@ using System.Web.Routing;
 using Orchard.Environment.Extensions;
 using Orchard.Mvc.Routes;
 
-namespace Orchard.Core.Common {
+namespace Nwazet.Commerce.Routes {
     [OrchardFeature("Nwazet.Commerce")]
     public class Routes : IRouteProvider {
         public void GetRoutes(ICollection<RouteDescriptor> routes) {

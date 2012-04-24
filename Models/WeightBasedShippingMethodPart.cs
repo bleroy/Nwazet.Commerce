@@ -15,11 +15,14 @@ namespace Nwazet.Commerce.Models {
         public string IncludedShippingAreas { get { return Record.IncludedShippingAreas; } set { Record.IncludedShippingAreas = value; } }
         public string ExcludedShippingAreas { get { return Record.ExcludedShippingAreas; } set { Record.ExcludedShippingAreas = value; } }
 
-        public double ComputePrice(IEnumerable<ShoppingCartQuantityProduct> productQuantities) {
-            var fixedCost = productQuantities
+        public double ComputePrice(IEnumerable<ShoppingCartQuantityProduct> productQuantities, IEnumerable<IShippingMethod> shippingMethods) {
+            var quantities = productQuantities.ToList();
+            var fixedCost = quantities
                 .Where(pq => pq.Product.ShippingCost != null && pq.Product.ShippingCost >= 0 && !pq.Product.IsDigital)
+// ReSharper disable PossibleInvalidOperationException
                 .Sum(pq => pq.Quantity * (double)pq.Product.ShippingCost);
-            var weight = productQuantities
+// ReSharper restore PossibleInvalidOperationException
+            var weight = quantities
                 .Where(pq => (pq.Product.ShippingCost == null || pq.Product.ShippingCost < 0) && !pq.Product.IsDigital)
                 .Sum(pq => pq.Quantity * pq.Product.Weight);
             if (weight.CompareTo(0) == 0) return fixedCost;

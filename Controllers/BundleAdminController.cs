@@ -21,7 +21,7 @@ namespace Nwazet.Commerce.Controllers {
         [HttpPost]
         public ActionResult RemoveOne(int id) {
             var bundle = _contentManager.Get<BundlePart>(id);
-            var products = _bundleService.GetProductQuantitiesFor(bundle);
+            var products = _bundleService.GetProductQuantitiesFor(bundle).ToList();
             foreach (var productPartQuantity in products) {
                 productPartQuantity.Product.Inventory -= productPartQuantity.Quantity;
             }

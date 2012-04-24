@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Nwazet.Commerce.Models;
@@ -27,16 +28,18 @@ namespace Nwazet.Commerce.Drivers {
             var productShape = ContentShape(
                 "Parts_Product",
                 () => shapeHelper.Parts_Product(
-                    Sku: part.Sku,
-                    Price: part.Price,
-                    Inventory: inventory,
-                    OutOfStockMessage: part.OutOfStockMessage,
-                    AllowBackOrder: part.AllowBackOrder,
-                    Weight: part.Weight,
-                    ShippingCost: part.ShippingCost,
-                    IsDigital: part.IsDigital,
-                    ContentPart: part
-                          ));
+                        Sku: part.Sku,
+                        Price: part.Price,
+                        Inventory: inventory,
+                        OutOfStockMessage: part.OutOfStockMessage,
+                        AllowBackOrder: part.AllowBackOrder,
+                        Weight: part.Weight,
+                        Size: part.Size,
+                        ShippingCost: part.ShippingCost,
+                        IsDigital: part.IsDigital,
+                        ContentPart: part
+                        )
+                );
             if (part.Inventory > 0 || part.AllowBackOrder) {
                 return Combined(
                     productShape,

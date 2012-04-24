@@ -10,10 +10,11 @@ namespace Nwazet.Commerce.Services {
             IEnumerable<IShippingMethod> shippingMethods,
             IEnumerable<ShoppingCartQuantityProduct> productQuantities) {
 
-            return shippingMethods
+            var methods = shippingMethods.ToList();
+            return methods
                 .Select(
                     method => new ShippingMethodAndCost {
-                        Price = method.ComputePrice(productQuantities),
+                        Price = method.ComputePrice(productQuantities, methods),
                         ShippingMethod = method
                     })
                     .Where(mc => mc.Price.CompareTo(0) >= 0);

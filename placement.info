@@ -6,6 +6,7 @@
   <Place Parts_GoogleCheckout="Content:3.3"/>
   <Place Parts_GoogleCheckout_Settings="Content:5"/>
   <Place Parts_WeightBasedShippingMethod_Edit="Content:2"/>
+  <Place Parts_SizeBasedShippingMethod_Edit="Content:2"/>
   <Place Parts_Bundle="Content:3.2"/>
   <Place Parts_Bundle_Edit="Content:3.2"/>
   <Match DisplayType="SummaryAdmin">

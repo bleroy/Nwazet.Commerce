@@ -60,7 +60,7 @@ namespace Nwazet.Commerce.Controllers {
         private dynamic BuildCartShape(bool isSummary = false) {
             dynamic shape = _shapeFactory.ShoppingCart();
 
-            var productQuantities = _shoppingCart.GetProducts();
+            var productQuantities = _shoppingCart.GetProducts().ToList();
             var productShapes = productQuantities.Select(
                 productQuantity => _shapeFactory.ShoppingCartItem(
                     Quantity: productQuantity.Quantity,
@@ -75,11 +75,13 @@ namespace Nwazet.Commerce.Controllers {
                     Weight: productQuantity.Product.Weight)).ToList();
             shape.ShopItems = productShapes;
 
-            var validShippingMethods = _shippingMethodProviders
+            var shippingMethods = _shippingMethodProviders
                 .SelectMany(p => p.GetShippingMethods())
+                .ToList();
+            var validShippingMethods = shippingMethods
                 .Select(
                     m => _shapeFactory.ShippingMethod(
-                        Price: m.ComputePrice(productQuantities),
+                        Price: m.ComputePrice(productQuantities, shippingMethods),
                         DisplayName: _contentManager.GetItemMetadata(m).DisplayText,
                         Name: m.Name,
                         ShippingCompany: m.ShippingCompany,

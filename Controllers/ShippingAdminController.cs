@@ -30,7 +30,8 @@ namespace Nwazet.Commerce.Controllers {
         public ActionResult Index(PagerParameters pagerParameters) {
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters.Page, pagerParameters.PageSize);
             var shippingMethods = _shippingMethodProviders
-                .SelectMany(smp => smp.GetShippingMethods());
+                .SelectMany(smp => smp.GetShippingMethods())
+                .ToList();
             var paginatedMethods = shippingMethods
                 .OrderBy(sm => sm.Name)
                 .Skip(pager.GetStartIndex())

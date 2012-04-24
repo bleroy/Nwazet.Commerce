@@ -7,5 +7,9 @@
 
         public int Quantity { get; private set; }
         public ProductPart Product { get; private set; }
+
+        public override string ToString() {
+            return "{" + Quantity + " " + Product.Sku + "}";
+        }
     }
 }

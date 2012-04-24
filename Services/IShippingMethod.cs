@@ -11,6 +11,6 @@ namespace Nwazet.Commerce.Services {
         string ExcludedShippingAreas { get; set; }
 
         // returns -1 if shipping method does not apply to the current cart
-        double ComputePrice(IEnumerable<ShoppingCartQuantityProduct> productQuantities);
+        double ComputePrice(IEnumerable<ShoppingCartQuantityProduct> productQuantities, IEnumerable<IShippingMethod> shippingMethods);
     }
 }

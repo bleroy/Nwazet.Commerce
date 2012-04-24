@@ -107,12 +107,14 @@
     <Compile Include="Controllers\ShippingAdminController.cs" />
     <Compile Include="Controllers\ShoppingCartController.cs" />
     <Compile Include="Drivers\BundlePartDriver.cs" />
+    <Compile Include="Drivers\SizeBasedShippingMethodPartDriver.cs" />
     <Compile Include="Drivers\GoogleCheckoutSettingsPartDriver.cs" />
     <Compile Include="Drivers\ProductPartDriver.cs" />
     <Compile Include="Drivers\ShoppingCartWidgetDriver.cs" />
     <Compile Include="Drivers\WeightBasedShippingMethodPartDriver.cs" />
     <Compile Include="Filters\ReferrerFilter.cs" />
     <Compile Include="Handlers\BundlePartHandler.cs" />
+    <Compile Include="Handlers\SizeBasedShippingMethodPartHandler.cs" />
     <Compile Include="Handlers\WeightBasedShippingMethodPartHandler.cs" />
     <Compile Include="Handlers\GoogleCheckoutSettingsPartHandler.cs" />
     <Compile Include="Handlers\ProductPartHandler.cs" />
@@ -125,6 +127,8 @@
     <Compile Include="Models\BundlePart.cs" />
     <Compile Include="Models\BundlePartRecord.cs" />
     <Compile Include="Models\BundleProductsRecord.cs" />
+    <Compile Include="Models\SizeBasedShippingMethodPart.cs" />
+    <Compile Include="Models\SizeBasedShippingMethodPartRecord.cs" />
     <Compile Include="Models\ProductPartQuantity.cs" />
     <Compile Include="Models\ProductQuantity.cs" />
     <Compile Include="Models\WeightBasedShippingMethodPart.cs" />
@@ -143,6 +147,7 @@
     <Compile Include="Models\ShoppingCartWidgetPart.cs" />
     <Compile Include="Routes\Routes.cs" />
     <Compile Include="Services\BundleService.cs" />
+    <Compile Include="Services\SizeBasedShippingMethodProvider.cs" />
     <Compile Include="Services\CoreShippingAreas.cs" />
     <Compile Include="Services\IExtraCartInfoProvider.cs" />
     <Compile Include="Services\IShippingMethodProvider.cs" />
@@ -154,7 +159,8 @@
     <Compile Include="Services\IShippingAreaProvider.cs" />
     <Compile Include="Services\IShippingMethod.cs" />
     <Compile Include="Services\WeightBasedShippingMethodProvider.cs" />
-    <Compile Include="Tokens\CommentTokens.cs" />
+    <Compile Include="Tokens\ITokenProvider.cs" />
+    <Compile Include="Tokens\ProductTokens.cs" />
     <Compile Include="ViewModels\BundleViewModel.cs" />
     <Compile Include="ViewModels\ShippingMethodIndexViewModel.cs" />
     <Compile Include="ViewModels\UpdateShoppingCartItemViewModel.cs" />
@@ -180,6 +186,7 @@
     <Content Include="Views\ProductSummaryAdmin.cshtml" />
     <Content Include="Views\MediaPickerProductImageThumbnail.cshtml" />
     <Content Include="Views\BundleSummaryAdmin.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\SizeBasedShippingMethod.cshtml" />
     <None Include="Views\ShoppingCart.Summary.cshtml" />
     <None Include="Views\Parts\Product.AddButton.cshtml" />
     <None Include="Views\ShoppingCart.cshtml" />

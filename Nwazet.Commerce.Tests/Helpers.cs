@@ -16,5 +16,17 @@ namespace Nwazet.Commerce.Tests {
             };
             return result;
         }
+
+        public static SizeBasedShippingMethodPart BuildSizeBasedShippingMethod(
+            double price,
+            string size = null,
+            int priority = 0) {
+            return new SizeBasedShippingMethodPart {
+                Record = new SizeBasedShippingMethodPartRecord(),
+                Price = price,
+                Size = size,
+                Priority = priority
+            };
+        }
     }
 }

@@ -1,4 +1,5 @@
 @using Nwazet.Commerce.ViewModels
+@using Orchard.Utility.Extensions
 @model ShippingMethodIndexViewModel
 
 @{
@@ -9,6 +10,7 @@
 	if(!pageSizes.Contains(defaultPageSize)) { 
 		pageSizes.Add(defaultPageSize);
 	}
+    var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
 }
 
 <h1>@Html.TitleForPage(T("Manage Shipping Methods").Text) </h1>
@@ -44,7 +46,7 @@
                         @Html.ItemEditLinkWithReturnUrl(method.Name, method) 
                     </td>
                     <td>
-                        @Html.ItemRemoveLink(method) 
+                        @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(method, new {returnUrl}), new {itemprop = "RemoveUrl UnsafeUrl"})
                     </td>
                 </tr>
                 index++;

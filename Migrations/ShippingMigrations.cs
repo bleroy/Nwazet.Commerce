@@ -25,5 +25,24 @@ namespace Nwazet.Commerce.Migrations {
 
             return 1;
         }
+
+        public int UpdateFrom1() {
+            SchemaBuilder.CreateTable("SizeBasedShippingMethodPartRecord", table => table
+                .ContentPartRecord()
+                .Column("Name", DbType.String)
+                .Column("ShippingCompany", DbType.String)
+                .Column("Price", DbType.Double)
+                .Column("Size", DbType.String)
+                .Column("Priority", DbType.Int32)
+                .Column("IncludedShippingAreas", DbType.String)
+                .Column("ExcludedShippingAreas", DbType.String)
+            );
+
+            ContentDefinitionManager.AlterTypeDefinition("SizeBasedShippingMethod", cfg => cfg
+              .WithPart("SizeBasedShippingMethodPart")
+              .WithPart("TitlePart"));
+
+            return 2;
+        }
     }
 }

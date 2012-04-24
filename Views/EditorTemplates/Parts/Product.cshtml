@@ -1,4 +1,5 @@
 ﻿@using Nwazet.Commerce.Models
+@using Nwazet.Commerce.Services
 @using Orchard.ContentManagement
 @model Nwazet.Commerce.Models.ProductPart
 <fieldset>
@@ -25,6 +26,32 @@
 <fieldset>
     <label class="sub" for="Weight">@T("Weight")</label><br />
     @Html.TextBoxFor(m => m.Weight, new { @class = "text" })<br />
+    <label class="sub" for="Size">@T("Size")</label><br/>
+    @{
+        // Attempt to get size-based shipping methods through WCA so we do it late and we don't fail if the feature is not enabled
+        var shippingMethods = WorkContext.Resolve<IEnumerable<IShippingMethodProvider>>();
+        if (shippingMethods != null) {
+            var sizes = shippingMethods
+                .Where(m => m.GetType() == typeof (SizeBasedShippingMethodProvider))
+                .SelectMany(m => m.GetShippingMethods().Cast<SizeBasedShippingMethodPart>().Select(p => p.Size))
+                .Distinct()
+                .OrderBy(s => s)
+                .ToList();
+            @Html.DropDownList("SizeHelper", sizes.Select(s => new SelectListItem {Text = s, Value = s}))
+            using (Script.Foot()) {
+                <script type="text/javascript">
+                    (function ($) {
+                        $(function () {
+                            var helper = $("#NwazetCommerceProduct_SizeHelper").change(function () {
+                                $("#NwazetCommerceProduct_Size").val(helper.val());
+                            });
+                        });
+                    })(jQuery);
+                </script>
+            }
+        }
+    }
+    @Html.TextBoxFor(m => m.Size, new { @class = "text" })<br />
     <label class="sub" for="ShippingCost">@T("Shipping Cost")</label><br />
     @Html.TextBoxFor(m => m.ShippingCost, new { @class = "text" })<br />
     <span class="hint">@T("Specify a shipping cost if you want the shipping cost to be fixed. Otherwise, leave this empty and only specify the weight. The shipping will be computed based on the shipping provider that the customer will pick.")</span>

@@ -76,8 +76,8 @@ Available model properties:
         <input type="hidden" name="@("item_merchant_id_" + i)" value="@Model.MerchantId"/>
     }
     @{
-        var custom = Model.Custom as IEnumerable<string>;
-        if (custom != null && custom.Any()) {
+        var custom = ((Model.Custom as IEnumerable<string>) ?? new string[] {}).ToList();
+        if (custom.Any()) {
             <input type="hidden" name="comment" value="@string.Join("; ", custom)"/>
         }
         i = 0;
