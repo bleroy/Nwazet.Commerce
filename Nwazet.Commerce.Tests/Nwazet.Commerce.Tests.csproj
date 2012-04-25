@@ -39,7 +39,6 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ShippingMethodTest.cs" />
     <Compile Include="SizeBasedShippingMethodTest.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="ProductStub.cs" />
