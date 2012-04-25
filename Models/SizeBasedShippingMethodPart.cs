@@ -21,7 +21,8 @@ namespace Nwazet.Commerce.Models {
                 .Where(m => m.GetType() == typeof (SizeBasedShippingMethodPart))
                 .Cast<SizeBasedShippingMethodPart>()
                 .Where(m => !string.IsNullOrWhiteSpace(m.Size))
-                .ToDictionary(p => p.Size, p => p.Priority);
+                .GroupBy(m => m.Size)
+                .ToDictionary(g => g.Key, g => g.Min(m => m.Priority));
             var quantities = productQuantities.ToList();
             var fixedCost = quantities
                 .Where(pq => pq.Product.ShippingCost != null && pq.Product.ShippingCost >= 0 && !pq.Product.IsDigital)
