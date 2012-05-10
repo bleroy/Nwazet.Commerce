@@ -187,6 +187,7 @@
     <Content Include="Views\MediaPickerProductImageThumbnail.cshtml" />
     <Content Include="Views\BundleSummaryAdmin.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\SizeBasedShippingMethod.cshtml" />
+    <Content Include="Views\Content-Product.cshtml" />
     <None Include="Views\ShoppingCart.Summary.cshtml" />
     <None Include="Views\Parts\Product.AddButton.cshtml" />
     <None Include="Views\ShoppingCart.cshtml" />

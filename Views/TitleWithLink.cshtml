@@ -1,3 +1,3 @@
 ﻿@using Orchard.Mvc.Html
 @using Orchard.ContentManagement
-<h1><a href="@Url.ItemDisplayUrl((IContent)Model.ContentPart)">@Model.Title</a></h1>
+<h1><a href="@Url.ItemDisplayUrl((IContent)Model.ContentPart)">@if (Model.Quantity != null && (int)Model.Quantity > 1) {<text>@(Model.Quantity)x </text>}@Model.Title</a></h1>

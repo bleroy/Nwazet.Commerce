@@ -1,0 +1,42 @@
+﻿@using Orchard.Utility.Extensions;
+@{
+    if (Model.Title != null) {
+        Layout.Title = Model.Title;
+    }
+    
+    var contentTypeClassName = ((string)Model.ContentItem.ContentType).HtmlClassify();
+    
+    // Copy the quantity down to each shape under the content zone
+    var quantity = Model.Quantity;
+    if (quantity != null) {
+        foreach (dynamic shape in Model.Content.Items) {
+            shape.Quantity(Model.Quantity);
+        }
+    }
+}
+<article class="content-item @Model.Metadata.DisplayType.ToLower() @contentTypeClassName">
+    <header>
+        @Display(Model.Header)
+        @if (Model.Meta != null) {
+            <div class="metadata">
+                @Display(Model.Meta)
+            </div>
+        }
+    </header>
+    @if(Model.Images != null) {
+    <div class="images">
+        @Display(Model.Images)
+    </div>
+    }
+    @if(Model.Specs != null) {
+    <div class="specs">
+        @Display(Model.Specs)
+    </div>
+    }
+    @Display(Model.Content)
+    @if(Model.Footer != null) {
+    <footer>
+        @Display(Model.Footer)
+    </footer>
+    }
+</article>
