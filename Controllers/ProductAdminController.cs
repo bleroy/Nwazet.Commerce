@@ -47,13 +47,13 @@ namespace Nwazet.Commerce.Controllers {
 
             switch (model.Options.OrderBy) {
                 case ContentsOrder.Modified:
-                    query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.ModifiedUtc);
+                    query.OrderByDescending<CommonPartRecord>(cr => cr.ModifiedUtc);
                     break;
                 case ContentsOrder.Published:
-                    query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.PublishedUtc);
+                    query.OrderByDescending<CommonPartRecord>(cr => cr.PublishedUtc);
                     break;
                 case ContentsOrder.Created:
-                    query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.CreatedUtc);
+                    query.OrderByDescending<CommonPartRecord>(cr => cr.CreatedUtc);
                     break;
             }
 

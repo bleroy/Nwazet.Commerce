@@ -99,7 +99,7 @@
       <Name>Orchard.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Fields\Orchard.Fields.csproj">
-      <Project>{3787DDE5-E5C8-4841-BDA7-DCB325388064}</Project>
+      <Project>{3787dde5-e5c8-4841-bda7-dcb325388064}</Project>
       <Name>Orchard.Fields</Name>
     </ProjectReference>
   </ItemGroup>
