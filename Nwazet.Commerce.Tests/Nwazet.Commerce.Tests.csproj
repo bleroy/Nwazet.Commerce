@@ -52,7 +52,7 @@
       <Name>Orchard.Framework</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nwazet.Commerce.csproj">
-      <Project>{909ACC2C-D672-4752-B75B-6822E05FE0E3}</Project>
+      <Project>{909acc2c-d672-4752-b75b-6822e05fe0e3}</Project>
       <Name>Nwazet.Commerce</Name>
     </ProjectReference>
   </ItemGroup>
