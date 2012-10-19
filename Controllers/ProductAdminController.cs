@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Nwazet.Commerce.Models;
+using Nwazet.Commerce.Services;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
@@ -19,15 +21,18 @@ namespace Nwazet.Commerce.Controllers {
     public class ProductAdminController : Controller {
         private readonly IContentManager _contentManager;
         private readonly ISiteService _siteService;
+        private readonly IWorkContextAccessor _wca;
 
         public ProductAdminController(
             IOrchardServices services,
             IContentManager contentManager,
             ISiteService siteService,
+            IWorkContextAccessor wca,
             IShapeFactory shapeFactory) {
             Services = services;
             _contentManager = contentManager;
             _siteService = siteService;
+            _wca = wca;
             T = NullLocalizer.Instance;
             Shape = shapeFactory;
         }
@@ -38,19 +43,17 @@ namespace Nwazet.Commerce.Controllers {
 
         public ActionResult List(ListContentsViewModel model, PagerParameters pagerParameters) {
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
-            var query = _contentManager.Query<ProductPart>(VersionOptions.Latest);
+            var query = _contentManager.Query<ProductPart, ProductPartRecord>(VersionOptions.Latest);
 
             switch (model.Options.OrderBy) {
                 case ContentsOrder.Modified:
-                    //query = query.OrderByDescending<ContentPartRecord, int>(ci => ci.ContentItemRecord.Versions.Single(civr => civr.Latest).Id);
-                    query = query.OrderByDescending<CommonPartRecord>(cr => cr.ModifiedUtc);
+                    query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.ModifiedUtc);
                     break;
                 case ContentsOrder.Published:
-                    query = query.OrderByDescending<CommonPartRecord>(cr => cr.PublishedUtc);
+                    query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.PublishedUtc);
                     break;
                 case ContentsOrder.Created:
-                    //query = query.OrderByDescending<ContentPartRecord, int>(ci => ci.Id);
-                    query = query.OrderByDescending<CommonPartRecord>(cr => cr.CreatedUtc);
+                    query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.CreatedUtc);
                     break;
             }
 
@@ -69,7 +72,27 @@ namespace Nwazet.Commerce.Controllers {
             return View((object)viewModel);
         }
 
-
-
+        [HttpPost]
+        public ActionResult RemoveOne(int id) {
+            var product = _contentManager.Get<ProductPart>(id);
+            product.Inventory--;
+            Dictionary<string, int> newInventory;
+            IBundleService bundleService;
+            if (_wca.GetContext().TryResolve(out bundleService)) {
+                var affectedBundles = _contentManager.Query<BundlePart, BundlePartRecord>()
+                    .Where(b => b.Products.Any(p => p.ContentItemRecord.Id == product.Id))
+                    .WithQueryHints(new QueryHints().ExpandParts<ProductPart>())
+                    .List();
+                newInventory = affectedBundles.ToDictionary(
+                    b => b.As<ProductPart>().Sku,
+                    b => bundleService.GetProductQuantitiesFor(b).Min(p => p.Product.Inventory / p.Quantity));
+            } else {
+                newInventory = new Dictionary<string, int>(1);
+            }
+            newInventory.Add(product.Sku, product.Inventory);
+            return new JsonResult {
+                Data = newInventory
+            };
+        }
     }
 }
