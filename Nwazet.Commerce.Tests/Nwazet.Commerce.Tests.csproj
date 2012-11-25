@@ -37,19 +37,34 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Stubs\ContentManagerStub.cs" />
+    <Compile Include="Stubs\DiscountStub.cs" />
+    <Compile Include="Stubs\FakeCartStorage.cs" />
+    <Compile Include="Stubs\FakeClock.cs" />
+    <Compile Include="Stubs\FakeQuery.cs" />
+    <Compile Include="PriceProviderTests.cs" />
     <Compile Include="SizeBasedShippingMethodTest.cs" />
     <Compile Include="Helpers.cs" />
-    <Compile Include="ProductStub.cs" />
+    <Compile Include="Stubs\ProductStub.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShippingMethodSelectionTest.cs" />
+    <Compile Include="Stubs\UserStub.cs" />
     <Compile Include="WeightBasedShippingMethodTest.cs" />
+    <Compile Include="Stubs\WorkContextAccessorStub.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Roles\Orchard.Roles.csproj">
+      <Project>{d10ad48f-407d-4db5-a328-173ec7cb010f}</Project>
+      <Name>Orchard.Roles</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nwazet.Commerce.csproj">
       <Project>{909acc2c-d672-4752-b75b-6822e05fe0e3}</Project>

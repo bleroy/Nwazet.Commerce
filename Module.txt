@@ -30,3 +30,8 @@ Features:
         Name: Nwazet Referrals
         Description: Keeps track of the domain the user came from, in order to honor partner referral fees.
         Category: Commerce
+    Nwazet.Promotions:
+        Name: Nwazet Promotions
+        Description: Apply promotions to your products
+        Category: Commerce
+        Dependencies: Orchard.Roles

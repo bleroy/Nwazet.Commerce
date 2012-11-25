@@ -1,46 +1,35 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using Orchard;
+using Nwazet.Commerce.Services;
 using Orchard.ContentManagement;
-using Orchard.Data;
 using Orchard.Environment.Extensions;
 
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.Commerce")]
     public class ShoppingCart : IShoppingCart {
-        private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IContentManager _contentManager;
-        private readonly IOrchardServices _orchardServices;
+        private readonly IShoppingCartStorage _cartStorage;
+        private readonly IEnumerable<IPriceProvider> _priceProviders;
+        private const double Epsilon = 0.001;
 
         public ShoppingCart(
-            IWorkContextAccessor workContextAccessor,
             IContentManager contentManager,
-            IOrchardServices orchardServices) {
+            IShoppingCartStorage cartStorage,
+            IEnumerable<IPriceProvider> priceProviders) {
 
-            _workContextAccessor = workContextAccessor;
             _contentManager = contentManager;
-            _orchardServices = orchardServices;
+            _cartStorage = cartStorage;
+            _priceProviders = priceProviders;
         }
 
         public IEnumerable<ShoppingCartItem> Items {
             get { return ItemsInternal.AsReadOnly(); }
         }
 
-        private HttpContextBase HttpContext {
-            get { return _workContextAccessor.GetContext().HttpContext; }
-        }
-
         private List<ShoppingCartItem> ItemsInternal {
             get {
-                var items = (List<ShoppingCartItem>) HttpContext.Session["ShoppingCart"];
-
-                if (items == null) {
-                    items = new List<ShoppingCartItem>();
-                    HttpContext.Session["ShoppingCart"] = items;
-                }
-
-                return items;
+                return _cartStorage.Retrieve();
             }
         }
 
@@ -77,14 +66,30 @@ namespace Nwazet.Commerce.Models {
             var ids = Items.Select(x => x.ProductId);
 
             var productParts =
-                _orchardServices.ContentManager.GetMany<ProductPart>(ids, VersionOptions.Latest, QueryHints.Empty).ToArray();
+                _contentManager.GetMany<ProductPart>(ids, VersionOptions.Latest, QueryHints.Empty).ToArray();
 
-            var query = from item in Items
-                        from product in productParts
-                        where product.Id == item.ProductId
-                        select new ShoppingCartQuantityProduct(item.Quantity, product);
+            var shoppingCartQuantities =
+                (from item in Items
+                 from product in productParts
+                 where product.Id == item.ProductId
+                 select new ShoppingCartQuantityProduct(item.Quantity, product))
+                    .ToList();
 
-            return query;
+            return shoppingCartQuantities
+                .Select(
+                    q => {
+                        var modifiedPrices = _priceProviders
+                            .SelectMany(pp => pp.GetModifiedPrices(q, shoppingCartQuantities))
+                            .ToList();
+                        if (!modifiedPrices.Any()) return q;
+                        var minPrice = modifiedPrices.Min(mp => mp.Price);
+                        q.Price = minPrice;
+                        var lowestPrice = modifiedPrices.FirstOrDefault(mp => Math.Abs(mp.Price - minPrice) < Epsilon);
+                        if (lowestPrice != null) {
+                            q.Comment = lowestPrice.Comment;
+                        }
+                        return q;
+                    });
         }
 
         public void UpdateItems() {
@@ -92,10 +97,11 @@ namespace Nwazet.Commerce.Models {
         }
 
         public double Subtotal() {
-            return GetProducts().Sum(pq => pq.Product.Price * pq.Quantity);
+            return Math.Round(GetProducts().Sum(pq => Math.Round(pq.Price * pq.Quantity, 2)), 2);
         }
 
         public double Taxes() {
+            // TODO: handle taxes
             return 0;
         }
 

@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
+using Nwazet.Commerce.Tests.Stubs;
 
 namespace Nwazet.Commerce.Tests {
     [TestFixture]
