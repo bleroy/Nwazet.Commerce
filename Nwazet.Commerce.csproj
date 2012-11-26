@@ -212,6 +212,7 @@
     <Content Include="Views\BundleSummaryAdmin.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\SizeBasedShippingMethod.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\Discount.cshtml" />
+    <None Include="Views\Price.cshtml" />
     <None Include="Views\PromotionAdmin\Index.cshtml" />
     <None Include="Views\ShoppingCart.Summary.cshtml" />
     <None Include="Views\Parts\Product.AddButton.cshtml" />

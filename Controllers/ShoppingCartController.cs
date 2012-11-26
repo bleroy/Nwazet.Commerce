@@ -71,6 +71,7 @@ namespace Nwazet.Commerce.Controllers {
                     ProductImage: ((MediaPickerField)productQuantity.Product.Fields.FirstOrDefault(f => f.Name == "ProductImage")),
                     IsDigital: productQuantity.Product.IsDigital,
                     Price: productQuantity.Product.Price,
+                    DiscountedPrice: productQuantity.Price,
                     ShippingCost: productQuantity.Product.ShippingCost,
                     Weight: productQuantity.Product.Weight)).ToList();
             shape.ShopItems = productShapes;

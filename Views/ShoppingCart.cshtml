@@ -31,7 +31,7 @@ else {
                         var title = item.Title;
                         string imageUrl = (item.ProductImage != null ? item.ProductImage.Url : null);
                         var quantity = (int)item.Quantity;
-                        var unitPrice = (double)item.Price;
+                        var unitPrice = (double)item.DiscountedPrice;
                         var totalPrice = quantity*unitPrice;
                         <tr>
                             @if (imageUrl != null) {

@@ -3,14 +3,8 @@
 }
 <br/>
 @T("Price"):
-@if (Model.DiscountedPrice != Model.Price) {
-    <b class="inactive-price" style="text-decoration:line-through" title="@T("Was ${0}", Model.Price)">$@Model.Price</b>
-    <b class="discounted-price" title="@T("Now ${0}", Model.DiscountedPrice)">$@Model.DiscountedPrice</b>
-    <span class="discount-comment">@Model.DiscountComment</span>
-}
-else {
-    <b>$@Model.Price</b>
-}<br />
+@Display.Price(Price: Model.Price, DiscountedPrice: Model.DiscountedPrice, DiscountComment: Model.DiscountComment)
+<br />
 @Model.Sku<br/>
 @if (Model.Inventory != null && (int)Model.Inventory <= 0) {
     <div class="out-of-stock">
