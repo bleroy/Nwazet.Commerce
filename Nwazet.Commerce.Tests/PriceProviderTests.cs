@@ -5,8 +5,10 @@ using NUnit.Framework;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
 using Nwazet.Commerce.Tests.Stubs;
+using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Security;
+using Orchard.Services;
 
 namespace Nwazet.Commerce.Tests {
     [TestFixture]
@@ -63,13 +65,13 @@ namespace Nwazet.Commerce.Tests {
                 EndDate = new DateTime(2012, 11, 2, 12, 0, 0, DateTimeKind.Utc),
                 Comment = "Old discount"
             };
-            var futureDiscount = new DiscountStub(4) {
+            var futureDiscount = new DiscountStub(5) {
                 DiscountPercent = 5,
                 StartDate = new DateTime(2012, 12, 24, 12, 0, 0, DateTimeKind.Utc),
                 EndDate = new DateTime(2012, 12, 25, 12, 0, 0, DateTimeKind.Utc),
                 Comment = "Future discount"
             };
-            var cart = PrepareCart(new[] { oldDiscount, futureDiscount }, new DateTime(2012, 11, 24, 12, 0, 0, DateTimeKind.Utc));
+            var cart = PrepareCart(new[] { oldDiscount, futureDiscount });
 
             CheckDiscount(cart, 1, "");
         }
@@ -82,7 +84,7 @@ namespace Nwazet.Commerce.Tests {
                 EndDate = new DateTime(2012, 11, 24, 14, 0, 0, DateTimeKind.Utc),
                 Comment = "Currently valid discount"
             };
-            var cart = PrepareCart(new[] { currentDiscount }, new DateTime(2012, 11, 24, 12, 0, 0, DateTimeKind.Utc));
+            var cart = PrepareCart(new[] { currentDiscount });
 
             CheckDiscount(cart, 0.95, currentDiscount.Comment);
         }
@@ -95,7 +97,7 @@ namespace Nwazet.Commerce.Tests {
                 EndQuantity = 2,
                 Comment = "Too low discount"
             };
-            var tooHighDiscount = new DiscountStub(4) {
+            var tooHighDiscount = new DiscountStub(5) {
                 DiscountPercent = 5,
                 StartQuantity = 7,
                 EndQuantity = 10,
@@ -227,14 +229,8 @@ namespace Nwazet.Commerce.Tests {
             new ShoppingCartQuantityProduct(Quantities[2], Products[2])
         };
 
-        private static void FillCart(IShoppingCart cart) {
-            cart.AddRange(OriginalQuantities
-                .Select(q => new ShoppingCartItem(q.Product.Id, q.Quantity)));
-        }
-
-        private static ShoppingCart PrepareCart(IEnumerable<DiscountStub> discounts, DateTime? now = null) {
-            var contentManager = new ContentManagerStub(Products.Cast<IContent>().Union(discounts));
-            var workContextAccessor = new WorkContextAccessorStub(new Dictionary<Type, object> {
+        private static readonly IWorkContextAccessor WorkContextAccessor =
+            new WorkContextAccessorStub(new Dictionary<Type, object> {
                 {typeof(IUser),
                     new UserStub(
                     "Joe",
@@ -244,14 +240,25 @@ namespace Nwazet.Commerce.Tests {
                         "Reseller",
                         "Customer"})}
             });
-            var clock = now == null ? new FakeClock() : new FakeClock((DateTime)now);
+
+        private static readonly IClock Now = new FakeClock(new DateTime(2012, 11, 24, 12, 0, 0, DateTimeKind.Utc));
+
+        private static void FillCart(IShoppingCart cart) {
+            cart.AddRange(OriginalQuantities
+                .Select(q => new ShoppingCartItem(q.Product.Id, q.Quantity)));
+        }
+
+        private static ShoppingCart PrepareCart(IEnumerable<DiscountStub> discounts) {
+
+            var contentManager = new ContentManagerStub(Products.Cast<IContent>().Union(discounts));
+            var cartStorage = new FakeCartStorage();
             var priceProviders = new IPriceProvider[] {
-                new DiscountPriceProvider(contentManager, workContextAccessor, clock) {
+                new DiscountPriceProvider(contentManager, WorkContextAccessor, Now) {
                     DisplayUrlResolver = item => ((ProductStub)item).Path
                 }
             };
-            var cartStorage = new FakeCartStorage();
-            var cart = new ShoppingCart(contentManager, cartStorage, priceProviders);
+            var priceService = new PriceService(priceProviders);
+            var cart = new ShoppingCart(contentManager, cartStorage, priceService);
             FillCart(cart);
 
             return cart;

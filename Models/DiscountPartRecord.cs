@@ -1,9 +1,11 @@
 ﻿using System;
+using Orchard.ContentManagement.Records;
 using Orchard.Environment.Extensions;
 
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.Promotions")]
-    public class DiscountPartRecord {
+    public class DiscountPartRecord : ContentPartRecord {
+        public virtual string Name { get; set; }
         public virtual string Discount { get; set; }
         public virtual DateTime? StartDate { get; set; }
         public virtual DateTime? EndDate { get; set; }

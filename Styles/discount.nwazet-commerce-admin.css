@@ -1,0 +1,29 @@
+﻿html.dyn label.forpicker {
+    display:none;
+}
+html.dyn input.hinted {
+    color:#ccc;
+    font-style:italic;
+}
+
+fieldset.nwazet-discount-datetime {
+    float:left;
+    clear:none;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+fieldset.nwazet-discount-datetime input {
+    padding:1px;
+    text-align:center;
+}
+
+fieldset.nwazet-discount-datetime-second {
+    margin-left: 10px;
+}
+
+fieldset.nwazet-discount-datetime input:first-of-type {
+    width:10em;
+}
+fieldset.nwazet-discount-datetime input:last-of-type {
+    width:7em;
+}

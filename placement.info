@@ -9,6 +9,7 @@
   <Place Parts_SizeBasedShippingMethod_Edit="Content:2"/>
   <Place Parts_Bundle="Content:3.2"/>
   <Place Parts_Bundle_Edit="Content:3.2"/>
+  <Place Parts_Discount_Edit="Content:2"/>
   <Match DisplayType="SummaryAdmin">
     <Place Parts_Product="Content:2;Alternate=ProductSummaryAdmin"/>
     <Place Parts_Product_AddButton="-"/>

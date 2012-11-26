@@ -1,0 +1,110 @@
+﻿@model Nwazet.Commerce.ViewModels.DiscountEditorViewModel
+@{
+    var roles = ((IEnumerable<string>)Model.Roles).ToList();
+    var discountRoles = Model.DiscountRoles;
+    Style.Include("discount.nwazet-commerce-admin.css");
+}
+<fieldset class="nwazet-discount">
+    <label class="sub" for="@Html.IdFor(m => m.Name)">@T("Discount Name")</label><br />
+    @Html.TextBoxFor(m => m.Name, new { @class = "text" })<br />
+    <span class="hint">@T("The technical name of the discount (this is different from the title, which is the discount's friendly name that will be displayed to end-users).")</span><br/>
+
+    <label class="sub" for="@Html.IdFor(m => m.Discount)">@T("Discounted Amount or Percentage")</label><br />
+    @Html.TextBoxFor(m => m.Discount, new { @class = "text-small" })<br />
+    <span class="hint">@T("This can be a fixed amount, which will be subtracted from the price of each item (if the result is less than zero, the item becomes free), or a percentage amount. \"10%\" removes ten percent to the price. \"5\" removes $5 to the price.")</span><br/>
+    
+    <fieldset class="nwazet-discount-datetime">
+        <legend>@T("Starts")</legend>
+        <label class="forpicker" for="@Html.IdFor(m => m.StartDate)">@T("Date")</label>
+        @Html.EditorFor(m => m.StartDate)
+        <label class="forpicker" for="@Html.IdFor(m => m.StartTime)">@T("Time")</label>
+        @Html.EditorFor(m => m.StartTime)
+    </fieldset>
+    
+    <fieldset class="nwazet-discount-datetime nwazet-discount-datetime-second">
+        <legend>@T("Ends")</legend>
+        <label class="forpicker" for="@Html.IdFor(m => m.EndDate)">@T("Date")</label>
+        @Html.EditorFor(m => m.EndDate)
+        <label class="forpicker" for="@Html.IdFor(m => m.EndTime)">@T("Time")</label>
+        @Html.EditorFor(m => m.EndTime)
+    </fieldset>
+    
+    <fieldset>
+        <legend>@T("Roles")</legend>
+        @foreach(var role in roles) {
+            <input type="checkbox" name="@Html.Name("DiscountRoles")"@(discountRoles != null &&
+            discountRoles.Contains(role) ? " checked=\"checked\"" : "") id="@(Html.Id("DiscountRoles") + "_" + role)" value="@role"/>
+            <label class="forcheckbox" for="@(Html.Id("DiscountRoles") + "_" + role)">@role</label>
+        }
+        <span class="hint">@T("Use this to restrict the promotion to members of specific roles. Leave all unchecked for no restriction.")</span>
+    </fieldset>
+    
+    <fieldset>
+        <legend>@T("Quantity")</legend>
+        <label class="sub" for="@Html.IdFor(m => m.StartQuantity)">@T("From:")</label>
+        @Html.TextBoxFor(m => m.StartQuantity, new { @class = "text-small", @type="number" })
+        <label class="sub" for="@Html.IdFor(m => m.EndQuantity)">@T("To:")</label>
+        @Html.TextBoxFor(m => m.EndQuantity, new { @class = "text-small", @type="number" })
+    </fieldset>
+    
+    <label class="sub" for="@Html.IdFor(m => m.Pattern)">@T("Url pattern")</label><br />
+    @Html.TextBoxFor(m => m.Pattern, new { @class = "text" })<br />
+    <span class="hint">@T("If specified, this will restrict the applicability of the discount to products with a URL starting with it. For example, if you specify \"/modules\", a product with a path \"/modules/display\" would have the discount applied, but not a product with a path \"/components/standoff\".")</span><br/>
+    
+    <label class="sub" for="@Html.IdFor(m => m.Comment)">@T("Comment")</label><br />
+    @Html.TextBoxFor(m => m.Comment, new { @class = "text" })<br />
+    <span class="hint">@T("A short comment that will be displayed next to the discounted price on the front-end.")</span><br/>
+</fieldset>
+
+@using (Script.Foot()) {
+
+    @* generates the localization script *@
+    @Display.DatePickerLocalization()
+    @Display.TimePickerLocalization()
+
+<script type="text/javascript">
+//<![CDATA[
+    $(function() {
+
+        var clearHint = function($this) {
+            if ($this.val() == $this.data("hint")) {
+                $this.removeClass("hinted").val("");
+            }
+        };
+        var resetHint = function($this) {
+            setTimeout(function() {
+                if (!$this.val()) {
+                    $this.addClass("hinted").val($this.data("hint"));
+                }
+            }, 300);
+        };
+        
+        $(".nwazet-discount label.forpicker").each(function () {
+            var $this = $(this);
+            var pickerInput = $("#" + $this.attr("for"));
+            if (!pickerInput.val()) {
+                pickerInput.data("hint", $this.text());
+                pickerInput.addClass("hinted")
+                    .val(pickerInput.data("hint"))
+                    .focus(function() { clearHint($(this)); })
+                    .blur(function() { resetHint($(this)); });
+                $this.closest("form").submit(function() {
+                    clearHint(pickerInput);
+                    pickerInput = 0;
+                });
+            }
+        });
+
+        $('#@Html.IdFor(m => m.StartDate)')
+            .datepicker({ showAnim: "" });
+        $('#@Html.IdFor(m => m.StartTime)')
+            .timepicker({ stepMinute: 5 });
+
+        $('#@Html.IdFor(m => m.EndDate)')
+            .datepicker({ showAnim: "" });
+        $('#@Html.IdFor(m => m.EndTime)')
+            .timepicker({ stepMinute: 5 });
+    })
+//]]>
+</script>
+}

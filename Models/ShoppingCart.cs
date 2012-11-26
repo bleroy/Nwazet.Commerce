@@ -10,17 +10,16 @@ namespace Nwazet.Commerce.Models {
     public class ShoppingCart : IShoppingCart {
         private readonly IContentManager _contentManager;
         private readonly IShoppingCartStorage _cartStorage;
-        private readonly IEnumerable<IPriceProvider> _priceProviders;
-        private const double Epsilon = 0.001;
+        private readonly IPriceService _priceService;
 
         public ShoppingCart(
             IContentManager contentManager,
             IShoppingCartStorage cartStorage,
-            IEnumerable<IPriceProvider> priceProviders) {
+            IPriceService priceService) {
 
             _contentManager = contentManager;
             _cartStorage = cartStorage;
-            _priceProviders = priceProviders;
+            _priceService = priceService;
         }
 
         public IEnumerable<ShoppingCartItem> Items {
@@ -76,20 +75,7 @@ namespace Nwazet.Commerce.Models {
                     .ToList();
 
             return shoppingCartQuantities
-                .Select(
-                    q => {
-                        var modifiedPrices = _priceProviders
-                            .SelectMany(pp => pp.GetModifiedPrices(q, shoppingCartQuantities))
-                            .ToList();
-                        if (!modifiedPrices.Any()) return q;
-                        var minPrice = modifiedPrices.Min(mp => mp.Price);
-                        q.Price = minPrice;
-                        var lowestPrice = modifiedPrices.FirstOrDefault(mp => Math.Abs(mp.Price - minPrice) < Epsilon);
-                        if (lowestPrice != null) {
-                            q.Comment = lowestPrice.Comment;
-                        }
-                        return q;
-                    });
+                .Select(q => _priceService.GetDiscountedPrice(q, shoppingCartQuantities));
         }
 
         public void UpdateItems() {

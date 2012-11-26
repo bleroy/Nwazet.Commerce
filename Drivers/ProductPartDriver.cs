@@ -14,9 +14,11 @@ namespace Nwazet.Commerce.Drivers {
     [OrchardFeature("Nwazet.Commerce")]
     public class ProductPartDriver : ContentPartDriver<ProductPart> {
         private readonly IWorkContextAccessor _wca;
+        private readonly IPriceService _priceService;
 
-        public ProductPartDriver(IWorkContextAccessor wca) {
+        public ProductPartDriver(IWorkContextAccessor wca, IPriceService priceService) {
             _wca = wca;
+            _priceService = priceService;
         }
 
         protected override string Prefix { get { return "NwazetCommerceProduct"; } }
@@ -25,11 +27,14 @@ namespace Nwazet.Commerce.Drivers {
             ProductPart part, string displayType, dynamic shapeHelper) {
 
             var inventory = GetInventory(part);
+            var discountedPriceQuantity = _priceService.GetDiscountedPrice(new ShoppingCartQuantityProduct(1, part));
             var productShape = ContentShape(
                 "Parts_Product",
                 () => shapeHelper.Parts_Product(
                         Sku: part.Sku,
                         Price: part.Price,
+                        DiscountedPrice: discountedPriceQuantity.Price,
+                        DiscountComment: discountedPriceQuantity.Comment,
                         Inventory: inventory,
                         OutOfStockMessage: part.OutOfStockMessage,
                         AllowBackOrder: part.AllowBackOrder,
