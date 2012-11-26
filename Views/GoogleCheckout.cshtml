@@ -70,7 +70,7 @@ Available model properties:
         <input type="hidden" name="@("item_weight_" + i)" value="@product.Weight"/> 
         <input type="hidden" name="@("item_weight_unit_" + i)" value="@Model.WeightUnit"/> 
         <input type="hidden" name="@("item_description_" + i)" value="@product.Title"/>
-        <input type="hidden" name="@("item_price_" + i)" value="@product.Price"/>
+        <input type="hidden" name="@("item_price_" + i)" value="@product.DiscountedPrice"/>
         <input type="hidden" name="@("item_currency_" + i)" value="@Model.Currency"/>
         <input type="hidden" name="@("item_quantity_" + i)" value="@product.Quantity"/>
         <input type="hidden" name="@("item_merchant_id_" + i)" value="@Model.MerchantId"/>
