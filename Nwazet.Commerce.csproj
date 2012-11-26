@@ -212,12 +212,12 @@
     <Content Include="Views\BundleSummaryAdmin.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\SizeBasedShippingMethod.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\Discount.cshtml" />
-    <None Include="Views\Price.cshtml" />
-    <None Include="Views\PromotionAdmin\Index.cshtml" />
-    <None Include="Views\ShoppingCart.Summary.cshtml" />
-    <None Include="Views\Parts\Product.AddButton.cshtml" />
-    <None Include="Views\ShoppingCart.cshtml" />
-    <None Include="Views\ShoppingCartWidget.cshtml" />
+    <Content Include="Views\Price.cshtml" />
+    <Content Include="Views\PromotionAdmin\Index.cshtml" />
+    <Content Include="Views\ShoppingCart.Summary.cshtml" />
+    <Content Include="Views\Parts\Product.AddButton.cshtml" />
+    <Content Include="Views\ShoppingCart.cshtml" />
+    <Content Include="Views\ShoppingCartWidget.cshtml" />
     <Content Include="Views\TitleWithLink.cshtml" />
   </ItemGroup>
   <ItemGroup />
