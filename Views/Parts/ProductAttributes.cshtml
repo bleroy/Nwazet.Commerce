@@ -1,0 +1,20 @@
+﻿@using Nwazet.Commerce.Models
+@{
+    var attributeFieldName = Html.Name("productattributes");
+    var index = 0;
+}
+@if (Model.ProductAttributes != null && Model.ProductAttributes.Length != 0) {
+    foreach (ProductAttributePart attribute in Model.ProductAttributes) {
+        <input type="hidden" name="@(attributeFieldName)[@(index)].Key" value="@attribute.Id"/>
+        <select name="@(attributeFieldName)[@(index)].Value" class="product-attribute">
+            @foreach (var val in attribute.AttributeValues) {
+                <option>@val</option>
+            }
+        </select>
+        index++;
+    }
+}
+else {
+    <input type="hidden" name="@(attributeFieldName)[0].Key" value="-1"/>
+    <input type="hidden" name="@(attributeFieldName)[0].Value" value="__none__" />
+}

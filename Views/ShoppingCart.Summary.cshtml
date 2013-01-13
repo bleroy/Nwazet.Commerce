@@ -11,9 +11,12 @@
         <ul>
             @for (var i = 0; i < items.Count; i++) {
                 var item = items[i];
-                var product = (IProduct) item.Product;
+                var propertyNamePrefix = string.Format("items[{0}]", i);
+                var product = (IProduct)item.Product;
                 var contentItem = (IContent) item.Product;
-                var title = item.Title;
+                var title = item.Title
+                    + (item.ProductAttributes == null 
+                    ? "" : " (" + string.Join(", ", item.ProductAttributes.Values) + ")");
                 string imageUrl = (item.ProductImage != null ? item.ProductImage.Url : null);
                 var quantity = (int)item.Quantity;
                 var unitPrice = (double)item.DiscountedPrice;
@@ -28,9 +31,18 @@
                     }
                     <span class="action"><a class="delete" href="#">@T("Remove")</a></span>
                     <span class="price">
-                        <input name="@string.Format("items[{0}].ProductId", i)" type="hidden" value="@product.Id" />
+                        @if (item.ProductAttributes != null) {
+                            var attrIndex = 0;
+                            var attributeNamePrefix = propertyNamePrefix + string.Format(".AttributeIdsToValues[{0}]", attrIndex);
+                            foreach (KeyValuePair<int, string> attribute in item.ProductAttributes) {
+                                <input type="hidden" name="@(attributeNamePrefix).Key" value="@attribute.Key"/>
+                                <input type="hidden" name="@(attributeNamePrefix).Value" value="@attribute.Value" />
+                                attrIndex++;
+                            }
+                        }
+                        <input name="@(propertyNamePrefix + ".ProductId")" type="hidden" value="@product.Id" />
                         <span class="numeric">
-                            <input name="@string.Format("items[{0}].Quantity", i)" type="number" class="quantity" value="@quantity" />
+                            <input name="@(propertyNamePrefix + ".Quantity")" type="number" class="quantity" value="@quantity" />
                         </span>
                         <span class="numeric">@totalPrice.ToString("c")</span>
                     </span>

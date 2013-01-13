@@ -42,7 +42,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ProductAttributeTests.cs" />
     <Compile Include="Stubs\ContentManagerStub.cs" />
+    <Compile Include="Stubs\ProductAttributeStub.cs" />
     <Compile Include="Stubs\DiscountStub.cs" />
     <Compile Include="Stubs\FakeCartStorage.cs" />
     <Compile Include="Stubs\FakeClock.cs" />

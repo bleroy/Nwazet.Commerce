@@ -15,10 +15,16 @@ namespace Nwazet.Commerce.Drivers {
     public class ProductPartDriver : ContentPartDriver<ProductPart> {
         private readonly IWorkContextAccessor _wca;
         private readonly IPriceService _priceService;
+        private readonly IEnumerable<IProductAttributesDriver> _attributeProviders;
 
-        public ProductPartDriver(IWorkContextAccessor wca, IPriceService priceService) {
+        public ProductPartDriver(
+            IWorkContextAccessor wca, 
+            IPriceService priceService,
+            IEnumerable<IProductAttributesDriver> attributeProviders) {
+
             _wca = wca;
             _priceService = priceService;
+            _attributeProviders = attributeProviders;
         }
 
         protected override string Prefix { get { return "NwazetCommerceProduct"; } }
@@ -50,7 +56,15 @@ namespace Nwazet.Commerce.Drivers {
                     productShape,
                     ContentShape(
                         "Parts_Product_AddButton",
-                        () => shapeHelper.Parts_Product_AddButton(ProductId: part.Id))
+                        () => {
+                            // Get attributes and add them to the add to cart shape
+                            var attributeShapes = _attributeProviders
+                                .Select(p => p.GetAttributeDisplayShape(part.ContentItem, shapeHelper))
+                                .ToList();
+                            return shapeHelper.Parts_Product_AddButton(
+                                ProductId: part.Id,
+                                ProductAttributes: attributeShapes);
+                        })
                     );
             }
             return productShape;

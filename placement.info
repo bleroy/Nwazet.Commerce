@@ -10,12 +10,15 @@
   <Place Parts_Bundle="Content:3.2"/>
   <Place Parts_Bundle_Edit="Content:3.2"/>
   <Place Parts_Discount_Edit="Content:2"/>
+  <Place Parts_ProductAttribute_Edit="Content:2"/>
+  <Place Parts_ProductAttributes_Edit="Content:3.3"/>
   <Match DisplayType="SummaryAdmin">
     <Place Parts_Product="Content:2;Alternate=ProductSummaryAdmin"/>
     <Place Parts_Product_AddButton="-"/>
     <Place Parts_GoogleCheckout="-"/>
     <Place Parts_Bundle="Content:3;Alternate=BundleSummaryAdmin"/>
     <Place Fields_MediaPicker="Content:1;Alternate=MediaPickerProductImageSummaryAdmin"/>
+    <Place Parts_ProductAttributes="-"/>
   </Match>
   <Match DisplayType="Thumbnail">
     <Place Fields_MediaPicker="Content:1;Alternate=MediaPickerProductImageThumbnail"/>
@@ -23,5 +26,6 @@
     <Place Parts_Product="Content:3"/>
     <Place Parts_Product_AddButton="-"/>
     <Place Parts_Common_Body_Summary="-"/>
+    <Place Parts_ProductAttributes="-"/>
   </Match>
 </Placement>

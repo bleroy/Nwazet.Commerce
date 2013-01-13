@@ -110,11 +110,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\BundleAdminController.cs" />
+    <Compile Include="Controllers\AttributesAdminController.cs" />
     <Compile Include="Controllers\PromotionAdminController.cs" />
     <Compile Include="Controllers\ProductAdminController.cs" />
     <Compile Include="Controllers\ShippingAdminController.cs" />
     <Compile Include="Controllers\ShoppingCartController.cs" />
     <Compile Include="Drivers\BundlePartDriver.cs" />
+    <Compile Include="Drivers\ProductAttributesPartDriver.cs" />
+    <Compile Include="Drivers\ProductAttributePartDriver.cs" />
     <Compile Include="Drivers\DiscountPartDriver.cs" />
     <Compile Include="Drivers\SizeBasedShippingMethodPartDriver.cs" />
     <Compile Include="Drivers\GoogleCheckoutSettingsPartDriver.cs" />
@@ -123,19 +126,27 @@
     <Compile Include="Drivers\WeightBasedShippingMethodPartDriver.cs" />
     <Compile Include="Filters\ReferrerFilter.cs" />
     <Compile Include="Handlers\BundlePartHandler.cs" />
+    <Compile Include="Handlers\AttributePartHandler.cs" />
+    <Compile Include="Handlers\AttributesPartHandler.cs" />
     <Compile Include="Handlers\DiscountPartHandler.cs" />
     <Compile Include="Handlers\SizeBasedShippingMethodPartHandler.cs" />
     <Compile Include="Handlers\WeightBasedShippingMethodPartHandler.cs" />
     <Compile Include="Handlers\GoogleCheckoutSettingsPartHandler.cs" />
     <Compile Include="Handlers\ProductPartHandler.cs" />
+    <Compile Include="Menus\AttributeAdminMenu.cs" />
     <Compile Include="Menus\PromotionAdminMenu.cs" />
     <Compile Include="Menus\ProductAdminMenu.cs" />
     <Compile Include="Menus\ShippingAdminMenu.cs" />
     <Compile Include="Migrations\BundleMigrations.cs" />
     <Compile Include="Migrations\CommerceMigrations.cs" />
+    <Compile Include="Migrations\AttributesMigrations.cs" />
     <Compile Include="Migrations\DiscountMigrations.cs" />
     <Compile Include="Migrations\ShippingMigrations.cs" />
     <Compile Include="Migrations\GoogleCheckoutMigrations.cs" />
+    <Compile Include="Models\ProductAttributesPart.cs" />
+    <Compile Include="Models\ProductAttributesPartRecord.cs" />
+    <Compile Include="Models\ProductAttributePart.cs" />
+    <Compile Include="Models\ProductAttributePartRecord.cs" />
     <Compile Include="Models\BundlePart.cs" />
     <Compile Include="Models\BundlePartRecord.cs" />
     <Compile Include="Models\BundleProductsRecord.cs" />
@@ -163,6 +174,7 @@
     <Compile Include="Services\BundleService.cs" />
     <Compile Include="Services\Discount.cs" />
     <Compile Include="Services\DiscountPriceProvider.cs" />
+    <Compile Include="Services\IProductAttributesDriver.cs" />
     <Compile Include="Services\IPriceProvider.cs" />
     <Compile Include="Services\IPriceService.cs" />
     <Compile Include="Services\IPromotion.cs" />
@@ -183,8 +195,10 @@
     <Compile Include="Services\WeightBasedShippingMethodProvider.cs" />
     <Compile Include="Tokens\ITokenProvider.cs" />
     <Compile Include="Tokens\ProductTokens.cs" />
+    <Compile Include="ViewModels\AttributesIndexViewModel.cs" />
     <Compile Include="ViewModels\BundleViewModel.cs" />
     <Compile Include="ViewModels\DiscountEditorViewModel.cs" />
+    <Compile Include="ViewModels\ProductAttributesPartEditViewModel.cs" />
     <Compile Include="ViewModels\PromotionIndexViewModel.cs" />
     <Compile Include="ViewModels\ShippingMethodIndexViewModel.cs" />
     <Compile Include="ViewModels\UpdateShoppingCartItemViewModel.cs" />
@@ -220,7 +234,12 @@
     <Content Include="Views\ShoppingCartWidget.cshtml" />
     <Content Include="Views\TitleWithLink.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Views\AttributesAdmin\Index.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\ProductAttribute.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\ProductAttributes.cshtml" />
+    <None Include="Views\Parts\ProductAttributes.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

@@ -20,7 +20,7 @@ namespace Nwazet.Commerce.Services {
                 .SelectMany(pp => pp.GetModifiedPrices(productQuantity, shoppingCartQuantities))
                 .ToList();
             if (!modifiedPrices.Any()) return productQuantity;
-            var result = new ShoppingCartQuantityProduct(productQuantity.Quantity, productQuantity.Product);
+            var result = new ShoppingCartQuantityProduct(productQuantity.Quantity, productQuantity.Product, productQuantity.AttributeIdsToValues);
             var minPrice = modifiedPrices.Min(mp => mp.Price);
             result.Price = minPrice;
             var lowestPrice = modifiedPrices.FirstOrDefault(mp => Math.Abs(mp.Price - minPrice) < Epsilon);

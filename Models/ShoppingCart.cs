@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nwazet.Commerce.Services;
 using Orchard.ContentManagement;
+using Orchard.Core.Title.Models;
 using Orchard.Environment.Extensions;
 
 namespace Nwazet.Commerce.Models {
@@ -11,15 +12,18 @@ namespace Nwazet.Commerce.Models {
         private readonly IContentManager _contentManager;
         private readonly IShoppingCartStorage _cartStorage;
         private readonly IPriceService _priceService;
+        private readonly IEnumerable<IProductAttributesDriver> _attributesDrivers;
 
         public ShoppingCart(
             IContentManager contentManager,
             IShoppingCartStorage cartStorage,
-            IPriceService priceService) {
+            IPriceService priceService,
+            IEnumerable<IProductAttributesDriver> attributesDrivers) {
 
             _contentManager = contentManager;
             _cartStorage = cartStorage;
             _priceService = priceService;
+            _attributesDrivers = attributesDrivers;
         }
 
         public IEnumerable<ShoppingCartItem> Items {
@@ -32,46 +36,60 @@ namespace Nwazet.Commerce.Models {
             }
         }
 
-        public void Add(int productId, int quantity = 1) {
-            var item = Items.SingleOrDefault(x => x.ProductId == productId);
-
-            if (item == null) {
-                item = new ShoppingCartItem(productId, quantity);
-                ItemsInternal.Add(item);
+        public void Add(int productId, int quantity = 1, IDictionary<int, string> attributeIdsToValues = null) {
+            ValidateAttributes(productId, attributeIdsToValues);
+            var item = FindCartItem(productId, attributeIdsToValues);
+            if (item != null) {
+                item.Quantity += quantity;
             }
             else {
-                item.Quantity += quantity;
+                ItemsInternal.Add(new ShoppingCartItem(productId, quantity, attributeIdsToValues));
+            }
+        }
+
+        public ShoppingCartItem FindCartItem(int productId, IDictionary<int, string> attributeIdsToValues = null) {
+            if (attributeIdsToValues == null || attributeIdsToValues.Count == 0) {
+                return Items.FirstOrDefault(i => i.ProductId == productId
+                      && (i.AttributeIdsToValues == null || i.AttributeIdsToValues.Count == 0));
+            }
+            return Items.FirstOrDefault(
+                i => i.ProductId == productId
+                     && i.AttributeIdsToValues != null
+                     && i.AttributeIdsToValues.Count == attributeIdsToValues.Count
+                     && i.AttributeIdsToValues.All(attributeIdsToValues.Contains));
+        }
+
+        private void ValidateAttributes(int productId, IDictionary<int, string> attributeIdsToValues) {
+            if (_attributesDrivers == null || attributeIdsToValues == null || !attributeIdsToValues.Any()) return;
+            var product = _contentManager.Get(productId);
+            if (_attributesDrivers.Any(d => !d.ValidateAttributes(product, attributeIdsToValues))) {
+                // Throwing because this should only happen from malicious payloads
+                throw new ArgumentException("Invalid product attributes", "attributeIdsToValues");
             }
         }
 
         public void AddRange(IEnumerable<ShoppingCartItem> items) {
             foreach (var item in items) {
-                Add(item.ProductId, item.Quantity);
+                Add(item.ProductId, item.Quantity, item.AttributeIdsToValues);
             }
         }
 
-        public void Remove(int productId) {
-            var item = Items.SingleOrDefault(x => x.ProductId == productId);
+        public void Remove(int productId, IDictionary<int, string> attributeIdsToValues = null) {
+            var item = FindCartItem(productId, attributeIdsToValues);
             if (item == null) return;
 
             ItemsInternal.Remove(item);
-        }
-
-        public ProductPart GetProduct(int productId) {
-            return _contentManager.Get(productId).As<ProductPart>();
         }
 
         public IEnumerable<ShoppingCartQuantityProduct> GetProducts() {
             var ids = Items.Select(x => x.ProductId);
 
             var productParts =
-                _contentManager.GetMany<ProductPart>(ids, VersionOptions.Latest, QueryHints.Empty).ToArray();
+                _contentManager.GetMany<ProductPart>(ids, VersionOptions.Published, new QueryHints().ExpandParts<TitlePart>()).ToArray();
 
             var shoppingCartQuantities =
                 (from item in Items
-                 from product in productParts
-                 where product.Id == item.ProductId
-                 select new ShoppingCartQuantityProduct(item.Quantity, product))
+                 select new ShoppingCartQuantityProduct(item.Quantity, productParts.First(p => p.Id == item.ProductId), item.AttributeIdsToValues))
                     .ToList();
 
             return shoppingCartQuantities

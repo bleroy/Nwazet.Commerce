@@ -42,8 +42,12 @@ namespace Nwazet.Commerce.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Add(int id, int quantity) {
-            _shoppingCart.Add(id, quantity);
+        public ActionResult Add(int id, int quantity, IDictionary<int, string> productattributes) {
+            // Workaround MVC bug that won't correctly bind an empty dictionary
+            if (productattributes.Count == 1 && productattributes.Values.First() == "__none__") {
+                productattributes = null;
+            }
+            _shoppingCart.Add(id, quantity, productattributes);
             if (Request.IsAjaxRequest()) {
                 return new ShapePartialResult(this, BuildCartShape(true));
             }
@@ -67,6 +71,7 @@ namespace Nwazet.Commerce.Controllers {
                     Product: productQuantity.Product,
                     Sku: productQuantity.Product.Sku,
                     Title: _contentManager.GetItemMetadata(productQuantity.Product).DisplayText,
+                    ProductAttributes: productQuantity.AttributeIdsToValues,
                     ContentItem: (productQuantity.Product).ContentItem,
                     ProductImage: ((MediaPickerField)productQuantity.Product.Fields.FirstOrDefault(f => f.Name == "ProductImage")),
                     IsDigital: productQuantity.Product.IsDigital,
@@ -145,6 +150,7 @@ namespace Nwazet.Commerce.Controllers {
                          {
                              id = productQuantity.Product.Id,
                              title = productQuantity.Product is IContent ? _contentManager.GetItemMetadata((IContent)productQuantity.Product).DisplayText : productQuantity.Product.Sku,
+                             productAttributes = productQuantity.AttributeIdsToValues,
                              unitPrice = productQuantity.Product.Price,
                              quantity = productQuantity.Quantity
                          }).ToArray()
@@ -162,7 +168,10 @@ namespace Nwazet.Commerce.Controllers {
 
             _shoppingCart.AddRange(items
                 .Where(item => !item.IsRemoved)
-                .Select(item => new ShoppingCartItem(item.ProductId, item.Quantity < 0 ? 0 : item.Quantity))
+                .Select(item => new ShoppingCartItem(
+                    item.ProductId, 
+                    item.Quantity < 0 ? 0 : item.Quantity,
+                    item.AttributeIdsToValues))
             );
 
             _shoppingCart.UpdateItems();

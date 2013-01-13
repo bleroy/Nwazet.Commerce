@@ -3,6 +3,7 @@ Available model properties:
     CartItems
         Product
         Title
+        ProductAttributes
         Sku
         ProductImage
         IsDigital
@@ -65,11 +66,14 @@ Available model properties:
 <form method="POST" action="@checkoutUrl"@{if (analyticsOn) {<text>  onsubmit="setUrchinInputCode(pageTracker);"</text>}}>
     @foreach (var product in Model.CartItems) {
         i++;
-        <input type="hidden" name="@("item_name_" + i)" value="@product.Title"/>
+        var title = product.Title
+            + (product.ProductAttributes == null
+            ? "" : " (" + string.Join(", ", product.ProductAttributes.Values) + ")");
+        <input type="hidden" name="@("item_name_" + i)" value="@title"/>
         <input type="hidden" name="@("item_id_" + i)" value="@product.Sku"/>
         <input type="hidden" name="@("item_weight_" + i)" value="@product.Weight"/> 
         <input type="hidden" name="@("item_weight_unit_" + i)" value="@Model.WeightUnit"/> 
-        <input type="hidden" name="@("item_description_" + i)" value="@product.Title"/>
+        <input type="hidden" name="@("item_description_" + i)" value="@title"/>
         <input type="hidden" name="@("item_price_" + i)" value="@product.DiscountedPrice"/>
         <input type="hidden" name="@("item_currency_" + i)" value="@Model.Currency"/>
         <input type="hidden" name="@("item_quantity_" + i)" value="@product.Quantity"/>
