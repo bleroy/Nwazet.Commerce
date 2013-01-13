@@ -4,13 +4,14 @@
 @model Nwazet.Commerce.ViewModels.ProductAttributesPartEditViewModel
 @{
     var currentAttributeIds = Model.Part.AttributeIds;
+    var index = 0;
 }
 <fieldset>
     <legend>@T("Attributes")</legend>
     @foreach(var attribute in Model.Attributes) {
         var attributeName = attribute.As<TitlePart>().Title;
         var idString = attribute.Id.ToString(CultureInfo.InvariantCulture);
-        <input type="checkbox" name="@Html.Name(idString)"@(currentAttributeIds.Contains(attribute.Id) ? " checked=\"checked\"" : "") id="@Html.Id(idString)" value="@attribute.Id"/>
+        <input type="checkbox" name="@(Html.Name("AttributeIds"))"@(currentAttributeIds.Contains(attribute.Id) ? " checked=\"checked\"" : "") id="@Html.Id(idString)" value="@attribute.Id"/>
         <label class="forcheckbox" for="@Html.Id(idString)">@attributeName</label>
     }
     <div class="hint">@T("Please select the attributes that apply to this product. Customers will need to choose a value for each active attribute when adding the product to their shopping cart.")</div>
