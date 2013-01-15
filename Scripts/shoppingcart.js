@@ -8,6 +8,7 @@
     }
 
     $(".shoppingcart .delete").live("click", function () {
+        $(this).trigger("nwazet.removefromcart");
         setQuantityToZero("tr")($(this)).submit();
     });
 
@@ -20,14 +21,17 @@
     }
 
     function onload(text) {
+        $(this).trigger("nwazet.cartupdated");
         mini.parent().toggle(text.trim().length > 0);
     }
 
     $(".minicart .delete").live("click", function () {
+        $(this).trigger("nwazet.removefromcart");
         return miniLoad(setQuantityToZero("li")($(this)));
     });
 
     $(".minicart .update-button, .addtocart-button").live("click", function () {
+        $(this).trigger("nwazet.addtocart");
         return miniLoad($(this).parents("form"));
     });
 });

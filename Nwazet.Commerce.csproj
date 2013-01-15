@@ -77,8 +77,6 @@
       <LastGenOutput>shoppingcart.min.js</LastGenOutput>
     </Content>
     <Content Include="Scripts\shoppingcart.min.js">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
       <DependentUpon>shoppingcart.js</DependentUpon>
     </Content>
     <Content Include="Styles\bundle.nwazet-commerce-admin.css" />
@@ -235,6 +233,9 @@
     <Content Include="Views\TitleWithLink.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Scripts\shoppingcart.min.js.map">
+      <DependentUpon>shoppingcart.js</DependentUpon>
+    </None>
     <None Include="Views\AttributesAdmin\Index.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\ProductAttribute.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\ProductAttributes.cshtml" />
