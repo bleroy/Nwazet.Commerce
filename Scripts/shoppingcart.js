@@ -1,29 +1,29 @@
 ﻿jQuery(function ($) {
-    function setQuantityToZero(parentTag) {
-        return function (button) {
+    var setQuantityToZero = function(parentTag) {
+        return function(button) {
             return button.parents(parentTag + ":first")
                 .find("input.quantity").val(0)
                 .parents("form");
         };
-    }
+    },
+        miniLoad = function(form) {
+            mini.load(form.attr("action"), form.serializeArray(), onload);
+            return false;
+        },
+        onload = function(text) {
+            mini.parent().toggle(text.trim().length > 0);
+            $(this).trigger("nwazet.cartupdated");
+        },
+        mini = $(".minicart");
 
+    mini.load(mini.data("url"), onload)
+        .parent().hide();
+    
     $(".shoppingcart .delete").live("click", function () {
         $(this).trigger("nwazet.removefromcart");
         setQuantityToZero("tr")($(this)).submit();
     });
 
-    var mini = $(".minicart");
-    mini.load(mini.data("url"), onload).parent().hide();
-
-    function miniLoad(form) {
-        mini.load(form.attr("action"), form.serializeArray(), onload);
-        return false;
-    }
-
-    function onload(text) {
-        $(this).trigger("nwazet.cartupdated");
-        mini.parent().toggle(text.trim().length > 0);
-    }
 
     $(".minicart .delete").live("click", function () {
         $(this).trigger("nwazet.removefromcart");

@@ -73,7 +73,6 @@
       <DependentUpon>referral.js</DependentUpon>
     </Content>
     <Content Include="Scripts\shoppingcart.js">
-      <Generator>GoogleClosureCompiler</Generator>
       <LastGenOutput>shoppingcart.min.js</LastGenOutput>
     </Content>
     <Content Include="Scripts\shoppingcart.min.js">
