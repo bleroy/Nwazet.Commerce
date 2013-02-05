@@ -43,7 +43,7 @@ namespace Nwazet.Commerce.Models {
                 item.Quantity += quantity;
             }
             else {
-                ItemsInternal.Add(new ShoppingCartItem(productId, quantity, attributeIdsToValues));
+                ItemsInternal.Insert(0, new ShoppingCartItem(productId, quantity, attributeIdsToValues));
             }
         }
 

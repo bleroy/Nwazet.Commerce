@@ -244,7 +244,7 @@ namespace Nwazet.Commerce.Tests {
         private static readonly IClock Now = new FakeClock(new DateTime(2012, 11, 24, 12, 0, 0, DateTimeKind.Utc));
 
         private static void FillCart(IShoppingCart cart) {
-            cart.AddRange(OriginalQuantities
+            cart.AddRange(OriginalQuantities.Reverse()
                 .Select(q => new ShoppingCartItem(q.Product.Id, q.Quantity)));
         }
 
