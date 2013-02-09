@@ -3,8 +3,7 @@
 @using Orchard.Core.Title.Models
 @model Nwazet.Commerce.ViewModels.ProductAttributesPartEditViewModel
 @{
-    var currentAttributeIds = Model.Part.AttributeIds;
-    var index = 0;
+    var currentAttributeIds = Model.Part.AttributeIds.ToList();
 }
 <fieldset>
     <legend>@T("Attributes")</legend>

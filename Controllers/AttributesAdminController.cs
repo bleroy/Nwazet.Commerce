@@ -40,7 +40,7 @@ namespace Nwazet.Commerce.Controllers {
                 .Query<ProductAttributePart>()
                 .Join<TitlePartRecord>()
                 .OrderBy(p => p.Title)
-                .List();
+                .List().ToList();
             var paginatedAttributes = attributes
                 .Skip(pager.GetStartIndex())
                 .Take(pager.PageSize)

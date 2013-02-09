@@ -22,8 +22,7 @@ namespace Nwazet.Commerce.Routes {
                             {"controller", "ShoppingCart"},
                             {"action", "Index"}
                         },
-                        new RouteValueDictionary {
-                        },
+                        new RouteValueDictionary(),
                         new RouteValueDictionary {
                             {"area", "Nwazet.Commerce"}
                         },
@@ -37,8 +36,7 @@ namespace Nwazet.Commerce.Routes {
                             {"controller", "ShoppingCart"},
                             {"action", "NakedCart"}
                         },
-                        new RouteValueDictionary {
-                        },
+                        new RouteValueDictionary(),
                         new RouteValueDictionary {
                             {"area", "Nwazet.Commerce"}
                         },
@@ -52,13 +50,12 @@ namespace Nwazet.Commerce.Routes {
                             {"controller", "ShoppingCart"},
                             {"action", "GetItems"}
                         },
-                        new RouteValueDictionary {
-                        },
+                        new RouteValueDictionary(),
                         new RouteValueDictionary {
                             {"area", "Nwazet.Commerce"}
                         },
                         new MvcRouteHandler())
-                },
+                }
             };
         }
 

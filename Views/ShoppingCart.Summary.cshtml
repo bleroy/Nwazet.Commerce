@@ -6,7 +6,7 @@
     var root = HttpContext.Current.Request.ApplicationPath;
 }
 @if (items.Any()) { 
-    using(Html.BeginFormAntiForgeryPost(Url.Action("Update", "ShoppingCart", new { area = "Nwazet.Commerce" }))) {
+    using(Html.BeginFormAntiForgeryPost(Url.Action("AjaxUpdate", "ShoppingCart", new { area = "Nwazet.Commerce" }))) {
         <h1><a href="@Url.Action("Index", "ShoppingCart", new {area = "NWazet.Commerce"})">@T("Your Cart")</a></h1>
         <ul>
             @for (var i = 0; i < items.Count; i++) {

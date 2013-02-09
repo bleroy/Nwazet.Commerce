@@ -1,6 +1,4 @@
-﻿using Orchard.ContentManagement;
-
-namespace Nwazet.Commerce.Models {
+﻿namespace Nwazet.Commerce.Models {
     public interface IProduct {
         int Id { get; }
         string Sku { get; set; }

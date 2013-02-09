@@ -3,30 +3,30 @@
 @using Orchard.ContentManagement
 @model Nwazet.Commerce.Models.ProductPart
 <fieldset>
-    <label class="sub" for="Sku">@T("Sku")</label><br />
+    <label class="sub" for="@Html.IdFor(m => m.Sku)">@T("Sku")</label><br />
     @Html.TextBoxFor(m => m.Sku, new { @class = "text" })<br />
-    <label class="sub" for="Price">@T("Price")</label><br />
+    <label class="sub" for="@Html.IdFor(m => m.Price)">@T("Price")</label><br />
     @Html.TextBoxFor(m => m.Price, new { @class = "text" })
 </fieldset>
 <fieldset>
-    <label class="sub" for="Inventory">@T("Inventory")</label>
+    <label class="sub" for="@Html.IdFor(m => m.Inventory)">@T("Inventory")</label>
     @if (Model.Has<BundlePart>()) {
         <text>: @Model.Inventory</text>
     }
     else {
         <br />@Html.TextBoxFor(m => m.Inventory, new { @class = "text" })
     }<br />
-    <label class="sub" for="OutOfStockMessage">@T("Out of stock message")</label><br />
+    <label class="sub" for="@Html.IdFor(m => m.OutOfStockMessage)">@T("Out of stock message")</label><br />
     @Html.TextBoxFor(m => m.OutOfStockMessage, new { @class = "textMedium" })<br />
     <span class="hint">@T("This message will be displayed if the inventory is zero or less. Leave blank for the default message to be used.")</span>
     @Html.CheckBoxFor(m => m.AllowBackOrder)
-    <label class="sub" for="AllowBackOrder">@T("allow back order")</label><br />
+    <label class="sub" for="@Html.IdFor(m => m.AllowBackOrder)">@T("allow back order")</label><br />
     <span class="hint">@T("If unchecked, the add button won't be visible on the product page when the inventory is zero or less.")</span>
 </fieldset>
 <fieldset>
-    <label class="sub" for="Weight">@T("Weight")</label><br />
+    <label class="sub" for="@Html.IdFor(m => m.Weight)">@T("Weight")</label><br />
     @Html.TextBoxFor(m => m.Weight, new { @class = "text" })<br />
-    <label class="sub" for="Size">@T("Size")</label><br/>
+    <label class="sub" for="@Html.IdFor(m => m.Size)">@T("Size")</label><br/>
     @{
         // Attempt to get size-based shipping methods through WCA so we do it late and we don't fail if the feature is not enabled
         var shippingMethods = WorkContext.Resolve<IEnumerable<IShippingMethodProvider>>();
@@ -52,11 +52,11 @@
         }
     }
     @Html.TextBoxFor(m => m.Size, new { @class = "text" })<br />
-    <label class="sub" for="ShippingCost">@T("Shipping Cost")</label><br />
+    <label class="sub" for="@Html.IdFor(m => m.ShippingCost)">@T("Shipping Cost")</label><br />
     @Html.TextBoxFor(m => m.ShippingCost, new { @class = "text" })<br />
     <span class="hint">@T("Specify a shipping cost if you want the shipping cost to be fixed. Otherwise, leave this empty and only specify the weight. The shipping will be computed based on the shipping provider that the customer will pick.")</span>
 </fieldset>
 <fieldset>
     @Html.CheckBoxFor(m => m.IsDigital)
-    <label class="sub" for="IsDigital">@T("digital product")</label>
+    <label class="sub" for="@Html.IdFor(m => m.IsDigital)">@T("digital product")</label>
 </fieldset>

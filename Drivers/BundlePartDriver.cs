@@ -61,14 +61,17 @@ namespace Nwazet.Commerce.Drivers {
         }
 
         protected override void Importing(BundlePart part, ImportContentContext context) {
-            var productQuantities =
-                context.Data.Element("BundlePart").Elements("Product")
-                    .Select(e => new ProductQuantity {
-                        ProductId = context.GetItemFromSession(e.Attribute("id").Value).Id,
-                        Quantity = int.Parse(e.Attribute("quantity").Value, CultureInfo.InvariantCulture)
-                    });
-            foreach (var productQuantity in productQuantities) {
-                _bundleService.AddProduct(productQuantity.Quantity, productQuantity.ProductId, part.Record);
+            var xElement = context.Data.Element("BundlePart");
+            if (xElement != null) {
+                var productQuantities =
+                    xElement.Elements("Product")
+                           .Select(e => new ProductQuantity {
+                               ProductId = context.GetItemFromSession(e.Attribute("id").Value).Id,
+                               Quantity = int.Parse(e.Attribute("quantity").Value, CultureInfo.InvariantCulture)
+                           });
+                foreach (var productQuantity in productQuantities) {
+                    _bundleService.AddProduct(productQuantity.Quantity, productQuantity.ProductId, part.Record);
+                }
             }
         }
 

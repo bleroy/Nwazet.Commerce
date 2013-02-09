@@ -43,7 +43,7 @@ namespace Nwazet.Commerce.Controllers {
 
         [HttpPost]
         public ActionResult Add(int id, int quantity, IDictionary<int, string> productattributes) {
-            // Workaround MVC bug that won't correctly bind an empty dictionary
+            // Workaround MVC buggy behavior that won't correctly bind an empty dictionary
             if (productattributes.Count == 1 && productattributes.Values.First() == "__none__") {
                 productattributes = null;
             }
@@ -104,8 +104,7 @@ namespace Nwazet.Commerce.Controllers {
 
             var checkoutShapes = _checkoutServices.Select(
                 service => service.BuildCheckoutButtonShape(
-                    productShapes, productQuantities, validShippingMethods, custom)
-                );
+                    productShapes, productQuantities, validShippingMethods, custom)).ToList();
             shape.CheckoutButtons = checkoutShapes;
 
             shape.Total = _shoppingCart.Total();
@@ -123,33 +122,30 @@ namespace Nwazet.Commerce.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Update(string command, UpdateShoppingCartItemViewModel[] items){
+        public ActionResult Update(UpdateShoppingCartItemViewModel[] items){
 
-            UpdateShoppingCart(items);
-
-            switch(command) {
-                //case "Checkout":
-                //    return RedirectToAction("SignupOrLogin", "Checkout");
-                case "Update":
-                    break;
-            }
-            if (Request.IsAjaxRequest()) {
-                return new ShapePartialResult(this, BuildCartShape(true));
-            }
+            UpdateShoppingCart(items.Reverse());
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult AjaxUpdate(UpdateShoppingCartItemViewModel[] items) {
+
+            UpdateShoppingCart(items.Reverse());
+            return new ShapePartialResult(this, BuildCartShape(true));
         }
 
         [OutputCache(Duration = 0)]
         public ActionResult GetItems() {
             var products = _shoppingCart.GetProducts();
 
-            var json = new
-            {
+            var json = new {
                 items = (from productQuantity in products
-                         select new
-                         {
+                         select new {
                              id = productQuantity.Product.Id,
-                             title = productQuantity.Product is IContent ? _contentManager.GetItemMetadata((IContent)productQuantity.Product).DisplayText : productQuantity.Product.Sku,
+                             title = productQuantity.Product != null
+                                         ? _contentManager.GetItemMetadata(productQuantity.Product).DisplayText
+                                         : productQuantity.Product.Sku,
                              productAttributes = productQuantity.AttributeIdsToValues,
                              unitPrice = productQuantity.Product.Price,
                              quantity = productQuantity.Quantity

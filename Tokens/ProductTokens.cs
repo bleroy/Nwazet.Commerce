@@ -7,10 +7,8 @@ using Orchard.Localization;
 namespace Nwazet.Commerce.Tokens {
     [OrchardFeature("Nwazet.Commerce")]
     public class ProductTokens : ITokenProvider {
-        private readonly IContentManager _contentManager;
 
-        public ProductTokens(IContentManager contentManager) {
-            _contentManager = contentManager;
+        public ProductTokens() {
             T = NullLocalizer.Instance;
         }
 

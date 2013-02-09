@@ -1,9 +1,7 @@
 ﻿@using Orchard.Utility.Extensions
 @model Nwazet.Commerce.ViewModels.PromotionIndexViewModel
 @{
-    var index = 0;
-
-	var pageSizes = new List<int?>() { 10, 50, 100 };
+	var pageSizes = new List<int?> { 10, 50, 100 };
 	var defaultPageSize = WorkContext.CurrentSite.PageSize;
 	if(!pageSizes.Contains(defaultPageSize)) { 
 		pageSizes.Add(defaultPageSize);
@@ -47,7 +45,6 @@
                         @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(promotion.ContentItem, new {returnUrl}), new {itemprop = "RemoveUrl UnsafeUrl"})
                     </td>
                 </tr>
-                index++;
             }
         </table>
 	@Display(Model.Pager)

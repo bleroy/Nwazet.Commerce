@@ -6,25 +6,25 @@
     var excludedAreas = new HashSet<string>((method.ExcludedShippingAreas ?? "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
 }
 <fieldset>
-    <label class="sub" for="Name">@T("Method Name")</label><br />
+    <label class="sub" for="@Html.IdFor(m => m.Name)">@T("Method Name")</label><br />
     @Html.TextBox("Name", method.Name, new { @class = "text" })<br />
     <span class="hint">@T("The technical name of the shipping method (this is different from the title, which is the method's friendly name that will be displayed to end-users).")</span><br/>
-    <label class="sub" for="ShippingCompany">@T("Shipping Company")</label><br />
+    <label class="sub" for="@Html.IdFor(m => m.ShippingCompany)">@T("Shipping Company")</label><br />
     @Html.TextBox("ShippingCompany", method.ShippingCompany, new { @class = "text" })<br />
-    <label class="sub" for="Price">@T("Price")</label><br />
+    <label class="sub" for="@Html.IdFor(m => m.Price)">@T("Price")</label><br />
     @Html.TextBox("Price", method.Price, new { @class = "text" })<br />
-    <label class="sub" for="Size">@T("Size")</label><br />
+    <label class="sub" for="@Html.IdFor(m => m.Size)">@T("Size")</label><br />
     @Html.TextBox("Size", method.Size, new { @class = "text" })<br />
-    <label class="sub" for="Priority">@T("Priority")</label><br />
+    <label class="sub" for="@Html.IdFor(m => m.Priority)">@T("Priority")</label><br />
     @Html.TextBox("Priority", method.Priority, new { @class = "text" })<br />
     <span class="hint">@T("Specify the size (usually S, M, L or XL) for which this shipping price is valid. Any product that matches this size will trigger the shipping method, unless another of higher priority takes precedence. Leave empty to define the default size-based shipping method.")</span><br/>
-    <label class="sub" for="IncludedShippingAreas">@T("Areas for which this method is valid:")</label><br />
+    <label class="sub" for="@Html.IdFor(m => m.IncludedShippingAreas)">@T("Areas for which this method is valid:")</label><br />
     @foreach(var area in shippingAreas) {
         <input type="checkbox" name="@(Model.Prefix + ".IncludedShippingAreas")"@(includedAreas.Contains(area.Id) ? " checked=\"checked\"" : "") id="@(Model.Prefix + "_" + area.Id)" value="@area.Id"/>
         <label class="forcheckbox" for="@(Model.Prefix + "_" + area.Id)">@area.Name</label>
     }
     <br/>
-    <label class="sub" for="ExcludedShippingAreas">@T("Areas for which this method is not valid:")</label><br />
+    <label class="sub" for="@Html.IdFor(m => m.ExcludedShippingAreas)">@T("Areas for which this method is not valid:")</label><br />
     @foreach(var area in shippingAreas) {
         <input type="checkbox" name="@(Model.Prefix + ".ExcludedShippingAreas")"@(excludedAreas.Contains(area.Id) ? " checked=\"checked\"" : "") id="@(Model.Prefix + "_" + area.Id)" value="@area.Id"/>
         <label class="forcheckbox" for="@(Model.Prefix + "_" + area.Id)">@area.Name</label>

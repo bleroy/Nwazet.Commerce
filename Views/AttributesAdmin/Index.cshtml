@@ -1,7 +1,7 @@
 ﻿@using Orchard.Utility.Extensions
 @model Nwazet.Commerce.ViewModels.AttributesIndexViewModel
 @{
-	var pageSizes = new List<int?>() { 10, 50, 100 };
+	var pageSizes = new List<int?> { 10, 50, 100 };
 	var defaultPageSize = WorkContext.CurrentSite.PageSize;
 	if(!pageSizes.Contains(defaultPageSize)) { 
 		pageSizes.Add(defaultPageSize);

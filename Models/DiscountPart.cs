@@ -1,14 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
-using Nwazet.Commerce.Services;
-using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
-using Orchard.Mvc.Html;
-using Orchard.Roles.Models;
-using Orchard.Services;
 
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.Promotions")]

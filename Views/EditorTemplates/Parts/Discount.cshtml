@@ -1,6 +1,6 @@
 ﻿@model Nwazet.Commerce.ViewModels.DiscountEditorViewModel
 @{
-    var roles = ((IEnumerable<string>)Model.Roles).ToList();
+    var roles = Model.Roles.ToList();
     var discountRoles = Model.DiscountRoles;
     Style.Include("discount.nwazet-commerce-admin.css");
 }
