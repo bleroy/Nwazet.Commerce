@@ -4,10 +4,11 @@
     var items = (IList<dynamic>)Model.ShopItems;
     var subtotal = (decimal) Model.Subtotal;
     var root = HttpContext.Current.Request.ApplicationPath;
+    var cartUrl = Url.Action("Index", "ShoppingCart", new {area = "NWazet.Commerce"});
 }
-@if (items.Any()) { 
-    using(Html.BeginFormAntiForgeryPost(Url.Action("AjaxUpdate", "ShoppingCart", new { area = "Nwazet.Commerce" }))) {
-        <h1><a href="@Url.Action("Index", "ShoppingCart", new {area = "NWazet.Commerce"})">@T("Your Cart")</a></h1>
+@if (items.Any()) {
+    using (Html.BeginFormAntiForgeryPost(Url.Action("AjaxUpdate", "ShoppingCart", new {area = "Nwazet.Commerce"}))) {
+        <h1><a href="@cartUrl">@T("Your Cart")</a></h1>
         <ul>
             @for (var i = 0; i < items.Count; i++) {
                 var item = items[i];
@@ -56,12 +57,7 @@
         </div>
         <span class="explanation">@T("Tax and shipping will be calculated at checkout.")</span>
     }
-    <ul class="checkout">
-    @foreach (var checkoutButton in Model.CheckoutButtons) {
-        checkoutButton.IsMiniCart = true;
-        <li>
-            @Display(checkoutButton)
-        </li>
-    }
-    </ul>
+    <div class="checkout">
+        <a class="button" href="@cartUrl">Checkout</a>
+    </div>
 }
