@@ -10,8 +10,27 @@
             mini.load(form.attr("action"), form.serializeArray(), onload);
             return false;
         },
-        onload = function(text) {
-            mini.parent().toggle(text.trim().length > 0);
+        hasLocalStorage = function() {
+            try {
+                return "localStorage" in window && window.localStorage != null;
+            } catch(e) {
+                return false;
+            } 
+        },
+        onload = function (text) {
+            var gotCart = $.trim(text).length > 0;
+            if (hasLocalStorage()) {
+                if (gotCart) {
+                    localStorage["nwazet.cart"] = text;
+                } else {
+                    var localCart = localStorage["nwazet.cart"];
+                    if (localCart) {
+                        mini.html(localCart);
+                        miniLoad(mini.find("form"));
+                    }
+                }
+            }
+            mini.parent().toggle(gotCart);
             $(this).trigger("nwazet.cartupdated");
         },
         mini = $(".minicart");
