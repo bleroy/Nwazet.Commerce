@@ -1,0 +1,24 @@
+﻿@*
+Available model properties:
+    CartItems
+        Product
+        Title
+        ProductAttributes
+        Sku
+        ProductImage
+        IsDigital
+        Price
+        Weight
+        ShippingCost
+    ShippingMethods
+        Price
+        DisplayName
+        Name
+        ShippingCompany
+        IncludedShippingAreas
+        ExcludedShippingAreas
+    PublishableKey
+    Custom
+*@
+<a href="@Url.Action("Ship", "Stripe", new {area = "Nwazet.Commerce"})"
+   class="stripe-checkout checkout"><img src="@Url.Content("~/Modules/Nwazet.Commerce/Content/checkout-with-stripe.png")" alt="@T("Checkout with Stripe")"/></a>

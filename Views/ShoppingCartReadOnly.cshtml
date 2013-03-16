@@ -1,8 +1,6 @@
 ﻿@using Nwazet.Commerce.Models
 @using Orchard.ContentManagement
 @{
-    Script.Require("jQuery");
-    Script.Include("shoppingcart.js", "shoppingcart.min.js");
     var items = (IList<dynamic>)Model.ShopItems;
     var subtotal = (decimal) Model.Subtotal;
 }
@@ -12,7 +10,6 @@
 }
 else { 
     <article class="shoppingcart">
-        @using(Html.BeginFormAntiForgeryPost(Url.Action("Update", "ShoppingCart", new { area = "Nwazet.Commerce" }))) {
             <table>
                 <thead>
                     <tr>
@@ -20,7 +17,6 @@ else {
                         <td class="numeric">@T("Unit Price")</td>
                         <td class="numeric">@T("Quantity")</td>
                         <td class="numeric">@T("Total Price")</td>
-                        <td class="action"></td>
                     </tr>
                 </thead>
                 <tbody>
@@ -52,17 +48,12 @@ else {
                                 @if (item.ProductAttributes != null) {
                                     var attrIndex = 0;
                                     foreach (KeyValuePair<int, string> attribute in item.ProductAttributes) {
-                                        var attributeNamePrefix = propertyNamePrefix + ".AttributeIdsToValues[" + attrIndex + "]";
-                                        <input type="hidden" name="@(attributeNamePrefix).Key" value="@attribute.Key"/>
-                                        <input type="hidden" name="@(attributeNamePrefix).Value" value="@attribute.Value" />
+                                        var attributeNamePrefix = propertyNamePrefix + string.Format(".AttributeIdsToValues[{0}]", attrIndex);
                                         attrIndex++;
                                     }
                                 }
-                                <input name="@(propertyNamePrefix + ".ProductId")" type="hidden" value="@product.Id" />
-                                <input name="@(propertyNamePrefix + ".Quantity")" type="number" class="quantity" value="@quantity" />
                             </td>
                             <td class="numeric">@totalPrice.ToString("c")</td>
-                            <td class="action"><a class="delete" href="#">@T("Remove")</a></td>
                         </tr>
                     }
             
@@ -71,17 +62,9 @@ else {
                     <tr class="total">
                         <td class="numeric label" colspan="4">@T("Subtotal:")</td>
                         <td class="numeric">@subtotal.ToString("c")</td>
-                        <td><button name="command" value="Update" type="submit" class="update-button">@T("Update All")</button></td>
                     </tr>
                 </tfoot>
             </table>
         }
-        <ul class="checkout">
-        @foreach (var checkoutButton in Model.CheckoutButtons) {
-            <li>
-                @Display(checkoutButton)
-            </li>
-        }
-        </ul>
     </article>
 }

@@ -10,7 +10,7 @@ Features:
         Name: Nwazet Commerce
         Description: Commerce for small online businesses
         Category: Commerce
-        Dependencies: Orchard.Fields
+        Dependencies: Orchard.Fields, Orchard.Tokens
     Nwazet.Bundles:
         Name: Nwazet Bundles
         Description: Product bundles are products made of a set of products
@@ -38,4 +38,8 @@ Features:
     Nwazet.Attributes:
         Name: Nwazet Product Attributes
         Description: Enables customers to customize a product when they add it to the cart
+        Category: Commerce
+    Stripe:
+        Name: Stripe
+        Description: Stripe checkout for Nwazet.Commerce
         Category: Commerce

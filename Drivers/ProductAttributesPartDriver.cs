@@ -44,6 +44,8 @@ namespace Nwazet.Commerce.Drivers {
 
         public bool ValidateAttributes(IContent product, IDictionary<int, string> attributeIdsToValues) {
             var attributesPart = product.As<ProductAttributesPart>();
+            //if (attributeIdsToValues.Count == 1 &&
+            //    attributeIdsToValues[0].)
             // If the part isn't there, there must be no attributes
             if (attributesPart == null) return attributeIdsToValues == null || !attributeIdsToValues.Any();
             // If the part is there, it must have as many attributes as were passed in

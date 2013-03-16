@@ -60,7 +60,10 @@ namespace Nwazet.Commerce.Models {
         }
 
         private void ValidateAttributes(int productId, IDictionary<int, string> attributeIdsToValues) {
-            if (_attributesDrivers == null || attributeIdsToValues == null || !attributeIdsToValues.Any()) return;
+            if (_attributesDrivers == null ||
+                attributeIdsToValues == null ||
+                !attributeIdsToValues.Any()) return;
+
             var product = _contentManager.Get(productId);
             if (_attributesDrivers.Any(d => !d.ValidateAttributes(product, attributeIdsToValues))) {
                 // Throwing because this should only happen from malicious payloads

@@ -55,6 +55,48 @@ namespace Nwazet.Commerce.Routes {
                             {"area", "Nwazet.Commerce"}
                         },
                         new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Route = new Route(
+                        "stripe/checkout",
+                        new RouteValueDictionary {
+                            {"area", "Nwazet.Commerce"},
+                            {"controller", "Stripe"},
+                            {"action", "Checkout"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Nwazet.Commerce"}
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Route = new Route(
+                        "stripe/ship",
+                        new RouteValueDictionary {
+                            {"area", "Nwazet.Commerce"},
+                            {"controller", "Stripe"},
+                            {"action", "Ship"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Nwazet.Commerce"}
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Route = new Route(
+                        "stripe/summary",
+                        new RouteValueDictionary {
+                            {"area", "Nwazet.Commerce"},
+                            {"controller", "Stripe"},
+                            {"action", "Summary"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Nwazet.Commerce"}
+                        },
+                        new MvcRouteHandler())
                 }
             };
         }

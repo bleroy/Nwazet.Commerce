@@ -27,10 +27,12 @@ Available model properties:
 @{
     var includedAreaToGoogleFormatString = new Dictionary<string, KeyValuePair<string, string>> {
         {"world", new KeyValuePair<string, string>("checkout-flow-support.merchant-checkout-flow-support.shipping-methods.flat-rate-shipping-{0}.shipping-restrictions.allowed-areas.world-area-{1}", "true")},
+        {"canada", new KeyValuePair<string, string>("checkout-flow-support.merchant-checkout-flow-support.shipping-methods.flat-rate-shipping-{0}.shipping-restrictions.allowed-areas.postal-area-{1}.country-code", "CA")},
         {"us", new KeyValuePair<string, string>("checkout-flow-support.merchant-checkout-flow-support.shipping-methods.flat-rate-shipping-{0}.shipping-restrictions.allowed-areas.us-country-area-{1}.country-area", "ALL")},
         {"us-continental", new KeyValuePair<string, string>("ship_method_us_area_{0}", "CONTINENTAL_48")}
     };
     var excludedAreaToGoogleFormatString = new Dictionary<string, KeyValuePair<string, string>> {
+        {"canada", new KeyValuePair<string, string>("checkout-flow-support.merchant-checkout-flow-support.shipping-methods.flat-rate-shipping-{0}.shipping-restrictions.excluded-areas.postal-area-{1}.country-code", "CA")},
         {"us", new KeyValuePair<string, string>("checkout-flow-support.merchant-checkout-flow-support.shipping-methods.flat-rate-shipping-{0}.shipping-restrictions.excluded-areas.us-country-area-{1}.country-area", "ALL")}
     };
     var isMini = Model.IsMiniCart != null && (bool)Model.IsMiniCart;
@@ -94,8 +96,9 @@ Available model properties:
         <input type="hidden" name="@("ship_method_currency_" + i)" value="@Model.Currency" />
         if (shippingMethod.IncludedShippingAreas != null) {
             foreach (var area in shippingMethod.IncludedShippingAreas) {
-                j++;
+                if (String.IsNullOrWhiteSpace(area)) {continue;}
                 if (includedAreaToGoogleFormatString.ContainsKey(area)) {
+                    j++;
                     <input type="hidden" name="@string.Format(includedAreaToGoogleFormatString[area].Key, i, j)" value="@includedAreaToGoogleFormatString[area].Value" />
                 }
                 else {
@@ -106,8 +109,9 @@ Available model properties:
         j = 0;
         if (shippingMethod.ExcludedShippingAreas != null) {
             foreach (var area in shippingMethod.ExcludedShippingAreas) {
-                j++;
+                if (String.IsNullOrWhiteSpace(area)) {continue;}
                 if (excludedAreaToGoogleFormatString.ContainsKey(area)) {
+                    j++;
                     <input type="hidden" name="@string.Format(excludedAreaToGoogleFormatString[area].Key, i, j)" value="@excludedAreaToGoogleFormatString[area].Value" />
                 }
                 else {

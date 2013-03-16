@@ -6,12 +6,12 @@ using Orchard.Environment.Extensions;
 using Orchard.Localization;
 
 namespace Nwazet.Commerce.Handlers {
-    [OrchardFeature("Google.Checkout")]
-    public class GoogleCheckoutSettingsPartHandler : ContentHandler {
-        public GoogleCheckoutSettingsPartHandler(IRepository<GoogleCheckoutSettingsPartRecord> repository) {
+    [OrchardFeature("Stripe")]
+    public class StripeSettingsPartHandler : ContentHandler {
+        public StripeSettingsPartHandler(IRepository<StripeSettingsPartRecord> repository) {
             T = NullLocalizer.Instance;
             Filters.Add(StorageFilter.For(repository));
-            Filters.Add(new ActivatingFilter<GoogleCheckoutSettingsPart>("Site"));
+            Filters.Add(new ActivatingFilter<StripeSettingsPart>("Site"));
         }
 
         public Localizer T { get; set; }
@@ -20,9 +20,9 @@ namespace Nwazet.Commerce.Handlers {
             if (context.ContentItem.ContentType != "Site")
                 return;
             base.GetItemMetadata(context);
-            context.Metadata.EditorGroupInfo.Add(new GroupInfo(T("Google Checkout")) {
-                Id = "GoogleCheckout",
-                Position = "4.2"
+            context.Metadata.EditorGroupInfo.Add(new GroupInfo(T("Stripe")) {
+                Id = "Stripe",
+                Position = "4.1"
             });
         }
     }

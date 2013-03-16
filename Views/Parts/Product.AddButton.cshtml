@@ -2,7 +2,15 @@
     var productId = (int) Model.ProductId;
 }
 
-@using (Html.BeginFormAntiForgeryPost(Url.Action("Add", "ShoppingCart", new { area = "Nwazet.Commerce", id = productId}), FormMethod.Post, new {@class = "addtocart" })) {
+@using (Html.BeginFormAntiForgeryPost(
+    Url.Action("Add", "ShoppingCart",
+               new {area = "Nwazet.Commerce", id = productId}),
+    FormMethod.Post,
+    new Dictionary<string, object> {
+        {"class", "addtocart"},
+        {"data-productid", productId}
+    })) {
+
     if (Model.ProductAttributes != null) {
         foreach (var productAttributeShape in Model.ProductAttributes) {
             @Display(productAttributeShape)

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Nwazet.Commerce.Models;
@@ -91,8 +92,8 @@ namespace Nwazet.Commerce.Controllers {
                         DisplayName: _contentManager.GetItemMetadata(m).DisplayText,
                         Name: m.Name,
                         ShippingCompany: m.ShippingCompany,
-                        IncludedShippingAreas: m.IncludedShippingAreas == null ? null : m.IncludedShippingAreas.Split(','),
-                        ExcludedShippingAreas: m.ExcludedShippingAreas == null ? null : m.ExcludedShippingAreas.Split(',')
+                        IncludedShippingAreas: m.IncludedShippingAreas == null ? null : m.IncludedShippingAreas.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries),
+                        ExcludedShippingAreas: m.ExcludedShippingAreas == null ? null : m.ExcludedShippingAreas.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                              ))
                 .Where(x => x.Price >= 0)
                 .ToList();

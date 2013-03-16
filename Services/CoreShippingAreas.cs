@@ -8,6 +8,7 @@ namespace Nwazet.Commerce.Services {
         private readonly ShippingArea[] _areas =
             new[] {
                 new ShippingArea {Id = "world", Name = "World"},
+                new ShippingArea {Id = "canada", Name = "Canada"}, 
                 new ShippingArea {Id = "us", Name = "All US states"},
                 new ShippingArea {Id = "us-continental", Name = "All US states except Alaska and Hawaii"}
             };

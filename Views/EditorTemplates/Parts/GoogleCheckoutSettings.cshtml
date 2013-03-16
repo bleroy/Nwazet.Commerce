@@ -5,9 +5,9 @@
     <label class="sub" for="@Html.IdFor(m => m.AnalyticsId)">@T("Google Analytics Id")</label><br />
     @Html.TextBoxFor(m => m.AnalyticsId, new { @class = "text" })<br />
     <label class="sub" for="@Html.IdFor(m => m.Currency)">@T("Currency")</label><br />
-    @Html.TextBoxFor(m => m.Currency, new { @class = "text" })<br />
+    @Html.TextBoxFor(m => m.Currency, new { @class = "text-small" })<br />
     <label class="sub" for="@Html.IdFor(m => m.WeightUnit)">@T("Shipping Weight Unit")</label><br />
-    @Html.TextBoxFor(m => m.WeightUnit, new { @class = "text" })<br />
+    @Html.TextBoxFor(m => m.WeightUnit, new { @class = "text-small" })<br />
     
     @Html.CheckBoxFor(m => m.UseSandbox)
     <label class="sub" for="@Html.IdFor(m => m.UseSandbox)">@T("Use Sandbox")</label><br />
