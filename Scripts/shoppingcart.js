@@ -96,17 +96,19 @@
                         var index = name.slice(18, name.length - 5),
                             value = $.grep(addFormData, function(element) {
                                 return element.name == "productattributes[" + index + "].Value";
-                            })[0].value,
-                            attributePrefix = prefix + "AttributeIdsToValues[" + attrIndex++ + "].";
-                        minicartForm
-                            .append($(inputTag).attr({
-                                name: attributePrefix + "Key",
-                                value: this.value
-                            }))
-                            .append($(inputTag).attr({
-                                name: attributePrefix + "Value",
-                                value: value
-                            }));
+                            })[0].value;
+                        if (value != "__none__") {
+                            var attributePrefix = prefix + "AttributeIdsToValues[" + attrIndex++ + "].";
+                            minicartForm
+                                .append($(inputTag).attr({
+                                    name: attributePrefix + "Key",
+                                    value: this.value
+                                }))
+                                .append($(inputTag).attr({
+                                    name: attributePrefix + "Value",
+                                    value: value
+                                }));
+                        }
                     }
                 });
                 miniLoad(minicartForm);
