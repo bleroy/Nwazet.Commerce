@@ -13,7 +13,7 @@ namespace Nwazet.Commerce.Menus {
             T = NullLocalizer.Instance;
         }
 
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         public void GetNavigation(NavigationBuilder builder) {
             builder
