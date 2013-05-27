@@ -1,0 +1,94 @@
+﻿@model Nwazet.Commerce.Models.UspsShippingMethodPart
+@using Newtonsoft.Json
+@using Nwazet.Commerce.Models
+@using Nwazet.Commerce.Services
+<fieldset><legend></legend>
+    <label class="sub" for="@Html.IdFor(m => m.Name)">@T("Method Name")</label><br />
+    @Html.TextBoxFor(m => m.Name, new { @class = "text" })<br />
+    <span class="hint">@T("The technical name of the shipping method (this is different from the title, which is the method's friendly name that will be displayed to end-users).")</span>
+</fieldset>
+<fieldset><legend>@T("Service")</legend>
+    @Html.CheckBoxFor(m => m.International, new {@class = "monitor-container"})<label class="forcheckbox" for="@Html.IdFor(m => m.International)">@T("International shipping")</label>
+    <label for="@Html.IdFor(m => m.ServiceNameValidationExpression)">@T("Service name validation")</label>
+    @Html.TextBoxFor(m => m.ServiceNameValidationExpression)<br />
+    <span class="hint">@T("Services returned by USPS will be filtered to keep only the ones that match the above regular expression. Example: \"First-Class Package\". Leave empty to keep all services.")</span>
+    <label for="@Html.IdFor(m => m.ServiceNameExclusionExpression)">@T("Service name exclusion")</label>
+    @Html.TextBoxFor(m => m.ServiceNameExclusionExpression)<br />
+    <span class="hint">@T("Services returned by USPS will be filtered to keep only the ones that don't satisfy the above regular expression. Example: \"(DVD|Video|Library)\". Leave empty to keep all services.")</span>
+</fieldset>
+<fieldset><legend>@T("Adjustments")</legend>
+    <label for="@Html.IdFor(m => m.Markup)">@T("Markup")</label>
+    $@Html.TextBoxFor(m => m.Markup, new { @class = "text-small", type = "number", step = "0.01", min = "0" })<br />
+    <span class="hint">@T("The markup will be added to the price returned by the USPS service. It usually represents the price of the packaging.")</span>
+    <label for="@Html.IdFor(m => m.WeightPaddingInOunces)">@T("Weight padding (ounces)")</label>
+    @Html.TextBoxFor(m => m.WeightPaddingInOunces, new { @class = "text-small", type = "number", step = "0.1", min = "0" })&nbsp;@T("oz")<br />
+    <span class="hint">@T("The weight padding will be added to the total weight of the products to ship. It usually represents the weight of the packaging.")</span>
+</fieldset>
+<fieldset><legend>@T("Package")</legend>
+    <label for="@Html.IdFor(m => m.Container)">@T("USPS container type")</label>
+    @Html.DropDownListFor(m => m.Container, UspsContainer.List.Select(kvp => new SelectListItem {
+        Selected = Model.Container == kvp.Key,
+        Value = kvp.Key,
+        Text = kvp.Value.Name
+    }))
+    @using (Script.Foot()) {
+        <script type="text/javascript">
+            $(function() {
+                var uspsContainers = @Html.Raw(JsonConvert.SerializeObject(
+                                         UspsContainer.List.ToDictionary(c => c.Key, c => new {
+                                             uspsName = c.Value.UspsName,
+                                             large = c.Value.Size == UspsContainer.ContainerSize.Large,
+                                             international = (c.Value.Destination & UspsContainer.ContainerDestination.International) != 0,
+                                             domestic = (c.Value.Destination & UspsContainer.ContainerDestination.Domestic) != 0
+                                         }))),
+                    containersDropDown = $("#@Html.IdFor(m => m.Container)"),
+                    internationalCheckbox = $("#@Html.IdFor(m => m.International)"),
+                    widthBox = $("#@Html.IdFor(m => m.WidthInInches)"),
+                    heightBox = $("#@Html.IdFor(m => m.HeightInInches)"),
+                    lengthBox = $("#@Html.IdFor(m => m.LengthInInches)"),
+                    rebuildContainers = function() {
+                        var isLarge = +widthBox.val() > 12 || +heightBox.val() > 12 || +lengthBox.val() > 12,
+                            isInternational = internationalCheckbox.is(':checked'),
+                            currentContainer = containersDropDown.val();
+                        containersDropDown.empty();
+                        $.each(uspsContainers, function(key, value) {
+                            if ((value.international && isInternational) || (value.domestic && !isInternational) && value.large == isLarge) {
+                                containersDropDown.append($("<option></option>")
+                                    .html(key)
+                                    .attr({
+                                        value: key,
+                                        selected: currentContainer == key
+                                    }));
+                            }
+                        });
+                    };
+                $(".monitor-container").on("change", rebuildContainers);
+                rebuildContainers();
+            });
+        </script>
+    }
+    <div>
+        <label for="@Html.IdFor(m => m.WidthInInches)">@T("Package dimensions (inches)")</label>
+        @T("W:")&nbsp;@Html.TextBoxFor(m => m.WidthInInches, new {@class="text-small monitor-container", type="number", min="1"}) x
+        @T("L:")&nbsp;@Html.TextBoxFor(m => m.LengthInInches, new {@class="text-small monitor-container", type="number", min="1"}) x
+        @T("H:")&nbsp;@Html.TextBoxFor(m => m.HeightInInches, new {@class="text-small monitor-container", type="number", min="1"})
+    </div>
+    <div>
+        <label for="@Html.IdFor(m => m.MaximumWeightInOunces)">@T("Maximum package weight (ounces)")</label>
+        @Html.TextBoxFor(m => m.MaximumWeightInOunces, new { @class = "text-small", type = "number", step = "0.1", min = "0" })&nbsp;@T("oz")
+    </div>
+    <div>
+        <label class="sub" for="@Html.IdFor(m => m.Size)">@T("Item Size")</label>
+        @Html.TextBoxFor(m => m.Size, new { @class = "text-small" })
+        <label class="sub" for="@Html.IdFor(m => m.Priority)">@T("Priority")</label>
+        @Html.TextBoxFor(m => m.Priority, new { @class = "text-small", type="number", step="1" })<br />
+        <span class="hint">@T("Specify the size (usually S, M, L or XL) for which this shipping price is valid. Any product that matches this size will trigger the shipping method, unless another of higher priority takes precedence. Leave empty to define the default size-based shipping method.")</span>
+    </div>
+</fieldset>
+<fieldset><legend>@T("Shipping options")</legend>
+    @Html.CheckBoxFor(m => m.RegisteredMail)<label class="forcheckbox" for="@Html.IdFor(m => m.RegisteredMail)">@T("Registered mail")</label>
+    @Html.CheckBoxFor(m => m.Insurance)<label class="forcheckbox" for="@Html.IdFor(m => m.Insurance)">@T("Insurance")</label>
+    @Html.CheckBoxFor(m => m.ReturnReceipt)<label class="forcheckbox" for="@Html.IdFor(m => m.ReturnReceipt)">@T("Return receipt")</label>
+    @Html.CheckBoxFor(m => m.CertificateOfMailing)<label class="forcheckbox" for="@Html.IdFor(m => m.CertificateOfMailing)">@T("Certificate of mailing")</label>
+    @Html.CheckBoxFor(m => m.ElectronicConfirmation)<label class="forcheckbox" for="@Html.IdFor(m => m.ElectronicConfirmation)">@T("Electronic confirmation")</label>
+</fieldset>

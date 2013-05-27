@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
+using Nwazet.Commerce.Helpers;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.ViewModels;
 using Orchard;
@@ -105,83 +106,34 @@ namespace Nwazet.Commerce.Drivers {
         }
 
         protected override void Importing(DiscountPart part, ImportContentContext context) {
-            var name = context.Attribute(part.PartDefinition.Name, "Name");
-            if (!String.IsNullOrWhiteSpace(name)) {
-                part.Name = name;
-            }
-            var discountString = context.Attribute(part.PartDefinition.Name, "Discount");
-            if (!String.IsNullOrWhiteSpace(discountString)) {
-                part.Record.Discount = discountString;
-            }
-            var startDateString = context.Attribute(part.PartDefinition.Name, "StartDate");
-            if (String.IsNullOrWhiteSpace(startDateString)) {
-                part.StartDate = null;
-            }
-            else {
-                DateTime startDate;
-                if (DateTime.TryParse(startDateString, out startDate)) {
-                    part.StartDate = startDate;
-                }
-            }
-            var endDateString = context.Attribute(part.PartDefinition.Name, "EndDate");
-            if (String.IsNullOrWhiteSpace(endDateString)) {
-                part.EndDate = null;
-            }
-            else {
-                DateTime endDate;
-                if (DateTime.TryParse(endDateString, out endDate)) {
-                    part.EndDate = endDate;
-                }
-            }
-            var startQuantityString = context.Attribute(part.PartDefinition.Name, "StartQuantity");
-            if (String.IsNullOrWhiteSpace(startQuantityString)) {
-                part.StartQuantity = null;
-            }
-            else {
-                int startQuantity;
-                if (int.TryParse(startQuantityString, out startQuantity)) {
-                    part.StartQuantity = startQuantity;
-                }
-            }
-            var endQuantityString = context.Attribute(part.PartDefinition.Name, "EndQuantity");
-            if (String.IsNullOrWhiteSpace(endQuantityString)) {
-                part.EndQuantity = null;
-            }
-            else {
-                int endQuantity;
-                if (int.TryParse(endQuantityString, out endQuantity)) {
-                    part.EndQuantity = endQuantity;
-                }
-            }
-            part.Record.Roles = context.Attribute(part.PartDefinition.Name, "Roles");
-            part.Pattern = context.Attribute(part.PartDefinition.Name, "Pattern") ?? "";
-            part.Comment = context.Attribute(part.PartDefinition.Name, "Comment") ?? "";
+            var el = context.Data.Element(typeof(DiscountPart).Name);
+            if (el == null) return;
+            el.With(part)
+              .FromAttr(p => p.Name)
+              .FromAttr(p => p.StartDate)
+              .FromAttr(p => p.EndDate)
+              .FromAttr(p => p.StartQuantity)
+              .FromAttr(p => p.EndQuantity)
+              .FromAttr(p => p.Pattern)
+              .FromAttr(p => p.Comment)
+              .With(part.Record)
+              .FromAttr(r => r.Discount)
+              .FromAttr(r => r.Roles);
         }
 
         protected override void Exporting(DiscountPart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Name", part.Name);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Discount", part.Record.Discount);
-            if (part.StartDate != null) {
-                context.Element(part.PartDefinition.Name).SetAttributeValue("StartDate", part.StartDate.ToString());
-            }
-            if (part.EndDate != null) {
-                context.Element(part.PartDefinition.Name).SetAttributeValue("EndDate", part.EndDate.ToString());
-            }
-            if (part.StartQuantity != null) {
-                context.Element(part.PartDefinition.Name).SetAttributeValue("StartQuantity", part.StartQuantity.ToString());
-            }
-            if (part.EndQuantity != null) {
-                context.Element(part.PartDefinition.Name).SetAttributeValue("EndQuantity", part.EndQuantity.ToString());
-            }
-            if (!String.IsNullOrWhiteSpace(part.Record.Roles)) {
-                context.Element(part.PartDefinition.Name).SetAttributeValue("Roles", part.Record.Roles);
-            }
-            if (!String.IsNullOrWhiteSpace(part.Pattern)) {
-                context.Element(part.PartDefinition.Name).SetAttributeValue("Pattern", part.Pattern);
-            }
-            if (!String.IsNullOrWhiteSpace(part.Comment)) {
-                context.Element(part.PartDefinition.Name).SetAttributeValue("Comment", part.Comment);
-            }
+            context.Element(typeof (DiscountPart).Name)
+                   .With(part)
+                   .ToAttr(p => p.Name)
+                   .ToAttr(p => p.StartDate)
+                   .ToAttr(p => p.EndDate)
+                   .ToAttr(p => p.StartQuantity)
+                   .ToAttr(p => p.EndQuantity)
+                   .ToAttr(p => p.Pattern)
+                   .ToAttr(p => p.Comment)
+                   .With(part.Record)
+                   .ToAttr(r => r.Discount)
+                   .ToAttr(r => r.Roles);
         }
     }
 }

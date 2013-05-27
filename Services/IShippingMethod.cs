@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Nwazet.Commerce.Models;
+using Orchard;
 using Orchard.ContentManagement;
 
 namespace Nwazet.Commerce.Services {
@@ -11,6 +12,11 @@ namespace Nwazet.Commerce.Services {
         string ExcludedShippingAreas { get; set; }
 
         // returns -1 if shipping method does not apply to the current cart
-        double ComputePrice(IEnumerable<ShoppingCartQuantityProduct> productQuantities, IEnumerable<IShippingMethod> shippingMethods);
+        IEnumerable<ShippingOption> ComputePrice(
+            IEnumerable<ShoppingCartQuantityProduct> productQuantities,
+            IEnumerable<IShippingMethod> shippingMethods,
+            string country,
+            string zipCode,
+            IWorkContextAccessor workContextAccessor);
     }
 }

@@ -1,4 +1,6 @@
 @using Nwazet.Commerce.ViewModels
+@using Orchard.ContentManagement
+@using Orchard.Core.Title.Models
 @using Orchard.Utility.Extensions
 @model ShippingMethodIndexViewModel
 
@@ -41,7 +43,7 @@
             @foreach (var method in Model.ShippingMethods) { 
                 <tr>
                     <td>
-                        @Html.ItemEditLinkWithReturnUrl(method.Name, method) 
+                        @Html.ItemEditLinkWithReturnUrl(method.As<TitlePart>().Title, method) 
                     </td>
                     <td>
                         @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(method, new {returnUrl}), new {itemprop = "RemoveUrl UnsafeUrl"})

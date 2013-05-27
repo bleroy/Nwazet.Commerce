@@ -13,5 +13,9 @@ namespace Nwazet.Commerce.Tests.Stubs {
         public List<ShoppingCartItem> Retrieve() {
             return _cartItems;
         }
+
+        public string Country { get; set; }
+        public string ZipCode { get; set; }
+        public ShippingOption ShippingOption { get; set; }
     }
 }

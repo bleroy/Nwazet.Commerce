@@ -30,6 +30,21 @@ namespace Nwazet.Commerce.Models {
             get { return ItemsInternal.AsReadOnly(); }
         }
 
+        public string Country {
+            get { return _cartStorage.Country; }
+            set { _cartStorage.Country = value; }
+        }
+
+        public string ZipCode {
+            get { return _cartStorage.ZipCode; }
+            set { _cartStorage.ZipCode = value; }
+        }
+
+        public ShippingOption ShippingOption {
+            get { return _cartStorage.ShippingOption; }
+            set { _cartStorage.ShippingOption = value; }
+        }
+
         private List<ShoppingCartItem> ItemsInternal {
             get {
                 return _cartStorage.Retrieve();

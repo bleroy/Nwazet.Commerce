@@ -7,7 +7,7 @@ namespace Nwazet.Commerce.Services {
         dynamic BuildCheckoutButtonShape(
             IEnumerable<dynamic> productShapes, 
             IEnumerable<ShoppingCartQuantityProduct> productQuantities,
-            IEnumerable<dynamic> shippingMethodShapes,
+            IEnumerable<ShippingOption> shippingOptions,
             IEnumerable<string> custom 
             );
     }

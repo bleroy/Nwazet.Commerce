@@ -24,7 +24,7 @@ namespace Nwazet.Commerce.Menus {
                     .LinkToFirstChild(true)
 
                     .Add(subItem => subItem
-                        .Caption(T("Shipping Methods"))
+                        .Caption(T("Shipping"))
                         .Position("2.3")
                         .Action("Index", "ShippingAdmin", new { area = "Nwazet.Commerce" })
                     )

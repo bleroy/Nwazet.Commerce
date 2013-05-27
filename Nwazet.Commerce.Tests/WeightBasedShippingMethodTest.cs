@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Linq;
+using NUnit.Framework;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
 using Nwazet.Commerce.Tests.Stubs;
@@ -13,7 +14,9 @@ namespace Nwazet.Commerce.Tests {
                 new ShoppingCartQuantityProduct(2, new ProductStub {Weight = 1, ShippingCost = 0})
             };
             var shippingMethod = Helpers.BuildWeightBasedShippingMethod(price: 3);
-            Assert.AreEqual(0, shippingMethod.ComputePrice(cart, new IShippingMethod[] {shippingMethod}));
+            var prices = shippingMethod.ComputePrice(cart, new IShippingMethod[] {shippingMethod}, null, null, null).ToList();
+            Assert.That(prices.Count, Is.EqualTo(1));
+            Assert.That(prices.First().Price, Is.EqualTo(0));
         }
 
         [Test]
@@ -23,7 +26,9 @@ namespace Nwazet.Commerce.Tests {
                 new ShoppingCartQuantityProduct(2, new ProductStub {Weight = 1, ShippingCost = 20, IsDigital = true}) 
             };
             var shippingMethod = Helpers.BuildWeightBasedShippingMethod(price: 3);
-            Assert.AreEqual(0, shippingMethod.ComputePrice(cart, new IShippingMethod[] { shippingMethod }));
+            var prices = shippingMethod.ComputePrice(cart, new IShippingMethod[] { shippingMethod }, null, null, null).ToList();
+            Assert.That(prices.Count, Is.EqualTo(1));
+            Assert.That(prices.First().Price, Is.EqualTo(0));
         }
 
         [Test]
@@ -33,7 +38,7 @@ namespace Nwazet.Commerce.Tests {
                 new ShoppingCartQuantityProduct(2, new ProductStub {Weight = 1})
             };
             var shippingMethod = Helpers.BuildWeightBasedShippingMethod(price: 3, minimumWeight: 5);
-            Assert.AreEqual(-1, shippingMethod.ComputePrice(cart, new IShippingMethod[] { shippingMethod }));
+            Assert.IsFalse(shippingMethod.ComputePrice(cart, new IShippingMethod[] { shippingMethod }, null, null, null).Any());
         }
 
         [Test]
@@ -43,7 +48,7 @@ namespace Nwazet.Commerce.Tests {
                 new ShoppingCartQuantityProduct(2, new ProductStub {Weight = 1})
             };
             var shippingMethod = Helpers.BuildWeightBasedShippingMethod(price: 3, maximumWeight: 3);
-            Assert.AreEqual(-1, shippingMethod.ComputePrice(cart, new IShippingMethod[] { shippingMethod }));
+            Assert.IsFalse(shippingMethod.ComputePrice(cart, new IShippingMethod[] { shippingMethod }, null, null, null).Any());
         }
 
         [Test]
@@ -53,7 +58,9 @@ namespace Nwazet.Commerce.Tests {
                 new ShoppingCartQuantityProduct(2, new ProductStub {Weight = 2})
             };
             var shippingMethod = Helpers.BuildWeightBasedShippingMethod(price: 3, minimumWeight: 5, maximumWeight: 10);
-            Assert.AreEqual(3, shippingMethod.ComputePrice(cart, new IShippingMethod[] { shippingMethod }));
+            var prices = shippingMethod.ComputePrice(cart, new IShippingMethod[] { shippingMethod }, null, null, null).ToList();
+            Assert.That(prices.Count, Is.EqualTo(1));
+            Assert.That(prices.First().Price, Is.EqualTo(3));
         }
 
         [Test]
@@ -63,7 +70,9 @@ namespace Nwazet.Commerce.Tests {
                 new ShoppingCartQuantityProduct(2, new ProductStub {Weight = 1, ShippingCost = 4})
             };
             var shippingMethod = Helpers.BuildWeightBasedShippingMethod(price: 3);
-            Assert.AreEqual(11, shippingMethod.ComputePrice(cart, new IShippingMethod[] { shippingMethod }));
+            var prices = shippingMethod.ComputePrice(cart, new IShippingMethod[] { shippingMethod }, null, null, null).ToList();
+            Assert.That(prices.Count, Is.EqualTo(1));
+            Assert.That(prices.First().Price, Is.EqualTo(11));
         }
 
         [Test]
@@ -75,7 +84,9 @@ namespace Nwazet.Commerce.Tests {
                 new ShoppingCartQuantityProduct(3, new ProductStub {Weight = 3})
             };
             var shippingMethod = Helpers.BuildWeightBasedShippingMethod(price: 3, minimumWeight: 10, maximumWeight: 11);
-            Assert.AreEqual(8 + 3, shippingMethod.ComputePrice(cart, new IShippingMethod[] { shippingMethod }));
+            var prices = shippingMethod.ComputePrice(cart, new IShippingMethod[] { shippingMethod }, null, null, null).ToList();
+            Assert.That(prices.Count, Is.EqualTo(1));
+            Assert.That(prices.First().Price, Is.EqualTo(8 + 3));
         }
 
         [Test]
@@ -87,7 +98,9 @@ namespace Nwazet.Commerce.Tests {
                 new ShoppingCartQuantityProduct(3, new ProductStub {Weight = 3})
             };
             var shippingMethod = Helpers.BuildWeightBasedShippingMethod(price: 3);
-            Assert.AreEqual(3, shippingMethod.ComputePrice(cart, new IShippingMethod[] { shippingMethod }));
+            var prices = shippingMethod.ComputePrice(cart, new IShippingMethod[] { shippingMethod }, null, null, null).ToList();
+            Assert.That(prices.Count, Is.EqualTo(1));
+            Assert.That(prices.First().Price, Is.EqualTo(3));
         }
     }
 }

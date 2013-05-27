@@ -1,0 +1,12 @@
+﻿@using Nwazet.Commerce.Services
+<fieldset class="shipping-info">
+    <legend>@T("In order for us to estimate your shipping costs, please let us know where your package should be sent.")</legend>
+    @Html.Label("Country", T("Destination country"))
+    @Html.DropDownList("Country", Country.List.Select(c => new SelectListItem {
+        Text = c,
+        Selected = c == Model.Country
+    }))
+    @Html.Label("ZipCode", T("Zip code"))
+    @Html.TextBox("ZipCode", (string)Model.ZipCode)
+</fieldset>
+<button type="submit" class="estimate-shipping">@T("Estimate shipping")</button>

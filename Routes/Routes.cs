@@ -97,6 +97,20 @@ namespace Nwazet.Commerce.Routes {
                             {"area", "Nwazet.Commerce"}
                         },
                         new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Route = new Route(
+                        "admin/usps/price",
+                        new RouteValueDictionary {
+                            {"area", "Nwazet.Commerce"},
+                            {"controller", "UspsAdmin"},
+                            {"action", "Price"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Nwazet.Commerce"}
+                        },
+                        new MvcRouteHandler())
                 }
             };
         }

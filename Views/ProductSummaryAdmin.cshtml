@@ -1,5 +1,5 @@
 ﻿@using Nwazet.Commerce.Models
-@{Script.Include("inventory.js");}
+@{Script.Include("inventory.js", "inventory.min.js");}
 <div class="price">@T("Price:") <span class="value">@Model.Price.ToString("C")</span></div>
 <div class="sku">@T("Sku:") <span class="value">@Model.Sku</span></div>
 @if (Model.Inventory != null && !Model.ContentPart.ContentItem.Has(typeof(BundlePart))) {

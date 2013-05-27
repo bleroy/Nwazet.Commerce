@@ -12,7 +12,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nwazet.Commerce</RootNamespace>
     <AssemblyName>Nwazet.Commerce</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -30,6 +30,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -39,9 +40,14 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -64,13 +70,11 @@
     <Content Include="Content\menu.nwazet-commerce.png" />
     <Content Include="LICENSE.txt" />
     <Content Include="Scripts\inventory.js" />
-    <Content Include="Scripts\referral.js">
-      <Generator>GoogleClosureCompiler</Generator>
-      <LastGenOutput>referral.min.js</LastGenOutput>
+    <Content Include="Scripts\inventory.min.js">
+      <DependentUpon>inventory.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\referral.js" />
     <Content Include="Scripts\referral.min.js">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
       <DependentUpon>referral.js</DependentUpon>
     </Content>
     <Content Include="Scripts\shoppingcart.js">
@@ -113,12 +117,15 @@
   <ItemGroup>
     <Compile Include="Controllers\BundleAdminController.cs" />
     <Compile Include="Controllers\AttributesAdminController.cs" />
+    <Compile Include="Controllers\UspsAdminController.cs" />
     <Compile Include="Controllers\PromotionAdminController.cs" />
     <Compile Include="Controllers\ProductAdminController.cs" />
     <Compile Include="Controllers\ShippingAdminController.cs" />
     <Compile Include="Controllers\ShoppingCartController.cs" />
     <Compile Include="Controllers\StripeController.cs" />
     <Compile Include="Drivers\BundlePartDriver.cs" />
+    <Compile Include="Drivers\UspsShippingMethodPartDriver.cs" />
+    <Compile Include="Drivers\UspsSettingsPartDriver.cs" />
     <Compile Include="Drivers\StripeSettingsPartDriver.cs" />
     <Compile Include="Drivers\ProductAttributesPartDriver.cs" />
     <Compile Include="Drivers\ProductAttributePartDriver.cs" />
@@ -132,12 +139,15 @@
     <Compile Include="Handlers\BundlePartHandler.cs" />
     <Compile Include="Handlers\AttributePartHandler.cs" />
     <Compile Include="Handlers\AttributesPartHandler.cs" />
+    <Compile Include="Handlers\UspsShippingMethodPartHandler.cs" />
+    <Compile Include="Handlers\UspsSettingsPartHandler.cs" />
     <Compile Include="Handlers\StripeSettingsPartHandler.cs" />
     <Compile Include="Handlers\DiscountPartHandler.cs" />
     <Compile Include="Handlers\SizeBasedShippingMethodPartHandler.cs" />
     <Compile Include="Handlers\WeightBasedShippingMethodPartHandler.cs" />
     <Compile Include="Handlers\GoogleCheckoutSettingsPartHandler.cs" />
     <Compile Include="Handlers\ProductPartHandler.cs" />
+    <Compile Include="Helpers\XmlHelper.cs" />
     <Compile Include="Menus\AttributeAdminMenu.cs" />
     <Compile Include="Menus\PromotionAdminMenu.cs" />
     <Compile Include="Menus\ProductAdminMenu.cs" />
@@ -145,11 +155,19 @@
     <Compile Include="Migrations\BundleMigrations.cs" />
     <Compile Include="Migrations\CommerceMigrations.cs" />
     <Compile Include="Migrations\AttributesMigrations.cs" />
+    <Compile Include="Migrations\UspsMigrations.cs" />
     <Compile Include="Migrations\StripeMigrations.cs" />
     <Compile Include="Migrations\DiscountMigrations.cs" />
     <Compile Include="Migrations\ShippingMigrations.cs" />
     <Compile Include="Migrations\GoogleCheckoutMigrations.cs" />
     <Compile Include="Models\Address.cs" />
+    <Compile Include="Models\UspsException.cs" />
+    <Compile Include="Models\UspsShippingMethodPartRecord.cs" />
+    <Compile Include="Models\UspsSettingsPart.cs" />
+    <Compile Include="Models\UspsSettingsPartRecord.cs" />
+    <Compile Include="Models\ShippingOption.cs" />
+    <Compile Include="Models\UspsShippingOptionList.cs" />
+    <Compile Include="Models\UspsShippingMethodPart.cs" />
     <Compile Include="Models\StripeSettingsPart.cs" />
     <Compile Include="Models\StripeSettingsPartRecord.cs" />
     <Compile Include="Models\ProductAttributesPart.cs" />
@@ -174,7 +192,6 @@
     <Compile Include="Models\ProductPart.cs" />
     <Compile Include="Models\ProductPartRecord.cs" />
     <Compile Include="Models\ShippingArea.cs" />
-    <Compile Include="Models\ShippingMethodAndCost.cs" />
     <Compile Include="Models\ShoppingCart.cs" />
     <Compile Include="Models\ShoppingCartItem.cs" />
     <Compile Include="Models\ShoppingCartQuantityProduct.cs" />
@@ -182,6 +199,13 @@
     <Compile Include="Routes\Routes.cs" />
     <Compile Include="Services\AddressFormatter.cs" />
     <Compile Include="Services\BundleService.cs" />
+    <Compile Include="Services\Country.cs" />
+    <Compile Include="Services\IUspsService.cs" />
+    <Compile Include="Services\IUspsWebService.cs" />
+    <Compile Include="Services\ShippingService.cs" />
+    <Compile Include="Services\UspsContainer.cs" />
+    <Compile Include="Services\UspsService.cs" />
+    <Compile Include="Services\UspsShippingMethodProvider.cs" />
     <Compile Include="Services\IAddressFormatter.cs" />
     <Compile Include="Services\StripeService.cs" />
     <Compile Include="Services\IStripeService.cs" />
@@ -199,12 +223,12 @@
     <Compile Include="Services\IExtraCartInfoProvider.cs" />
     <Compile Include="Services\IShippingMethodProvider.cs" />
     <Compile Include="Services\ReferrerCartInfoProvider.cs" />
-    <Compile Include="Services\ShippingMethodFilter.cs" />
     <Compile Include="Services\ICheckoutService.cs" />
     <Compile Include="Services\IGoogleCheckoutService.cs" />
     <Compile Include="Services\GoogleCheckoutService.cs" />
     <Compile Include="Services\IShippingAreaProvider.cs" />
     <Compile Include="Services\IShippingMethod.cs" />
+    <Compile Include="Services\UspsWebService.cs" />
     <Compile Include="Services\WeightBasedShippingMethodProvider.cs" />
     <Compile Include="Tokens\ProductTokens.cs" />
     <Compile Include="ViewModels\AttributesIndexViewModel.cs" />
@@ -214,7 +238,6 @@
     <Compile Include="ViewModels\PromotionIndexViewModel.cs" />
     <Compile Include="ViewModels\ShippingMethodIndexViewModel.cs" />
     <Compile Include="ViewModels\StripeCheckoutViewModel.cs" />
-    <Compile Include="ViewModels\StripeShippingViewModel.cs" />
     <Compile Include="ViewModels\UpdateShoppingCartItemViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -249,6 +272,12 @@
     <Content Include="Views\TitleWithLink.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Scripts\inventory.min.js.map">
+      <DependentUpon>inventory.js</DependentUpon>
+    </None>
+    <None Include="Scripts\referral.min.js.map">
+      <DependentUpon>referral.js</DependentUpon>
+    </None>
     <None Include="Scripts\shoppingcart.min.js.map">
       <DependentUpon>shoppingcart.js</DependentUpon>
     </None>
@@ -257,10 +286,14 @@
     <Content Include="Views\EditorTemplates\Parts\ProductAttributes.cshtml" />
     <Content Include="Views\Stripe.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\StripeSettings.cshtml" />
-    <Content Include="Views\ShoppingCartReadOnly.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\UspsShippingMethod.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\UspsSettings.cshtml" />
     <None Include="Views\Parts\ProductAttributes.cshtml" />
-    <None Include="Views\Stripe\Checkout.cshtml" />
+    <None Include="Views\ShippingInfoForm.cshtml" />
+    <None Include="Views\ShippingOptions.cshtml" />
+    <None Include="Views\Stripe\Pay.cshtml" />
     <None Include="Views\Stripe\Ship.cshtml" />
+    <None Include="Views\UspsShippingTestForm.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

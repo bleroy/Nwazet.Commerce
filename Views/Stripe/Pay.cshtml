@@ -1,6 +1,6 @@
 ﻿@model Nwazet.Commerce.ViewModels.StripeCheckoutViewModel
 @{
-    var title = Layout.Title = T("Checkout with Stripe - 1: Credit Card Information");
+    var title = Layout.Title = T("Checkout with Stripe - 3: Credit Card Information");
     Script.Require("jQuery");
     Script.Include("https://js.stripe.com/v1/");
     using (Script.Foot()) {
@@ -92,5 +92,5 @@
         <button class="submit-button">@T("Next >")</button>
     </div>
 </div>
-@using (Html.BeginFormAntiForgeryPost(Url.Action("Ship", "Stripe", new {area = "Nwazet.Commerce"}), FormMethod.Post, new {@id="token-form"})) {
+@using (Html.BeginFormAntiForgeryPost(Url.Action("Pay", "Stripe", new {area = "Nwazet.Commerce"}), FormMethod.Post, new {@id="token-form"})) {
 }

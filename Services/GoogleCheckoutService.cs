@@ -41,14 +41,14 @@ namespace Nwazet.Commerce.Services {
         public dynamic BuildCheckoutButtonShape(
             IEnumerable<dynamic> productShapes,
             IEnumerable<ShoppingCartQuantityProduct> productQuantities,
-            IEnumerable<dynamic> shippingMethodShapes,
+            IEnumerable<ShippingOption> shippingOptions,
             IEnumerable<string> custom) {
 
             var checkoutSettings = GetSettings();
 
             return _shapeFactory.GoogleCheckout(
                 CartItems: productShapes,
-                ShippingMethods: shippingMethodShapes,
+                ShippingOptions: shippingOptions,
                 Custom: custom,
                 Currency: checkoutSettings.Currency,
                 WeightUnit: checkoutSettings.WeightUnit,

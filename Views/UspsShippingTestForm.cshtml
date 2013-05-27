@@ -1,0 +1,88 @@
+﻿@using Nwazet.Commerce.Models
+@using Nwazet.Commerce.Services
+@using Orchard.ContentManagement
+<fieldset style="border: solid 1px #bdbcbc;padding: 12px;position:relative;">
+    <legend>@T("Test the shipping method")</legend>
+    <div>
+        <label for="usps_test_weight">@T("Package content weight (ounces)")</label>
+        <input id="usps_test_weight" class="text-small" type="number" value="1" min="0" step="0.1"/>&nbsp;@T("oz")
+    </div>
+    <div>
+        <label for="usps_test_value">@T("Package value (dollars)")</label>
+        <input id="usps_test_value" class="text-small" type="number" value="10" min="0" step="0.01"/>&nbsp;@T("$")
+    </div>
+    <div>
+        <label for="usps_test_country">@T("Destination country")</label>
+        <select id="usps_test_country">
+            @foreach (var country in Country.List) {
+                <option>@country</option>
+            }
+        </select>
+        <label for="usps_test_destinationzip">@T("Zip code (for US)")</label>
+        <input id="usps_test_destinationzip" class="text-small" value="90220"/>
+    </div>
+    <div>
+        <button id="usps_test_execute">@T("Test")</button>
+    </div>
+    <div id="usps_test_result"></div>
+</fieldset>
+@{
+    var uspsSettings = Model.UspsSettings as UspsSettingsPart;
+    Script.Require("jQuery");
+    using (Script.Foot()) {
+        <script type="text/javascript">
+            $(function () {
+                $("#usps_test_execute")
+                    .on("click", function (e) {
+                        var resultOutput = $("#usps_test_result").empty();
+                        $.post(
+                            "@Url.Action("Price", "UspsAdmin", new {area = "Nwazet.Commerce"})",
+                            {
+                                __RequestVerificationToken: $("input[name='__RequestVerificationToken']").val(),
+                                userId: "@uspsSettings.UserId",
+                                weightInOunces: $("#usps_test_weight").val(),
+                                paddingWeight: $("[name$='WeightPaddingInOunces']").val(),
+                                valueOfContents: $("#usps_test_value").val(),
+                                container: $("select[name$='Container']").val(),
+                                serviceNameValidationExpression: $("[name$='ServiceNameValidationExpression']").val(),
+                                serviceNameExclusionExpression: $("[name$='ServiceNameExclusionExpression']").val(),
+                                country: $("#usps_test_country").val(),
+                                lengthInInches: $("[name$='LengthInInches']").val(),
+                                widthInInches: $("[name$='WidthInInches']").val(),
+                                heightInInches: $("[name$='HeightInInches']").val(),
+                                originZip: "@uspsSettings.OriginZip",
+                                destinationZip: $("#usps_test_destinationzip").val(),
+                                commercialPrices: @uspsSettings.CommercialPrices.ToString().ToLowerInvariant(),
+                                commercialPlusPrices: @uspsSettings.CommercialPlusPrices.ToString().ToLowerInvariant(),
+                                registeredMail: !!$("input[type='checkbox'][name$='RegisteredMail']").attr("checked"),
+                                insurance: !!$("input[type='checkbox'][name$='Insurance']").attr("checked"),
+                                returnReceipt: !!$("input[type='checkbox'][name$='ReturnReceipt']").attr("checked"),
+                                certificateOfMailing: !!$("input[type='checkbox'][name$='CertificateOfMailing']").attr("checked"),
+                                electronicConfirmation: !!$("input[type='checkbox'][name$='ElectronicConfirmation']").attr("checked")
+                            },
+                            function(result) {
+                                console.log(result);
+                                if (result.error) {
+                                    resultOutput.html("Error: " + result.error);
+                                } else {
+                                    resultOutput.empty();
+                                    if (result.length === 0) {
+                                        resultOutput.append($("<div>@T("No suitable shipping method found.")</div>"));
+                                    } else {
+                                        $.each(result, function() {
+                                            resultOutput.append($("<div></div>").html("<b>$" + this.Price + "</b> " +
+                                                this.Description
+                                                    .replace("&lt;sup&gt;&amp;reg;&lt;/sup&gt;", "<sup>&reg;</sup>")
+                                                    .replace("&lt;sup&gt;&amp;trade;&lt;/sup&gt;", "<sup>&trade;</sup>")
+                                            ));
+                                        });
+                                    }
+                                }
+                            }
+                        );
+                        e.preventDefault();
+                    });
+            });
+        </script>
+    }
+}

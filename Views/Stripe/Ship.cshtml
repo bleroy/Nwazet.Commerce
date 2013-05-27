@@ -1,4 +1,4 @@
-﻿@model Nwazet.Commerce.ViewModels.StripeShippingViewModel
+﻿@model Nwazet.Commerce.ViewModels.StripeCheckoutViewModel
 @helper AddressForm(string prefix) {
     <label for="@Html.Id(prefix + ".Honorific")">@T("Title")</label>
     <input id="@Html.Id(prefix + ".Honorific")" type="text" name="@Html.Name(prefix + ".Honorific")" class="honorific input-mini"/>
@@ -17,16 +17,16 @@
     <label for="@Html.Id(prefix + ".City")">@T("City")</label>
     <input id="@Html.Id(prefix + ".City")" type="text" name="@Html.Name(prefix + ".City")" class="input-large"/>
     <label for="@Html.Id(prefix + ".Province")">@T("State, province, prefecture, republic or region")</label>
-    <input id="@Html.Id("shippingAddress.Province")" type="text" name="@Html.Name("shippingAddress.Province")" class="input-mini"/>
+    <input id="@Html.Id(prefix + ".Province")" type="text" name="@Html.Name(prefix + ".Province")" class="input-mini"/>
     <div class="hint">@T("Please specify the state, province, prefecture, republic or region code as appropriate. For example, 'WA' for the state of Washington in the United States.")</div>
-    <label for="@Html.Id("shippingAddress.PostalCode")">@T("Postal or ZIP code")</label>
-    <input id="@Html.Id("shippingAddress.PostalCode")" type="text" name="@Html.Name("shippingAddress.PostalCode")" class="input-small"/>
-    <label for="@Html.Id("shippingAddress.Country")">@T("Country")</label>
-    <input id="@Html.Id("shippingAddress.Country")" type="text" name="@Html.Name("shippingAddress.Country")" class="input-medium"/>
+    <label for="@Html.Id(prefix + ".PostalCode")">@T("Postal or ZIP code")</label>
+    <input id="@Html.Id(prefix + ".PostalCode")" type="text" name="@Html.Name(prefix + ".PostalCode")" class="input-small"/>
+    <label for="@Html.Id(prefix + ".Country")">@T("Country")</label>
+    <input id="@Html.Id(prefix + ".Country")" type="text" name="@Html.Name(prefix + ".Country")" class="input-medium"/>
     <div class="hint">@T("You may leave this blank for the United States.")</div>
 }
 @{
-    var title = Layout.Title = T("Checkout with Stripe - 1: Shipping & Billing");
+    var title = Layout.Title = T("Checkout with Stripe - 1: Shipping & Billing Addresses");
     Script.Require("jQuery");
     using (Script.Foot()) {
         <script type="text/javascript">
@@ -41,7 +41,7 @@
 }
 <h1>@title</h1>
 
-@using (Html.BeginFormAntiForgeryPost(Url.Action("Confirm", "Stripe", new {area = "Nwazet.Commerce"}), FormMethod.Post, new {@id="address-form"})) {
+@using (Html.BeginFormAntiForgeryPost(Url.Action("Ship", "Stripe", new {area = "Nwazet.Commerce"}), FormMethod.Post, new {@id="address-form"})) {
     <fieldset>
         <legend>@T("Shipping Address")</legend>
         @AddressForm("shippingAddress")

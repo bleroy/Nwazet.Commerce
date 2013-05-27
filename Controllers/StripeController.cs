@@ -8,35 +8,46 @@ namespace Nwazet.Commerce.Controllers {
     [Themed]
     public class StripeController : Controller {
         private readonly IStripeService _stripeService;
+        private readonly IShoppingCart _shoppingCart;
 
-        public StripeController(IStripeService stripeService) {
+        public StripeController(IStripeService stripeService, IShoppingCart shoppingCart) {
             _stripeService = stripeService;
+            _shoppingCart = shoppingCart;
         }
 
-        public ActionResult Ship(string stripeToken) {
-            var shippingViewModel = new StripeShippingViewModel {
-                Token = stripeToken,
-            };
-            return View(shippingViewModel);
-        }
-
-        [HttpPost]
         public ActionResult Checkout() {
-            var viewModel = new StripeCheckoutViewModel {
-                PublishableKey = _stripeService.GetSettings().PublishableKey
-            };
-            return View(viewModel);
+            return RedirectToAction("Ship");
+        }
+
+        public ActionResult Ship() {
+            return View(GetCheckoutData());
         }
 
         [HttpPost]
-        public ActionResult Confirm(string stripeToken,
-                                    Address shippingAddress,
-                                    Address billingAddress,
-                                    string specialInstructions) {
-            if (string.IsNullOrWhiteSpace(stripeToken)) {
-                return RedirectToAction("Checkout");
-            }
+        public ActionResult Ship(StripeCheckoutViewModel stripeData) {
+            return RedirectToAction("Confirmation");
+        }
+
+        [HttpPost]
+        public ActionResult Pay() {
+            return View(GetCheckoutData());
+        }
+
+        [HttpPost]
+        public ActionResult Confirmation(StripeCheckoutViewModel stripeData) {
             return View();
+        }
+
+        private StripeCheckoutViewModel GetCheckoutData() {
+            var checkoutData = TempData["nwazet.stripe.checkout"] as StripeCheckoutViewModel;
+            if (checkoutData == null) {
+                TempData["nwazet.stripe.checkout"] = checkoutData =
+                    new StripeCheckoutViewModel {
+                    ShoppingCartItems = _shoppingCart.Items,
+                    PublishableKey = _stripeService.GetSettings().PublishableKey
+                };
+            }
+            return checkoutData;
         }
     }
 }

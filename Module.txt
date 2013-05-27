@@ -21,6 +21,11 @@ Features:
         Description: Define shipping options to work with Nwazet Commerce
         Category: Commerce
         Dependencies: Nwazet.Commerce
+    Usps.Shipping:
+		Name: USPS Shipping
+		Description: Dynamic USPS shipping method, using USPS web services for data that is always up-to-date
+		Category: Commerce
+		Dependencies: Nwazet.Commerce, Nwazet.Shipping
     Google.Checkout:
         Name: Google Checkout
         Description: Google Checkout part that can be added to any content type

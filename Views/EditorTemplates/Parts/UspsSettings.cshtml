@@ -1,0 +1,94 @@
+﻿@using Orchard.Localization
+@model Nwazet.Commerce.Models.UspsSettingsPartRecord
+@helper TestButton(int i, LocalizedString description) {
+    <li>
+        <button id="usps_test_@(i)">@T("Test {0}", i)</button> @description
+        <ul id="usps_test_@(i)_results"></ul>
+    </li>
+    }
+<fieldset><legend></legend>
+    <label class="sub" for="@Html.IdFor(m => m.UserId)">@T("USPS User Id")</label><br />
+    @Html.TextBoxFor(m => m.UserId, new { @class = "textMedium" })<br />
+    <label class="sub" for="@Html.IdFor(m => m.OriginZip)">@T("Origin Zip Code")</label><br />
+    @Html.TextBoxFor(m => m.OriginZip, new { @class = "text-small" })<br />
+    
+    @Html.CheckBoxFor(m => m.CommercialPrices)<label class="sub" for="@Html.IdFor(m => m.CommercialPrices)">@T("Commercial prices")</label><br />
+    @Html.CheckBoxFor(m => m.CommercialPlusPrices)<label class="sub" for="@Html.IdFor(m => m.CommercialPlusPrices)">@T("Commercial Plus prices")</label><br />
+    <span class="hint">@T("See <a href=\"http://pe.usps.com/text/dmm300/423.htm\" target=\"_blank\">http://pe.usps.com/text/dmm300/423.htm</a> for eligibility.")</span>
+</fieldset>
+<fieldset style="border: solid 1px #bdbcbc;padding: 12px;position:relative;">
+    <legend>@T("USPS Account Validation Tests")</legend>
+    <div>
+        <p>@T("USPS will demand that you execute a number of successful queries on the test API before they migrate your account and allow you to use the production API. We are providing these buttons to make it easier for you to satisfy those conditions. You should just need to click once on each button and verify that the results look consistent.")</p>
+        @{
+            var tests = new[] {
+                T("cleanse address and provide ZIP+4"),
+                T("cleanse address and complete ZIP"),
+                T("find city and state from ZIP"),
+                T("find city and state from ZIP"),
+                T("ZIP code lookup"),
+                T("ZIP code lookup"),
+                T("Track"),
+                T("Track"),
+                T("Complex response"),
+                T("More complex response"),
+                T("Pickup availability"),
+                T("Pickup availability from fewer details")
+            };
+        }
+        <ul>
+            @for (var i = 1; i <= tests.Length; i++) {
+                @TestButton(i, tests[i - 1])
+            }
+        </ul>
+    </div>
+</fieldset>
+@{
+    Script.Require("jQuery");
+    using (Script.Foot()) {
+        <script type="text/javascript">
+            $(function () {
+                var displayResult = function(result, element) {
+                    for (var name in result) {
+                        var val = result[name];
+                        if ($.isArray(val)) {
+                            for (var j = 0; j < val.length; j++) {
+                                if ($.isPlainObject(val[j])) {
+                                    var listItem = $("<li></li>");
+                                    var innerList = $("<ul style=\"margin-left:16px;padding-bottom:8px;\"></ul>");
+                                    displayResult(val[j], innerList);
+                                    listItem.append(innerList);
+                                    element.append(listItem);
+                                } else {
+                                    element.append($("<li></li>").html((j + 1) + ": " + val[j]));
+                                }
+                            }
+                        } else {
+                            element.append($("<li></li>").html(name + ": " + val));
+                        }
+                    }
+                };
+                
+                for (var i = 1; i <= @(tests.Length); i++) {
+                    (function(index) {
+                        $("#usps_test_" + index)
+                            .on("click", function(e) {
+                                var resultOutput = $("#usps_test_" + index + "_results").empty();
+                                $.post(
+                                    "@Url.Action("PerformTestRequest1", "UspsAdmin", new {area = "Nwazet.Commerce"})".replace(/1$/, index),
+                                    {
+                                        __RequestVerificationToken: $("input[name='__RequestVerificationToken']").val()
+                                    },
+                                    function(result) {
+                                        console.log(result);
+                                        displayResult(result, resultOutput);
+                                    }
+                                );
+                                e.preventDefault();
+                            });
+                    })(i);
+                }
+            });
+        </script>
+    }
+}

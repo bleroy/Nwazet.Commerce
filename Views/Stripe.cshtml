@@ -10,7 +10,7 @@ Available model properties:
         Price
         Weight
         ShippingCost
-    ShippingMethods
+    ShippingOptions
         Price
         DisplayName
         Name
@@ -20,5 +20,7 @@ Available model properties:
     PublishableKey
     Custom
 *@
-<a href="@Url.Action("Ship", "Stripe", new {area = "Nwazet.Commerce"})"
-   class="stripe-checkout checkout"><img src="@Url.Content("~/Modules/Nwazet.Commerce/Content/checkout-with-stripe.png")" alt="@T("Checkout with Stripe")"/></a>
+@if (Model.ShippingOptions != null) {
+    <a href="@Url.Action("Checkout", "Stripe", new {area = "Nwazet.Commerce"})"
+       class="stripe-checkout checkout"><img src="@Url.Content("~/Modules/Nwazet.Commerce/Content/checkout-with-stripe.png")" alt="@T("Checkout with Stripe")"/></a>
+}

@@ -32,6 +32,7 @@ namespace Nwazet.Commerce.Drivers {
         }
 
         protected override void Importing(GoogleCheckoutSettingsPart part, ImportContentContext context) {
+
             var merchantId = context.Attribute(part.PartDefinition.Name, "MerchantId");
             if (!String.IsNullOrWhiteSpace(merchantId)) {
                 part.MerchantId = merchantId;

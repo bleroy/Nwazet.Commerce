@@ -4,84 +4,131 @@
     Script.Require("jQuery");
     Script.Include("shoppingcart.js", "shoppingcart.min.js");
     var items = (IList<dynamic>)Model.ShopItems;
-    var subtotal = (decimal) Model.Subtotal;
+    var subtotal = (double) Model.Subtotal;
+    var readOnly = Model.ReadOnly != null && Model.ReadOnly == true;
 }
-@if (!items.Any())
-{
-    <p>@T("You don't have any items in your shopping cart.")</p>
-}
-else { 
-    <article class="shoppingcart">
-        @using(Html.BeginFormAntiForgeryPost(Url.Action("Update", "ShoppingCart", new { area = "Nwazet.Commerce" }))) {
-            <table>
-                <thead>
-                    <tr>
-                        <td colspan="2">@T("Article")</td>
-                        <td class="numeric">@T("Unit Price")</td>
-                        <td class="numeric">@T("Quantity")</td>
-                        <td class="numeric">@T("Total Price")</td>
-                        <td class="action"></td>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (var i = 0; i < items.Count; i++) {
-                        var item = items[i];
-                        var propertyNamePrefix = string.Format("items[{0}]", i);
-                        var product = (IProduct)item.Product;
-                        var contentItem = (IContent) item.Product;
-                        var title = item.Title
-                            + (item.ProductAttributes == null
-                            ? "" : " (" + string.Join(", ", item.ProductAttributes.Values) + ")");
-                        string imageUrl = (item.ProductImage != null ? item.ProductImage.Url : null);
-                        var quantity = (int)item.Quantity;
-                        var unitPrice = (double)item.DiscountedPrice;
-                        var totalPrice = quantity*unitPrice;
+<article class="shoppingcart">
+    <div id="shopping-cart-notification" class="message-Information hide"></div>
+    @using (Html.BeginFormAntiForgeryPost(Url.Action("Update", "ShoppingCart", new {area = "Nwazet.Commerce"}))) {
+        if (!items.Any()) {
+            <p class="shopping-cart-container" data-got-cart="false">
+                @T("You don't have any items in your shopping cart.")
+            </p>
+            <script type="text/javascript">
+                var Nwazet = window.Nwazet || {};
+                Nwazet.WaitWhileWeRestoreYourCart = "@T("Please wait while we restore your shopping cart...")";
+                Nwazet.FailedToLoadCart = "@T("Failed to load the cart")";
+            </script>
+        }
+        else {
+            <div  class="shopping-cart-container">
+                <table>
+                    <thead>
                         <tr>
-                            @if (imageUrl != null) {
-                                <td>
-                                    <a href="@Url.ItemDisplayUrl(contentItem)" class="product-image-link"><img src="@Href(imageUrl)" alt="@title" class="product-image"/></a>
-                                </td><td>
-                                    <a href="@Url.ItemDisplayUrl(contentItem)" class="product-name">@title</a>
-                                </td>
+                            <td colspan="2">@T("Article")</td>
+                            <td class="numeric">@T("Unit Price")</td>
+                            <td class="numeric">@T("Quantity")</td>
+                            <td class="numeric">@T("Total Price")</td>
+                            @if (!readOnly) {
+                                <td class="action"></td>
                             }
-                            else {
-                                <td colspan="2"><a href="@Url.ItemDisplayUrl(contentItem)">@title</a></td>
-                            }
-                            <td class="numeric">@unitPrice.ToString("c")</td>
-                            <td class="numeric">
-                                @if (item.ProductAttributes != null) {
-                                    var attrIndex = 0;
-                                    foreach (KeyValuePair<int, string> attribute in item.ProductAttributes) {
-                                        var attributeNamePrefix = propertyNamePrefix + ".AttributeIdsToValues[" + attrIndex + "]";
-                                        <input type="hidden" name="@(attributeNamePrefix).Key" value="@attribute.Key"/>
-                                        <input type="hidden" name="@(attributeNamePrefix).Value" value="@attribute.Value" />
-                                        attrIndex++;
-                                    }
-                                }
-                                <input name="@(propertyNamePrefix + ".ProductId")" type="hidden" value="@product.Id" />
-                                <input name="@(propertyNamePrefix + ".Quantity")" type="number" class="quantity" value="@quantity" />
-                            </td>
-                            <td class="numeric">@totalPrice.ToString("c")</td>
-                            <td class="action"><a class="delete" href="#">@T("Remove")</a></td>
                         </tr>
-                    }
+                    </thead>
+                    <tbody>
+                        @for (var i = 0; i < items.Count; i++) {
+                            var item = items[i];
+                            var propertyNamePrefix = string.Format("items[{0}]", i);
+                            var product = (IProduct) item.Product;
+                            var contentItem = (IContent) item.Product;
+                            var title = item.Title
+                                        + (item.ProductAttributes == null
+                                               ? "" : " (" + string.Join(", ", item.ProductAttributes.Values) + ")");
+                            string imageUrl = (item.ProductImage != null ? item.ProductImage.Url : null);
+                            var quantity = (int) item.Quantity;
+                            var unitPrice = (double) item.DiscountedPrice;
+                            var totalPrice = quantity*unitPrice;
+                            <tr>
+                                @if (imageUrl != null) {
+                                    <td>
+                                        <a href="@Url.ItemDisplayUrl(contentItem)" class="product-image-link"><img src="@Href(imageUrl)" alt="@title" class="product-image"/></a>
+                                    </td>
+                                    <td>
+                                        <a href="@Url.ItemDisplayUrl(contentItem)" class="product-name">@title</a>
+                                    </td>
+                                }
+                                else {
+                                    <td colspan="2"><a href="@Url.ItemDisplayUrl(contentItem)">@title</a></td>
+                                }
+                                <td class="numeric">@unitPrice.ToString("c")</td>
+                                <td class="numeric">
+                                    @if (readOnly) {
+                                        <span class="quantity">@quantity</span>
+                                    }
+                                    else {
+                                        if (item.ProductAttributes != null) {
+                                            var attrIndex = 0;
+                                            foreach (KeyValuePair<int, string> attribute in item.ProductAttributes) {
+                                                var attributeNamePrefix = propertyNamePrefix + ".AttributeIdsToValues[" + attrIndex + "]";
+                                                <input type="hidden" name="@(attributeNamePrefix).Key" value="@attribute.Key"/>
+                                                <input type="hidden" name="@(attributeNamePrefix).Value" value="@attribute.Value" />
+                                                attrIndex++;
+                                            }
+                                        }
+                                        <input name="@(propertyNamePrefix + ".ProductId")" type="hidden" value="@product.Id" />
+                                        <input name="@(propertyNamePrefix + ".Quantity")" type="number" class="quantity" value="@quantity" />
+                                    }
+                                </td>
+                                <td class="numeric amount">@totalPrice.ToString("c")</td>
+                                @if (!readOnly) {
+                                    <td class="action"><a class="delete" href="#">@T("Remove")</a></td>
+                                }
+                            </tr>
+                        }
             
-                </tbody>
-                <tfoot>
-                    <tr class="total">
-                        <td class="numeric label" colspan="4">@T("Subtotal:")</td>
-                        <td class="numeric">@subtotal.ToString("c")</td>
-                        <td><button name="command" value="Update" type="submit" class="update-button">@T("Update All")</button></td>
-                    </tr>
-                </tfoot>
-            </table>
+                    </tbody>
+                    <tfoot>
+                        <tr class="total">
+                            <td class="numeric label" colspan="4">@T("Subtotal:")</td>
+                            <td class="numeric amount">@subtotal.ToString("c")</td>
+                            @if (!readOnly) {
+                                <td class="action"><button name="command" value="Update" type="submit" class="update-button">@T("Update All")</button></td>
+                            }
+                        </tr>
+                        @if (Model.ShippingOption != null) {
+                            var shippingOption = (ShippingOption)Model.ShippingOption;
+                            <tr class="total">
+                                <td class="numeric label" colspan="4">@T("{1} {0}", Html.Raw(shippingOption.Description), shippingOption.ShippingCompany):</td>
+                                <td class="numeric amount">@shippingOption.Price.ToString("c")</td>
+                            </tr>
+                            <tr class="total final">
+                                <td class="numeric label" colspan="4">@T("Total:")</td>
+                                <td class="numeric amount">@((subtotal + shippingOption.Price).ToString("c"))</td>
+                            </tr>
+                        }
+                    </tfoot>
+                </table>
+                @if (String.IsNullOrWhiteSpace(Model.Country) &&
+                     String.IsNullOrWhiteSpace(Model.ZipCode)) {
+                    @Display.ShippingInfoForm()
+                }
+                else if (Model.ShippingOptions != null) {
+                    @Display.ShippingOptions(ShippingOptions: Model.ShippingOptions, Country: Model.Country, ZipCode: Model.ZipCode)
+                }
+                @if (Model.ShippingOption != null) {
+                    <p>@T("Click <a href=\"{0}\">here</a> to choose a different shipping option.",
+                          Url.Action("ResetShippingOption", "ShoppingCart", new {area = "Nwazet.Commerce"}))</p>
+                    <p>@T("Taxes may be added at checkout depending on your location.")</p>
+                }
+            </div>
         }
+    }
+    @if (Model.CheckoutButtons != null) {
         <ul class="checkout">
-        @foreach (var checkoutButton in Model.CheckoutButtons) {
-            <li>
-                @Display(checkoutButton)
-            </li>
-        }
+            @foreach (var checkoutButton in Model.CheckoutButtons) {
+                <li>
+                    @Display(checkoutButton)
+                </li>
+            }
         </ul>
-    </article>
-}
+    }
+</article >

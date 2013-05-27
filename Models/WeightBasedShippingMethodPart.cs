@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nwazet.Commerce.Services;
+using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 
@@ -15,7 +17,13 @@ namespace Nwazet.Commerce.Models {
         public string IncludedShippingAreas { get { return Record.IncludedShippingAreas; } set { Record.IncludedShippingAreas = value; } }
         public string ExcludedShippingAreas { get { return Record.ExcludedShippingAreas; } set { Record.ExcludedShippingAreas = value; } }
 
-        public double ComputePrice(IEnumerable<ShoppingCartQuantityProduct> productQuantities, IEnumerable<IShippingMethod> shippingMethods) {
+        public IEnumerable<ShippingOption> ComputePrice(
+            IEnumerable<ShoppingCartQuantityProduct> productQuantities,
+            IEnumerable<IShippingMethod> shippingMethods,
+            string country,
+            string zipCode,
+            IWorkContextAccessor workContextAccessor) {
+
             var quantities = productQuantities.ToList();
             var fixedCost = quantities
                 .Where(pq => pq.Product.ShippingCost != null && pq.Product.ShippingCost >= 0 && !pq.Product.IsDigital)
@@ -25,9 +33,21 @@ namespace Nwazet.Commerce.Models {
             var weight = quantities
                 .Where(pq => (pq.Product.ShippingCost == null || pq.Product.ShippingCost < 0) && !pq.Product.IsDigital)
                 .Sum(pq => pq.Quantity * pq.Product.Weight);
-            if (weight.CompareTo(0) == 0) return fixedCost;
-            if (weight < MinimumWeight || weight > MaximumWeight) return -1; // Shipping method not applicable to this weight range
-            return fixedCost + Price;
+            if (weight.CompareTo(0) == 0) {
+                yield return GetOption(fixedCost);
+            }
+            else if (weight >= MinimumWeight && weight <= MaximumWeight) {
+                yield return GetOption(fixedCost + Price);
+            }
+        }
+
+        private ShippingOption GetOption(double price) {
+            return new ShippingOption {
+                Description = Name,
+                Price = price,
+                IncludedShippingAreas = IncludedShippingAreas == null ? new string[] { } : IncludedShippingAreas.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries),
+                ExcludedShippingAreas = ExcludedShippingAreas == null ? new string[] { } : ExcludedShippingAreas.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+            };
         }
     }
 }

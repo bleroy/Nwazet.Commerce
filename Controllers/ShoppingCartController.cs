@@ -22,7 +22,7 @@ namespace Nwazet.Commerce.Controllers {
         private readonly IWorkContextAccessor _wca;
         private readonly IEnumerable<ICheckoutService> _checkoutServices;
         private readonly IEnumerable<IShippingMethodProvider> _shippingMethodProviders;
-        private readonly IEnumerable<IExtraCartInfoProvider> _extraCartInfoProviders; 
+        private readonly IEnumerable<IExtraCartInfoProvider> _extraCartInfoProviders;
 
         public ShoppingCartController(
             IShoppingCart shoppingCart,
@@ -50,7 +50,8 @@ namespace Nwazet.Commerce.Controllers {
             }
             _shoppingCart.Add(id, quantity, productattributes);
             if (Request.IsAjaxRequest()) {
-                return new ShapePartialResult(this, BuildCartShape(true));
+                return new ShapePartialResult(this,
+                                              BuildCartShape(true, _shoppingCart.Country, _shoppingCart.ZipCode));
             }
             return RedirectToAction("Index");
         }
@@ -59,54 +60,60 @@ namespace Nwazet.Commerce.Controllers {
         [OutputCache(Duration = 0)]
         public ActionResult Index() {
             _wca.GetContext().Layout.IsCartPage = true;
-            return new ShapeResult(this, BuildCartShape());
+            return new ShapeResult(
+                this,
+                BuildCartShape(
+                    false,
+                    _shoppingCart.Country,
+                    _shoppingCart.ZipCode,
+                    _shoppingCart.ShippingOption));
         }
 
-        private dynamic BuildCartShape(bool isSummary = false) {
-            dynamic shape = _shapeFactory.ShoppingCart();
+        private dynamic BuildCartShape(
+            bool isSummary = false,
+            string country = null, 
+            string zipCode = null, 
+            ShippingOption shippingOption = null) {
+
+            var shape = _shapeFactory.ShoppingCart();
+
+            if (shippingOption != null) {
+                shape.ReadOnly = true;
+                shape.ShippingOption = shippingOption;
+            }
 
             var productQuantities = _shoppingCart.GetProducts().ToList();
-            var productShapes = productQuantities.Select(
-                productQuantity => _shapeFactory.ShoppingCartItem(
-                    Quantity: productQuantity.Quantity,
-                    Product: productQuantity.Product,
-                    Sku: productQuantity.Product.Sku,
-                    Title: _contentManager.GetItemMetadata(productQuantity.Product).DisplayText,
-                    ProductAttributes: productQuantity.AttributeIdsToValues,
-                    ContentItem: (productQuantity.Product).ContentItem,
-                    ProductImage: ((MediaPickerField)productQuantity.Product.Fields.FirstOrDefault(f => f.Name == "ProductImage")),
-                    IsDigital: productQuantity.Product.IsDigital,
-                    Price: productQuantity.Product.Price,
-                    DiscountedPrice: productQuantity.Price,
-                    ShippingCost: productQuantity.Product.ShippingCost,
-                    Weight: productQuantity.Product.Weight)).ToList();
+            var productShapes = GetProductShapesFromQuantities(productQuantities);
             shape.ShopItems = productShapes;
 
-            var shippingMethods = _shippingMethodProviders
-                .SelectMany(p => p.GetShippingMethods())
-                .ToList();
-            var validShippingMethods = shippingMethods
-                .Select(
-                    m => _shapeFactory.ShippingMethod(
-                        Price: m.ComputePrice(productQuantities, shippingMethods),
-                        DisplayName: _contentManager.GetItemMetadata(m).DisplayText,
-                        Name: m.Name,
-                        ShippingCompany: m.ShippingCompany,
-                        IncludedShippingAreas: m.IncludedShippingAreas == null ? null : m.IncludedShippingAreas.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries),
-                        ExcludedShippingAreas: m.ExcludedShippingAreas == null ? null : m.ExcludedShippingAreas.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                             ))
-                .Where(x => x.Price >= 0)
-                .ToList();
+            var custom =
+                _extraCartInfoProviders == null
+                    ? null
+                    : _extraCartInfoProviders
+                          .SelectMany(p => p.GetExtraCartInfo())
+                          .ToList();
 
-            var custom = _extraCartInfoProviders == null ? null :
-                _extraCartInfoProviders
-                    .SelectMany(p => p.GetExtraCartInfo())
-                    .ToList();
-
-            var checkoutShapes = _checkoutServices.Select(
-                service => service.BuildCheckoutButtonShape(
-                    productShapes, productQuantities, validShippingMethods, custom)).ToList();
-            shape.CheckoutButtons = checkoutShapes;
+            if ((country == Country.UnitedStates && !string.IsNullOrWhiteSpace(zipCode)) ||
+                (!String.IsNullOrWhiteSpace(country) && country != Country.UnitedStates)) {
+                shape.Country = country;
+                shape.ZipCode = zipCode;
+                if (!isSummary && shippingOption == null) {
+                    var shippingMethods = _shippingMethodProviders
+                        .SelectMany(p => p.GetShippingMethods())
+                        .ToList();
+                    shape.ShippingOptions =
+                        ShippingService
+                            .GetShippingOptions(
+                                shippingMethods, productQuantities, country, zipCode, _wca).ToList();
+                }
+            }
+            if (shippingOption != null) {
+                var checkoutShapes = _checkoutServices.Select(
+                    service => service.BuildCheckoutButtonShape(
+                        productShapes, productQuantities,
+                        new[] { shippingOption }, custom)).ToList();
+                shape.CheckoutButtons = checkoutShapes;
+            }
 
             shape.Total = _shoppingCart.Total();
             shape.Subtotal = _shoppingCart.Subtotal();
@@ -117,23 +124,64 @@ namespace Nwazet.Commerce.Controllers {
             return shape;
         }
 
+        private IEnumerable<dynamic> GetProductShapesFromQuantities(
+            IEnumerable<ShoppingCartQuantityProduct> productQuantities) {
+            var productShapes = productQuantities.Select(
+                productQuantity => _shapeFactory.ShoppingCartItem(
+                    Quantity: productQuantity.Quantity,
+                    Product: productQuantity.Product,
+                    Sku: productQuantity.Product.Sku,
+                    Title: _contentManager.GetItemMetadata(productQuantity.Product).DisplayText,
+                    ProductAttributes: productQuantity.AttributeIdsToValues,
+                    ContentItem: (productQuantity.Product).ContentItem,
+                    ProductImage:
+                        ((MediaPickerField) productQuantity.Product.Fields.FirstOrDefault(f => f.Name == "ProductImage")),
+                    IsDigital: productQuantity.Product.IsDigital,
+                    Price: productQuantity.Product.Price,
+                    DiscountedPrice: productQuantity.Price,
+                    ShippingCost: productQuantity.Product.ShippingCost,
+                    Weight: productQuantity.Product.Weight)).ToList();
+            return productShapes;
+        }
+
         [OutputCache(Duration = 0)]
         public ActionResult NakedCart() {
-            return new ShapePartialResult(this, BuildCartShape(true));
+            return new ShapePartialResult(this,
+                                          BuildCartShape(true, _shoppingCart.Country, _shoppingCart.ZipCode));
         }
 
         [HttpPost]
-        public ActionResult Update(UpdateShoppingCartItemViewModel[] items){
+        public ActionResult Update(
+            UpdateShoppingCartItemViewModel[] items,
+            string country = null,
+            string zipCode = null,
+            string shippingOption = null) {
 
-            UpdateShoppingCart(items.Reverse());
+            _shoppingCart.Country = country;
+            _shoppingCart.ZipCode = zipCode;
+            if (!String.IsNullOrWhiteSpace(shippingOption)) {
+                _shoppingCart.ShippingOption =
+                    ShippingService.RebuildShippingOption(shippingOption);
+            }
+
+            if (items != null) {
+                UpdateShoppingCart(items.Reverse());
+            }
             return RedirectToAction("Index");
         }
 
         [HttpPost]
-        public ActionResult AjaxUpdate(UpdateShoppingCartItemViewModel[] items) {
+        public ActionResult AjaxUpdate(
+            UpdateShoppingCartItemViewModel[] items,
+            string country = null,
+            string zipCode = null) {
+
+            _shoppingCart.Country = country;
+            _shoppingCart.ZipCode = zipCode;
 
             UpdateShoppingCart(items.Reverse());
-            return new ShapePartialResult(this, BuildCartShape(true));
+            return new ShapePartialResult(this,
+                                          BuildCartShape(true, _shoppingCart.Country, _shoppingCart.ZipCode));
         }
 
         [OutputCache(Duration = 0)]
@@ -156,22 +204,35 @@ namespace Nwazet.Commerce.Controllers {
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
-        private void UpdateShoppingCart(IEnumerable<UpdateShoppingCartItemViewModel> items)
-        {
+        private void UpdateShoppingCart(IEnumerable<UpdateShoppingCartItemViewModel> items) {
             _shoppingCart.Clear();
 
             if (items == null)
                 return;
 
-            _shoppingCart.AddRange(items
-                .Where(item => !item.IsRemoved)
-                .Select(item => new ShoppingCartItem(
-                    item.ProductId, 
-                    item.Quantity < 0 ? 0 : item.Quantity,
-                    item.AttributeIdsToValues))
-            );
+            _shoppingCart.AddRange(
+                items
+                    .Where(item => !item.IsRemoved)
+                    .Select(item => new ShoppingCartItem(
+                                        item.ProductId,
+                                        item.Quantity < 0 ? 0 : item.Quantity,
+                                        item.AttributeIdsToValues))
+                );
 
             _shoppingCart.UpdateItems();
+        }
+
+        public ActionResult ResetDestination() {
+            _shoppingCart.Country = null;
+            _shoppingCart.ZipCode = null;
+
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult ResetShippingOption() {
+            _shoppingCart.ShippingOption = null;
+
+            return RedirectToAction("Index");
         }
     }
 }

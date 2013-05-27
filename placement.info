@@ -5,7 +5,10 @@
   <Place ShoppingCartWidget="Content:0" />
   <Place Parts_GoogleCheckout="Content:3.3"/>
   <Place Parts_GoogleCheckout_Settings="Content:5"/>
+  <Place Parts_Usps_Settings="Content:5"/>
   <Place Parts_Stripe_Settings="Content:5"/>
+  <Place Parts_UspsShippingMethod_Edit="Content:2"/>
+  <Place UspsShippingTestForm="Content:6"/>
   <Place Parts_WeightBasedShippingMethod_Edit="Content:2"/>
   <Place Parts_SizeBasedShippingMethod_Edit="Content:2"/>
   <Place Parts_Bundle="Content:3.2"/>
