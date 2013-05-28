@@ -159,10 +159,7 @@ namespace Nwazet.Commerce.Controllers {
 
             _shoppingCart.Country = country;
             _shoppingCart.ZipCode = zipCode;
-            if (!String.IsNullOrWhiteSpace(shippingOption)) {
-                _shoppingCart.ShippingOption =
-                    ShippingService.RebuildShippingOption(shippingOption);
-            }
+            _shoppingCart.ShippingOption = String.IsNullOrWhiteSpace(shippingOption) ? null : ShippingService.RebuildShippingOption(shippingOption);
 
             if (items != null) {
                 UpdateShoppingCart(items.Reverse());
@@ -178,6 +175,7 @@ namespace Nwazet.Commerce.Controllers {
 
             _shoppingCart.Country = country;
             _shoppingCart.ZipCode = zipCode;
+            _shoppingCart.ShippingOption = null;
 
             UpdateShoppingCart(items.Reverse());
             return new ShapePartialResult(this,
