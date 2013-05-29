@@ -1,9 +1,10 @@
 ﻿jQuery(function($) {
-    var cartContainer = $(".shopping-cart-container"),
+    var nwazetCart = "nwazet.cart",
+        cartContainer = $(".shopping-cart-container"),
         setQuantityToZero = function(parentTag) {
             return function(button) {
                 if (findNextIndex(button.closest("form")) === 1 && hasLocalStorage()) {
-                    localStorage["nwazet.cart"] = "";
+                    localStorage.removeItem(nwazetCart);
                 }
                 return button.closest(parentTag)
                     .find("input.quantity").val(0)
@@ -60,12 +61,17 @@
                                 cart[formField.name] = formField.value;
                             });
                             delete cart.__RequestVerificationToken;
-                            localStorage["nwazet.cart"] = JSON.stringify(cart);
+                            localStorage[nwazetCart] = JSON.stringify(cart);
                         }
                     } else {
-                        var cachedCartString = localStorage["nwazet.cart"];
+                        var cachedCartString = localStorage[nwazetCart];
                         if (cachedCartString) {
-                            var cachedCart = JSON.parse(cachedCartString);
+                            try {
+                                var cachedCart = JSON.parse(cachedCartString);
+                            } catch(ex) {
+                                localStorage.removeItem(nwazetCart);
+                                return;
+                            }
                             var cartContainerForm = cartContainer.closest("form");
                             if (cartContainerForm.length === 0) {
                                 cartContainerForm = $("<form></form>")
