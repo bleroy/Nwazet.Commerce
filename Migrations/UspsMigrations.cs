@@ -38,33 +38,13 @@ namespace Nwazet.Commerce.Migrations {
                 .Column<string>("Container")
                 .Column<double>("Markup"));
 
-            ContentDefinitionManager.AlterTypeDefinition("UspsShippingMethod", cfg => cfg
-              .WithPart("UspsShippingMethodPart")
-              .WithPart("TitlePart"));
-
-            return 4;
+            return 1;
         }
 
         public int UpdateFrom1() {
-            SchemaBuilder.AlterTable("UspsShippingMethodPartRecord", table => table.AddColumn<string>("Size"));
-            SchemaBuilder.AlterTable("UspsShippingMethodPartRecord", table => table.AddColumn<int>("WidthInInches"));
-            SchemaBuilder.AlterTable("UspsShippingMethodPartRecord", table => table.AddColumn<int>("LengthInInches"));
-            SchemaBuilder.AlterTable("UspsShippingMethodPartRecord", table => table.AddColumn<int>("HeightInInches"));
-            SchemaBuilder.AlterTable("UspsShippingMethodPartRecord", table => table.AddColumn<double>("MaximumWeightInOunces"));
-            SchemaBuilder.AlterTable("UspsShippingMethodPartRecord", table => table.AddColumn<int>("Priority"));
-            return 2;
-        }
-
-        public int UpdateFrom2() {
-            SchemaBuilder.AlterTable("UspsShippingMethodPartRecord", table => table.AddColumn<string>("Container"));
-            SchemaBuilder.AlterTable("UspsShippingMethodPartRecord", table => table.AddColumn<double>("Markup"));
-            return 3;
-        }
-
-        public int UpdateFrom3() {
-            SchemaBuilder.AlterTable("UspsShippingMethodPartRecord", table => table.AddColumn<double>("WeightPaddingInOunces"));
-            SchemaBuilder.AlterTable("UspsShippingMethodPartRecord", table => table.AddColumn<string>("ServiceNameValidationExpression"));
-            SchemaBuilder.AlterTable("UspsShippingMethodPartRecord", table => table.AddColumn<string>("ServiceNameExclusionExpression"));
+            ContentDefinitionManager.AlterTypeDefinition("UspsShippingMethod", cfg => cfg
+              .WithPart("UspsShippingMethodPart")
+              .WithPart("TitlePart"));
             return 4;
         }
     }
