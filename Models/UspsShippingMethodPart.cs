@@ -144,7 +144,7 @@ namespace Nwazet.Commerce.Models {
             }
 
             var uspsSettings = uspsService.GetSettings();
-            var weight = relevantQuantities.Sum(pq => pq.Quantity*pq.Product.Weight) + WeightPaddingInOunces;
+            var weight = relevantQuantities.Sum(pq => pq.Quantity*pq.Product.Weight*16) + WeightPaddingInOunces;
             // If above the maximum package weight, pass
             if (MaximumWeightInOunces > 0 && weight > MaximumWeightInOunces) yield break;
 
