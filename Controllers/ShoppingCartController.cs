@@ -10,6 +10,7 @@ using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions;
 using Orchard.Fields.Fields;
+using Orchard.MediaPicker.Fields;
 using Orchard.Mvc;
 using Orchard.Themes;
 

@@ -72,6 +72,10 @@ namespace Nwazet.Commerce.Tests.Stubs {
             throw new System.NotImplementedException();
         }
 
+        public IEnumerable<ContentItem> GetManyByVersionId(IEnumerable<int> versionRecordIds, QueryHints hints) {
+            throw new System.NotImplementedException();
+        }
+
         public void Publish(ContentItem contentItem) {
             throw new System.NotImplementedException();
         }
@@ -125,6 +129,10 @@ namespace Nwazet.Commerce.Tests.Stubs {
         }
 
         public GroupInfo GetDisplayGroupInfo(IContent contentItem, string groupInfoId) {
+            throw new System.NotImplementedException();
+        }
+
+        public ContentItem ResolveIdentity(ContentIdentity contentIdentity) {
             throw new System.NotImplementedException();
         }
 

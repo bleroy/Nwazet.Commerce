@@ -23,6 +23,10 @@ namespace Nwazet.Commerce.Tests.Stubs {
             return this;
         }
 
+        public IContentQuery<TPart> ForContentItems(IEnumerable<int> ids) {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<TPart> List() {
             var itemsOfThatType = ContentManagerStub
                 .GetAllItems()
