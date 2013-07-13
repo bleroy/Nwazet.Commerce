@@ -188,56 +188,53 @@ namespace Nwazet.Commerce.Tests {
         [Test]
         public void WeightAtMaximumWeightPasses() {
             var cart = new[] {
-                new ShoppingCartQuantityProduct(1, new ProductStub {Weight = 3}),
-                new ShoppingCartQuantityProduct(2, new ProductStub {Weight = 2})
+                new ShoppingCartQuantityProduct(1, new ProductStub {Weight = 3.0/16}), // For the moment, weight is in pounds here
+                new ShoppingCartQuantityProduct(2, new ProductStub {Weight = 2.0/16})
             };
             var defaultShippingMethod = Helpers.BuildUspsShippingMethod();
             defaultShippingMethod.WeightPaddingInOunces = 1;
             defaultShippingMethod.MaximumWeightInOunces = 8;
             var shippingMethods = new IShippingMethod[] {defaultShippingMethod};
             var wca = Helpers.GetUspsWorkContextAccessor("foo", false, false, 3);
-            Assert.AreEqual(3,
-                            defaultShippingMethod.ComputePrice(cart, shippingMethods, Country.UnitedStates, "90220",
-                                                               wca).First().Price);
+            var prices = defaultShippingMethod.ComputePrice(cart, shippingMethods, Country.UnitedStates, "90220", wca);
+            Assert.AreEqual(3, prices.First().Price);
         }
 
         [Test]
         public void WeightBelowMaximumWeightPasses() {
             var cart = new[] {
-                new ShoppingCartQuantityProduct(1, new ProductStub {Weight = 3}),
-                new ShoppingCartQuantityProduct(2, new ProductStub {Weight = 2})
+                new ShoppingCartQuantityProduct(1, new ProductStub {Weight = 3.0/16}),
+                new ShoppingCartQuantityProduct(2, new ProductStub {Weight = 2.0/16})
             };
             var defaultShippingMethod = Helpers.BuildUspsShippingMethod();
             defaultShippingMethod.WeightPaddingInOunces = 1;
             defaultShippingMethod.MaximumWeightInOunces = 9;
             var shippingMethods = new IShippingMethod[] {defaultShippingMethod};
             var wca = Helpers.GetUspsWorkContextAccessor("foo", false, false, 3);
-            Assert.AreEqual(3,
-                            defaultShippingMethod.ComputePrice(cart, shippingMethods, Country.UnitedStates, "90220",
-                                                               wca).First().Price);
+            var prices = defaultShippingMethod.ComputePrice(cart, shippingMethods, Country.UnitedStates, "90220", wca);
+            Assert.AreEqual(3, prices.First().Price);
         }
 
         [Test]
         public void WeightAboveMaximumWeightFails() {
             var cart = new[] {
-                new ShoppingCartQuantityProduct(1, new ProductStub {Weight = 3}),
-                new ShoppingCartQuantityProduct(2, new ProductStub {Weight = 2})
+                new ShoppingCartQuantityProduct(1, new ProductStub {Weight = 3.0/16}),
+                new ShoppingCartQuantityProduct(2, new ProductStub {Weight = 2.0/16})
             };
             var defaultShippingMethod = Helpers.BuildUspsShippingMethod();
             defaultShippingMethod.WeightPaddingInOunces = 1;
-            defaultShippingMethod.MaximumWeightInOunces = 7;
+            defaultShippingMethod.MaximumWeightInOunces = 6.9;
             var shippingMethods = new IShippingMethod[] {defaultShippingMethod};
             var wca = Helpers.GetUspsWorkContextAccessor("foo", false, false, 3);
-            Assert.That(
-                defaultShippingMethod.ComputePrice(cart, shippingMethods, Country.UnitedStates, "90220", wca),
-                Is.Empty);
+            var prices = defaultShippingMethod.ComputePrice(cart, shippingMethods, Country.UnitedStates, "90220", wca);
+            Assert.That(prices, Is.Empty);
         }
 
         [Test]
         public void WithNoMaximumWeightAnythingGoes() {
             var cart = new[] {
-                new ShoppingCartQuantityProduct(1, new ProductStub {Weight = 30}),
-                new ShoppingCartQuantityProduct(2, new ProductStub {Weight = 20})
+                new ShoppingCartQuantityProduct(1, new ProductStub {Weight = 30.0/16}),
+                new ShoppingCartQuantityProduct(2, new ProductStub {Weight = 20.0/16})
             };
             var defaultShippingMethod = Helpers.BuildUspsShippingMethod();
             defaultShippingMethod.WeightPaddingInOunces = 10;

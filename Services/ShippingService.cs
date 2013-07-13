@@ -31,8 +31,8 @@ namespace Nwazet.Commerce.Services {
                     var binaryValue = Encoding.UTF8.GetBytes(
                                           "Description:" + shippingOption.Description +
                                           "\nCompany:" + shippingOption.ShippingCompany +
-                                          "\nIncluded:" + String.Join(",", shippingOption.IncludedShippingAreas) +
-                                          "\nExcluded:" + String.Join(",", shippingOption.ExcludedShippingAreas) +
+                                          "\nIncluded:" + String.Join(",", shippingOption.IncludedShippingAreas ?? new string[0]) +
+                                          "\nExcluded:" + String.Join(",", shippingOption.ExcludedShippingAreas ?? new string[0]) +
                                           "\nPrice:" + shippingOption.Price);
                     shippingOption.FormValue = Convert.ToBase64String(MachineKey.Protect(binaryValue, EncryptionPurpose));
                     if (!alreadyFound.Contains(shippingOption)) {
