@@ -276,28 +276,28 @@
     <Content Include="Views\TitleWithLink.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scripts\inventory.min.js.map">
+    <Content Include="Scripts\inventory.min.js.map">
       <DependentUpon>inventory.js</DependentUpon>
-    </None>
-    <None Include="Scripts\referral.min.js.map">
+    </Content>
+    <Content Include="Scripts\referral.min.js.map">
       <DependentUpon>referral.js</DependentUpon>
-    </None>
-    <None Include="Scripts\shoppingcart.min.js.map">
+    </Content>
+    <Content Include="Scripts\shoppingcart.min.js.map">
       <DependentUpon>shoppingcart.js</DependentUpon>
-    </None>
-    <None Include="Views\AttributesAdmin\Index.cshtml" />
+    </Content>
+    <Content Include="Views\AttributesAdmin\Index.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\ProductAttribute.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\ProductAttributes.cshtml" />
     <Content Include="Views\Stripe.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\StripeSettings.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\UspsShippingMethod.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\UspsSettings.cshtml" />
-    <None Include="Views\Parts\ProductAttributes.cshtml" />
-    <None Include="Views\ShippingInfoForm.cshtml" />
-    <None Include="Views\ShippingOptions.cshtml" />
-    <None Include="Views\Stripe\Pay.cshtml" />
-    <None Include="Views\Stripe\Ship.cshtml" />
-    <None Include="Views\UspsShippingTestForm.cshtml" />
+    <Content Include="Views\Parts\ProductAttributes.cshtml" />
+    <Content Include="Views\ShippingInfoForm.cshtml" />
+    <Content Include="Views\ShippingOptions.cshtml" />
+    <Content Include="Views\Stripe\Pay.cshtml" />
+    <Content Include="Views\Stripe\Ship.cshtml" />
+    <Content Include="Views\UspsShippingTestForm.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
