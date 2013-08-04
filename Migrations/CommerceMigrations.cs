@@ -38,7 +38,7 @@ namespace Nwazet.Commerce.Migrations {
               .Indexed());
 
             ContentDefinitionManager.AlterPartDefinition("Product",
-              builder => builder.WithField("ProductImage", fieldBuilder => fieldBuilder.OfType("MediaPickerField").WithDisplayName("Product Image")));
+              builder => builder.WithField("ProductImage", fieldBuilder => fieldBuilder.OfType("MediaLibraryPickerField").WithDisplayName("Product Image")));
             return 1;
         }
 

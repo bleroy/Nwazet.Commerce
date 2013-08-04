@@ -10,7 +10,7 @@ using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions;
 using Orchard.Fields.Fields;
-using Orchard.MediaPicker.Fields;
+using Orchard.MediaLibrary.Fields;
 using Orchard.Mvc;
 using Orchard.Themes;
 
@@ -136,7 +136,7 @@ namespace Nwazet.Commerce.Controllers {
                     ProductAttributes: productQuantity.AttributeIdsToValues,
                     ContentItem: (productQuantity.Product).ContentItem,
                     ProductImage:
-                        ((MediaPickerField) productQuantity.Product.Fields.FirstOrDefault(f => f.Name == "ProductImage")),
+                        ((MediaLibraryPickerField) productQuantity.Product.Fields.FirstOrDefault(f => f.Name == "ProductImage")),
                     IsDigital: productQuantity.Product.IsDigital,
                     Price: productQuantity.Product.Price,
                     DiscountedPrice: productQuantity.Price,

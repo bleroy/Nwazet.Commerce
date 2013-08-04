@@ -105,9 +105,9 @@
       <Project>{3787dde5-e5c8-4841-bda7-dcb325388064}</Project>
       <Name>Orchard.Fields</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orchard.MediaPicker\Orchard.MediaPicker.csproj">
-      <Project>{43D0EC0B-1955-4566-8D31-7B9102DA1703}</Project>
-      <Name>Orchard.MediaPicker</Name>
+    <ProjectReference Include="..\Orchard.MediaLibrary\Orchard.MediaLibrary.csproj">
+      <Project>{73a7688a-5bd3-4f7e-adfa-ce36c5a10e3b}</Project>
+      <Name>Orchard.MediaLibrary</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Roles\Orchard.Roles.csproj">
       <Project>{d10ad48f-407d-4db5-a328-173ec7cb010f}</Project>
