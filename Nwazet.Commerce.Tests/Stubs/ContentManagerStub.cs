@@ -21,7 +21,11 @@ namespace Nwazet.Commerce.Tests.Stubs {
 
         public IEnumerable<IContent> GetAllItems() {
             return _contentItems;
-        } 
+        }
+
+        public ContentItem Clone(ContentItem contentItem) {
+            throw new System.NotImplementedException();
+        }
 
         public ContentItem Get(int id) {
             var item = _contentItems
