@@ -21,11 +21,11 @@
     <Place Parts_Product_AddButton="-"/>
     <Place Parts_GoogleCheckout="-"/>
     <Place Parts_Bundle="Content:3;Alternate=BundleSummaryAdmin"/>
-    <Place Fields_MediaPicker="Content:1;Alternate=MediaPickerProductImageSummaryAdmin"/>
+    <Place Fields_MediaLibraryPicker="Content:1;Alternate=MediaPickerProductImageSummaryAdmin"/>
     <Place Parts_ProductAttributes="-"/>
   </Match>
   <Match DisplayType="Thumbnail">
-    <Place Fields_MediaPicker="Content:1;Alternate=MediaPickerProductImageThumbnail"/>
+    <Place Fields_MediaLibraryPicker="Content:1;Alternate=MediaPickerProductImageThumbnail"/>
     <Place Parts_Title="Content:2;Alternate=TitleWithLink"/>
     <Place Parts_Product="Content:3"/>
     <Place Parts_Product_AddButton="-"/>
