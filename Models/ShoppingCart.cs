@@ -13,17 +13,20 @@ namespace Nwazet.Commerce.Models {
         private readonly IShoppingCartStorage _cartStorage;
         private readonly IPriceService _priceService;
         private readonly IEnumerable<IProductAttributesDriver> _attributesDrivers;
+        private readonly IEnumerable<ITaxProvider> _taxProviders; 
 
         public ShoppingCart(
             IContentManager contentManager,
             IShoppingCartStorage cartStorage,
             IPriceService priceService,
-            IEnumerable<IProductAttributesDriver> attributesDrivers) {
+            IEnumerable<IProductAttributesDriver> attributesDrivers,
+            IEnumerable<ITaxProvider> taxProviders) {
 
             _contentManager = contentManager;
             _cartStorage = cartStorage;
             _priceService = priceService;
             _attributesDrivers = attributesDrivers;
+            _taxProviders = taxProviders;
         }
 
         public IEnumerable<ShoppingCartItem> Items {
@@ -122,13 +125,27 @@ namespace Nwazet.Commerce.Models {
             return Math.Round(GetProducts().Sum(pq => Math.Round(pq.Price * pq.Quantity, 2)), 2);
         }
 
-        public double Taxes() {
-            // TODO: handle taxes
-            return 0;
+        public TaxAmount Taxes() {
+            if (ShippingOption == null || (Country == null && ZipCode == null)) return null;
+            var taxes = _taxProviders
+                .SelectMany(p => p.GetTaxes())
+                .OrderBy(t => t.Priority);
+            return (
+                from tax in taxes
+                let name = tax.Name
+                let amount = tax.ComputeTax(GetProducts(), Subtotal(), ShippingOption.Price, Country, ZipCode) where amount > 0
+                select new TaxAmount {Name = name, Amount = amount}
+                ).FirstOrDefault();
         }
 
         public double Total() {
-            return Subtotal() + Taxes();
+            var taxes = Taxes();
+            if (taxes == null) {
+                if (ShippingOption == null) return Subtotal();
+                return Subtotal() + ShippingOption.Price;
+            }
+            if (ShippingOption == null) return Subtotal() + Taxes().Amount;
+            return Subtotal() + Taxes().Amount + ShippingOption.Price;
         }
 
         public double ItemCount() {

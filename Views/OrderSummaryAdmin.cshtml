@@ -1,0 +1,5 @@
+﻿@using Nwazet.Commerce.Models
+@{
+    var items = (IEnumerable<CheckoutItem>)Model.OrderedProducts;
+}
+@(Html.Raw(String.Join(", ", items.Select(i => String.Format(T("{0} &times; {1}").Text, i.Quantity, i.Title)))))

@@ -25,6 +25,8 @@ namespace Nwazet.Commerce.Services {
             _shapeFactory = shapeFactory;
         }
 
+        public string Name {get { return "Google"; }}
+
         public GoogleCheckoutSettingsPart GetSettings() {
             return _cacheManager.Get(
                 "GoogleCheckoutSettings",
@@ -42,6 +44,9 @@ namespace Nwazet.Commerce.Services {
             IEnumerable<dynamic> productShapes,
             IEnumerable<ShoppingCartQuantityProduct> productQuantities,
             IEnumerable<ShippingOption> shippingOptions,
+            TaxAmount taxes,
+            string country,
+            string zipCode,
             IEnumerable<string> custom) {
 
             var checkoutSettings = GetSettings();
@@ -49,12 +54,17 @@ namespace Nwazet.Commerce.Services {
             return _shapeFactory.GoogleCheckout(
                 CartItems: productShapes,
                 ShippingOptions: shippingOptions,
+                Taxes: taxes,
                 Custom: custom,
                 Currency: checkoutSettings.Currency,
                 WeightUnit: checkoutSettings.WeightUnit,
                 MerchantId: checkoutSettings.MerchantId,
                 AnalyticsId: checkoutSettings.AnalyticsId,
                 UseSandbox: checkoutSettings.UseSandbox);
+        }
+
+        public string GetChargeAdminUrl(string transactionId) {
+            return null;
         }
     }
 }

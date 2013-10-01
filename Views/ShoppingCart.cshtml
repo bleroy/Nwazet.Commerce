@@ -94,6 +94,12 @@
                                 <td class="action"><button name="command" value="Update" type="submit" class="update-button">@T("Update All")</button></td>
                             }
                         </tr>
+                        @if (Model.Taxes != null) {
+                            <tr class="total">
+                                <td class="numeric label" colspan="4">@T("Taxes {0}", Model.Taxes.Name):</td>
+                                <td class="numeric amount">@Model.Taxes.Amount.ToString("c")</td>
+                            </tr>
+                        }
                         @if (Model.ShippingOption != null) {
                             var shippingOption = (ShippingOption)Model.ShippingOption;
                             <tr class="total">
@@ -102,7 +108,7 @@
                             </tr>
                             <tr class="total final">
                                 <td class="numeric label" colspan="4">@T("Total:")</td>
-                                <td class="numeric amount">@((subtotal + shippingOption.Price).ToString("c"))</td>
+                                <td class="numeric amount">@((Model.Total).ToString("c"))</td>
                             </tr>
                         }
                     </tfoot>
@@ -116,8 +122,7 @@
                 }
                 @if (Model.ShippingOption != null) {
                     <p>@T("Click <a href=\"{0}\">here</a> to choose a different shipping option.",
-                          Url.Action("ResetShippingOption", "ShoppingCart", new {area = "Nwazet.Commerce"}))</p>
-                    <p>@T("Taxes may be added at checkout depending on your location.")</p>
+                           Url.Action("ResetShippingOption", "ShoppingCart", new {area = "Nwazet.Commerce"}))</p>
                 }
             </div>
         }

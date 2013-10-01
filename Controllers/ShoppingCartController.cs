@@ -9,10 +9,10 @@ using Orchard;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions;
-using Orchard.Fields.Fields;
 using Orchard.MediaLibrary.Fields;
 using Orchard.Mvc;
 using Orchard.Themes;
+using Orchard.Workflows.Services;
 
 namespace Nwazet.Commerce.Controllers {
     [OrchardFeature("Nwazet.Commerce")]
@@ -24,6 +24,7 @@ namespace Nwazet.Commerce.Controllers {
         private readonly IEnumerable<ICheckoutService> _checkoutServices;
         private readonly IEnumerable<IShippingMethodProvider> _shippingMethodProviders;
         private readonly IEnumerable<IExtraCartInfoProvider> _extraCartInfoProviders;
+        private readonly IWorkflowManager _workflowManager;
 
         public ShoppingCartController(
             IShoppingCart shoppingCart,
@@ -32,7 +33,8 @@ namespace Nwazet.Commerce.Controllers {
             IWorkContextAccessor wca,
             IEnumerable<ICheckoutService> checkoutServices,
             IEnumerable<IShippingMethodProvider> shippingMethodProviders,
-            IEnumerable<IExtraCartInfoProvider> extraCartInfoProviders) {
+            IEnumerable<IExtraCartInfoProvider> extraCartInfoProviders,
+            IWorkflowManager workflowManager) {
 
             _shippingMethodProviders = shippingMethodProviders;
             _shoppingCart = shoppingCart;
@@ -41,6 +43,7 @@ namespace Nwazet.Commerce.Controllers {
             _wca = wca;
             _checkoutServices = checkoutServices;
             _extraCartInfoProviders = extraCartInfoProviders;
+            _workflowManager = workflowManager;
         }
 
         [HttpPost]
@@ -50,9 +53,17 @@ namespace Nwazet.Commerce.Controllers {
                 productattributes = null;
             }
             _shoppingCart.Add(id, quantity, productattributes);
+
+            _workflowManager.TriggerEvent("CartUpdated",
+                _wca.GetContext().CurrentSite,
+                () => new Dictionary<string, object> {
+                    {"Cart", _shoppingCart}
+                });
+
             if (Request.IsAjaxRequest()) {
-                return new ShapePartialResult(this,
-                                              BuildCartShape(true, _shoppingCart.Country, _shoppingCart.ZipCode));
+                return new ShapePartialResult(
+                    this,
+                    BuildCartShape(true, _shoppingCart.Country, _shoppingCart.ZipCode));
             }
             return RedirectToAction("Index");
         }
@@ -108,18 +119,25 @@ namespace Nwazet.Commerce.Controllers {
                                 shippingMethods, productQuantities, country, zipCode, _wca).ToList();
                 }
             }
+            var taxes = _shoppingCart.Taxes();
             if (shippingOption != null) {
                 var checkoutShapes = _checkoutServices.Select(
                     service => service.BuildCheckoutButtonShape(
-                        productShapes, productQuantities,
-                        new[] { shippingOption }, custom)).ToList();
+                        productShapes,
+                        productQuantities,
+                        new[] { shippingOption },
+                        taxes,
+                        country,
+                        zipCode,
+                        custom)).ToList();
                 shape.CheckoutButtons = checkoutShapes;
             }
 
-            shape.Total = _shoppingCart.Total();
             shape.Subtotal = _shoppingCart.Subtotal();
-            shape.Vat = _shoppingCart.Taxes();
-            if (isSummary) {
+            shape.Taxes = taxes;
+            shape.Total = _shoppingCart.Total();
+            if (isSummary)
+            {
                 shape.Metadata.Alternates.Add("ShoppingCart_Summary");
             }
             return shape;
@@ -219,6 +237,12 @@ namespace Nwazet.Commerce.Controllers {
                 );
 
             _shoppingCart.UpdateItems();
+
+            _workflowManager.TriggerEvent("CartUpdated",
+                _wca.GetContext().CurrentSite,
+                () => new Dictionary<string, object> {
+                    {"Cart", _shoppingCart}
+                });
         }
 
         public ActionResult ResetDestination() {

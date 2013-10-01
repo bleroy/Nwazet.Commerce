@@ -1,4 +1,5 @@
 ﻿using System;
+using Nwazet.Commerce.Helpers;
 using Nwazet.Commerce.Models;
 using Orchard.Caching;
 using Orchard.ContentManagement;
@@ -15,14 +16,16 @@ namespace Nwazet.Commerce.Drivers {
             _signals = signals;
         }
 
-        protected override string Prefix { get { return "StripeSettings"; } }
+        protected override string Prefix {
+            get { return "StripeSettings"; }
+        }
 
         protected override DriverResult Editor(StripeSettingsPart part, dynamic shapeHelper) {
             return ContentShape("Parts_Stripe_Settings",
-                               () => shapeHelper.EditorTemplate(
-                                   TemplateName: "Parts/StripeSettings",
-                                   Model: part.Record,
-                                   Prefix: Prefix)).OnGroup("Stripe");
+                () => shapeHelper.EditorTemplate(
+                    TemplateName: "Parts/StripeSettings",
+                    Model: part.Record,
+                    Prefix: Prefix)).OnGroup("Stripe");
         }
 
         protected override DriverResult Editor(StripeSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
@@ -32,16 +35,21 @@ namespace Nwazet.Commerce.Drivers {
         }
 
         protected override void Importing(StripeSettingsPart part, ImportContentContext context) {
-            var publishableKey = context.Attribute(part.PartDefinition.Name, "PublishableKey");
-            if (!String.IsNullOrWhiteSpace(publishableKey)) {
-                part.PublishableKey = publishableKey;
-            }
+            var el = context.Data.Element(typeof (StripeSettingsPart).Name);
+            if (el == null) return;
+            el.With(part)
+                .FromAttr(p => p.PublishableKey)
+                .FromAttr(p => p.SecretKey)
+                .FromAttr(p => p.Currency);
         }
 
         protected override void Exporting(StripeSettingsPart part, ExportContentContext context) {
             context
-                .Element(part.PartDefinition.Name)
-                .SetAttributeValue("PublishableKey", part.PublishableKey);
+                .Element(typeof (StripeSettingsPart).Name)
+                .With(part)
+                .ToAttr(p => p.PublishableKey)
+                .ToAttr(p => p.SecretKey)
+                .ToAttr(p => p.Currency);
         }
     }
 }

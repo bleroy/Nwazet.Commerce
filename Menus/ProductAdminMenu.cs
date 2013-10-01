@@ -21,11 +21,11 @@ namespace Nwazet.Commerce.Menus {
                 .Add(item => item
                     .Caption(T("Commerce"))
                     .Position("2")
-                    .LinkToFirstChild(true)
+                    .LinkToFirstChild(false)
 
                     .Add(subItem => subItem
                         .Caption(T("Products"))
-                        .Position("2.0")
+                        .Position("2.3")
                         .Action("List", "ProductAdmin", new { area = "Nwazet.Commerce" })
                     )
                 );

@@ -22,11 +22,11 @@
                 T("Add a new {0}", provider.Name).Text,
                 "Create", "Admin",
                 new {
-                        Area = "Contents",
-                        Id = provider.ContentTypeName,
-                        ReturnUrl = Url.Action(
-                            "Index", "ShippingAdmin",
-                            new { Area = "Nwazet.Commerce" })
+                    Area = "Contents",
+                    Id = provider.ContentTypeName,
+                    ReturnUrl = Url.Action(
+                        "Index", "TaxAdmin",
+                        new { Area = "Nwazet.Commerce" })
                 },
                 new { @class = "button primaryAction" })
         }

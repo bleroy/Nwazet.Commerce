@@ -1,9 +1,9 @@
 ﻿@model Nwazet.Commerce.Models.StripeSettingsPartRecord
 <fieldset>
     <label class="sub" for="@Html.IdFor(m => m.SecretKey)">@T("Stripe Merchant Secret Key")</label><br />
-    @Html.TextBoxFor(m => m.SecretKey, new { @class = "textMedium" })<br />
+    @Html.TextBoxFor(m => m.SecretKey, new { @class = "text-medium" })<br />
     <label class="sub" for="@Html.IdFor(m => m.PublishableKey)">@T("Stripe Merchant Publishable Key")</label><br />
-    @Html.TextBoxFor(m => m.PublishableKey, new { @class = "textMedium" })<br />
+    @Html.TextBoxFor(m => m.PublishableKey, new { @class = "text-medium" })<br />
     <label class="sub" for="@Html.IdFor(m => m.Currency)">@T("Currency")</label><br />
     @Html.TextBoxFor(m => m.Currency, new { @class = "text-small" })
     <div class="hint">@T("A 3-character currency code, e.g. USD.")</div>

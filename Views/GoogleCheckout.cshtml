@@ -11,7 +11,7 @@ Available model properties:
         Price
         Weight
         ShippingCost
-    ShippingOptions
+    ShippingOption
         Price
         DisplayName
         Name
@@ -76,7 +76,7 @@ Available model properties:
                                                  if (analyticsOn) {
                                                      <text>  onsubmit=" setUrchinInputCode(pageTracker); "</text>
                                                  }
-                                             }>
+                                             } class="google-checkout">
         @foreach (var product in Model.CartItems) {
             i++;
             var title = product.Title
@@ -147,6 +147,6 @@ Available model properties:
             }
         }
         <input type="image" name="Google Checkout" alt="@T("Fast checkout through Google")"
-               src="@(buttonUrl + "&w=" + width + "&h=" + height + "&style=white&variant=text&loc=en_US")" height="@height" width="@width"/>
+               src="@(buttonUrl + "&w=" + width + "&h=" + height + "&style=white&variant=text&loc=en_US")" class="checkout-button @(isMini ? "mini":"")"/>
     </form>
 }

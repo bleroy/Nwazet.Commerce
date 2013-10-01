@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Nwazet.Commerce.Helpers;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
 using Orchard;
@@ -18,7 +19,7 @@ namespace Nwazet.Commerce.Drivers {
         private readonly IEnumerable<IProductAttributesDriver> _attributeProviders;
 
         public ProductPartDriver(
-            IWorkContextAccessor wca, 
+            IWorkContextAccessor wca,
             IPriceService priceService,
             IEnumerable<IProductAttributesDriver> attributeProviders) {
 
@@ -27,7 +28,9 @@ namespace Nwazet.Commerce.Drivers {
             _attributeProviders = attributeProviders;
         }
 
-        protected override string Prefix { get { return "NwazetCommerceProduct"; } }
+        protected override string Prefix {
+            get { return "NwazetCommerceProduct"; }
+        }
 
         protected override DriverResult Display(
             ProductPart part, string displayType, dynamic shapeHelper) {
@@ -37,19 +40,19 @@ namespace Nwazet.Commerce.Drivers {
             var productShape = ContentShape(
                 "Parts_Product",
                 () => shapeHelper.Parts_Product(
-                        Sku: part.Sku,
-                        Price: part.Price,
-                        DiscountedPrice: discountedPriceQuantity.Price,
-                        DiscountComment: discountedPriceQuantity.Comment,
-                        Inventory: inventory,
-                        OutOfStockMessage: part.OutOfStockMessage,
-                        AllowBackOrder: part.AllowBackOrder,
-                        Weight: part.Weight,
-                        Size: part.Size,
-                        ShippingCost: part.ShippingCost,
-                        IsDigital: part.IsDigital,
-                        ContentPart: part
-                        )
+                    Sku: part.Sku,
+                    Price: part.Price,
+                    DiscountedPrice: discountedPriceQuantity.Price,
+                    DiscountComment: discountedPriceQuantity.Comment,
+                    Inventory: inventory,
+                    OutOfStockMessage: part.OutOfStockMessage,
+                    AllowBackOrder: part.AllowBackOrder,
+                    Weight: part.Weight,
+                    Size: part.Size,
+                    ShippingCost: part.ShippingCost,
+                    IsDigital: part.IsDigital,
+                    ContentPart: part
+                    )
                 );
             if (part.Inventory > 0 || part.AllowBackOrder) {
                 return Combined(
@@ -75,11 +78,12 @@ namespace Nwazet.Commerce.Drivers {
             var inventory = part.Inventory;
             if (_wca.GetContext().TryResolve(out bundleService) && part.Has<BundlePart>()) {
                 var bundlePart = part.As<BundlePart>();
-                if (!bundlePart.ProductIds.Any()) return 0;
+                var ids = bundlePart.ProductIds.ToList();
+                if (!ids.Any()) return 0;
                 part.Inventory = inventory =
                     bundleService
-                    .GetProductQuantitiesFor(bundlePart)
-                    .Min(p => p.Product.Inventory / p.Quantity);
+                        .GetProductQuantitiesFor(bundlePart)
+                        .Min(p => p.Product.Inventory/p.Quantity);
             }
             return inventory;
         }
@@ -103,57 +107,44 @@ namespace Nwazet.Commerce.Drivers {
         }
 
         protected override void Importing(ProductPart part, ImportContentContext context) {
-            var sku = context.Attribute(part.PartDefinition.Name, "Sku");
-            if (!String.IsNullOrWhiteSpace(sku)) {
-                part.Sku = sku;
-            }
-            var priceString = context.Attribute(part.PartDefinition.Name, "Price");
+            var el = context.Data.Element(typeof (ProductPart).Name);
+            if (el == null) return;
+            el.With(part)
+                .FromAttr(p => p.Sku)
+                .FromAttr(p => p.Inventory)
+                .FromAttr(p => p.OutOfStockMessage)
+                .FromAttr(p => p.AllowBackOrder)
+                .FromAttr(p => p.IsDigital)
+                .FromAttr(p => p.Weight);
+            var priceAttr = el.Attribute("Price");
             double price;
-            if (double.TryParse(priceString, NumberStyles.Currency, CultureInfo.InvariantCulture, out price)) {
+            if (priceAttr != null &&
+                double.TryParse(priceAttr.Value, NumberStyles.Currency, CultureInfo.InvariantCulture, out price)) {
                 part.Price = price;
             }
-            var inventoryString = context.Attribute(part.PartDefinition.Name, "Inventory");
-            int inventory;
-            if (int.TryParse(inventoryString, out inventory)) {
-                part.Inventory = inventory;
-            }
-            var outOfStockMessage = context.Attribute(part.PartDefinition.Name, "OutOfStockMessage");
-            if (!String.IsNullOrWhiteSpace(outOfStockMessage)) {
-                part.OutOfStockMessage = outOfStockMessage;
-            }
-            var allowBackOrderString = context.Attribute(part.PartDefinition.Name, "AllowBackOrder");
-            bool allowBackOrder;
-            if (bool.TryParse(allowBackOrderString, out allowBackOrder)) {
-                part.AllowBackOrder = allowBackOrder;
-            }
-            var isDigitalAttribute = context.Attribute(part.PartDefinition.Name, "IsDigital");
-            bool isDigital;
-            if (bool.TryParse(isDigitalAttribute, out isDigital)) {
-                part.IsDigital = isDigital;
-            }
-            var weightString = context.Attribute(part.PartDefinition.Name, "Weight");
-            double weight;
-            if (double.TryParse(weightString, NumberStyles.Float, CultureInfo.InvariantCulture, out weight)) {
-                part.Weight = weight;
-            }
-            var shippingCostString = context.Attribute(part.PartDefinition.Name, "ShippingCost");
+            var shippingCostAttr = el.Attribute("ShippingCost");
             double shippingCost;
-            if (shippingCostString != null && double.TryParse(shippingCostString, NumberStyles.Currency, CultureInfo.InvariantCulture, out shippingCost)) {
+            if (shippingCostAttr != null &&
+                double.TryParse(shippingCostAttr.Value, NumberStyles.Currency, CultureInfo.InvariantCulture,
+                    out shippingCost)) {
                 part.ShippingCost = shippingCost;
             }
         }
 
         protected override void Exporting(ProductPart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Sku", part.Sku);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Price", part.Price.ToString("C", CultureInfo.InvariantCulture));
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Inventory", part.Inventory.ToString(CultureInfo.InvariantCulture));
-            context.Element(part.PartDefinition.Name).SetAttributeValue("OutOfStockMessage", part.OutOfStockMessage);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("AllowBackOrder", part.AllowBackOrder.ToString(CultureInfo.InvariantCulture).ToLower());
-            context.Element(part.PartDefinition.Name).SetAttributeValue("IsDigital", part.IsDigital.ToString(CultureInfo.InvariantCulture).ToLower());
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Weight", part.Weight.ToString(CultureInfo.InvariantCulture));
+            var el = context.Element(typeof (ProductPart).Name);
+            el
+                .With(part)
+                .ToAttr(p => p.Sku)
+                .ToAttr(p => p.Inventory)
+                .ToAttr(p => p.OutOfStockMessage)
+                .ToAttr(p => p.AllowBackOrder)
+                .ToAttr(p => p.IsDigital)
+                .ToAttr(p => p.Weight);
+            el.SetAttributeValue("Price", part.Price.ToString("C", CultureInfo.InvariantCulture));
             if (part.ShippingCost != null) {
-                context.Element(part.PartDefinition.Name).SetAttributeValue(
-                    "ShippingCost", ((double)part.ShippingCost).ToString("C", CultureInfo.InvariantCulture));
+                el.SetAttributeValue(
+                    "ShippingCost", ((double) part.ShippingCost).ToString("C", CultureInfo.InvariantCulture));
             }
         }
     }

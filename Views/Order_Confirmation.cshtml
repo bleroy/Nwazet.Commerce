@@ -1,0 +1,74 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.Mvc.Html
+@{
+    var title = Layout.Title = T("Order #{0}", Model.OrderId);
+}
+<h1>@title</h1>
+<p class="order-status">@T("Status: {0}", Model.Status)</p>
+<fieldset class="order-items">
+    <legend>@T("Products:")</legend>
+    <table>
+        <thead>
+            <tr>
+                <th class="quantity"><abbr title="@T("Quantity")">@T("Qty")</abbr></th>
+                <th class="description">@T("Product")</th>
+                <th class="price">@T("Price")</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items) {
+                <tr>
+                    <td class="quantity">@item.Quantity &times;</td>
+                    <td class="description"><a href="@Url.ItemDisplayUrl((IContent)Model.Products[item.ProductId])">@item.Title</a></td>
+                    <td class="price">@item.Price.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr class="subtotal">
+                <td colspan="2" class="label">@T("Subtotal")</td>
+                <td class="price">@Model.SubTotal.ToString("C")</td>
+            </tr>
+            <tr class="taxes">
+                <td colspan="2" class="label">@T("Taxes {0}", string.IsNullOrWhiteSpace(Model.Taxes.Name) ? T("Taxes").Text : Model.Taxes.Name)</td>
+                <td class="price">@Model.Taxes.Amount.ToString("C")</td>
+            </tr>
+            <tr class="shipping">
+                <td colspan="2" class="label">@T("{0} {1}", Model.ShippingOption.ShippingCompany, Model.ShippingOption.Description)</td>
+                <td class="price">@Model.ShippingOption.Price.ToString("C")</td>
+            </tr>
+            <tr class="total">
+                <td colspan="2" class="label">@T("Total")</td>
+                <td class="price">@Model.Total.ToString("C")</td>
+            </tr>
+        </tfoot>
+    </table>
+</fieldset>
+
+<fieldset>
+    <legend>@T("Charged to:")</legend>
+    <p>@Html.Raw(Html.Encode(Model.BillingAddress).Replace(Environment.NewLine, "<br/>"))</p>
+    <p>@T("Card **** **** **** {0} expiring {1}/{2}.", Model.CardLast4, Model.CardExpirationMonth, Model.CardExpirationYear)</p>
+</fieldset>
+
+<fieldset class="shipping-address">
+    <legend>@T("Shipping to:")</legend>
+    @Html.Raw(Html.Encode(Model.ShippingAddress).Replace(Environment.NewLine, "<br/>"))
+
+    @if (!String.IsNullOrWhiteSpace(Model.TrackingUrl)) {
+        <p>@T("Tracking URL: <a href=\"{0}\">{0}</a>", Model.TrackingUrl)</p>
+    }
+</fieldset>
+
+<p>@T("E-mail:") <a href="@("mailto:" + Model.CustomerEmail)">@Model.CustomerEmail</a></p>
+<p>@T("Phone:") <a href="@("tel:" + Model.CustomerPhone)">@Model.CustomerPhone</a></p>
+
+@if (!string.IsNullOrWhiteSpace(Model.SpecialInstructions)) {
+    <fieldset>
+        <legend>@T("Special instructions:")</legend>
+        @Model.SpecialInstructions
+    </fieldset>
+}
+
+<div class="order-link">@T("You may view this order at a later time by going to this address: <a href=\"{2}{0}\">{0}</a>, using this password: \"{1}\".",
+                            Url.Action("Show", "OrderSsl", new {id = Model.OrderId}), Model.Password, Model.BaseUrl)</div>

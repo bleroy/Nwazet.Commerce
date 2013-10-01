@@ -1,0 +1,38 @@
+﻿@model Nwazet.Commerce.ViewModels.StripeCheckoutViewModel
+@{
+    var title = Layout.Title = T("Checkout with Stripe - 1: Shipping & Billing Addresses");
+    Script.Require("jQuery");
+    Script.Include("ship.js");
+}
+<h1>@title</h1>
+
+@using (Html.BeginFormAntiForgeryPost(Url.Action("Ship", "StripeSsl", new {area = "Nwazet.Commerce"}), FormMethod.Post, new {@id="address-form"})) {
+    <fieldset>
+        <legend>@T("Shipping Address")</legend>
+        @Display.CommerceAddressForm(Prefix: "shippingAddress", Address: Model.ShippingAddress)
+    </fieldset>
+    <fieldset class="toggle-billing">
+        <input id="toggle-billing-address" type="checkbox" checked="checked"/>
+        <label for="toggle-billing-address" class="for-checkbox">@T("Bill me at the shipping address.")</label>
+    </fieldset>
+    <fieldset class="billing-address">
+        <legend>@T("Billing Address")</legend>
+        @Display.CommerceAddressForm(Prefix: "billingAddress", Address: Model.BillingAddress)
+    </fieldset>
+
+    <label for="@Html.Id("Email")">@T("e-mail")</label>
+    <input id="@Html.Id("Email")" type="text" name="@Html.Name("Email")" value="@Model.Email" class="input-large"/>
+    <div class="hint">@T("Please provide an e-mail address for us to use in order to give you updates on your order.")</div>
+    
+    <label for="@Html.Id("Phone")">@T("Phone")</label>
+    <input id="@Html.Id("Phone")" type="text" name="@Html.Name("Phone")" value="@Model.Phone" class="input-large"/>
+    <div class="hint">@T("Please provide a phone number where we can reach you in case we need additional information. This is also required when shipping to some countries.")</div>
+    
+    <label for="@Html.Id("specialInstructions")">@T("Special Instructions")</label>
+    <textarea id="@Html.Id("specialInstructions")" name="@Html.Name("shippingAddress.Country")" rows="6" cols="80" class="input-xxlarge"></textarea>
+    <input type="hidden" name="stripeToken" value="@Model.Token"/>
+    <div class="actions">
+        <input type="submit" name="next" class="submit-button" value="@T("Next >")"/>
+        <input type="submit" name="back" class="back-button" value="@T("< Back")"/>
+    </div>
+}

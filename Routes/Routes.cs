@@ -61,7 +61,7 @@ namespace Nwazet.Commerce.Routes {
                         "stripe/checkout",
                         new RouteValueDictionary {
                             {"area", "Nwazet.Commerce"},
-                            {"controller", "Stripe"},
+                            {"controller", "StripeSsl"},
                             {"action", "Checkout"}
                         },
                         new RouteValueDictionary(),
@@ -75,7 +75,7 @@ namespace Nwazet.Commerce.Routes {
                         "stripe/ship",
                         new RouteValueDictionary {
                             {"area", "Nwazet.Commerce"},
-                            {"controller", "Stripe"},
+                            {"controller", "StripeSsl"},
                             {"action", "Ship"}
                         },
                         new RouteValueDictionary(),
@@ -86,11 +86,11 @@ namespace Nwazet.Commerce.Routes {
                 },
                 new RouteDescriptor {
                     Route = new Route(
-                        "stripe/summary",
+                        "stripe/pay",
                         new RouteValueDictionary {
                             {"area", "Nwazet.Commerce"},
-                            {"controller", "Stripe"},
-                            {"action", "Summary"}
+                            {"controller", "StripeSsl"},
+                            {"action", "Pay"}
                         },
                         new RouteValueDictionary(),
                         new RouteValueDictionary {
@@ -105,6 +105,34 @@ namespace Nwazet.Commerce.Routes {
                             {"area", "Nwazet.Commerce"},
                             {"controller", "UspsAdmin"},
                             {"action", "Price"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Nwazet.Commerce"}
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Route = new Route(
+                        "order/summary",
+                        new RouteValueDictionary {
+                            {"area", "Nwazet.Commerce"},
+                            {"controller", "OrderSsl"},
+                            {"action", "Confirmation"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Nwazet.Commerce"}
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Route = new Route(
+                        "order/{id}",
+                        new RouteValueDictionary {
+                            {"area", "Nwazet.Commerce"},
+                            {"controller", "OrderSsl"},
+                            {"action", "Show"}
                         },
                         new RouteValueDictionary(),
                         new RouteValueDictionary {

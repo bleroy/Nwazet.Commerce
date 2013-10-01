@@ -1,0 +1,33 @@
+﻿@using Nwazet.Commerce.Models
+@using Nwazet.Commerce.Services
+@{
+    var stateOrCountryTaxPart = (StateOrCountryTaxPart)Model.Tax;
+}
+<fieldset>
+    <label class="sub" for="@Html.Id("Country")">@T("Country")</label><br />
+    @Html.DropDownList("Country",
+        (new [] {new SelectListItem {Text = "Any (*)", Value = "*", Selected = string.IsNullOrWhiteSpace(stateOrCountryTaxPart.Country)}})
+        .Union(
+        Country.List.Select(c => new SelectListItem {
+            Text = c,
+            Value = c,
+            Selected = c.Equals(stateOrCountryTaxPart.Country, StringComparison.OrdinalIgnoreCase)
+        })), new { @class = "text" })<br />
+    <span class="hint">@T("The customer country where this tax applies. Use 'Any (*)' to apply to all countries.")</span><br/>
+    <label class="sub" for="@Html.Id("State")">@T("State")</label><br />
+    @Html.DropDownList("State",
+        (new [] {new SelectListItem {Text = "Any (*)", Value = "*", Selected = string.IsNullOrWhiteSpace(stateOrCountryTaxPart.State)}})
+        .Union(
+        UnitedStates.States.Select(s => new SelectListItem {
+            Text = s.Value,
+            Value = s.Key,
+            Selected = s.Key.Equals(stateOrCountryTaxPart.State, StringComparison.OrdinalIgnoreCase)
+        })), new { @class = "text" })<br />
+    <span class="hint">@T("The customer state where this tax applies. Use * to apply to all states.")</span><br/>
+    <label class="sub" for="@Html.Id("Rate")">@T("Rate")</label><br />
+    @Html.TextBox("Rate", stateOrCountryTaxPart.Rate * 100, new { @class = "text text-small" })%<br />
+    <span class="hint">@T("The percentage applied as taxes for this region.")</span><br/>
+    <label class="sub" for="@Html.Id("Priority")">@T("Priority")</label><br />
+    @Html.TextBox("Priority", stateOrCountryTaxPart.Priority, new { @class = "text text-small" })<br />
+    <span class="hint">@T("The priority to apply this tax. The highest priority wins. This makes it possible to create a hierarchy of taxes.")</span><br/>
+</fieldset>

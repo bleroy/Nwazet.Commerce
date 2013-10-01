@@ -10,7 +10,7 @@ Features:
         Name: Nwazet Commerce
         Description: Commerce for small online businesses
         Category: Commerce
-        Dependencies: Orchard.Fields, Orchard.Tokens
+        Dependencies: Orchard.Fields, Orchard.Tokens, Orchard.Workflows, Contrib.SecuredSocketsLayer
     Nwazet.Bundles:
         Name: Nwazet Bundles
         Description: Product bundles are products made of a set of products
@@ -19,6 +19,11 @@ Features:
     Nwazet.Shipping:
         Name: Nwazet Shipping
         Description: Define shipping options to work with Nwazet Commerce
+        Category: Commerce
+        Dependencies: Nwazet.Commerce
+    Nwazet.Taxes:
+        Name: Nwazet Taxes
+        Description: Define tax options to work with Nwazet Commerce
         Category: Commerce
         Dependencies: Nwazet.Commerce
     Usps.Shipping:
@@ -30,21 +35,24 @@ Features:
         Name: Google Checkout
         Description: Google Checkout part that can be added to any content type
         Category: Commerce
-        Dependencies: Nwazet.Shipping
+        Dependencies: Nwazet.Commerce, Nwazet.Shipping
     Nwazet.Referrals:
         Name: Nwazet Referrals
         Description: Keeps track of the domain the user came from, in order to honor partner referral fees
         Category: Commerce
+        Dependencies: Nwazet.Commerce
     Nwazet.Promotions:
         Name: Nwazet Promotions
         Description: Apply promotions to your products
         Category: Commerce
-        Dependencies: Orchard.Roles
+        Dependencies: Nwazet.Commerce, Orchard.Roles
     Nwazet.Attributes:
         Name: Nwazet Product Attributes
         Description: Enables customers to customize a product when they add it to the cart
         Category: Commerce
+        Dependencies: Nwazet.Commerce
     Stripe:
         Name: Stripe
         Description: Stripe checkout for Nwazet.Commerce
         Category: Commerce
+        Dependencies: Nwazet.Commerce, Contrib.SecuredSocketsLayer

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Nwazet.Commerce.Helpers;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
 using Orchard.ContentManagement;
@@ -18,21 +19,25 @@ namespace Nwazet.Commerce.Drivers {
             _shippingAreaProviders = shippingAreaProviders;
         }
 
-        protected override string Prefix { get { return "NwazetCommerceWeightShipping"; } }
+        protected override string Prefix {
+            get { return "NwazetCommerceWeightShipping"; }
+        }
 
         protected override DriverResult Display(
             SizeBasedShippingMethodPart part, string displayType, dynamic shapeHelper) {
             return ContentShape(
-                    "Parts_SizeBasedShippingMethod",
-                    () => shapeHelper.Parts_SizeBasedShippingMethod(
-                        Name: part.Name,
-                        Price: part.Price,
-                        ShippingCompany: part.ShippingCompany,
-                        Size: part.Size,
-                        Priority: part.Priority,
-                        IncludedShippingAreas: part.IncludedShippingAreas.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries),
-                        ExcludedShippingAreas: part.ExcludedShippingAreas.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries),
-                        ContentItem: part.ContentItem));
+                "Parts_SizeBasedShippingMethod",
+                () => shapeHelper.Parts_SizeBasedShippingMethod(
+                    Name: part.Name,
+                    Price: part.Price,
+                    ShippingCompany: part.ShippingCompany,
+                    Size: part.Size,
+                    Priority: part.Priority,
+                    IncludedShippingAreas:
+                        part.IncludedShippingAreas.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries),
+                    ExcludedShippingAreas:
+                        part.ExcludedShippingAreas.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries),
+                    ContentItem: part.ContentItem));
         }
 
         //GET
@@ -53,60 +58,48 @@ namespace Nwazet.Commerce.Drivers {
         }
 
         //POST
-        protected override DriverResult Editor(SizeBasedShippingMethodPart part, IUpdateModel updater, dynamic shapeHelper) {
-            updater.TryUpdateModel(part, Prefix, null, new[] { "IncludedShippingAreas", "ExcludedShippingAreas" });
+        protected override DriverResult Editor(SizeBasedShippingMethodPart part, IUpdateModel updater,
+            dynamic shapeHelper) {
+            updater.TryUpdateModel(part, Prefix, null, new[] {"IncludedShippingAreas", "ExcludedShippingAreas"});
             var dyn = new LocalViewModel();
-            updater.TryUpdateModel(dyn, Prefix, new[] { "IncludedShippingAreas", "ExcludedShippingAreas" }, null);
-            part.IncludedShippingAreas = dyn.IncludedShippingAreas == null ?
-                "" : string.Join(",", dyn.IncludedShippingAreas);
-            part.ExcludedShippingAreas = dyn.ExcludedShippingAreas == null ? 
-                "" : string.Join(",", dyn.ExcludedShippingAreas);
+            updater.TryUpdateModel(dyn, Prefix, new[] {"IncludedShippingAreas", "ExcludedShippingAreas"}, null);
+            part.IncludedShippingAreas = dyn.IncludedShippingAreas == null
+                ? ""
+                : string.Join(",", dyn.IncludedShippingAreas);
+            part.ExcludedShippingAreas = dyn.ExcludedShippingAreas == null
+                ? ""
+                : string.Join(",", dyn.ExcludedShippingAreas);
             return Editor(part, shapeHelper);
         }
 
         protected override void Importing(SizeBasedShippingMethodPart part, ImportContentContext context) {
-            var name = context.Attribute(part.PartDefinition.Name, "Name");
-            if (!String.IsNullOrWhiteSpace(name)) {
-                part.Name = name;
-            }
-            var priceString = context.Attribute(part.PartDefinition.Name, "Price");
+            var el = context.Data.Element(typeof (SizeBasedShippingMethodPart).Name);
+            if (el == null) return;
+            el.With(part)
+                .FromAttr(p => p.Name)
+                .FromAttr(p => p.ShippingCompany)
+                .FromAttr(p => p.Size)
+                .FromAttr(p => p.Priority)
+                .FromAttr(p => p.IncludedShippingAreas)
+                .FromAttr(p => p.ExcludedShippingAreas);
+            var priceAttr = el.Attribute("Price");
             double price;
-            if (Double.TryParse(priceString, NumberStyles.Currency, CultureInfo.InvariantCulture, out price)) {
+            if (priceAttr != null &&
+                Double.TryParse(priceAttr.Value, NumberStyles.Currency, CultureInfo.InvariantCulture, out price)) {
                 part.Price = price;
-            }
-            var shippingCompany = context.Attribute(part.PartDefinition.Name, "ShippingCompany");
-            if (!String.IsNullOrWhiteSpace(shippingCompany)) {
-                part.ShippingCompany = shippingCompany;
-            }
-            var size = context.Attribute(part.PartDefinition.Name, "Size");
-            if (!string.IsNullOrWhiteSpace(size)) {
-                part.Size = size;
-            }
-            var priorityString = context.Attribute(part.PartDefinition.Name, "Priority");
-            int priority;
-            if (priorityString != null && int.TryParse(priorityString, NumberStyles.Integer, CultureInfo.InvariantCulture, out priority)) {
-                part.Priority = priority;
-            }
-            var includedShippingAreas = context.Attribute(part.PartDefinition.Name, "IncludedShippingAreas");
-            if (!String.IsNullOrWhiteSpace(includedShippingAreas)) {
-                part.IncludedShippingAreas = includedShippingAreas;
-            }
-            var excludedShippingAreas = context.Attribute(part.PartDefinition.Name, "ExcludedShippingAreas");
-            if (!String.IsNullOrWhiteSpace(excludedShippingAreas)) {
-                part.ExcludedShippingAreas = excludedShippingAreas;
             }
         }
 
         protected override void Exporting(SizeBasedShippingMethodPart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Name", part.Name);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Price", part.Price.ToString("C"));
-            context.Element(part.PartDefinition.Name).SetAttributeValue("ShippingCompany", part.ShippingCompany);
-            if (!string.IsNullOrWhiteSpace(part.Size)) {
-                context.Element(part.PartDefinition.Name).SetAttributeValue("Size", part.Size);
-            }
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Priority", part.Priority.ToString(CultureInfo.InvariantCulture));
-            context.Element(part.PartDefinition.Name).SetAttributeValue("IncludedShippingAreas", part.IncludedShippingAreas);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("ExcludedShippingAreas", part.IncludedShippingAreas);
+            var el = context.Element(typeof (SizeBasedShippingMethodPart).Name);
+            el.With(part)
+                .ToAttr(p => p.Name)
+                .ToAttr(p => p.ShippingCompany)
+                .ToAttr(p => p.Size)
+                .ToAttr(p => p.Priority)
+                .ToAttr(p => p.IncludedShippingAreas)
+                .ToAttr(p => p.ExcludedShippingAreas);
+            el.SetAttributeValue("Price", part.Price.ToString("C"));
         }
     }
 }

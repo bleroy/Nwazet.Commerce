@@ -258,7 +258,7 @@ namespace Nwazet.Commerce.Tests {
                 }
             };
             var priceService = new PriceService(priceProviders);
-            var cart = new ShoppingCart(contentManager, cartStorage, priceService, null);
+            var cart = new ShoppingCart(contentManager, cartStorage, priceService, null, null);
             FillCart(cart);
 
             return cart;

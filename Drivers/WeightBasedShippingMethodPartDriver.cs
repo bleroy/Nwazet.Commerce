@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Nwazet.Commerce.Helpers;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
 using Orchard.ContentManagement;
@@ -18,21 +19,25 @@ namespace Nwazet.Commerce.Drivers {
             _shippingAreaProviders = shippingAreaProviders;
         }
 
-        protected override string Prefix { get { return "NwazetCommerceWeightShipping"; } }
+        protected override string Prefix {
+            get { return "NwazetCommerceWeightShipping"; }
+        }
 
         protected override DriverResult Display(
             WeightBasedShippingMethodPart part, string displayType, dynamic shapeHelper) {
             return ContentShape(
-                    "Parts_WeightBasedShippingMethod",
-                    () => shapeHelper.Parts_WeightBasedShippingMethod(
-                        Name: part.Name,
-                        Price: part.Price,
-                        ShippingCompany: part.ShippingCompany,
-                        MinimumWeight: part.MinimumWeight,
-                        MaximumWeight: part.MaximumWeight,
-                        IncludedShippingAreas: part.IncludedShippingAreas.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries),
-                        ExcludedShippingAreas: part.ExcludedShippingAreas.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries),
-                        ContentItem: part.ContentItem));
+                "Parts_WeightBasedShippingMethod",
+                () => shapeHelper.Parts_WeightBasedShippingMethod(
+                    Name: part.Name,
+                    Price: part.Price,
+                    ShippingCompany: part.ShippingCompany,
+                    MinimumWeight: part.MinimumWeight,
+                    MaximumWeight: part.MaximumWeight,
+                    IncludedShippingAreas:
+                        part.IncludedShippingAreas.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries),
+                    ExcludedShippingAreas:
+                        part.ExcludedShippingAreas.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries),
+                    ContentItem: part.ContentItem));
         }
 
         //GET
@@ -53,64 +58,48 @@ namespace Nwazet.Commerce.Drivers {
         }
 
         //POST
-        protected override DriverResult Editor(WeightBasedShippingMethodPart part, IUpdateModel updater, dynamic shapeHelper) {
-            updater.TryUpdateModel(part, Prefix, null, new[] { "IncludedShippingAreas", "ExcludedShippingAreas" });
+        protected override DriverResult Editor(WeightBasedShippingMethodPart part, IUpdateModel updater,
+            dynamic shapeHelper) {
+            updater.TryUpdateModel(part, Prefix, null, new[] {"IncludedShippingAreas", "ExcludedShippingAreas"});
             var dyn = new LocalViewModel();
-            updater.TryUpdateModel(dyn, Prefix, new[] { "IncludedShippingAreas", "ExcludedShippingAreas" }, null);
-            part.IncludedShippingAreas = dyn.IncludedShippingAreas == null ?
-                "" : string.Join(",", dyn.IncludedShippingAreas);
-            part.ExcludedShippingAreas = dyn.ExcludedShippingAreas == null ? 
-                "" : string.Join(",", dyn.ExcludedShippingAreas);
+            updater.TryUpdateModel(dyn, Prefix, new[] {"IncludedShippingAreas", "ExcludedShippingAreas"}, null);
+            part.IncludedShippingAreas = dyn.IncludedShippingAreas == null
+                ? ""
+                : string.Join(",", dyn.IncludedShippingAreas);
+            part.ExcludedShippingAreas = dyn.ExcludedShippingAreas == null
+                ? ""
+                : string.Join(",", dyn.ExcludedShippingAreas);
             return Editor(part, shapeHelper);
         }
 
         protected override void Importing(WeightBasedShippingMethodPart part, ImportContentContext context) {
-            var name = context.Attribute(part.PartDefinition.Name, "Name");
-            if (!String.IsNullOrWhiteSpace(name)) {
-                part.Name = name;
-            }
-            var priceString = context.Attribute(part.PartDefinition.Name, "Price");
+            var el = context.Data.Element(typeof (WeightBasedShippingMethodPart).Name);
+            if (el == null) return;
+            el.With(part)
+                .FromAttr(p => p.Name)
+                .FromAttr(p => p.ShippingCompany)
+                .FromAttr(p => p.MinimumWeight)
+                .FromAttr(p => p.MaximumWeight)
+                .FromAttr(p => p.IncludedShippingAreas)
+                .FromAttr(p => p.ExcludedShippingAreas);
+            var priceAttr = el.Attribute("Price");
             double price;
-            if (Double.TryParse(priceString, NumberStyles.Currency, CultureInfo.InvariantCulture, out price)) {
+            if (priceAttr != null &&
+                Double.TryParse(priceAttr.Value, NumberStyles.Currency, CultureInfo.InvariantCulture, out price)) {
                 part.Price = price;
-            }
-            var shippingCompany = context.Attribute(part.PartDefinition.Name, "ShippingCompany");
-            if (!String.IsNullOrWhiteSpace(shippingCompany)) {
-                part.ShippingCompany = shippingCompany;
-            }
-            var minimumWeight = context.Attribute(part.PartDefinition.Name, "MinimumWeight");
-            double weight;
-            if (minimumWeight != null && double.TryParse(minimumWeight, NumberStyles.Float, CultureInfo.InvariantCulture, out weight)) {
-                part.MinimumWeight = weight;
-            }
-            var maximumWeight = context.Attribute(part.PartDefinition.Name, "MaximumWeight");
-            if (maximumWeight != null && double.TryParse(maximumWeight, NumberStyles.Float, CultureInfo.InvariantCulture, out weight)) {
-                part.MaximumWeight = weight;
-            }
-            var includedShippingAreas = context.Attribute(part.PartDefinition.Name, "IncludedShippingAreas");
-            if (!String.IsNullOrWhiteSpace(includedShippingAreas)) {
-                part.IncludedShippingAreas = includedShippingAreas;
-            }
-            var excludedShippingAreas = context.Attribute(part.PartDefinition.Name, "ExcludedShippingAreas");
-            if (!String.IsNullOrWhiteSpace(excludedShippingAreas)) {
-                part.ExcludedShippingAreas = excludedShippingAreas;
             }
         }
 
         protected override void Exporting(WeightBasedShippingMethodPart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Name", part.Name);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Price", part.Price.ToString("C"));
-            context.Element(part.PartDefinition.Name).SetAttributeValue("ShippingCompany", part.ShippingCompany);
-            if (part.MinimumWeight != null && !double.IsNaN((double)part.MinimumWeight)) {
-                context.Element(part.PartDefinition.Name).SetAttributeValue(
-                    "MinimumWeight", ((double)part.MinimumWeight).ToString(CultureInfo.InvariantCulture));
-            }
-            if (part.MaximumWeight != null && !double.IsNaN((double)part.MaximumWeight)) {
-                context.Element(part.PartDefinition.Name).SetAttributeValue(
-                    "MaximumWeight", ((double)part.MaximumWeight).ToString(CultureInfo.InvariantCulture));
-            }
-            context.Element(part.PartDefinition.Name).SetAttributeValue("IncludedShippingAreas", part.IncludedShippingAreas);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("ExcludedShippingAreas", part.IncludedShippingAreas);
+            var el = context.Element(typeof (WeightBasedShippingMethodPart).Name);
+            el.With(part)
+                .ToAttr(p => p.Name)
+                .ToAttr(p => p.ShippingCompany)
+                .ToAttr(p => p.MinimumWeight)
+                .ToAttr(p => p.MaximumWeight)
+                .ToAttr(p => p.IncludedShippingAreas)
+                .ToAttr(p => p.ExcludedShippingAreas);
+            el.SetAttributeValue("Price", part.Price.ToString("C"));
         }
     }
 }

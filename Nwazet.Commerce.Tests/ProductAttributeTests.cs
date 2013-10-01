@@ -260,7 +260,7 @@ namespace Nwazet.Commerce.Tests {
             var cartStorage = new FakeCartStorage();
             var priceService = new PriceService(new IPriceProvider[0]);
             var attributeDriver = new ProductAttributesPartDriver(contentManager);
-            var cart = new ShoppingCart(contentManager, cartStorage, priceService, new[] {attributeDriver});
+            var cart = new ShoppingCart(contentManager, cartStorage, priceService, new[] {attributeDriver}, null);
             FillCart(cart);
 
             return cart;

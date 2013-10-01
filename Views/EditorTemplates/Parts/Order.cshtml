@@ -1,0 +1,165 @@
+﻿@using System.Globalization
+@using Nwazet.Commerce.Models
+@using Orchard.Localization
+@model Nwazet.Commerce.ViewModels.OrderEditorViewModel
+@{
+    Style.Include("order-admin.css", "order-admin.min.css");
+    Script.Include("order-admin.js", "order-admin.min.js");
+
+    var charge = Model.Order.CreditCardCharge;
+}
+<div class="order-editor">
+    <fieldset class="order-status">
+        <legend>@T("Status:")</legend>
+        <ul>
+            @foreach (var state in Model.OrderStates) {
+                var stateid = ViewData.TemplateInfo.GetFullHtmlFieldId("Status_" + state);
+                <li>
+                    @Html.RadioButtonFor(m => m.Order.Status, state, new {@id = stateid})
+                    @Html.Label("Status_" + state, Model.StatusLabels[state].Text)
+                </li>
+            }
+        </ul>
+    </fieldset>
+
+    <div class="addresses">
+        <fieldset class="shipping-address">
+            <legend>@T("Shipping to:")</legend>
+            <div class="address-view">
+                @Html.Raw(Html.Encode(Model.ShippingAddressText).Replace(Environment.NewLine, "<br/>"))
+            </div>
+            <div class="address-form">
+                @Html.TextBoxFor(m => m.Order.ShippingAddress.Honorific, new {@class="text-small", title=T("Honorific")})
+                @Html.TextBoxFor(m => m.Order.ShippingAddress.FirstName, new {@class="text", title=T("First Name")})
+                @Html.TextBoxFor(m => m.Order.ShippingAddress.LastName, new {@class="text", title=T("Last Name")})<br/>
+                @Html.TextBoxFor(m => m.Order.ShippingAddress.Company, new {@class="text-medium", title=T("Company")})<br/>
+                @Html.TextBoxFor(m => m.Order.ShippingAddress.Address1, new {@class="text-medium", title=T("Address 1")})<br/>
+                @Html.TextBoxFor(m => m.Order.ShippingAddress.Address2, new {@class="text-medium", title=T("Address 2")})<br/>
+                @Html.TextBoxFor(m => m.Order.ShippingAddress.City, new {@class="text", title=T("City")})
+                @Html.TextBoxFor(m => m.Order.ShippingAddress.Province, new {@class="text-small", title=T("Province or State")})
+                @Html.TextBoxFor(m => m.Order.ShippingAddress.PostalCode, new {@class="text-small", title=T("Postal code")})<br/>
+                @Html.TextBoxFor(m => m.Order.ShippingAddress.Country, new {@class="text-medium", title=T("Country")})
+            </div>
+        </fieldset>
+
+        <fieldset class="billing-address">
+            <legend>@T("Billing:")</legend>
+            <div class="address-view">
+                @Html.Raw(Html.Encode(Model.BillingAddressText).Replace(Environment.NewLine, "<br/>"))
+            </div>
+            <div class="address-form">
+                @Html.TextBoxFor(m => m.Order.BillingAddress.Honorific, new {@class="text-small", title=T("Honorific")})
+                @Html.TextBoxFor(m => m.Order.BillingAddress.FirstName, new {@class="text", title=T("First Name")})
+                @Html.TextBoxFor(m => m.Order.BillingAddress.LastName, new {@class="text", title=T("Last Name")})<br/>
+                @Html.TextBoxFor(m => m.Order.BillingAddress.Company, new {@class="text-medium", title=T("Company")})<br/>
+                @Html.TextBoxFor(m => m.Order.BillingAddress.Address1, new {@class="text-medium", title=T("Address 1")})<br/>
+                @Html.TextBoxFor(m => m.Order.BillingAddress.Address2, new {@class="text-medium", title=T("Address 2")})<br/>
+                @Html.TextBoxFor(m => m.Order.BillingAddress.City, new {@class="text", title=T("City")})
+                @Html.TextBoxFor(m => m.Order.BillingAddress.Province, new {@class="text-small", title=T("Province or State")})
+                @Html.TextBoxFor(m => m.Order.BillingAddress.PostalCode, new {@class="text-small", title=T("Postal code")})<br/>
+                @Html.TextBoxFor(m => m.Order.BillingAddress.Country, new {@class="text-medium", title=T("Country")})
+            </div>
+        </fieldset>
+    
+        <p>@T("E-mail:") <a href="@("mailto:" + Model.Order.CustomerEmail)">@Model.Order.CustomerEmail</a></p>
+        <p>@T("Phone:") <a href="@("tel:" + Model.Order.CustomerPhone)">@Model.Order.CustomerPhone</a></p>
+    </div>
+
+    <fieldset class="order-items">
+        <legend>@T("Products:")</legend>
+        <table>
+            <thead>
+                <tr>
+                    <th class="quantity"><abbr title="@T("Quantity")">@T("Qty")</abbr></th>
+                    <th class="description">@T("Product")</th>
+                    <th class="price">@T("Price")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Order.Items) {
+                    <tr>
+                        <td class="quantity">@item.Quantity &times;</td>
+                        <td class="description"><a href="@Url.ItemDisplayUrl(Model.Products[item.ProductId])">@item.Title</a></td>
+                        <td class="price">@item.Price.ToString("C")</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr class="subtotal">
+                    <td colspan="2" class="label">@T("Subtotal")</td>
+                    <td class="price">@Model.Order.SubTotal.ToString("C")</td>
+                </tr>
+                <tr class="taxes">
+                    <td colspan="2" class="label">@T("Taxes {0}", string.IsNullOrWhiteSpace(Model.Order.Taxes.Name) ? T("Taxes").Text : Model.Order.Taxes.Name)</td>
+                    <td class="price">@Model.Order.Taxes.Amount.ToString("C")</td>
+                </tr>
+                <tr class="shipping">
+                    <td colspan="2" class="label">@T("{0} {1}", Model.Order.ShippingOption.ShippingCompany, Model.Order.ShippingOption.Description)</td>
+                    <td class="price">@Model.Order.ShippingOption.Price.ToString("C")</td>
+                </tr>
+                <tr class="total">
+                    <td colspan="2" class="label">@T("Total")</td>
+                    <td class="price">@Model.Order.Total.ToString("C")</td>
+                </tr>
+            </tfoot>
+        </table>
+    </fieldset>
+
+    <fieldset>
+        <legend>@T("Charged to:")</legend>
+        <p>@T("Card **** **** **** {0} expiring {1}/{2}.", charge.Last4, charge.ExpirationMonth, charge.ExpirationYear)</p>
+        <p>@T("Transaction <a href=\"{1}\">{0}</a>.", charge.TransactionId, Model.LinkToTransaction)</p>
+    </fieldset>
+
+    <fieldset class="order-tracking">
+        <legend>@T("Tracking URL:")</legend>
+        <div class="order-tracking-view">
+            <a href="@Model.Order.TrackingUrl">@Model.Order.TrackingUrl</a>
+            <button class="edit-button link">@T("Edit")</button>
+        </div>
+        <div class="order-tracking-edit">
+            @Html.TextBoxFor(m => m.Order.TrackingUrl, new {@class="text-medium order-tracking-edit-field"})
+            <button class="cancel-button link">@T("Cancel")</button>
+        </div>
+    </fieldset>
+
+    @if (!string.IsNullOrWhiteSpace(Model.Order.SpecialInstructions)) {
+        <fieldset>
+            <legend>@T("Special instructions:")</legend>
+            @Model.Order.SpecialInstructions
+        </fieldset>
+    }
+
+    <fieldset class="order-events"
+              data-add-event-url="@Url.Action("AddEvent", "OrderAdmin", new {area = "Nwazet.Commerce"})" data-order-id="@Model.Order.Id">
+        <legend>@T("Activity:")</legend>
+        <ul class="order-event-log">
+            @if (Model.Order.Activity != null) {
+                foreach (var orderEvent in Model.Order.Activity) {
+                    <li>
+                        <p>
+                            @orderEvent.Date.ToLocalTime().ToString(CultureInfo.CurrentCulture)
+                            (@orderEvent.Category)
+                            @orderEvent.Description
+                        </p>
+                    </li>
+                }
+            }
+        </ul>
+
+        <ul>
+            @foreach (var category in Model.EventCategories) {
+                var stateid = ViewData.TemplateInfo.GetFullHtmlFieldId("EventCategory_" + category);
+                <li>
+                    @Html.RadioButton("EventCategory", category, new {@id = stateid, @class="new-order-event-category"})
+                    @Html.Label("EventCategory_" + category, Model.EventCategoryLabels[category].Text)
+                </li>
+            }
+        </ul>
+        <textarea class="new-order-event-description"></textarea>
+        <button type="button" class="new-order-event-add button grey">@T("Add")</button>
+    </fieldset>
+
+    <div class="order-link">@T("You may view this order at a later time by going to this address: <a href=\"{0}\">{0}</a>, using this password: \"{1}\".",
+                                Url.Action("Show", "OrderSsl", new {id = Model.Order.Id}), Model.Order.Password)</div>
+</div>

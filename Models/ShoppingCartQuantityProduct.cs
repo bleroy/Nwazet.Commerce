@@ -26,9 +26,9 @@ namespace Nwazet.Commerce.Models {
         }
 
         public override string ToString() {
-            return "{" + Quantity + " " + Product.Sku 
+            return Quantity + " " + Product.Sku 
                 + (string.IsNullOrWhiteSpace(AttributeDescription) ? "" : " " + AttributeDescription) 
-                + " at $" + Price + "}";
+                + " at $" + Price;
         }
     }
 }

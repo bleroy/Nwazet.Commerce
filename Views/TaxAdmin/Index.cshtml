@@ -1,0 +1,56 @@
+@using Nwazet.Commerce.ViewModels
+@using Orchard.ContentManagement
+@using Orchard.Core.Title.Models
+@using Orchard.Utility.Extensions
+@model TaxIndexViewModel
+
+@{
+	var pageSizes = new List<int?> { 10, 50, 100 };
+	var defaultPageSize = WorkContext.CurrentSite.PageSize;
+	if(!pageSizes.Contains(defaultPageSize)) { 
+		pageSizes.Add(defaultPageSize);
+	}
+    var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
+}
+
+<h1>@Html.TitleForPage(T("Manage Taxes").Text) </h1>
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.ValidationSummary()
+    <div class="manage">
+        @foreach(var provider in Model.TaxProviders) {
+            @Html.ActionLink(
+                T("Add a new {0}", provider.Name).Text,
+                "Create", "Admin",
+                new {
+                    Area = "Contents",
+                    Id = provider.ContentTypeName,
+                    ReturnUrl = Url.Action(
+                        "Index", "TaxAdmin",
+                        new { Area = "Nwazet.Commerce" })
+                },
+                new { @class = "button primaryAction" })
+        }
+    </div>
+
+    <fieldset>		
+        <table class="items">
+            <thead>
+                <tr>
+                    <th scope="col">@T("Name")</th>
+                    <th scope="col" class="actions">&nbsp;</th>
+                </tr>
+            </thead>
+            @foreach (var tax in Model.Taxes) { 
+                <tr>
+                    <td>
+                        @Html.ItemEditLinkWithReturnUrl(tax.Name, tax) 
+                    </td>
+                    <td>
+                        @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(tax, new {returnUrl}), new {itemprop = "RemoveUrl UnsafeUrl"})
+                    </td>
+                </tr>
+            }
+        </table>
+	@Display(Model.Pager)
+    </fieldset>
+} 

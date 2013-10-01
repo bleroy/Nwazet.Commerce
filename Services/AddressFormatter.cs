@@ -2,23 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nwazet.Commerce.Models;
-using Orchard.Tokens;
 
 namespace Nwazet.Commerce.Services {
     public class AddressFormatter : IAddressFormatter {
-        private readonly ITokenizer _tokenizer;
-
-        public AddressFormatter(ITokenizer tokenizer) {
-            _tokenizer = tokenizer;
-        }
-
         public string Format(Address address) {
             string country = address.Country;
             string pattern;
             if (!_addressPatterns.TryGetValue(country, out pattern)) {
                 pattern = DefaultPattern;
             }
-            var rawString = _tokenizer.Replace(pattern, address);
+            var rawString = pattern
+                .Replace("{Honorific}", address.Honorific)
+                .Replace("{FirstName}", address.FirstName)
+                .Replace("{LastName}", address.LastName)
+                .Replace("{Address1}", address.Address1)
+                .Replace("{Address2}", address.Address2)
+                .Replace("{City}", address.City)
+                .Replace("{Company}", address.Company)
+                .Replace("{Country}", address.Country)
+                .Replace("{PostalCode}", address.PostalCode)
+                .Replace("{Province}", address.Province);
             return string.Join(
                 Environment.NewLine,
                 rawString
@@ -28,7 +31,7 @@ namespace Nwazet.Commerce.Services {
         }
 
         private const string DefaultPattern = @"{Honorific} {FirstName} {LastName}
-{CompanyName}
+{Company}
 {Address1}
 {Address2}
 {City}, {Province} {PostalCode}
@@ -38,7 +41,7 @@ namespace Nwazet.Commerce.Services {
 {Address1}
 {Address2}
 {LastName} {FirstName} {Honorific}";
-        private const string BrazilianPattern = @"{CompanyName}
+        private const string BrazilianPattern = @"{Company}
 {Honorific} {FirstName} {LastName}
 {Address1}
 {Address2}
@@ -49,22 +52,22 @@ namespace Nwazet.Commerce.Services {
 {PostalCode} {City}
 {Address1}
 {Address2}
-{CompanyName}
+{Company}
 {Honorific} {FirstName}  {LastName}";
         private const string EuropeanPattern = @"{Honorific} {FirstName} {LastName}
-{CompanyName}
+{Company}
 {Address1}
 {Address2}
 {PostalCode} {City}
 {Province} 
 {Country}";
-        private const string GermanPattern = @"{CompanyName}
+        private const string GermanPattern = @"{Company}
 {Honorific} {FirstName}  {LastName}
 {Address1}
 {Address2}
 {Country} {PostalCode} {City}";
         private const string HungarianPattern = @"{Honorific} {LastName} {FirstName}
-{CompanyName}
+{Company}
 {City}
 {Address1}
 {Address2}
@@ -72,7 +75,7 @@ namespace Nwazet.Commerce.Services {
 {Province}
 {Country}";
         private const string ItalianPattern = @"{Honorific} {FirstName} {LastName}
-{CompanyName}
+{Company}
 {Address1}
 {Address2}
 {PostalCode} {City} {Province}
@@ -81,21 +84,21 @@ namespace Nwazet.Commerce.Services {
 {PostalCode} {Province} {City}
 {Address1}
 {Address2}
-{CompanyName}
+{Company}
 {LastName} {FirstName} {Honorific}";
         private const string KoreanPattern = @"{Country}
 {PostalCode}
 {Province} {City} {Address1} {Address2}
-{CompanyName}
+{Company}
 {LastName} {FirstName}  {Honorific}";
         private const string MalaysianPattern = @"{Honorific} {FirstName} {LastName}
-{CompanyName}
+{Company}
 {Address1}
 {Address2}
 {PostalCode} {City}
 {Province} {Country}";
         private const string PortuguesePattern = @"{Honorific} {FirstName} {LastName}
-{CompanyName}
+{Company}
 {Address1}
 {Address2}
 {City}
@@ -106,7 +109,7 @@ namespace Nwazet.Commerce.Services {
 {Province} {City}
 {Address1}
 {Address2}
-{CompanyName}
+{Company}
 {LastName}
 {FirstName}";
 

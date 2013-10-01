@@ -18,7 +18,7 @@ namespace Nwazet.Commerce.Filters {
 
         public void OnActionExecuting(ActionExecutingContext filterContext) {
             // Referrer needs to be handled client-side so that it works even if the page is cached
-            _resourceManager.Include("script", "~/Modules/Nwazet.Commerce/Scripts/referral.min.js", "~/Modules/Nwazet.Commerce/Scripts/referral.js");
+            _resourceManager.Include("script", "~/Modules/Nwazet.Commerce/scripts/referral.min.js", "~/Modules/Nwazet.Commerce/scripts/referral.js");
             // Also do the work on the server-side for the current, uncached request
             var ctx = _workContextAccessor.GetContext().HttpContext;
             if (ctx != null) {

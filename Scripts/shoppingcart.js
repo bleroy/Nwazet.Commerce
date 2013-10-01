@@ -64,10 +64,10 @@
                             localStorage[nwazetCart] = JSON.stringify(cart);
                         }
                     } else {
-                        var cachedCartString = localStorage[nwazetCart];
+                        var cachedCart, cachedCartString = localStorage[nwazetCart];
                         if (cachedCartString) {
                             try {
-                                var cachedCart = JSON.parse(cachedCartString);
+                                cachedCart = JSON.parse(cachedCartString);
                             } catch(ex) {
                                 localStorage.removeItem(nwazetCart);
                                 return;

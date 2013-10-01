@@ -31,8 +31,9 @@ namespace Nwazet.Commerce.Services {
 
         public void UpdateBundleProducts(ContentItem item, IEnumerable<ProductEntry> products) {
             var record = item.As<BundlePart>().Record;
-            var oldProducts = _bundleProductsRepository.Fetch(
-                r => r.BundlePartRecord == record);
+            var oldProducts = _bundleProductsRepository
+                .Fetch(r => r.BundlePartRecord == record)
+                .ToList();
             var lookupNew = products
                 .Where(e => e.Quantity > 0)
                 .ToDictionary(r => r.ProductId, r => r.Quantity);
@@ -69,7 +70,8 @@ namespace Nwazet.Commerce.Services {
 
         public IEnumerable<IContent> GetProducts() {
             return _contentManager
-                .List<ProductPart>()
+                .Query<ProductPart, ProductPartRecord>(VersionOptions.Latest)
+                .List()
                 .Where(p => !p.Has<BundlePart>());
         }
 
@@ -87,11 +89,14 @@ namespace Nwazet.Commerce.Services {
             return new BundleViewModel {
                 Products = GetProducts()
                     .Select(
-                        p => new ProductEntry {
-                            ProductId = p.ContentItem.Id,
-                            Product = p,
-                            Quantity = bundleProductQuantities.ContainsKey(p.Id) ? bundleProductQuantities[p.Id] : 0,
-                            DisplayText = _contentManager.GetItemMetadata(p).DisplayText
+                        p => {
+                            var id = p.ContentItem.Id;
+                            return new ProductEntry {
+                                ProductId = id,
+                                Product = p,
+                                Quantity = bundleProductQuantities.ContainsKey(id) ? bundleProductQuantities[id] : 0,
+                                DisplayText = _contentManager.GetItemMetadata(p).DisplayText
+                            };
                         }
                     )
                     .OrderBy(vm => vm.DisplayText)

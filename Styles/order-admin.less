@@ -1,0 +1,99 @@
+﻿.order-editor {
+    fieldset {
+        margin-top: 16px;
+        legend {
+            font-weight: bold;
+        }
+    }
+
+    .order-status, .order-events {
+        li {
+            display: inline-block;
+
+            label {
+                display: inline;
+            }
+        }
+    }
+
+    .addresses {
+        clear: both;
+
+        .shipping-address, .billing-address {
+            display: inline-block;
+            vertical-align: top;
+
+            input {
+                margin-left: 0;
+            }
+
+            .address-form {
+                display: none;
+            }
+
+            .address-view {
+                cursor: pointer;
+            }
+        }
+
+        .billing-address {
+            border-left: solid 1px lightgray;
+            margin-left: 8px;
+            padding-left: 8px;
+        }
+    }
+
+    .order-items {
+        table {
+            border-spacing: 1px;
+
+            th {
+                background-color: lightgray;
+                border-spacing: 1px;
+            }
+
+            td, th {
+                padding: 3px;
+
+                &.quantity, &.price {
+                    text-align: right;
+                }
+            }
+
+            tbody {
+                border-collapse: collapse;
+
+                tr:last-child td {
+                    border-bottom: 1px solid lightgray;
+                }
+            }
+
+            tfoot {
+                .label {
+                    text-align: right;
+                }
+
+                .total {
+                    td {
+                        font-weight: bold;
+                    }
+                }
+            }
+        }
+    }
+
+    .order-tracking {
+        .order-tracking-view {
+            display: none;
+        }
+    }
+
+    .order-event-log {
+        margin-bottom: 12px;
+
+        li {
+            display: block;
+            margin-bottom: 6px;
+        }
+    }
+}

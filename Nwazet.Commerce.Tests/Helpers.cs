@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using NUnit.Framework;
-using NUnit.Framework.Constraints;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
 using Nwazet.Commerce.Tests.Stubs;

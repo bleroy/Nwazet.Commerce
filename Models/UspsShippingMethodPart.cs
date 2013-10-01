@@ -195,7 +195,7 @@ namespace Nwazet.Commerce.Models {
             }
         }
 
-        private ShippingOption GetOption(double price, IEnumerable<string> includedShippingAreas, IEnumerable<string> excludedShippingAreas) {
+        private ShippingOption GetOption(double price, IList<string> includedShippingAreas, IList<string> excludedShippingAreas) {
             return new ShippingOption {
                 Description = Name,
                 Price = price,
