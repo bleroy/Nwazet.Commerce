@@ -14,6 +14,8 @@ namespace Nwazet.Commerce.Services {
         private readonly IWorkContextAccessor _wca;
         private readonly IClock _clock;
 
+        private IEnumerable<IPromotion> _promotions; 
+
         public DiscountPriceProvider(
             IContentManager contentManager,
             IWorkContextAccessor wca,
@@ -31,7 +33,8 @@ namespace Nwazet.Commerce.Services {
         public Func<IContent, string> DisplayUrlResolver { get; set; }
 
         public IEnumerable<IPromotion> GetPromotions() {
-            return _contentManager
+            if (_promotions != null) return _promotions;
+            return _promotions = _contentManager
                 .Query<DiscountPart, DiscountPartRecord>("Discount")
                 .List()
                 .Select(dp => new Discount(_wca, _clock) {DiscountPart = dp});
