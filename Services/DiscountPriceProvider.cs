@@ -32,7 +32,8 @@ namespace Nwazet.Commerce.Services {
 
         public IEnumerable<IPromotion> GetPromotions() {
             return _contentManager
-                .List<DiscountPart>("Discount")
+                .Query<DiscountPart, DiscountPartRecord>("Discount")
+                .List()
                 .Select(dp => new Discount(_wca, _clock) {DiscountPart = dp});
         }
 

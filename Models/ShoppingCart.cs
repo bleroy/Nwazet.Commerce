@@ -13,7 +13,9 @@ namespace Nwazet.Commerce.Models {
         private readonly IShoppingCartStorage _cartStorage;
         private readonly IPriceService _priceService;
         private readonly IEnumerable<IProductAttributesDriver> _attributesDrivers;
-        private readonly IEnumerable<ITaxProvider> _taxProviders; 
+        private readonly IEnumerable<ITaxProvider> _taxProviders;
+
+        private IEnumerable<ShoppingCartQuantityProduct> _products; 
 
         public ShoppingCart(
             IContentManager contentManager,
@@ -63,6 +65,7 @@ namespace Nwazet.Commerce.Models {
             else {
                 ItemsInternal.Insert(0, new ShoppingCartItem(productId, quantity, attributeIdsToValues));
             }
+            _products = null;
         }
 
         public ShoppingCartItem FindCartItem(int productId, IDictionary<int, string> attributeIdsToValues = null) {
@@ -100,9 +103,12 @@ namespace Nwazet.Commerce.Models {
             if (item == null) return;
 
             ItemsInternal.Remove(item);
+            _products = null;
         }
 
         public IEnumerable<ShoppingCartQuantityProduct> GetProducts() {
+            if (_products != null) return _products;
+
             var ids = Items.Select(x => x.ProductId);
 
             var productParts =
@@ -113,12 +119,14 @@ namespace Nwazet.Commerce.Models {
                  select new ShoppingCartQuantityProduct(item.Quantity, productParts.First(p => p.Id == item.ProductId), item.AttributeIdsToValues))
                     .ToList();
 
-            return shoppingCartQuantities
-                .Select(q => _priceService.GetDiscountedPrice(q, shoppingCartQuantities));
+            return _products = shoppingCartQuantities
+                .Select(q => _priceService.GetDiscountedPrice(q, shoppingCartQuantities))
+                .ToList();
         }
 
         public void UpdateItems() {
             ItemsInternal.RemoveAll(x => x.Quantity <= 0);
+            _products = null;
         }
 
         public double Subtotal() {
@@ -153,6 +161,7 @@ namespace Nwazet.Commerce.Models {
         }
 
         public void Clear() {
+            _products = null;
             ItemsInternal.Clear();
             UpdateItems();
         }
