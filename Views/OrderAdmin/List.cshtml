@@ -9,7 +9,7 @@
         <label for="publishActions">@T("Actions:")</label>
         <select id="publishActions" name="Options.BulkAction">
             @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.None, T("Choose action...").ToString())
-            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Remove, T("Delete").ToString())
+            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Remove, T("Archive").ToString())
         </select>
         <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
     </fieldset>
