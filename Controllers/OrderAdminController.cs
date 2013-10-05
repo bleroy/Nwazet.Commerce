@@ -70,6 +70,9 @@ namespace Nwazet.Commerce.Controllers {
 
                     query = query.Where(o => o.Status == filterOption);
                 }
+                else {
+                    query = query.Where(o => o.Status != OrderPart.Archived);
+                }
 
                 switch (model.Options.OrderBy) {
                     case ContentsOrder.Modified:
@@ -127,23 +130,23 @@ namespace Nwazet.Commerce.Controllers {
         [Orchard.Mvc.FormValueRequired("submit.BulkEdit")]
         public ActionResult ListPost(ContentOptions options, IEnumerable<int> itemIds, string returnUrl) {
             if (itemIds != null) {
-                var checkedContentItems = _contentManager.GetMany<ContentItem>(itemIds, VersionOptions.Latest,
+                var checkedOrders = _contentManager.GetMany<OrderPart>(itemIds, VersionOptions.Latest,
                     QueryHints.Empty);
                 switch (options.BulkAction) {
                     case ContentsBulkAction.None:
                         break;
                     case ContentsBulkAction.Remove:
-                        foreach (var item in checkedContentItems) {
+                        foreach (var order in checkedOrders) {
                             if (
-                                !_orchardServices.Authorizer.Authorize(Permissions.DeleteContent, item,
-                                    T("Couldn't remove selected content."))) {
+                                !_orchardServices.Authorizer.Authorize(Permissions.DeleteContent, order,
+                                    T("Couldn't archive selected orders."))) {
                                 _transactionManager.Cancel();
                                 return new HttpUnauthorizedResult();
                             }
 
-                            _contentManager.Remove(item);
+                            order.Status = OrderPart.Archived;
                         }
-                        _orchardServices.Notifier.Information(T("Content successfully removed."));
+                        _orchardServices.Notifier.Information(T("Orders successfully archived."));
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

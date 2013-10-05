@@ -5,7 +5,6 @@ using System.Web.Mvc;
 using Nwazet.Commerce.Models;
 using Orchard.ContentManagement;
 using Orchard.Localization;
-using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Html;
 
 namespace Nwazet.Commerce.Services {
@@ -71,7 +70,7 @@ namespace Nwazet.Commerce.Services {
                 return new Dictionary<string, LocalizedString> {
                     {OrderPart.Pending, T("Pending")},
                     {OrderPart.Accepted, T("Accepted")},
-                    {OrderPart.Shipped, T("Shipped")},
+                    {OrderPart.Archived, T("Archived")},
                     {OrderPart.Cancelled, T("Cancelled")}
                 };
             }

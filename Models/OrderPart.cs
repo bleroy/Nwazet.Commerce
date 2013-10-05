@@ -12,11 +12,11 @@ namespace Nwazet.Commerce.Models {
     public class OrderPart : ContentPart<OrderPartRecord>, ITitleAspect {
         public const string Pending = "Pending";
         public const string Accepted = "Accepted";
-        public const string Shipped = "Shipped";
+        public const string Archived = "Archived";
         public const string Cancelled = "Cancelled";
 
         public static readonly string[] States = {
-            Pending, Accepted, Shipped, Cancelled
+            Pending, Accepted, Archived, Cancelled
         };
 
         public const string Note = "Note";
