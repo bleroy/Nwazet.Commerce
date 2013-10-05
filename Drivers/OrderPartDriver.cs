@@ -4,6 +4,7 @@ using System.Linq;
 using System.Xml.Linq;
 using Nwazet.Commerce.Helpers;
 using Nwazet.Commerce.Models;
+using Nwazet.Commerce.Permissions;
 using Nwazet.Commerce.Services;
 using Nwazet.Commerce.ViewModels;
 using Orchard;
@@ -21,6 +22,7 @@ namespace Nwazet.Commerce.Drivers {
         private readonly IAddressFormatter _addressFormatter;
         private readonly IEnumerable<ICheckoutService> _checkoutServices;
         private readonly IWorkContextAccessor _wca;
+        private readonly IOrchardServices _orchardServices;
         private readonly IWorkflowManager _workflowManager;
 
         public OrderPartDriver(
@@ -28,12 +30,14 @@ namespace Nwazet.Commerce.Drivers {
             IAddressFormatter addressFormatter,
             IEnumerable<ICheckoutService> checkoutServices,
             IWorkContextAccessor wca,
+            IOrchardServices orchardServices,
             IWorkflowManager workflowManager) {
 
             _orderService = orderService;
             _addressFormatter = addressFormatter;
             _checkoutServices = checkoutServices;
             _wca = wca;
+            _orchardServices = orchardServices;
             _workflowManager = workflowManager;
             T = NullLocalizer.Instance;
         }
@@ -87,6 +91,9 @@ namespace Nwazet.Commerce.Drivers {
 
         //GET
         protected override DriverResult Editor(OrderPart part, dynamic shapeHelper) {
+            if (!_orchardServices.Authorizer.Authorize(OrderPermissions.ManageOrders, null, T("Cannot manage orders")))
+                return null;
+
             var contentManager = part.ContentItem.ContentManager;
             var products = contentManager
                 .GetMany<IContent>(part.Items.Select(p => p.ProductId), VersionOptions.Latest, QueryHints.Empty)
@@ -115,6 +122,9 @@ namespace Nwazet.Commerce.Drivers {
         //POST
         protected override DriverResult Editor(
             OrderPart part, IUpdateModel updater, dynamic shapeHelper) {
+
+            if (!_orchardServices.Authorizer.Authorize(OrderPermissions.ManageOrders, null, T("Cannot manage orders")))
+                return null;
 
             var previousTrackingUrl = part.TrackingUrl;
             var previousStatus = part.Status;

@@ -250,6 +250,7 @@
     <Compile Include="Models\ShoppingCartItem.cs" />
     <Compile Include="Models\ShoppingCartQuantityProduct.cs" />
     <Compile Include="Models\ShoppingCartWidgetPart.cs" />
+    <Compile Include="Permissions\OrderPermissions.cs" />
     <Compile Include="Routes\Routes.cs" />
     <Compile Include="Services\AddressFormatter.cs" />
     <Compile Include="Services\BundleService.cs" />

@@ -4,12 +4,12 @@ using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using Nwazet.Commerce.Models;
+using Nwazet.Commerce.Permissions;
 using Nwazet.Commerce.Services;
 using Nwazet.Commerce.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
-using Orchard.Core.Contents;
 using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions;
@@ -51,6 +51,9 @@ namespace Nwazet.Commerce.Controllers {
         }
 
         public ActionResult List(ListOrdersViewModel model, PagerParameters pagerParameters) {
+            if (!_orchardServices.Authorizer.Authorize(OrderPermissions.ManageOrders, null, T("Cannot manage orders")))
+                return new HttpUnauthorizedResult();
+
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             var query = _contentManager.Query<OrderPart, OrderPartRecord>(VersionOptions.Latest);
             var states = OrderPart.States.ToList();
@@ -137,8 +140,7 @@ namespace Nwazet.Commerce.Controllers {
                         break;
                     case ContentsBulkAction.Remove:
                         foreach (var order in checkedOrders) {
-                            if (
-                                !_orchardServices.Authorizer.Authorize(Permissions.DeleteContent, order,
+                            if (!_orchardServices.Authorizer.Authorize(OrderPermissions.ManageOrders, order,
                                     T("Couldn't archive selected orders."))) {
                                 _transactionManager.Cancel();
                                 return new HttpUnauthorizedResult();
@@ -156,6 +158,9 @@ namespace Nwazet.Commerce.Controllers {
         }
 
         public ActionResult AddEvent(int orderId, string category, string description) {
+            if (!_orchardServices.Authorizer.Authorize(OrderPermissions.ManageOrders, null, T("Cannot add order events")))
+                return new HttpUnauthorizedResult();
+
             var order = _orderService.Get(orderId);
             var orderEvent = order.LogActivity(category, description);
             var result = new JsonResult {
