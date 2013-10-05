@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nwazet.Commerce.Services;
+using Orchard.Autoroute.Models;
 using Orchard.ContentManagement;
 using Orchard.Core.Title.Models;
 using Orchard.Environment.Extensions;
@@ -112,7 +113,8 @@ namespace Nwazet.Commerce.Models {
             var ids = Items.Select(x => x.ProductId);
 
             var productParts =
-                _contentManager.GetMany<ProductPart>(ids, VersionOptions.Published, new QueryHints().ExpandParts<TitlePart>()).ToArray();
+                _contentManager.GetMany<ProductPart>(ids, VersionOptions.Published,
+                new QueryHints().ExpandParts<TitlePart, ProductPart, AutoroutePart>()).ToArray();
 
             var shoppingCartQuantities =
                 (from item in Items

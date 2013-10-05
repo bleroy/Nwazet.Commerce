@@ -14,10 +14,12 @@ using Orchard.Environment.Extensions;
 namespace Nwazet.Commerce.Drivers {
     [OrchardFeature("Nwazet.Attributes")]
     public class ProductAttributesPartDriver : ContentPartDriver<ProductAttributesPart>, IProductAttributesDriver {
-        private readonly IContentManager _contentManager;
+        private readonly IProductAttributeService _attributeService;
 
-        public ProductAttributesPartDriver(IContentManager contentManager) {
-            _contentManager = contentManager;
+        public ProductAttributesPartDriver(
+            IProductAttributeService attributeService) {
+
+            _attributeService = attributeService;
         }
 
         protected override string Prefix { get { return "NwazetCommerceAttribute"; } }
@@ -31,11 +33,9 @@ namespace Nwazet.Commerce.Drivers {
 
         public dynamic GetAttributeDisplayShape(IContent product, dynamic shapeHelper) {
             var attributesPart = product.As<ProductAttributesPart>();
-            var attributes = attributesPart == null ? null : _contentManager
-                .GetMany<ProductAttributePart>(
-                    attributesPart.AttributeIds,
-                    VersionOptions.Published,
-                    new QueryHints().ExpandParts<TitlePart>());
+            var attributes = attributesPart == null
+                ? null
+                : _attributeService.GetAttributes(attributesPart.AttributeIds);
             return shapeHelper.Parts_ProductAttributes(
                 ContentItem: product,
                 ProductAttributes: attributes
@@ -53,11 +53,7 @@ namespace Nwazet.Commerce.Drivers {
             // The same attributes must be present
             if (!attributesPart.AttributeIds.All(attributeIdsToValues.ContainsKey)) return false;
             // Get the actual attributes in order to verify the values
-            var attributes = _contentManager.GetMany<ProductAttributePart>(
-                attributeIdsToValues.Keys, 
-                VersionOptions.Published, 
-                QueryHints.Empty)
-                .ToList();
+            var attributes = _attributeService.GetAttributes(attributeIdsToValues.Keys);
             // The values that got passed in must exist
             return attributes.All(attribute => attribute.AttributeValues.Contains(attributeIdsToValues[attribute.Id]));
         }
@@ -72,11 +68,9 @@ namespace Nwazet.Commerce.Drivers {
                     Model: new ProductAttributesPartEditViewModel {
                         Prefix = Prefix,
                         Part = part,
-                        Attributes = _contentManager
-                        .Query<ProductAttributePart>(VersionOptions.Published)
-                        .Join<TitlePartRecord>()
-                        .OrderBy(p => p.Title)
-                        .List()
+                        Attributes = _attributeService.Attributes
+                            .OrderBy(p => p.As<TitlePart>().Title)
+                            .ToList()
                     }));
         }
 

@@ -10,7 +10,7 @@ Features:
         Name: Nwazet Commerce
         Description: Commerce for small online businesses
         Category: Commerce
-        Dependencies: Orchard.Fields, Orchard.Tokens, Orchard.Workflows, Contrib.SecuredSocketsLayer
+        Dependencies: Orchard.Autoroute, Orchard.Fields, Orchard.Tokens, Orchard.Workflows, Contrib.SecuredSocketsLayer
     Nwazet.Bundles:
         Name: Nwazet Bundles
         Description: Product bundles are products made of a set of products

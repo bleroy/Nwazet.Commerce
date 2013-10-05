@@ -123,6 +123,10 @@
       <Project>{36b82383-d69e-4897-a24a-648babdf80ec}</Project>
       <Name>Contrib.SecuredSocketsLayer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Autoroute\Orchard.Autoroute.csproj">
+      <Project>{66fccd76-2761-47e3-8d11-b45d0001ddaa}</Project>
+      <Name>Orchard.Autoroute</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Fields\Orchard.Fields.csproj">
       <Project>{3787dde5-e5c8-4841-bda7-dcb325388064}</Project>
       <Name>Orchard.Fields</Name>
@@ -251,12 +255,14 @@
     <Compile Include="Services\BundleService.cs" />
     <Compile Include="Services\Country.cs" />
     <Compile Include="Services\IOrderService.cs" />
+    <Compile Include="Services\IProductAttributeService.cs" />
     <Compile Include="Services\IStripeWebService.cs" />
     <Compile Include="Services\ITax.cs" />
     <Compile Include="Services\ITaxProvider.cs" />
     <Compile Include="Services\IUspsService.cs" />
     <Compile Include="Services\IUspsWebService.cs" />
     <Compile Include="Services\OrderService.cs" />
+    <Compile Include="Services\ProductAttributeService.cs" />
     <Compile Include="Services\ShippingService.cs" />
     <Compile Include="Services\StateOrCountryTaxProvider.cs" />
     <Compile Include="Services\StripeWebService.cs" />

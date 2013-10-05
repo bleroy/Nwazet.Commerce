@@ -1,10 +1,12 @@
 ﻿@using Nwazet.Commerce.Models
+@using System.Linq;
 @{
     var attributeFieldName = Html.Name("productattributes");
     var index = 0;
+    var attributes = ((IEnumerable<ProductAttributePart>)Model.ProductAttributes).ToList();
 }
-@if (Model.ProductAttributes != null && Model.ProductAttributes.Length != 0) {
-    foreach (ProductAttributePart attribute in Model.ProductAttributes) {
+@if (attributes != null && attributes.Any()) {
+    foreach (ProductAttributePart attribute in attributes) {
         <input type="hidden" name="@(attributeFieldName)[@(index)].Key" value="@attribute.Id"/>
         <select name="@(attributeFieldName)[@(index)].Value" class="product-attribute">
             @foreach (var val in attribute.AttributeValues) {
