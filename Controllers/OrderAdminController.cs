@@ -157,6 +157,33 @@ namespace Nwazet.Commerce.Controllers {
             return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
         }
 
+        [HttpPost]
+        public ActionResult Archive(int id, string returnUrl = null) {
+            var order = _contentManager.Get<OrderPart>(id);
+            if (!_orchardServices.Authorizer.Authorize(OrderPermissions.ManageOrders, order,
+                T("Couldn't archive selected order."))) {
+                return new HttpUnauthorizedResult();
+            }
+
+            order.Status = OrderPart.Archived;
+            if (returnUrl != null) return Redirect(returnUrl);
+            return RedirectToAction("List");
+        }
+
+        [HttpPost]
+        public ActionResult Unarchive(int id, string returnUrl = null)
+        {
+            var order = _contentManager.Get<OrderPart>(id);
+            if (!_orchardServices.Authorizer.Authorize(OrderPermissions.ManageOrders, order,
+                T("Couldn't unarchive selected order."))) {
+                return new HttpUnauthorizedResult();
+            }
+
+            order.Status = OrderPart.Pending;
+            if (returnUrl != null) return Redirect(returnUrl);
+            return RedirectToAction("List");
+        }
+
         public ActionResult AddEvent(int orderId, string category, string description) {
             if (!_orchardServices.Authorizer.Authorize(OrderPermissions.ManageOrders, null, T("Cannot add order events")))
                 return new HttpUnauthorizedResult();

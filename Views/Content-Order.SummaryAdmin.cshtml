@@ -1,0 +1,34 @@
+﻿@using Nwazet.Commerce.Models
+@using Orchard.ContentManagement;
+@using Orchard.Utility.Extensions;
+@{
+    ContentItem contentItem = Model.ContentItem;
+    var order = contentItem.As<OrderPart>();
+    var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
+}
+<div class="summary" itemscope="itemscope" itemid="@contentItem.Id" itemtype="http://orchardproject.net/data/ContentItem">
+    <div class="properties">
+        <input type="checkbox" value="@contentItem.Id" name="itemIds"/>
+        <h3>@Html.ItemAdminLink(contentItem)</h3>
+        @if (Model.Header != null) {
+        <div class="header">@Display(Model.Header)</div>
+        }
+        @if (Model.Meta != null) {
+        <div class="metadata">@Display(Model.Meta)</div>
+        }
+    </div>
+    <div class="related">
+        @Display(Model.Actions)
+        @Html.ItemEditLink(T("Edit").Text, contentItem)@T(" | ")
+        @if (order.Status == OrderPart.Archived) {
+            @Html.Link(T("Unarchive").Text, Url.Action("Unarchive", "OrderAdmin", new {@id = order.Id, returnUrl}), new {itemprop = "UnsafeUrl"})@T(" | ")
+            @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(contentItem, new {returnUrl}), new {itemprop = "RemoveUrl UnsafeUrl"})
+        }
+        else {
+            @Html.Link(T("Archive").Text, Url.Action("Archive", "OrderAdmin", new {@id = order.Id, returnUrl}), new {itemprop = "UnsafeUrl"})
+        }
+    </div>
+    @if (Model.Content != null) {
+    <div class="primary">@Display(Model.Content)</div>
+    }
+</div>

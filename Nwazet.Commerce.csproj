@@ -376,6 +376,7 @@
     <Content Include="Views\EditorTemplates\Parts\StateOrCountryTax.cshtml" />
     <Content Include="Views\OrderSummaryAdmin.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\Order.cshtml" />
+    <Content Include="Views\Content-Order.SummaryAdmin.cshtml" />
     <None Include="Views\OrderAdmin\List.cshtml" />
     <None Include="Views\Order_CheckPassword.cshtml" />
     <None Include="Views\Order_Confirmation.cshtml" />
