@@ -1,5 +1,4 @@
-﻿@using System.Text.RegularExpressions
-@using Contrib.SecuredSocketsLayer.Services
+﻿@using Orchard.SecureSocketsLayer.Services
 @*
 Available model properties:
     CartItems
@@ -23,45 +22,10 @@ Available model properties:
     Custom
 *@
 @{
-    var sslService = WorkContext.Resolve<ISecuredSocketsLayerService>();
-}
-@functions {
-    string Sanitize(string html) {
-        var tagExpression = new Regex(@"<\s*?[^>]+\s*?>");
-        var entityExpression = new Regex(@"&[^;]+;");
-        return entityExpression.Replace(tagExpression.Replace(html, ""), "");
-    }
+    var sslService = WorkContext.Resolve<ISecureSocketsLayerService>();
 }
 @if (Model.ShippingOptions != null) {
-    <form method="POST" action="@sslService.SecureActionUrl("Checkout", "StripeSsl", new {area = "Nwazet.Commerce"})" class="stripe-checkout">
-        @*        @for (var i = 0; i < Model.CartItems.Count; i++) {
-            var product = Model.CartItems[i];
-            var cartItemPrefix = "CartItems[" + i + "].";
-            var title = product.Title
-                        + (product.ProductAttributes == null
-                            ? "" : " (" + string.Join(", ", product.ProductAttributes.Values) + ")");
-            <input type="hidden" name="@(cartItemPrefix + "ProductId")" value="@product.Product.Id"/>
-            <input type="hidden" name="@(cartItemPrefix + "Quantity")" value="@product.Quantity"/>
-            <input type="hidden" name="@(cartItemPrefix + "Price")" value="@product.DiscountedPrice"/>
-            <input type="hidden" name="@(cartItemPrefix + "Title")" value="@title"/>
-        }
-        @{
-            var custom = ((Model.Custom as IEnumerable<string>) ?? new string[] {}).ToList();
-            if (custom.Any()) {
-                <input type="hidden" name="comment" value="@string.Join("; ", custom)"/>
-            }
-        }
-        @{var shippingOption = Model.ShippingOptions[0];
-            <input type="hidden" name="ShippingOption.Description" value="@Sanitize(shippingOption.Description)" />
-            <input type="hidden" name="ShippingOption.ShippingCompany" value="@shippingOption.ShippingCompany" />
-            <input type="hidden" name="ShippingOption.Price" value="@shippingOption.Price" />
-        }
-        <input type="hidden" name="Taxes.Name" value="@Model.Taxes.Name" />
-        <input type="hidden" name="Taxes.Amount" value="@Model.Taxes.Amount" />
-
-        <input type="hidden" name="Country" value="@Model.Country"/>
-        <input type="hidden" name="ZipCode" value="@Model.ZipCode"/>
-*@
+    <form method="POST" action="@sslService.SecureActionUrl("Checkout", "Stripe", new {area = "Nwazet.Commerce"})" class="stripe-checkout">
         @Html.AntiForgeryTokenOrchard()
         <input type="hidden" name="checkoutData" value="@Model.EncryptedData"/>
         <input type="image" name="StripeCheckout" src="@Url.Content("~/Modules/Nwazet.Commerce/Content/checkout-with-stripe.png")" alt="@T("Checkout with Stripe")" class="checkout-button"/>

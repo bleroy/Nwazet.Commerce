@@ -61,7 +61,7 @@ namespace Nwazet.Commerce.Routes {
                         "stripe/checkout",
                         new RouteValueDictionary {
                             {"area", "Nwazet.Commerce"},
-                            {"controller", "StripeSsl"},
+                            {"controller", "Stripe"},
                             {"action", "Checkout"}
                         },
                         new RouteValueDictionary(),
@@ -75,7 +75,7 @@ namespace Nwazet.Commerce.Routes {
                         "stripe/ship",
                         new RouteValueDictionary {
                             {"area", "Nwazet.Commerce"},
-                            {"controller", "StripeSsl"},
+                            {"controller", "Stripe"},
                             {"action", "Ship"}
                         },
                         new RouteValueDictionary(),
@@ -89,7 +89,7 @@ namespace Nwazet.Commerce.Routes {
                         "stripe/pay",
                         new RouteValueDictionary {
                             {"area", "Nwazet.Commerce"},
-                            {"controller", "StripeSsl"},
+                            {"controller", "Stripe"},
                             {"action", "Pay"}
                         },
                         new RouteValueDictionary(),

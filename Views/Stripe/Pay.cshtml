@@ -1,0 +1,98 @@
+﻿@model Nwazet.Commerce.ViewModels.StripeCheckoutViewModel
+@{
+    var title = Layout.Title = T("Checkout with Stripe - 2: Credit Card Information");
+    Script.Require("jQuery");
+    Script.Include("https://js.stripe.com/v1/");
+    using (Script.Foot()) {
+        <script type="text/javascript">
+            Stripe.setPublishableKey("@Model.PublishableKey");
+
+            $(function() {
+                var tokenForm = $("#token-form"),
+                    errors = $(".payment-errors"),
+                    showError = function(condition, message) {
+                        if (!condition) {
+                            errors.show().html(message);
+                        } else {
+                            errors.hide();
+                        }
+                    },
+                    cardNumber = $(".card-number")
+                        .blur(function() {
+                            showError(
+                                Stripe.validateCardNumber(cardNumber.val()),
+                                "@T("Invalid card number")");
+                        }),
+                    cvc = $(".card-cvc")
+                        .blur(function() {
+                            showError(
+                                Stripe.validateCVC(cvc.val()),
+                                "@T("Invalid CVC")");
+                        }),
+                    expMonth = $(".card-expiry-month").keypress(function(e) {
+                        if (e.which == 47) {
+                            e.preventDefault();
+                            expYear.focus();
+                            return false;
+                        }
+                    }),
+                    expYear = $(".card-expiry-year")
+                        .blur(function() {
+                            showError(
+                                Stripe.validateExpiry(expMonth.val(), expYear.val()),
+                                "@T("Invalid expiration date")");
+                        }),
+                    submit = $(".submit-button")
+                        .click(function(event) {
+                            event.preventDefault();
+                            submit.prop("disabled", true);
+
+                            Stripe.createToken({
+                                number: cardNumber.val(),
+                                cvc: cvc.val(),
+                                exp_month: expMonth.val(),
+                                exp_year: expYear.val()
+                            }, stripeResponseHandler);
+                            return false;
+                        }),
+                    stripeResponseHandler = function(status, response) {
+                        if (response.error) {
+                            showError(false, response.error.message);
+                            submit.prop("disabled", false);
+                        } else {
+                            var token = response.id;
+                            tokenForm
+                                .append($("<input type=\"hidden\" name=\"stripeToken\"/>").val(token))
+                                .get(0)
+                                .submit();
+                        }
+                    };
+            });
+        </script>
+    }
+}
+<h1>@title</h1>
+<div class="payment-errors"></div>
+
+<div id="payment-form">
+    <label for="@Html.Id("cardNumber")">@T("Card Number")</label>
+    <input id="@Html.Id("cardNumber")" type="text" size="20" autocomplete="off" class="card-number input-medium"/>
+
+    <label for="@Html.Id("cvc")">@T("CVC")</label>
+    <input id="@Html.Id("cvc")" type="text" size="4" autocomplete="off" class="card-cvc input-mini"/>
+    <div class="hint">@T("a 3-digit code on the back of your card, or a 4-digit code on the front if your card is an American Express.")</div>
+
+    <label for="@Html.Id("expirationMonth")">@T("Expiration date (MM/YYYY)")</label>
+    <input id="@Html.Id("expirationMonth")" type="text" size="2" class="card-expiry-month input-mini"/>
+    <span>@T(" / ")</span>
+    <input id="@Html.Id("expirationYear")" type="text" size="4" class="card-expiry-year input-mini"/>
+
+    <div class="actions">
+        @using (Html.BeginFormAntiForgeryPost(Url.Action("Pay", "Stripe", new {area = "Nwazet.Commerce"}), FormMethod.Post)) {
+            <input type="submit" name="back" class="back-button" value="@T("< Back")"/>
+        }
+        <button class="submit-button">@T("Next >")</button>
+    </div>
+</div>
+@using (Html.BeginFormAntiForgeryPost(Url.Action("Pay", "Stripe", new {area = "Nwazet.Commerce"}), FormMethod.Post, new {@id="token-form"})) {
+}

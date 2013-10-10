@@ -119,10 +119,6 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Contrib.SecuredSocketsLayer\Contrib.SecuredSocketsLayer.csproj">
-      <Project>{36b82383-d69e-4897-a24a-648babdf80ec}</Project>
-      <Name>Contrib.SecuredSocketsLayer</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Orchard.Autoroute\Orchard.Autoroute.csproj">
       <Project>{66fccd76-2761-47e3-8d11-b45d0001ddaa}</Project>
       <Name>Orchard.Autoroute</Name>
@@ -138,6 +134,10 @@
     <ProjectReference Include="..\Orchard.Roles\Orchard.Roles.csproj">
       <Project>{d10ad48f-407d-4db5-a328-173ec7cb010f}</Project>
       <Name>Orchard.Roles</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.SecureSocketsLayer\Orchard.SecureSocketsLayer.csproj">
+      <Project>{36b82383-d69e-4897-a24a-648babdf80ec}</Project>
+      <Name>Orchard.SecureSocketsLayer</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
       <Project>{6f759635-13d7-4e94-bcc9-80445d63f117}</Project>
@@ -160,7 +160,7 @@
     <Compile Include="Controllers\ProductAdminController.cs" />
     <Compile Include="Controllers\ShippingAdminController.cs" />
     <Compile Include="Controllers\ShoppingCartController.cs" />
-    <Compile Include="Controllers\StripeSslController.cs" />
+    <Compile Include="Controllers\StripeController.cs" />
     <Compile Include="Drivers\BundlePartDriver.cs" />
     <Compile Include="Drivers\OrderPartDriver.cs" />
     <Compile Include="Drivers\StateOrCountryTaxPartDriver.cs" />
@@ -359,8 +359,8 @@
     <Content Include="Views\Parts\ProductAttributes.cshtml" />
     <Content Include="Views\ShippingInfoForm.cshtml" />
     <Content Include="Views\ShippingOptions.cshtml" />
-    <Content Include="Views\StripeSsl\Pay.cshtml" />
-    <Content Include="Views\StripeSsl\Ship.cshtml" />
+    <Content Include="Views\Stripe\Pay.cshtml" />
+    <Content Include="Views\Stripe\Ship.cshtml" />
     <Content Include="Views\UspsShippingTestForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -380,7 +380,7 @@
     <None Include="Views\OrderAdmin\List.cshtml" />
     <None Include="Views\Order_CheckPassword.cshtml" />
     <None Include="Views\Order_Confirmation.cshtml" />
-    <None Include="Views\StripeSsl\Confirmation.cshtml" />
+    <None Include="Views\Stripe\Confirmation.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
