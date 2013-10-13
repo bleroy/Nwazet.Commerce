@@ -16,7 +16,7 @@ using Orchard.Localization;
 using Orchard.Workflows.Services;
 
 namespace Nwazet.Commerce.Drivers {
-    [OrchardFeature("Nwazet.Commerce")]
+    [OrchardFeature("Nwazet.Orders")]
     public class OrderPartDriver : ContentPartDriver<OrderPart> {
         private readonly IOrderService _orderService;
         private readonly IAddressFormatter _addressFormatter;

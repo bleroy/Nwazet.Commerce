@@ -149,7 +149,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Activities\CommerceActivities.cs" />
+    <Compile Include="Activities\CommerceActivity.cs" />
+    <Compile Include="Activities\OrderActivity.cs" />
     <Compile Include="Controllers\BundleAdminController.cs" />
     <Compile Include="Controllers\AttributesAdminController.cs" />
     <Compile Include="Controllers\OrderAdminController.cs" />
@@ -200,6 +201,7 @@
     <Compile Include="Migrations\BundleMigrations.cs" />
     <Compile Include="Migrations\CommerceMigrations.cs" />
     <Compile Include="Migrations\AttributesMigrations.cs" />
+    <Compile Include="Migrations\OrderMigrations.cs" />
     <Compile Include="Migrations\TaxMigrations.cs" />
     <Compile Include="Migrations\UspsMigrations.cs" />
     <Compile Include="Migrations\StripeMigrations.cs" />
@@ -251,7 +253,10 @@
     <Compile Include="Models\ShoppingCartQuantityProduct.cs" />
     <Compile Include="Models\ShoppingCartWidgetPart.cs" />
     <Compile Include="Permissions\OrderPermissions.cs" />
-    <Compile Include="Routes\Routes.cs" />
+    <Compile Include="Routes\UspsRoutes.cs" />
+    <Compile Include="Routes\StripeRoutes.cs" />
+    <Compile Include="Routes\OrderRoutes.cs" />
+    <Compile Include="Routes\CommerceRoutes.cs" />
     <Compile Include="Services\AddressFormatter.cs" />
     <Compile Include="Services\BundleService.cs" />
     <Compile Include="Services\Country.cs" />

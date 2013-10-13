@@ -5,11 +5,13 @@ using Nwazet.Commerce.Services;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
+using Orchard.Environment.Extensions;
 using Orchard.Mvc;
 using Orchard.Themes;
 
 namespace Nwazet.Commerce.Controllers {
     [Themed]
+    [OrchardFeature("Nwazet.Orders")]
     public class OrderSslController : Controller {
         private readonly IOrderService _orderService;
         private readonly IContentManager _contentManager;

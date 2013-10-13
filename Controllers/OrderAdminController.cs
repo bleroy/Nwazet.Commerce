@@ -22,7 +22,7 @@ using Orchard.UI.Notify;
 
 namespace Nwazet.Commerce.Controllers {
     [Admin]
-    [OrchardFeature("Nwazet.Commerce")]
+    [OrchardFeature("Nwazet.Orders")]
     public class OrderAdminController : Controller {
         private readonly IOrderService _orderService;
         private readonly IContentManager _contentManager;

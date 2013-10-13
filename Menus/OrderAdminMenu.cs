@@ -4,7 +4,7 @@ using Orchard.Localization;
 using Orchard.UI.Navigation;
 
 namespace Nwazet.Commerce.Menus {
-    [OrchardFeature("Nwazet.Commerce")]
+    [OrchardFeature("Nwazet.Orders")]
     public class OrderAdminMenu : INavigationProvider {
         public string MenuName {
             get { return "admin"; }

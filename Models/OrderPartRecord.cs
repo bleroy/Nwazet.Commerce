@@ -2,9 +2,8 @@
 using Orchard.Environment.Extensions;
 
 namespace Nwazet.Commerce.Models {
-    [OrchardFeature("Nwazet.Commerce")]
-    public class OrderPartRecord : ContentPartRecord
-    {
+    [OrchardFeature("Nwazet.Orders")]
+    public class OrderPartRecord : ContentPartRecord {
         public virtual string Status { get; set; }
         public virtual string Contents { get; set; }
         public virtual string Customer { get; set; }

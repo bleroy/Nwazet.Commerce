@@ -1,10 +1,15 @@
 ﻿using System.Collections.Generic;
+using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Security.Permissions;
 
 namespace Nwazet.Commerce.Permissions {
+    [OrchardFeature("Nwazet.Orders")]
     public class OrderPermissions : IPermissionProvider {
-        public static readonly Permission ManageOrders = new Permission { Description = "Manage orders", Name = "ManageOrders" };
+        public static readonly Permission ManageOrders = new Permission {
+            Description = "Manage orders",
+            Name = "ManageOrders"
+        };
 
         public virtual Feature Feature { get; set; }
 

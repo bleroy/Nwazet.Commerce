@@ -8,7 +8,7 @@ using Orchard.ContentManagement.Aspects;
 using Orchard.Environment.Extensions;
 
 namespace Nwazet.Commerce.Models {
-    [OrchardFeature("Nwazet.Commerce")]
+    [OrchardFeature("Nwazet.Orders")]
     public class OrderPart : ContentPart<OrderPartRecord>, ITitleAspect {
         public const string Pending = "Pending";
         public const string Accepted = "Accepted";

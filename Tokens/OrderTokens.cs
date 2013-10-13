@@ -8,7 +8,7 @@ using Orchard.Localization;
 using Orchard.Tokens;
 
 namespace Nwazet.Commerce.Tokens {
-    [OrchardFeature("Nwazet.Commerce")]
+    [OrchardFeature("Nwazet.Orders")]
     public class OrderTokens : ITokenProvider {
         private readonly IOrderService _orderService;
         private readonly IAddressFormatter _addressFormatter;

@@ -16,29 +16,19 @@ Features:
         Description: Product bundles are products made of a set of products
         Category: Commerce
         Dependencies: Nwazet.Commerce
+    Nwazet.Attributes:
+        Name: Nwazet Product Attributes
+        Description: Enables customers to customize a product when they add it to the cart
+        Category: Commerce
+        Dependencies: Nwazet.Commerce
+    Nwazet.Orders:
+        Name: Nwazet Orders
+        Description: Order management for Nwazet.Commerce
+        Category: Commerce
+        Dependencies: Nwazet.Commerce
     Nwazet.Shipping:
         Name: Nwazet Shipping
         Description: Define shipping options to work with Nwazet Commerce
-        Category: Commerce
-        Dependencies: Nwazet.Commerce
-    Nwazet.Taxes:
-        Name: Nwazet Taxes
-        Description: Define tax options to work with Nwazet Commerce
-        Category: Commerce
-        Dependencies: Nwazet.Commerce
-    Usps.Shipping:
-		Name: USPS Shipping
-		Description: Dynamic USPS shipping method, using USPS web services for data that is always up-to-date
-		Category: Commerce
-		Dependencies: Nwazet.Commerce, Nwazet.Shipping
-    Google.Checkout:
-        Name: Google Checkout
-        Description: Google Checkout part that can be added to any content type
-        Category: Commerce
-        Dependencies: Nwazet.Commerce, Nwazet.Shipping
-    Nwazet.Referrals:
-        Name: Nwazet Referrals
-        Description: Keeps track of the domain the user came from, in order to honor partner referral fees
         Category: Commerce
         Dependencies: Nwazet.Commerce
     Nwazet.Promotions:
@@ -46,13 +36,28 @@ Features:
         Description: Apply promotions to your products
         Category: Commerce
         Dependencies: Nwazet.Commerce, Orchard.Roles
-    Nwazet.Attributes:
-        Name: Nwazet Product Attributes
-        Description: Enables customers to customize a product when they add it to the cart
+    Nwazet.Taxes:
+        Name: Nwazet Taxes
+        Description: Define tax options to work with Nwazet Commerce
         Category: Commerce
         Dependencies: Nwazet.Commerce
+    Nwazet.Referrals:
+        Name: Nwazet Referrals
+        Description: Keeps track of the domain the user came from, in order to honor partner referral fees
+        Category: Commerce
+        Dependencies: Nwazet.Commerce
+    Usps.Shipping:
+		Name: USPS Shipping
+		Description: Dynamic USPS shipping method, using USPS web services for data that is always up-to-date
+		Category: Commerce
+		Dependencies: Nwazet.Commerce, Nwazet.Shipping
     Stripe:
         Name: Stripe
         Description: Stripe checkout for Nwazet.Commerce
         Category: Commerce
-        Dependencies: Nwazet.Commerce
+        Dependencies: Nwazet.Commerce, Nwazet.Orders
+    Google.Checkout:
+        Name: Google Checkout (deprecated)
+        Description: Google Checkout part that can be added to any content type. This feature is deprecated as Google is retiring this service.
+        Category: Commerce
+        Dependencies: Nwazet.Commerce, Nwazet.Shipping

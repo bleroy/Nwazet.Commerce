@@ -5,6 +5,7 @@ using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
 namespace Nwazet.Commerce.Activities {
+    [OrchardFeature("Nwazet.Commerce")]
     public abstract class CommerceActivity : Event {
 
         public Localizer T { get; set; }
@@ -40,39 +41,6 @@ namespace Nwazet.Commerce.Activities {
 
         public override LocalizedString Description {
             get { return T("The shopping cart has been updated."); }
-        }
-    }
-
-    [OrchardFeature("Nwazet.Commerce")]
-    public class NewOrder : CommerceActivity {
-        public override string Name {
-            get { return "NewOrder"; }
-        }
-
-        public override LocalizedString Description {
-            get { return T("A new order has been passed."); }
-        }
-    }
-
-    [OrchardFeature("Nwazet.Commerce")]
-    public class OrderStatusChanged : CommerceActivity {
-        public override string Name {
-            get { return "OrderStatusChanged"; }
-        }
-
-        public override LocalizedString Description {
-            get { return T("The status of an order has changed."); }
-        }
-    }
-
-    [OrchardFeature("Nwazet.Commerce")]
-    public class OrderTrackingUrlChanged : CommerceActivity {
-        public override string Name {
-            get { return "OrderTrackingUrlChanged"; }
-        }
-
-        public override LocalizedString Description {
-            get { return T("The tracking URL of an order has changed."); }
         }
     }
 }

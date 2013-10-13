@@ -4,10 +4,12 @@ using System.Security.Cryptography;
 using System.Web.Mvc;
 using Nwazet.Commerce.Models;
 using Orchard.ContentManagement;
+using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Mvc.Html;
 
 namespace Nwazet.Commerce.Services {
+    [OrchardFeature("Nwazet.Orders")]
     public class OrderService : IOrderService {
         private static readonly RNGCryptoServiceProvider RngCsp = new RNGCryptoServiceProvider();
 

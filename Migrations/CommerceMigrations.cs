@@ -80,26 +80,5 @@ namespace Nwazet.Commerce.Migrations {
                 .AddColumn<string>("Size"));
             return 6;
         }
-
-        public int UpdateFrom6() {
-            SchemaBuilder.CreateTable("OrderPartRecord", table => table
-                .ContentPartRecord()
-                .Column<string>("Status")
-                .Column<string>("Contents", column => column.Unlimited())
-                .Column<string>("Customer", column => column.Unlimited())
-                .Column<string>("Activity", column => column.Unlimited())
-                .Column<string>("TrackingUrl")
-                .Column<string>("Password")
-                .Column<bool>("IsTestOrder"));
-
-            ContentDefinitionManager.AlterTypeDefinition("Order", type => type
-                .DisplayedAs("Order")
-                .WithPart("Order")
-                .WithPart("OrderPart")
-                .WithPart("CommonPart", p => p.WithSetting("OwnerEditorSettings.ShowOwnerEditor", "false"))
-                .WithPart("IdentityPart"));
-
-            return 7;
-        }
     }
 }
