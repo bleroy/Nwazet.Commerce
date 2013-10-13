@@ -47,9 +47,9 @@ namespace Nwazet.Commerce.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Add(int id, int quantity, IDictionary<int, string> productattributes) {
+        public ActionResult Add(int id, int quantity, IDictionary<int, string> productattributes = null) {
             // Workaround MVC buggy behavior that won't correctly bind an empty dictionary
-            if (productattributes.Count == 1 && productattributes.Values.First() == "__none__") {
+            if (productattributes != null && productattributes.Count == 1 && productattributes.Values.First() == "__none__") {
                 productattributes = null;
             }
             _shoppingCart.Add(id, quantity, productattributes);

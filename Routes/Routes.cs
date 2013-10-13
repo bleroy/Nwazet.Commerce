@@ -58,6 +58,21 @@ namespace Nwazet.Commerce.Routes {
                 },
                 new RouteDescriptor {
                     Route = new Route(
+                        "addtocart",
+                        new RouteValueDictionary {
+                            {"area", "Nwazet.Commerce"},
+                            {"controller", "ShoppingCart"},
+                            {"action", "Add"},
+                            {"productattributes", null}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Nwazet.Commerce"}
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Route = new Route(
                         "stripe/checkout",
                         new RouteValueDictionary {
                             {"area", "Nwazet.Commerce"},
