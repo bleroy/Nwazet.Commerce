@@ -6,14 +6,46 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
 
 namespace Nwazet.Commerce.Tests.Stubs {
-    public class FakeQuery<TPart> : IContentQuery<TPart> where TPart:IContent {
+    public class FakeQuery<TPart, TRecord> : FakeQuery<TPart>, IContentQuery<TPart, TRecord>
+        where TPart : IContent
+        where TRecord : ContentPartRecord {
+
+        public FakeQuery(ContentManagerStub contentManager) : base(contentManager) {}
+
+        public new IContentQuery<TPart, TRecord> ForVersion(VersionOptions options) {
+            throw new NotImplementedException();
+        }
+
+        public IContentQuery<TPart, TRecord> Where(Expression<Func<TRecord, bool>> predicate) {
+            throw new NotImplementedException();
+        }
+
+        public IContentQuery<TPart, TRecord> OrderBy<TKey>(Expression<Func<TRecord, TKey>> keySelector) {
+            throw new NotImplementedException();
+        }
+
+        public IContentQuery<TPart, TRecord> OrderByDescending<TKey>(Expression<Func<TRecord, TKey>> keySelector) {
+            throw new NotImplementedException();
+        }
+
+        public IContentQuery<TPart, TRecord> WithQueryHints(QueryHints hints) {
+            return this;
+        }
+
+        public IContentQuery<TPart, TRecord> WithQueryHintsFor(string contentType) {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class FakeQuery<TPart> : IContentQuery<TPart> where TPart : IContent {
         private string[] _types;
 
         public FakeQuery(ContentManagerStub contentManager) {
             ContentManager = contentManager;
         }
- 
-        public IContentManager ContentManager { get; private set; }
+
+        public IContentManager ContentManager { get; protected set; }
+
         private ContentManagerStub ContentManagerStub {
             get { return (ContentManagerStub) ContentManager; }
         }
@@ -44,7 +76,7 @@ namespace Nwazet.Commerce.Tests.Stubs {
         }
 
         public IContentQuery<TPart> ForVersion(VersionOptions options) {
-            throw new NotImplementedException();
+            return this;
         }
 
         public IEnumerable<TPart> Slice(int skip, int count) {
@@ -56,18 +88,21 @@ namespace Nwazet.Commerce.Tests.Stubs {
         }
 
         public IContentQuery<TPart, TRecord> Join<TRecord>() where TRecord : ContentPartRecord {
+            return new FakeQuery<TPart, TRecord>(ContentManagerStub);
+        }
+
+        public IContentQuery<TPart, TRecord> Where<TRecord>(Expression<Func<TRecord, bool>> predicate)
+            where TRecord : ContentPartRecord {
             throw new NotImplementedException();
         }
 
-        public IContentQuery<TPart, TRecord> Where<TRecord>(Expression<Func<TRecord, bool>> predicate) where TRecord : ContentPartRecord {
+        public IContentQuery<TPart, TRecord> OrderBy<TRecord>(Expression<Func<TRecord, object>> keySelector)
+            where TRecord : ContentPartRecord {
             throw new NotImplementedException();
         }
 
-        public IContentQuery<TPart, TRecord> OrderBy<TRecord>(Expression<Func<TRecord, object>> keySelector) where TRecord : ContentPartRecord {
-            throw new NotImplementedException();
-        }
-
-        public IContentQuery<TPart, TRecord> OrderByDescending<TRecord>(Expression<Func<TRecord, object>> keySelector) where TRecord : ContentPartRecord {
+        public IContentQuery<TPart, TRecord> OrderByDescending<TRecord>(Expression<Func<TRecord, object>> keySelector)
+            where TRecord : ContentPartRecord {
             throw new NotImplementedException();
         }
     }
