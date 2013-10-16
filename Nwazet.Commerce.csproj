@@ -191,6 +191,8 @@
     <Compile Include="Handlers\WeightBasedShippingMethodPartHandler.cs" />
     <Compile Include="Handlers\GoogleCheckoutSettingsPartHandler.cs" />
     <Compile Include="Handlers\ProductPartHandler.cs" />
+    <Compile Include="Helpers\InfosetHelper.cs" />
+    <Compile Include="Helpers\ReflectionHelper.cs" />
     <Compile Include="Helpers\XmlHelper.cs" />
     <Compile Include="Menus\AttributeAdminMenu.cs" />
     <Compile Include="Menus\OrderAdminMenu.cs" />
@@ -204,12 +206,12 @@
     <Compile Include="Migrations\OrderMigrations.cs" />
     <Compile Include="Migrations\TaxMigrations.cs" />
     <Compile Include="Migrations\UspsMigrations.cs" />
-    <Compile Include="Migrations\StripeMigrations.cs" />
     <Compile Include="Migrations\DiscountMigrations.cs" />
     <Compile Include="Migrations\ShippingMigrations.cs" />
     <Compile Include="Migrations\GoogleCheckoutMigrations.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\CheckoutItem.cs" />
+    <Compile Include="Models\InfosetContentPart.cs" />
     <Compile Include="Models\OrderEvent.cs" />
     <Compile Include="Models\OrderPart.cs" />
     <Compile Include="Models\OrderPartRecord.cs" />
@@ -220,12 +222,10 @@
     <Compile Include="Models\UspsException.cs" />
     <Compile Include="Models\UspsShippingMethodPartRecord.cs" />
     <Compile Include="Models\UspsSettingsPart.cs" />
-    <Compile Include="Models\UspsSettingsPartRecord.cs" />
     <Compile Include="Models\ShippingOption.cs" />
     <Compile Include="Models\UspsShippingOptionList.cs" />
     <Compile Include="Models\UspsShippingMethodPart.cs" />
     <Compile Include="Models\StripeSettingsPart.cs" />
-    <Compile Include="Models\StripeSettingsPartRecord.cs" />
     <Compile Include="Models\ProductAttributesPart.cs" />
     <Compile Include="Models\ProductAttributesPartRecord.cs" />
     <Compile Include="Models\ProductAttributePart.cs" />

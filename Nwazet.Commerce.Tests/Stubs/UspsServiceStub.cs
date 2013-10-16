@@ -28,7 +28,7 @@ namespace Nwazet.Commerce.Tests.Stubs {
 
         public UspsSettingsPart GetSettings() {
             var settings = new UspsSettingsPart();
-            Helpers.PreparePart<UspsSettingsPart, UspsSettingsPartRecord>(settings, "Site");
+            Helpers.PreparePart(settings, "Site");
             settings.UserId = _uspsUserId;
             settings.OriginZip = _originZip;
             settings.CommercialPrices = _commercialPrices;

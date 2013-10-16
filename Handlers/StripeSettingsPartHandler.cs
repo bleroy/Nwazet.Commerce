@@ -8,9 +8,8 @@ using Orchard.Localization;
 namespace Nwazet.Commerce.Handlers {
     [OrchardFeature("Stripe")]
     public class StripeSettingsPartHandler : ContentHandler {
-        public StripeSettingsPartHandler(IRepository<StripeSettingsPartRecord> repository) {
+        public StripeSettingsPartHandler() {
             T = NullLocalizer.Instance;
-            Filters.Add(StorageFilter.For(repository));
             Filters.Add(new ActivatingFilter<StripeSettingsPart>("Site"));
         }
 

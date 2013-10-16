@@ -41,7 +41,7 @@ namespace Nwazet.Commerce.Drivers {
         protected override DriverResult Editor(ProductAttributePart part, IUpdateModel updater, dynamic shapeHelper) {
             var editViewModel = new ProductAttributeEditViewModel();
             if (updater.TryUpdateModel(editViewModel, Prefix, null, null)) {
-                part.Record.AttributeValues = editViewModel.AttributeValues;
+                part.AttributeValuesString = editViewModel.AttributeValues;
             }
             return Editor(part, shapeHelper);
         }

@@ -1,5 +1,6 @@
 ﻿using Nwazet.Commerce.Models;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 using Orchard.ContentManagement.Records;
 
 namespace Nwazet.Commerce.Tests.Stubs {
@@ -14,6 +15,7 @@ namespace Nwazet.Commerce.Tests.Stubs {
             };
             ContentItem.Record.Id = id;
             ContentItem.Weld(this);
+            ContentItem.Weld(new InfosetPart());
         }
     }
 }

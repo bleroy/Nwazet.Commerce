@@ -6,25 +6,25 @@ using Orchard.Environment.Extensions;
 
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.Taxes")]
-    public class StateOrCountryTaxPart : ContentPart<StateOrCountryTaxPartRecord>, ITax {
+    public class StateOrCountryTaxPart : InfosetContentPart<StateOrCountryTaxPartRecord>, ITax {
         public string State {
-            get { return Record.State; }
-            set { Record.State = value; }
+            get { return Get(r => r.State); }
+            set { Set(r => r.State, value); }
         }
 
         public string Country {
-            get { return Record.Country; }
-            set { Record.Country = value; }
+            get { return Get(r => r.Country); }
+            set { Set(r => r.Country, value); }
         }
 
         public double Rate {
-            get { return Record.Rate; }
-            set { Record.Rate = value; }
+            get { return Get(r => r.Rate); }
+            set { Set(r => r.Rate, value); }
         }
 
         public int Priority {
-            get { return Record.Priority; }
-            set { Record.Priority = value; }
+            get { return Get(r => r.Priority); }
+            set { Set(r => r.Priority, value); }
         }
 
         public string Name {

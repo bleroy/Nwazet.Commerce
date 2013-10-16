@@ -5,6 +5,7 @@ using Nwazet.Commerce.Services;
 using Nwazet.Commerce.Tests.Stubs;
 using Orchard;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 using Orchard.ContentManagement.Records;
 
 namespace Nwazet.Commerce.Tests {
@@ -12,15 +13,14 @@ namespace Nwazet.Commerce.Tests {
         public static WeightBasedShippingMethodPart BuildWeightBasedShippingMethod(
             double price,
             double minimumWeight = 0,
-            double maximumWeight = double.PositiveInfinity
-            ) {
+            double maximumWeight = double.PositiveInfinity) {
 
-            var result = new WeightBasedShippingMethodPart {
-                Record = new WeightBasedShippingMethodPartRecord(),
-                Price = price,
-                MinimumWeight = minimumWeight,
-                MaximumWeight = maximumWeight
-            };
+            var result = new WeightBasedShippingMethodPart();
+            PreparePart<WeightBasedShippingMethodPart, WeightBasedShippingMethodPartRecord>(result,
+                "WeightBasedShippingMethod", 0);
+            result.Price = price;
+            result.MinimumWeight = minimumWeight;
+            result.MaximumWeight = maximumWeight;
             return result;
         }
 
@@ -28,22 +28,26 @@ namespace Nwazet.Commerce.Tests {
             double price,
             string size = null,
             int priority = 0) {
-            return new SizeBasedShippingMethodPart {
-                Record = new SizeBasedShippingMethodPartRecord(),
-                Price = price,
-                Size = size,
-                Priority = priority
-            };
+
+            var result = new SizeBasedShippingMethodPart();
+            PreparePart<SizeBasedShippingMethodPart, SizeBasedShippingMethodPartRecord>(result,
+                "SizeBasedShippingMethod", 0);
+            result.Price = price;
+            result.Size = size;
+            result.Priority = priority;
+            return result;
         }
 
         public static UspsShippingMethodPart BuildUspsShippingMethod(
             string size = null,
             int priority = 0) {
-            return new UspsShippingMethodPart {
-                Record = new UspsShippingMethodPartRecord(),
-                Size = size,
-                Priority = priority,
-            };
+
+            var result = new UspsShippingMethodPart();
+            PreparePart<UspsShippingMethodPart, UspsShippingMethodPartRecord>(result,
+                "UspsShippingMethod", 0);
+            result.Size = size;
+            result.Priority = priority;
+            return result;
         }
 
         public static ContentItem PreparePart<TPart, TRecord>(TPart part, string contentType, int id = -1)
@@ -51,6 +55,12 @@ namespace Nwazet.Commerce.Tests {
             where TRecord : ContentPartRecord, new() {
 
             part.Record = new TRecord();
+            return PreparePart(part, contentType, id);
+        }
+
+        public static ContentItem PreparePart<TPart>(TPart part, string contentType, int id = -1)
+            where TPart : ContentPart {
+
             var contentItem = part.ContentItem = new ContentItem {
                 VersionRecord = new ContentItemVersionRecord {
                     ContentItemRecord = new ContentItemRecord()
@@ -59,6 +69,7 @@ namespace Nwazet.Commerce.Tests {
             };
             contentItem.Record.Id = id;
             contentItem.Weld(part);
+            contentItem.Weld(new InfosetPart());
             return contentItem;
         }
 

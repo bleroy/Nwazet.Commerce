@@ -3,25 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using Nwazet.Commerce.Services;
 using Orchard;
-using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Usps.Shipping")]
-    public class UspsShippingMethodPart : ContentPart<UspsShippingMethodPartRecord>, IShippingMethod {
+    public class UspsShippingMethodPart : InfosetContentPart<UspsShippingMethodPartRecord>, IShippingMethod {
         public string Name {
-            get { return Record.Name; }
-            set { Record.Name = value; }
+            get { return Get(r => r.Name); }
+            set { Set(r => r.Name, value); }
         }
 
         public string Size {
-            get { return Record.Size; }
-            set { Record.Size = value; }
+            get { return Get(r => r.Size); }
+            set { Set(r => r.Size, value); }
         }
 
         public string Container {
-            get { return Record.Container; }
-            set { Record.Container = value; }
+            get { return Get(r => r.Container); }
+            set { Set(r => r.Container, value); }
         }
 
         public string ContainerSize {
@@ -29,48 +28,48 @@ namespace Nwazet.Commerce.Models {
         }
 
         public double Markup {
-            get { return Record.Markup; }
-            set { Record.Markup = value; }
+            get { return Get(r => r.Markup); }
+            set { Set(r => r.Markup, value); }
         }
 
         public int WidthInInches {
-            get { return Record.WidthInInches; }
-            set { Record.WidthInInches = value; }
+            get { return Get(r => r.WidthInInches); }
+            set { Set(r => r.WidthInInches, value); }
         }
 
         public int LengthInInches {
-            get { return Record.LengthInInches; }
-            set { Record.LengthInInches = value; }
+            get { return Get(r => r.LengthInInches); }
+            set { Set(r => r.LengthInInches, value); }
         }
 
         public int HeightInInches {
-            get { return Record.HeightInInches; }
-            set { Record.HeightInInches = value; }
+            get { return Get(r => r.HeightInInches); }
+            set { Set(r => r.HeightInInches, value); }
         }
 
         public double MaximumWeightInOunces {
-            get { return Record.MaximumWeightInOunces; }
-            set { Record.MaximumWeightInOunces = value; }
+            get { return Get(r => r.MaximumWeightInOunces); }
+            set { Set(r => r.MaximumWeightInOunces, value); }
         }
 
         public double WeightPaddingInOunces {
-            get { return Record.WeightPaddingInOunces; }
-            set { Record.WeightPaddingInOunces = value; }
+            get { return Get(r => r.WeightPaddingInOunces); }
+            set { Set(r => r.WeightPaddingInOunces, value); }
         }
 
         public string ServiceNameValidationExpression {
-            get { return Record.ServiceNameValidationExpression; }
-            set { Record.ServiceNameValidationExpression = value; }
+            get { return Get(r => r.ServiceNameValidationExpression); }
+            set { Set(r => r.ServiceNameValidationExpression, value); }
         }
 
         public string ServiceNameExclusionExpression {
-            get { return Record.ServiceNameExclusionExpression; }
-            set { Record.ServiceNameExclusionExpression = value; }
+            get { return Get(r => r.ServiceNameExclusionExpression); }
+            set { Set(r => r.ServiceNameExclusionExpression, value); }
         }
 
         public int Priority {
-            get { return Record.Priority; }
-            set { Record.Priority = value; }
+            get { return Get(r => r.Priority); }
+            set { Set(r => r.Priority, value); }
         }
 
         public string ShippingCompany {
@@ -82,33 +81,33 @@ namespace Nwazet.Commerce.Models {
         public string ExcludedShippingAreas { get; set; }
 
         public bool International {
-            get { return Record.International; }
-            set { Record.International = value; }
+            get { return Get(r => r.International); }
+            set { Set(r => r.International, value); }
         }
 
         public bool RegisteredMail {
-            get { return Record.RegisteredMail; }
-            set { Record.RegisteredMail = value; }
+            get { return Get(r => r.RegisteredMail); }
+            set { Set(r => r.RegisteredMail, value); }
         }
 
         public bool Insurance {
-            get { return Record.Insurance; }
-            set { Record.Insurance = value; }
+            get { return Get(r => r.Insurance); }
+            set { Set(r => r.Insurance, value); }
         }
 
         public bool ReturnReceipt {
-            get { return Record.ReturnReceipt; }
-            set { Record.ReturnReceipt = value; }
+            get { return Get(r => r.ReturnReceipt); }
+            set { Set(r => r.ReturnReceipt, value); }
         }
 
         public bool CertificateOfMailing {
-            get { return Record.CertificateOfMailing; }
-            set { Record.CertificateOfMailing = value; }
+            get { return Get(r => r.CertificateOfMailing); }
+            set { Set(r => r.CertificateOfMailing, value); }
         }
 
         public bool ElectronicConfirmation {
-            get { return Record.ElectronicConfirmation; }
-            set { Record.ElectronicConfirmation = value; }
+            get { return Get(r => r.ElectronicConfirmation); }
+            set { Set(r => r.ElectronicConfirmation, value); }
         }
 
         public IEnumerable<ShippingOption> ComputePrice(

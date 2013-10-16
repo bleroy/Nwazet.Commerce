@@ -9,14 +9,6 @@ namespace Nwazet.Commerce.Migrations {
     {
 
         public int Create() {
-            SchemaBuilder.CreateTable("UspsSettingsPartRecord", table => table
-                .ContentPartRecord()
-                .Column<string>("UserId")
-                .Column<string>("OriginZip")
-                .Column<bool>("CommercialPrices")
-                .Column<bool>("CommercialPlusPrices")
-            );
-
             SchemaBuilder.CreateTable("UspsShippingMethodPartRecord", table => table
                 .ContentPartRecord()
                 .Column<string>("Name")

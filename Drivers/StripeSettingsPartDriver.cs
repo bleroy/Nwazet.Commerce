@@ -24,12 +24,12 @@ namespace Nwazet.Commerce.Drivers {
             return ContentShape("Parts_Stripe_Settings",
                 () => shapeHelper.EditorTemplate(
                     TemplateName: "Parts/StripeSettings",
-                    Model: part.Record,
+                    Model: part,
                     Prefix: Prefix)).OnGroup("Stripe");
         }
 
         protected override DriverResult Editor(StripeSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
-            updater.TryUpdateModel(part.Record, Prefix, null, null);
+            updater.TryUpdateModel(part, Prefix, null, null);
             _signals.Trigger("Stripe.Changed");
             return Editor(part, shapeHelper);
         }

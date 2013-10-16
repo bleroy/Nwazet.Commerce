@@ -216,15 +216,15 @@ namespace Nwazet.Commerce.Drivers {
                             .FromAttr(coi => coi.Quantity)
                             .FromAttr(coi => coi.Price)
                             .Context),
-                (double) el.Attr(p => p.SubTotal),
-                (double) el.Attr(p => p.Total),
+                el.Attr(p => p.SubTotal),
+                el.Attr(p => p.Total),
                 tax,
                 shipping,
                 Address.Get(xel.Element(ShippingAddressName)),
                 Address.Get(xel.Element(BillingAddressName)),
-                (string) el.Attr(p => p.CustomerEmail),
-                (string) el.Attr(p => p.CustomerPhone),
-                (string) el.Attr(p => p.SpecialInstructions));
+                el.Attr(p => p.CustomerEmail),
+                el.Attr(p => p.CustomerPhone),
+                el.Attr(p => p.SpecialInstructions));
             el.With(part)
                 .FromAttr(p => p.IsTestOrder)
                 .FromAttr(p => p.Password)

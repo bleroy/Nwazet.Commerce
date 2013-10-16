@@ -8,9 +8,8 @@ using Orchard.Localization;
 namespace Nwazet.Commerce.Handlers {
     [OrchardFeature("Usps.Shipping")]
     public class UspsSettingsPartHandler : ContentHandler {
-        public UspsSettingsPartHandler(IRepository<UspsSettingsPartRecord> repository) {
+        public UspsSettingsPartHandler() {
             T = NullLocalizer.Instance;
-            Filters.Add(StorageFilter.For(repository));
             Filters.Add(new ActivatingFilter<UspsSettingsPart>("Site"));
         }
 

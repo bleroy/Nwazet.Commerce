@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace Nwazet.Commerce.Helpers {
@@ -29,6 +30,19 @@ namespace Nwazet.Commerce.Helpers {
         }
 
         /// <summary>
+        /// Gets a typed value from an attribute.
+        /// </summary>
+        /// <typeparam name="T">The type of the value</typeparam>
+        /// <param name="el">The element.</param>
+        /// <param name="name">The name of the attribute.</param>
+        /// <returns>The attribute value</returns>
+        public static T Attr<T>(this XElement el, string name) {
+
+            var attr = el.Attribute(name);
+            return attr == null ? default(T) : Parse<T>(attr.Value);
+        }
+
+        /// <summary>
         /// Sets an attribute value. This is chainable.
         /// </summary>
         /// <typeparam name="T">The type of the value.</typeparam>
@@ -37,7 +51,7 @@ namespace Nwazet.Commerce.Helpers {
         /// <param name="value">The value to set.</param>
         /// <returns>Itself</returns>
         public static XElement Attr<T>(this XElement el, string name, T value) {
-            el.SetAttributeValue(name, value);
+            el.SetAttributeValue(name, ToString(value));
             return el;
         }
 
@@ -77,53 +91,12 @@ namespace Nwazet.Commerce.Helpers {
         public static XElement FromAttr<TTarget, TProperty>(this XElement el, TTarget target,
             Expression<Func<TTarget, TProperty>> targetExpression) {
 
-            var propertyInfo = GetPropertyInfo(targetExpression);
+            var propertyInfo = ReflectionHelper<TTarget>.GetPropertyInfo(targetExpression);
             var name = propertyInfo.Name;
             var attr = el.Attribute(name);
 
             if (attr == null) return el;
-            if (typeof (TProperty) == typeof (string)) {
-                propertyInfo.SetValue(target, (string) attr, null);
-            }
-            else if (attr.Value == "null") {
-                propertyInfo.SetValue(target, null, null);
-            }
-            else if (typeof (TProperty) == typeof (int)) {
-                propertyInfo.SetValue(target, (int) attr, null);
-            }
-            else if (typeof (TProperty) == typeof (bool)) {
-                propertyInfo.SetValue(target, (bool) attr, null);
-            }
-            else if (typeof (TProperty) == typeof (DateTime)) {
-                propertyInfo.SetValue(target, (DateTime) attr, null);
-            }
-            else if (typeof (TProperty) == typeof (double)) {
-                propertyInfo.SetValue(target, (double) attr, null);
-            }
-            else if (typeof (TProperty) == typeof (float)) {
-                propertyInfo.SetValue(target, (float) attr, null);
-            }
-            else if (typeof (TProperty) == typeof (decimal)) {
-                propertyInfo.SetValue(target, (decimal) attr, null);
-            }
-            else if (typeof (TProperty) == typeof (int?)) {
-                propertyInfo.SetValue(target, (int?) attr, null);
-            }
-            else if (typeof (TProperty) == typeof (bool?)) {
-                propertyInfo.SetValue(target, (bool?) attr, null);
-            }
-            else if (typeof (TProperty) == typeof (DateTime?)) {
-                propertyInfo.SetValue(target, (DateTime?) attr, null);
-            }
-            else if (typeof (TProperty) == typeof (double?)) {
-                propertyInfo.SetValue(target, (double?) attr, null);
-            }
-            else if (typeof (TProperty) == typeof (float?)) {
-                propertyInfo.SetValue(target, (float?) attr, null);
-            }
-            else if (typeof (TProperty) == typeof (decimal?)) {
-                propertyInfo.SetValue(target, (decimal?) attr, null);
-            }
+            propertyInfo.SetValue(target, el.Attr<TProperty>(name), null);
             return el;
         }
 
@@ -138,62 +111,155 @@ namespace Nwazet.Commerce.Helpers {
         /// <returns>Itself</returns>
         public static XElement ToAttr<TTarget, TProperty>(this XElement el, TTarget target,
             Expression<Func<TTarget, TProperty>> targetExpression) {
-            var propertyInfo = GetPropertyInfo(targetExpression);
+            
+            var propertyInfo = ReflectionHelper<TTarget>.GetPropertyInfo(targetExpression);
             var name = propertyInfo.Name;
-            var val = propertyInfo.GetValue(target, null);
+            var val = (TProperty) propertyInfo.GetValue(target, null);
 
-            if (typeof (TProperty) == typeof (string)) {
-                el.Attr(name, (string) val);
-            }
-            else if (val == null) {
-                el.Attr(name, "null");
-            }
-            else if (typeof (TProperty) == typeof (int)) {
-                el.Attr(name, (int) val);
-            }
-            else if (typeof (TProperty) == typeof (bool)) {
-                el.Attr(name, (bool) val);
-            }
-            else if (typeof (TProperty) == typeof (DateTime)) {
-                el.Attr(name, (DateTime) val);
-            }
-            else if (typeof (TProperty) == typeof (double)) {
-                el.Attr(name, (double) val);
-            }
-            else if (typeof (TProperty) == typeof (float)) {
-                el.Attr(name, (float) val);
-            }
-            else if (typeof (TProperty) == typeof (decimal)) {
-                el.Attr(name, (decimal) val);
-            }
-            else if (typeof (TProperty) == typeof (int?)) {
-                el.Attr(name, (int?) val);
-            }
-            else if (typeof (TProperty) == typeof (bool?)) {
-                el.Attr(name, (bool?) val);
-            }
-            else if (typeof (TProperty) == typeof (DateTime?)) {
-                el.Attr(name, (DateTime?) val);
-            }
-            else if (typeof (TProperty) == typeof (double?)) {
-                el.Attr(name, (double?) val);
-            }
-            else if (typeof (TProperty) == typeof (float?)) {
-                el.Attr(name, (float?) val);
-            }
-            else if (typeof (TProperty) == typeof (decimal?)) {
-                el.Attr(name, (decimal?) val);
-            }
+            el.Attr(name, ToString(val));
             return el;
         }
 
-        private static PropertyInfo GetPropertyInfo<TContext, TProperty>(Expression<Func<TContext, TProperty>> expression) {
-            var memberExpression = expression.Body as MemberExpression;
-            if (memberExpression == null)
-                throw new InvalidOperationException("Expression is not a member expression.");
-            var propertyInfo = memberExpression.Member as PropertyInfo;
-            if (propertyInfo == null) throw new InvalidOperationException("Expression is not for a property.");
-            return propertyInfo;
+        /// <summary>
+        /// Gets the text value of an element as the specified type.
+        /// </summary>
+        /// <typeparam name="TValue">The type to parse the element as.</typeparam>
+        /// <param name="el">The element.</param>
+        /// <returns>The value of the element as type TValue.</returns>
+        public static TValue Val<TValue>(this XElement el) {
+            return Parse<TValue>(el.Value);
+        }
+
+        /// <summary>
+        /// Sets the value of an element.
+        /// </summary>
+        /// <typeparam name="TValue">The type of the value to set.</typeparam>
+        /// <param name="el">The element.</param>
+        /// <param name="value">The value.</param>
+        /// <returns>The element.</returns>
+        public static XElement Val<TValue>(this XElement el, TValue value) {
+            el.SetValue(ToString(value));
+            return el;
+        }
+
+        /// <summary>
+        /// Serializes the provided value as a string.
+        /// </summary>
+        /// <typeparam name="T">The type of the value.</typeparam>
+        /// <param name="value">The value.</param>
+        /// <returns>The string representation of the value.</returns>
+        public static string ToString<T>(T value) {
+            var type = typeof (T);
+            if (type == typeof (string)) {
+                return Convert.ToString(value);
+            }
+            if ((!type.IsValueType || Nullable.GetUnderlyingType(type) != null) &&
+                value == null &&
+                type != typeof (string)) {
+
+                return "null";
+            }
+
+            if (type == typeof (DateTime) || type == typeof (DateTime?)) {
+                return XmlConvert.ToString(Convert.ToDateTime(value),
+                    XmlDateTimeSerializationMode.Utc);
+            }
+
+            if (type == typeof (bool) ||
+                type == typeof (bool?)) {
+                return Convert.ToBoolean(value) ? "true" : "false";
+            }
+
+            if (type == typeof (int) ||
+                type == typeof (int?)) {
+
+                return Convert.ToInt64(value).ToString(CultureInfo.InvariantCulture);
+            }
+
+            if (type == typeof (double) ||
+                type == typeof (double?)) {
+
+                var doubleValue = (double) (object) value;
+                if (double.IsPositiveInfinity(doubleValue)) {
+                    return "infinity";
+                }
+                if (double.IsNegativeInfinity(doubleValue)) {
+                    return "-infinity";
+                }
+                return doubleValue.ToString(CultureInfo.InvariantCulture);
+            }
+
+            if (type == typeof (float) ||
+                type == typeof (float?)) {
+
+                var floatValue = (float) (object) value;
+                if (float.IsPositiveInfinity(floatValue)) {
+                    return "infinity";
+                }
+                if (float.IsNegativeInfinity(floatValue)) {
+                    return "-infinity";
+                }
+                return floatValue.ToString(CultureInfo.InvariantCulture);
+            }
+
+            if (type == typeof (decimal) ||
+                type == typeof (decimal?)) {
+
+                var decimalValue = Convert.ToDecimal(value);
+                return decimalValue.ToString(CultureInfo.InvariantCulture);
+            }
+
+            throw new NotSupportedException(String.Format("Could not handle type {0}", type.Name));
+        }
+
+        /// <summary>
+        /// Parses a string value as the provided type.
+        /// </summary>
+        /// <typeparam name="T">The destination type</typeparam>
+        /// <param name="value">The string representation of the value to parse.</param>
+        /// <returns>The parsed value with type T.</returns>
+        public static T Parse<T>(string value) {
+            var type = typeof (T);
+
+            if (type == typeof (string)) {
+                return (T) (object) value;
+            }
+            if (value == null ||
+                "null".Equals(value, StringComparison.Ordinal) &&
+                ((!type.IsValueType || Nullable.GetUnderlyingType(type) != null))) {
+
+                return default(T);
+            }
+
+            if ("infinity".Equals(value, StringComparison.Ordinal)) {
+                if (type == typeof (float) || type == typeof (float?)) return (T) (object) float.PositiveInfinity;
+                if (type == typeof (double) || type == typeof (double?)) return (T) (object) double.PositiveInfinity;
+                throw new NotSupportedException(String.Format("Infinity not supported for type {0}", type.Name));
+            }
+            if ("-infinity".Equals(value, StringComparison.Ordinal)) {
+                if (type == typeof (float)) return (T) (object) float.NegativeInfinity;
+                if (type == typeof (double)) return (T) (object) double.NegativeInfinity;
+                throw new NotSupportedException(String.Format("Infinity not supported for type {0}", type.Name));
+            }
+            if (type == typeof (int) || type == typeof (int?)) {
+                return (T) (object) int.Parse(value, CultureInfo.InvariantCulture);
+            }
+            if (type == typeof (bool) || type == typeof (bool?)) {
+                return (T) (object) value.Equals("true", StringComparison.Ordinal);
+            }
+            if (type == typeof (DateTime) || type == typeof (DateTime?)) {
+                return (T) (object) XmlConvert.ToDateTime(value, XmlDateTimeSerializationMode.Utc);
+            }
+            if (type == typeof (double) || type == typeof (double?)) {
+                return (T) (object) double.Parse(value, CultureInfo.InvariantCulture);
+            }
+            if (type == typeof (float) || type == typeof (float?)) {
+                return (T) (object) float.Parse(value, CultureInfo.InvariantCulture);
+            }
+            if (type == typeof (decimal) || type == typeof (decimal?)) {
+                return (T) (object) decimal.Parse(value, CultureInfo.InvariantCulture);
+            }
+            throw new NotSupportedException(String.Format("Could not handle type {0}", type.Name));
         }
 
         /// <summary>
@@ -207,6 +273,11 @@ namespace Nwazet.Commerce.Helpers {
             return new XElementWithContext<TContext>(el, context);
         }
 
+        /// <summary>
+        /// A wrapper for XElement, with context, for strongly-typed manipulation
+        /// of an XElement.
+        /// </summary>
+        /// <typeparam name="TContext">The type of the context.</typeparam>
         public class XElementWithContext<TContext> {
             public XElementWithContext(XElement element, TContext context) {
                 Element = element;
@@ -257,17 +328,14 @@ namespace Nwazet.Commerce.Helpers {
             /// <summary>
             /// Evaluates an attribute from an expression.
             /// It's a nice strongly-typed way to read attributes.
-            /// Cast the result if necessary
-            /// (it would be great if C# could let us do the cast automatically
-            /// but unfortunately it doesn't).
             /// </summary>
             /// <typeparam name="TProperty">The type of the property.</typeparam>
             /// <param name="expression">The property expression.</param>
             /// <returns>The attribute, ready to be cast.</returns>
-            public XAttribute Attr<TProperty>(Expression<Func<TContext, TProperty>> expression) {
-                var propertyInfo = GetPropertyInfo(expression);
+            public TProperty Attr<TProperty>(Expression<Func<TContext, TProperty>> expression) {
+                var propertyInfo = ReflectionHelper<TContext>.GetPropertyInfo(expression);
                 var name = propertyInfo.Name;
-                return Element.Attribute(name);
+                return Element.Attr<TProperty>(name);
             }
         }
     }

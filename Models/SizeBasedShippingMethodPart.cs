@@ -3,19 +3,45 @@ using System.Collections.Generic;
 using System.Linq;
 using Nwazet.Commerce.Services;
 using Orchard;
-using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.Shipping")]
-    public class SizeBasedShippingMethodPart : ContentPart<SizeBasedShippingMethodPartRecord>, IShippingMethod {
-        public string Name { get { return Record.Name; } set { Record.Name = value; } }
-        public string ShippingCompany { get { return Record.ShippingCompany; } set { Record.ShippingCompany = value; } }
-        public double Price { get { return Record.Price; } set { Record.Price = value; } }
-        public string Size { get { return Record.Size; } set { Record.Size = value; } }
-        public int Priority { get { return Record.Priority; } set { Record.Priority = value; } }
-        public string IncludedShippingAreas { get { return Record.IncludedShippingAreas; } set { Record.IncludedShippingAreas = value; } }
-        public string ExcludedShippingAreas { get { return Record.ExcludedShippingAreas; } set { Record.ExcludedShippingAreas = value; } }
+    public class SizeBasedShippingMethodPart : InfosetContentPart<SizeBasedShippingMethodPartRecord>, IShippingMethod {
+        public string Name {
+            get { return Get(r => r.Name); }
+            set { Set(r => r.Name, value); }
+        }
+
+        public string ShippingCompany {
+            get { return Get(r => r.ShippingCompany); }
+            set { Set(r => r.ShippingCompany, value); }
+        }
+
+        public double Price {
+            get { return Get(r => r.Price); }
+            set { Set(r => r.Price, value); }
+        }
+
+        public string Size {
+            get { return Get(r => r.Size); }
+            set { Set(r => r.Size, value); }
+        }
+
+        public int Priority {
+            get { return Get(r => r.Priority); }
+            set { Set(r => r.Priority, value); }
+        }
+
+        public string IncludedShippingAreas {
+            get { return Get(r => r.IncludedShippingAreas); }
+            set { Set(r => r.IncludedShippingAreas, value); }
+        }
+
+        public string ExcludedShippingAreas {
+            get { return Get(r => r.ExcludedShippingAreas); }
+            set { Set(r => r.ExcludedShippingAreas, value); }
+        }
 
         public IEnumerable<ShippingOption> ComputePrice(
             IEnumerable<ShoppingCartQuantityProduct> productQuantities,

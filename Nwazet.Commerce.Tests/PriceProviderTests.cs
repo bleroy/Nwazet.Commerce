@@ -181,9 +181,9 @@ namespace Nwazet.Commerce.Tests {
             CheckDiscounts(cart, new[] {0, 0, 0.5}, new[] {absoluteDiscount.Comment, absoluteDiscount.Comment, absoluteDiscount.Comment});
         }
 
-        private static readonly double[] Prices = new[] { 10, 1.5, 20 };
-        private static readonly int[] Quantities = new[] { 3, 6, 5 };
-        private static readonly string[] Paths = new[] {"foo/bar", "bar/baz", "foo/baz/glop"};
+        private static readonly double[] Prices = { 10, 1.5, 20 };
+        private static readonly int[] Quantities = { 3, 6, 5 };
+        private static readonly string[] Paths = {"foo/bar", "bar/baz", "foo/baz/glop"};
 
         private static void CheckDiscount(IShoppingCart cart, double discountRate, string comment) {
             const double epsilon = 0.001;
@@ -217,13 +217,13 @@ namespace Nwazet.Commerce.Tests {
             Assert.That(Math.Abs(cart.Subtotal() - expectedSubTotal), Is.LessThan(epsilon));
         }
 
-        private static readonly ProductStub[] Products = new[] {
+        private static readonly ProductStub[] Products = {
             new ProductStub(1, Paths[0]) {Price = Prices[0]},
             new ProductStub(2, Paths[1]) {Price = Prices[1]},
             new ProductStub(3, Paths[2]) {Price = Prices[2]}
         };
 
-        private static readonly ShoppingCartQuantityProduct[] OriginalQuantities = new[] {
+        private static readonly ShoppingCartQuantityProduct[] OriginalQuantities = {
             new ShoppingCartQuantityProduct(Quantities[0], Products[0]), 
             new ShoppingCartQuantityProduct(Quantities[1], Products[1]), 
             new ShoppingCartQuantityProduct(Quantities[2], Products[2])

@@ -1,5 +1,5 @@
 @using Orchard.Core.Contents.ViewModels;
-@using ContentsOrder = ViewModels.ContentsOrder
+@using ContentsOrder = Nwazet.Commerce.ViewModels.ContentsOrder
 @{
     var pageTitle = T("Manage Products");
     var createLinkText = T("Create New Product");
@@ -15,7 +15,6 @@
         <select id="orderResults" name="Options.OrderBy">
             @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Created, T("recently created").Text)
             @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Modified, T("recently modified").Text)
-            @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Published, T("recently published").Text)
         </select>
         <button type="submit" name="submit.Filter" value="yes please">@T("Apply")</button>
     </fieldset>

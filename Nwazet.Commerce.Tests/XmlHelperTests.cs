@@ -270,7 +270,7 @@ namespace Nwazet.Commerce.Tests {
               .ToAttr(t => t.ANullableFloat)
               .ToAttr(t => t.ANullableDecimal);
 
-            Assert.That(el.Attr("AString"), Is.Null);
+            Assert.That(el.Attr("AString"), Is.EqualTo(""));
             Assert.That(el.Attr("ANullableInt"), Is.EqualTo("null"));
             Assert.That(el.Attr("ANullableBoolean"), Is.EqualTo("null"));
             Assert.That(el.Attr("ANullableDate"), Is.EqualTo("null"));
