@@ -8,23 +8,23 @@ namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.Taxes")]
     public class StateOrCountryTaxPart : InfosetContentPart<StateOrCountryTaxPartRecord>, ITax {
         public string State {
-            get { return Get(r => r.State); }
-            set { Set(r => r.State, value); }
+            get { return Retrieve(r => r.State); }
+            set { Store(r => r.State, value); }
         }
 
         public string Country {
-            get { return Get(r => r.Country); }
-            set { Set(r => r.Country, value); }
+            get { return Retrieve(r => r.Country); }
+            set { Store(r => r.Country, value); }
         }
 
         public double Rate {
-            get { return Get(r => r.Rate); }
-            set { Set(r => r.Rate, value); }
+            get { return Retrieve(r => r.Rate); }
+            set { Store(r => r.Rate, value); }
         }
 
         public int Priority {
-            get { return Get(r => r.Priority); }
-            set { Set(r => r.Priority, value); }
+            get { return Retrieve(r => r.Priority); }
+            set { Store(r => r.Priority, value); }
         }
 
         public string Name {

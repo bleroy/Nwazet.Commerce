@@ -8,22 +8,22 @@ namespace Nwazet.Commerce.Models {
     // their methods are integrated into core's ContentPart and ContentPart<TRecord>.
     public class InfosetContentPart<TRecord> : ContentPart<TRecord> {
 
-        protected TProperty Get<TProperty>(Expression<Func<TRecord, TProperty>> targetExpression) {
-            return InfosetHelper.Get(this, targetExpression);
+        protected TProperty Retrieve<TProperty>(Expression<Func<TRecord, TProperty>> targetExpression) {
+            return InfosetHelper.Retrieve(this, targetExpression);
         }
 
-        protected TProperty Get<TProperty>(
+        protected TProperty Retrieve<TProperty>(
             Expression<Func<TRecord, TProperty>> targetExpression,
             Func<TRecord, TProperty> defaultExpression) {
 
-            return InfosetHelper.Get(this, targetExpression, defaultExpression);
+            return InfosetHelper.Retrieve(this, targetExpression, defaultExpression);
         }
 
-        protected InfosetContentPart<TRecord> Set<TProperty>(
+        protected InfosetContentPart<TRecord> Store<TProperty>(
             Expression<Func<TRecord, TProperty>> targetExpression,
             TProperty value) {
 
-            InfosetHelper.Set(this, targetExpression, value);
+            InfosetHelper.Store(this, targetExpression, value);
             return this;
         }
     }

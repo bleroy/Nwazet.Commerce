@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Xml.Linq;
 using NUnit.Framework;
 using Nwazet.Commerce.Helpers;
@@ -6,6 +7,49 @@ using Nwazet.Commerce.Helpers;
 namespace Nwazet.Commerce.Tests {
     [TestFixture]
     public class XmlHelperTests {
+        [Test]
+        public void AddEl() {
+            var el = new XElement("data");
+            el
+                .AddEl(new XElement("node1"), new XElement("node2"))
+                .AddEl(new XElement("node3"));
+
+            Assert.That(el.Descendants().Count(), Is.EqualTo(3));
+            Assert.That(el.Descendants().First().Name.ToString(), Is.EqualTo("node1"));
+            Assert.That(el.Descendants().ElementAt(1).Name.ToString(), Is.EqualTo("node2"));
+            Assert.That(el.Descendants().ElementAt(2).Name.ToString(), Is.EqualTo("node3"));
+        }
+
+        [Test]
+        public void Val() {
+            var el = new XElement("data");
+            el = el.Val(123);
+            var val = el.Val<int>();
+
+            Assert.That(val, Is.EqualTo(123));
+            Assert.That(el.ToString(SaveOptions.DisableFormatting),
+                Is.EqualTo("<data>123</data>"));
+        }
+
+        [Test]
+        public void Infinities() {
+            var el = new XElement("data")
+                .Attr("doubleplus", double.PositiveInfinity)
+                .Attr("doubleminus", double.NegativeInfinity)
+                .Attr("floatplus", float.PositiveInfinity)
+                .Attr("floatminus", float.NegativeInfinity);
+
+            Assert.That(el.Attr<string>("doubleplus"), Is.EqualTo("infinity"));
+            Assert.That(el.Attr<string>("doubleminus"), Is.EqualTo("-infinity"));
+            Assert.That(el.Attr<string>("floatplus"), Is.EqualTo("infinity"));
+            Assert.That(el.Attr<string>("floatminus"), Is.EqualTo("-infinity"));
+
+            Assert.That(double.IsPositiveInfinity(el.Attr<double>("doubleplus")), Is.True);
+            Assert.That(double.IsNegativeInfinity(el.Attr<double>("doubleminus")), Is.True);
+            Assert.That(double.IsPositiveInfinity(el.Attr<float>("floatplus")), Is.True);
+            Assert.That(double.IsNegativeInfinity(el.Attr<float>("floatminus")), Is.True);
+        }
+
         [Test]
         public void StringToAttribute() {
             var el = new XElement("data");
@@ -61,8 +105,7 @@ namespace Nwazet.Commerce.Tests {
         }
 
         [Test]
-        public void StringToElement()
-        {
+        public void StringToElement() {
             var el = new XElement("data");
             el.El("foo", "bar");
 
@@ -70,8 +113,7 @@ namespace Nwazet.Commerce.Tests {
         }
 
         [Test]
-        public void IntToElement()
-        {
+        public void IntToElement() {
             var el = new XElement("data");
             el.El("foo", 42);
 
@@ -79,8 +121,7 @@ namespace Nwazet.Commerce.Tests {
         }
 
         [Test]
-        public void BoolToElement()
-        {
+        public void BoolToElement() {
             var el = new XElement("data");
             el.El("foo", true);
             el.El("bar", false);
@@ -90,8 +131,7 @@ namespace Nwazet.Commerce.Tests {
         }
 
         [Test]
-        public void DateTimeToElement()
-        {
+        public void DateTimeToElement() {
             var el = new XElement("data");
             el.El("foo", new DateTime(1970, 5, 21, 13, 55, 21, 934, DateTimeKind.Utc));
 
@@ -99,8 +139,7 @@ namespace Nwazet.Commerce.Tests {
         }
 
         [Test]
-        public void DoubleFloatDecimalToElement()
-        {
+        public void DoubleFloatDecimalToElement() {
             var el = new XElement("data");
             el.El("double", 12.456D);
             el.El("float", 12.457F);
@@ -138,19 +177,19 @@ namespace Nwazet.Commerce.Tests {
             };
             var el = new XElement("data");
             el.With(target)
-              .ToAttr(t => t.AString)
-              .ToAttr(t => t.AnInt)
-              .ToAttr(t => t.ABoolean)
-              .ToAttr(t => t.ADate)
-              .ToAttr(t => t.ADouble)
-              .ToAttr(t => t.AFloat)
-              .ToAttr(t => t.ADecimal)
-              .ToAttr(t => t.ANullableInt)
-              .ToAttr(t => t.ANullableBoolean)
-              .ToAttr(t => t.ANullableDate)
-              .ToAttr(t => t.ANullableDouble)
-              .ToAttr(t => t.ANullableFloat)
-              .ToAttr(t => t.ANullableDecimal);
+                .ToAttr(t => t.AString)
+                .ToAttr(t => t.AnInt)
+                .ToAttr(t => t.ABoolean)
+                .ToAttr(t => t.ADate)
+                .ToAttr(t => t.ADouble)
+                .ToAttr(t => t.AFloat)
+                .ToAttr(t => t.ADecimal)
+                .ToAttr(t => t.ANullableInt)
+                .ToAttr(t => t.ANullableBoolean)
+                .ToAttr(t => t.ANullableDate)
+                .ToAttr(t => t.ANullableDouble)
+                .ToAttr(t => t.ANullableFloat)
+                .ToAttr(t => t.ANullableDecimal);
 
 
             Assert.That(el.Attr("AString"), Is.EqualTo("foo"));
@@ -180,19 +219,19 @@ namespace Nwazet.Commerce.Tests {
                     "ANullableDate=\"1970-05-21T13:55:21.934Z\" ANullableDouble=\"12.345\" " +
                     "ANullableFloat=\"23.456\" ANullableDecimal=\"34.567\"/>");
             el.With(target)
-              .FromAttr(t => t.AString)
-              .FromAttr(t => t.AnInt)
-              .FromAttr(t => t.ABoolean)
-              .FromAttr(t => t.ADate)
-              .FromAttr(t => t.ADouble)
-              .FromAttr(t => t.AFloat)
-              .FromAttr(t => t.ADecimal)
-              .FromAttr(t => t.ANullableInt)
-              .FromAttr(t => t.ANullableBoolean)
-              .FromAttr(t => t.ANullableDate)
-              .FromAttr(t => t.ANullableDouble)
-              .FromAttr(t => t.ANullableFloat)
-              .FromAttr(t => t.ANullableDecimal);
+                .FromAttr(t => t.AString)
+                .FromAttr(t => t.AnInt)
+                .FromAttr(t => t.ABoolean)
+                .FromAttr(t => t.ADate)
+                .FromAttr(t => t.ADouble)
+                .FromAttr(t => t.AFloat)
+                .FromAttr(t => t.ADecimal)
+                .FromAttr(t => t.ANullableInt)
+                .FromAttr(t => t.ANullableBoolean)
+                .FromAttr(t => t.ANullableDate)
+                .FromAttr(t => t.ANullableDouble)
+                .FromAttr(t => t.ANullableFloat)
+                .FromAttr(t => t.ANullableDecimal);
 
             Assert.That(target.AString, Is.EqualTo("foo"));
             Assert.That(target.AnInt, Is.EqualTo(42));
@@ -228,19 +267,19 @@ namespace Nwazet.Commerce.Tests {
             };
             var el = new XElement("data");
             el.With(target)
-              .FromAttr(t => t.AString)
-              .FromAttr(t => t.AnInt)
-              .FromAttr(t => t.ABoolean)
-              .FromAttr(t => t.ADate)
-              .FromAttr(t => t.ADouble)
-              .FromAttr(t => t.AFloat)
-              .FromAttr(t => t.ADecimal)
-              .FromAttr(t => t.ANullableInt)
-              .FromAttr(t => t.ANullableBoolean)
-              .FromAttr(t => t.ANullableDate)
-              .FromAttr(t => t.ANullableDouble)
-              .FromAttr(t => t.ANullableFloat)
-              .FromAttr(t => t.ANullableDecimal);
+                .FromAttr(t => t.AString)
+                .FromAttr(t => t.AnInt)
+                .FromAttr(t => t.ABoolean)
+                .FromAttr(t => t.ADate)
+                .FromAttr(t => t.ADouble)
+                .FromAttr(t => t.AFloat)
+                .FromAttr(t => t.ADecimal)
+                .FromAttr(t => t.ANullableInt)
+                .FromAttr(t => t.ANullableBoolean)
+                .FromAttr(t => t.ANullableDate)
+                .FromAttr(t => t.ANullableDouble)
+                .FromAttr(t => t.ANullableFloat)
+                .FromAttr(t => t.ANullableDecimal);
 
             Assert.That(target.AString, Is.EqualTo("foo"));
             Assert.That(target.AnInt, Is.EqualTo(42));
@@ -258,17 +297,49 @@ namespace Nwazet.Commerce.Tests {
         }
 
         [Test]
+        public void AttrWithContext() {
+            var el = new XElement("data")
+                .With(new {foo = 123})
+                .ToAttr(o => o.foo);
+            var val = el.Attr(o => o.foo);
+
+            Assert.That(val, Is.EqualTo(123));
+        }
+
+        [Test]
+        public void ContextSwitch() {
+            var el = new XElement("data");
+            el.With(new {foo = "bar"})
+                .ToAttr(o => o.foo)
+                .With(new {bar = "baz"})
+                .ToAttr(o => o.bar);
+
+            Assert.That(el.Attr<string>("foo"), Is.EqualTo("bar"));
+            Assert.That(el.Attr<string>("bar"), Is.EqualTo("baz"));
+        }
+
+        [Test]
+        public void ImplicitConversion() {
+            var el = new XElement("data")
+                .With(new {foo = "bar"})
+                .ToAttr(o => o.foo);
+            Func<XElement, string> func = e => e.Attr<string>("foo");
+
+            Assert.That(func(el), Is.EqualTo("bar"));
+        }
+
+        [Test]
         public void NullSerializes() {
             var target = new Target();
             var el = new XElement("data");
             el.With(target)
-              .ToAttr(t => t.AString)
-              .ToAttr(t => t.ANullableInt)
-              .ToAttr(t => t.ANullableBoolean)
-              .ToAttr(t => t.ANullableDate)
-              .ToAttr(t => t.ANullableDouble)
-              .ToAttr(t => t.ANullableFloat)
-              .ToAttr(t => t.ANullableDecimal);
+                .ToAttr(t => t.AString)
+                .ToAttr(t => t.ANullableInt)
+                .ToAttr(t => t.ANullableBoolean)
+                .ToAttr(t => t.ANullableDate)
+                .ToAttr(t => t.ANullableDouble)
+                .ToAttr(t => t.ANullableFloat)
+                .ToAttr(t => t.ANullableDecimal);
 
             Assert.That(el.Attr("AString"), Is.EqualTo(""));
             Assert.That(el.Attr("ANullableInt"), Is.EqualTo("null"));
@@ -288,13 +359,13 @@ namespace Nwazet.Commerce.Tests {
                     "ANullableDate=\"null\" ANullableDouble=\"null\" " +
                     "ANullableFloat=\"null\" ANullableDecimal=\"null\"/>");
             el.With(target)
-              .FromAttr(t => t.AString)
-              .FromAttr(t => t.ANullableInt)
-              .FromAttr(t => t.ANullableBoolean)
-              .FromAttr(t => t.ANullableDate)
-              .FromAttr(t => t.ANullableDouble)
-              .FromAttr(t => t.ANullableFloat)
-              .FromAttr(t => t.ANullableDecimal);
+                .FromAttr(t => t.AString)
+                .FromAttr(t => t.ANullableInt)
+                .FromAttr(t => t.ANullableBoolean)
+                .FromAttr(t => t.ANullableDate)
+                .FromAttr(t => t.ANullableDouble)
+                .FromAttr(t => t.ANullableFloat)
+                .FromAttr(t => t.ANullableDecimal);
 
             Assert.That(target.AString, Is.EqualTo("null"));
             Assert.That(target.ANullableInt, Is.Null);

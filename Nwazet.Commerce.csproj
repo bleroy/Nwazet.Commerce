@@ -369,23 +369,23 @@
     <Content Include="Views\UspsShippingTestForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scripts\order-admin.min.js.map">
+    <Content Include="Scripts\order-admin.min.js.map">
       <DependentUpon>order-admin.js</DependentUpon>
-    </None>
-    <None Include="Scripts\ship.min.js.map">
+    </Content>
+    <Content Include="Scripts\ship.min.js.map">
       <DependentUpon>ship.js</DependentUpon>
-    </None>
-    <None Include="Styles\order-admin.less" />
-    <None Include="Views\CommerceAddressForm.cshtml" />
+    </Content>
+    <Content Include="Styles\order-admin.less" />
+    <Content Include="Views\CommerceAddressForm.cshtml" />
     <Content Include="Views\TaxAdmin\Index.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\StateOrCountryTax.cshtml" />
     <Content Include="Views\OrderSummaryAdmin.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\Order.cshtml" />
     <Content Include="Views\Content-Order.SummaryAdmin.cshtml" />
-    <None Include="Views\OrderAdmin\List.cshtml" />
-    <None Include="Views\Order_CheckPassword.cshtml" />
-    <None Include="Views\Order_Confirmation.cshtml" />
-    <None Include="Views\Stripe\Confirmation.cshtml" />
+    <Content Include="Views\OrderAdmin\List.cshtml" />
+    <Content Include="Views\Order_CheckPassword.cshtml" />
+    <Content Include="Views\Order_Confirmation.cshtml" />
+    <Content Include="Views\Stripe\Confirmation.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

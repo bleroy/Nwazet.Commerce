@@ -6,7 +6,7 @@ using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 
 namespace Nwazet.Commerce.Helpers {
     public static class InfosetHelper {
-        public static TProperty Get<TProperty>(this ContentPart contentPart, string name) {
+        public static TProperty Retrieve<TProperty>(this ContentPart contentPart, string name) {
             var infosetPart = contentPart.As<InfosetPart>();
             var el = infosetPart == null
                 ? null
@@ -14,7 +14,7 @@ namespace Nwazet.Commerce.Helpers {
             return el == null ? default(TProperty) : el.Attr<TProperty>(name);
         }
 
-        public static void Set<TProperty>(this ContentPart contentPart,
+        public static void Store<TProperty>(this ContentPart contentPart,
             string name, TProperty value) {
 
             var partName = contentPart.GetType().Name;
@@ -29,15 +29,15 @@ namespace Nwazet.Commerce.Helpers {
             partElement.Attr(name, value);
         }
 
-        public static TProperty Get<TPart, TRecord, TProperty>(this TPart contentPart,
+        public static TProperty Retrieve<TPart, TRecord, TProperty>(this TPart contentPart,
             Expression<Func<TRecord, TProperty>> targetExpression)
             where TPart : ContentPart<TRecord> {
 
             var getter = ReflectionHelper<TRecord>.GetGetter(targetExpression);
-            return contentPart.Get(targetExpression, getter);
+            return contentPart.Retrieve(targetExpression, getter);
         }
 
-        public static TProperty Get<TPart, TRecord, TProperty>(this TPart contentPart,
+        public static TProperty Retrieve<TPart, TRecord, TProperty>(this TPart contentPart,
             Expression<Func<TRecord, TProperty>> targetExpression,
             Delegate defaultExpression)
             where TPart : ContentPart<TRecord> {
@@ -54,13 +54,13 @@ namespace Nwazet.Commerce.Helpers {
                 var defaultValue = defaultExpression == null
                     ? default(TProperty)
                     : (TProperty)defaultExpression.DynamicInvoke(contentPart.Record);
-                contentPart.Set(name, defaultValue);
+                contentPart.Store(name, defaultValue);
                 return defaultValue;
             }
             return el.Attr<TProperty>(name);
         }
 
-        public static void Set<TPart, TRecord, TProperty>(this TPart contentPart,
+        public static void Store<TPart, TRecord, TProperty>(this TPart contentPart,
             Expression<Func<TRecord, TProperty>> targetExpression,
             TProperty value)
             where TPart : ContentPart<TRecord> {
@@ -68,7 +68,7 @@ namespace Nwazet.Commerce.Helpers {
             var propertyInfo = ReflectionHelper<TRecord>.GetPropertyInfo(targetExpression);
             var name = propertyInfo.Name;
             propertyInfo.SetValue(contentPart.Record, value);
-            contentPart.Set(name, value);
+            contentPart.Store(name, value);
         }
     }
 }

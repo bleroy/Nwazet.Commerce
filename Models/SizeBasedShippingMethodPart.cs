@@ -9,38 +9,38 @@ namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.Shipping")]
     public class SizeBasedShippingMethodPart : InfosetContentPart<SizeBasedShippingMethodPartRecord>, IShippingMethod {
         public string Name {
-            get { return Get(r => r.Name); }
-            set { Set(r => r.Name, value); }
+            get { return Retrieve(r => r.Name); }
+            set { Store(r => r.Name, value); }
         }
 
         public string ShippingCompany {
-            get { return Get(r => r.ShippingCompany); }
-            set { Set(r => r.ShippingCompany, value); }
+            get { return Retrieve(r => r.ShippingCompany); }
+            set { Store(r => r.ShippingCompany, value); }
         }
 
         public double Price {
-            get { return Get(r => r.Price); }
-            set { Set(r => r.Price, value); }
+            get { return Retrieve(r => r.Price); }
+            set { Store(r => r.Price, value); }
         }
 
         public string Size {
-            get { return Get(r => r.Size); }
-            set { Set(r => r.Size, value); }
+            get { return Retrieve(r => r.Size); }
+            set { Store(r => r.Size, value); }
         }
 
         public int Priority {
-            get { return Get(r => r.Priority); }
-            set { Set(r => r.Priority, value); }
+            get { return Retrieve(r => r.Priority); }
+            set { Store(r => r.Priority, value); }
         }
 
         public string IncludedShippingAreas {
-            get { return Get(r => r.IncludedShippingAreas); }
-            set { Set(r => r.IncludedShippingAreas, value); }
+            get { return Retrieve(r => r.IncludedShippingAreas); }
+            set { Store(r => r.IncludedShippingAreas, value); }
         }
 
         public string ExcludedShippingAreas {
-            get { return Get(r => r.ExcludedShippingAreas); }
-            set { Set(r => r.ExcludedShippingAreas, value); }
+            get { return Retrieve(r => r.ExcludedShippingAreas); }
+            set { Store(r => r.ExcludedShippingAreas, value); }
         }
 
         public IEnumerable<ShippingOption> ComputePrice(

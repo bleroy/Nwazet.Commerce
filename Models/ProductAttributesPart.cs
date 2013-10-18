@@ -8,7 +8,7 @@ namespace Nwazet.Commerce.Models {
     public class ProductAttributesPart : InfosetContentPart<ProductAttributesPartRecord> {
         public IEnumerable<int> AttributeIds {
             get {
-                var attributes = Get(r => r.Attributes);
+                var attributes = Retrieve(r => r.Attributes);
                 return attributes == null
                     ? new int[0]
                     : attributes
@@ -16,7 +16,7 @@ namespace Nwazet.Commerce.Models {
                         .Select(int.Parse);
             }
             set {
-                Set(r => r.Attributes, value == null
+                Store(r => r.Attributes, value == null
                     ? null
                     : String.Join(",", value));
             }

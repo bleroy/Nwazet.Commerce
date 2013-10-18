@@ -24,10 +24,10 @@ namespace Nwazet.Commerce.Models {
 
         internal string AttributeValuesString {
             get {
-                return Get(r => r.AttributeValues);
+                return Retrieve(r => r.AttributeValues);
             }
             set {
-                Set(r => r.AttributeValues, value);
+                Store(r => r.AttributeValues, value);
             }
         }
     }

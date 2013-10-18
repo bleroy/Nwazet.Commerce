@@ -10,38 +10,38 @@ namespace Nwazet.Commerce.Models {
     public class WeightBasedShippingMethodPart : InfosetContentPart<WeightBasedShippingMethodPartRecord>,
         IShippingMethod {
         public string Name {
-            get { return Get(r => r.Name); }
-            set { Set(r => r.Name, value); }
+            get { return Retrieve(r => r.Name); }
+            set { Store(r => r.Name, value); }
         }
 
         public string ShippingCompany {
-            get { return Get(r => r.ShippingCompany); }
-            set { Set(r => r.ShippingCompany, value); }
+            get { return Retrieve(r => r.ShippingCompany); }
+            set { Store(r => r.ShippingCompany, value); }
         }
 
         public double Price {
-            get { return Get(r => r.Price); }
-            set { Set(r => r.Price, value); }
+            get { return Retrieve(r => r.Price); }
+            set { Store(r => r.Price, value); }
         }
 
         public string IncludedShippingAreas {
-            get { return Get(r => r.IncludedShippingAreas); }
-            set { Set(r => r.IncludedShippingAreas, value); }
+            get { return Retrieve(r => r.IncludedShippingAreas); }
+            set { Store(r => r.IncludedShippingAreas, value); }
         }
 
         public string ExcludedShippingAreas {
-            get { return Get(r => r.ExcludedShippingAreas); }
-            set { Set(r => r.ExcludedShippingAreas, value); }
+            get { return Retrieve(r => r.ExcludedShippingAreas); }
+            set { Store(r => r.ExcludedShippingAreas, value); }
         }
 
         public double? MinimumWeight {
-            get { return Get(r => r.MinimumWeight); }
-            set { Set(r => r.MinimumWeight, value); }
+            get { return Retrieve(r => r.MinimumWeight); }
+            set { Store(r => r.MinimumWeight, value); }
         }
 
         public double? MaximumWeight {
-            get { return Get(r => r.MaximumWeight); }
-            set { Set(r => r.MaximumWeight, value); }
+            get { return Retrieve(r => r.MaximumWeight); }
+            set { Store(r => r.MaximumWeight, value); }
         } // Set to double.PositiveInfinity (the default) for unlimited weight ranges
 
         public IEnumerable<ShippingOption> ComputePrice(

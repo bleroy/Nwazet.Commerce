@@ -9,18 +9,18 @@ namespace Nwazet.Commerce.Models {
     [OrchardFeature("Usps.Shipping")]
     public class UspsShippingMethodPart : InfosetContentPart<UspsShippingMethodPartRecord>, IShippingMethod {
         public string Name {
-            get { return Get(r => r.Name); }
-            set { Set(r => r.Name, value); }
+            get { return Retrieve(r => r.Name); }
+            set { Store(r => r.Name, value); }
         }
 
         public string Size {
-            get { return Get(r => r.Size); }
-            set { Set(r => r.Size, value); }
+            get { return Retrieve(r => r.Size); }
+            set { Store(r => r.Size, value); }
         }
 
         public string Container {
-            get { return Get(r => r.Container); }
-            set { Set(r => r.Container, value); }
+            get { return Retrieve(r => r.Container); }
+            set { Store(r => r.Container, value); }
         }
 
         public string ContainerSize {
@@ -28,48 +28,48 @@ namespace Nwazet.Commerce.Models {
         }
 
         public double Markup {
-            get { return Get(r => r.Markup); }
-            set { Set(r => r.Markup, value); }
+            get { return Retrieve(r => r.Markup); }
+            set { Store(r => r.Markup, value); }
         }
 
         public int WidthInInches {
-            get { return Get(r => r.WidthInInches); }
-            set { Set(r => r.WidthInInches, value); }
+            get { return Retrieve(r => r.WidthInInches); }
+            set { Store(r => r.WidthInInches, value); }
         }
 
         public int LengthInInches {
-            get { return Get(r => r.LengthInInches); }
-            set { Set(r => r.LengthInInches, value); }
+            get { return Retrieve(r => r.LengthInInches); }
+            set { Store(r => r.LengthInInches, value); }
         }
 
         public int HeightInInches {
-            get { return Get(r => r.HeightInInches); }
-            set { Set(r => r.HeightInInches, value); }
+            get { return Retrieve(r => r.HeightInInches); }
+            set { Store(r => r.HeightInInches, value); }
         }
 
         public double MaximumWeightInOunces {
-            get { return Get(r => r.MaximumWeightInOunces); }
-            set { Set(r => r.MaximumWeightInOunces, value); }
+            get { return Retrieve(r => r.MaximumWeightInOunces); }
+            set { Store(r => r.MaximumWeightInOunces, value); }
         }
 
         public double WeightPaddingInOunces {
-            get { return Get(r => r.WeightPaddingInOunces); }
-            set { Set(r => r.WeightPaddingInOunces, value); }
+            get { return Retrieve(r => r.WeightPaddingInOunces); }
+            set { Store(r => r.WeightPaddingInOunces, value); }
         }
 
         public string ServiceNameValidationExpression {
-            get { return Get(r => r.ServiceNameValidationExpression); }
-            set { Set(r => r.ServiceNameValidationExpression, value); }
+            get { return Retrieve(r => r.ServiceNameValidationExpression); }
+            set { Store(r => r.ServiceNameValidationExpression, value); }
         }
 
         public string ServiceNameExclusionExpression {
-            get { return Get(r => r.ServiceNameExclusionExpression); }
-            set { Set(r => r.ServiceNameExclusionExpression, value); }
+            get { return Retrieve(r => r.ServiceNameExclusionExpression); }
+            set { Store(r => r.ServiceNameExclusionExpression, value); }
         }
 
         public int Priority {
-            get { return Get(r => r.Priority); }
-            set { Set(r => r.Priority, value); }
+            get { return Retrieve(r => r.Priority); }
+            set { Store(r => r.Priority, value); }
         }
 
         public string ShippingCompany {
@@ -81,33 +81,33 @@ namespace Nwazet.Commerce.Models {
         public string ExcludedShippingAreas { get; set; }
 
         public bool International {
-            get { return Get(r => r.International); }
-            set { Set(r => r.International, value); }
+            get { return Retrieve(r => r.International); }
+            set { Store(r => r.International, value); }
         }
 
         public bool RegisteredMail {
-            get { return Get(r => r.RegisteredMail); }
-            set { Set(r => r.RegisteredMail, value); }
+            get { return Retrieve(r => r.RegisteredMail); }
+            set { Store(r => r.RegisteredMail, value); }
         }
 
         public bool Insurance {
-            get { return Get(r => r.Insurance); }
-            set { Set(r => r.Insurance, value); }
+            get { return Retrieve(r => r.Insurance); }
+            set { Store(r => r.Insurance, value); }
         }
 
         public bool ReturnReceipt {
-            get { return Get(r => r.ReturnReceipt); }
-            set { Set(r => r.ReturnReceipt, value); }
+            get { return Retrieve(r => r.ReturnReceipt); }
+            set { Store(r => r.ReturnReceipt, value); }
         }
 
         public bool CertificateOfMailing {
-            get { return Get(r => r.CertificateOfMailing); }
-            set { Set(r => r.CertificateOfMailing, value); }
+            get { return Retrieve(r => r.CertificateOfMailing); }
+            set { Store(r => r.CertificateOfMailing, value); }
         }
 
         public bool ElectronicConfirmation {
-            get { return Get(r => r.ElectronicConfirmation); }
-            set { Set(r => r.ElectronicConfirmation, value); }
+            get { return Retrieve(r => r.ElectronicConfirmation); }
+            set { Store(r => r.ElectronicConfirmation, value); }
         }
 
         public IEnumerable<ShippingOption> ComputePrice(

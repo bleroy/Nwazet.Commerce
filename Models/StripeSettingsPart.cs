@@ -8,18 +8,18 @@ namespace Nwazet.Commerce.Models {
     public class StripeSettingsPart : ContentPart {
         [Required]
         public string PublishableKey {
-            get { return this.Get<string>("PublishableKey"); }
-            set { this.Set("PublishableKey", value); }
+            get { return this.Retrieve<string>("PublishableKey"); }
+            set { this.Store("PublishableKey", value); }
         }
 
         public string SecretKey {
-            get { return this.Get<string>("SecretKey"); }
-            set { this.Set("SecretKey", value); }
+            get { return this.Retrieve<string>("SecretKey"); }
+            set { this.Store("SecretKey", value); }
         }
 
         public string Currency {
-            get { return this.Get<string>("Currency"); }
-            set { this.Set("Currency", value); }
+            get { return this.Retrieve<string>("Currency"); }
+            set { this.Store("Currency", value); }
         }
     }
 }
