@@ -91,6 +91,7 @@ namespace Nwazet.Commerce.Helpers {
         public static XElement FromAttr<TTarget, TProperty>(this XElement el, TTarget target,
             Expression<Func<TTarget, TProperty>> targetExpression) {
 
+            if (target == null) return el;
             var propertyInfo = ReflectionHelper<TTarget>.GetPropertyInfo(targetExpression);
             var name = propertyInfo.Name;
             var attr = el.Attribute(name);
@@ -111,7 +112,8 @@ namespace Nwazet.Commerce.Helpers {
         /// <returns>Itself</returns>
         public static XElement ToAttr<TTarget, TProperty>(this XElement el, TTarget target,
             Expression<Func<TTarget, TProperty>> targetExpression) {
-            
+
+            if (target == null) return el;
             var propertyInfo = ReflectionHelper<TTarget>.GetPropertyInfo(targetExpression);
             var name = propertyInfo.Name;
             var val = (TProperty) propertyInfo.GetValue(target, null);
