@@ -17,9 +17,7 @@ namespace Nwazet.Commerce.Tests.Stubs {
                 },
                 ContentType = "User"
             };
-            var rolesPart = new UserRolesPart {
-                Roles = roles.ToList()
-            };
+            var rolesPart = new UserRolesStub(roles.ToList());
             ContentItem.Weld(rolesPart);
         }
 
@@ -27,5 +25,12 @@ namespace Nwazet.Commerce.Tests.Stubs {
         public int Id { get; private set; }
         public string UserName { get; private set; }
         public string Email { get; private set; }
+    }
+
+    public class UserRolesStub : ContentPart, IUserRoles {
+        public UserRolesStub(IList<string> roles) {
+            Roles = roles;
+        }
+        public IList<string> Roles { get; private set; }
     }
 }
