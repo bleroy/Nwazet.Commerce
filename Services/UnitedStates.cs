@@ -85,7 +85,8 @@ namespace Nwazet.Commerce.Services {
             if (nonDigit.Success) {
                 zipCode = zipCode.Substring(0, nonDigit.Index);
             }
-            var code = int.Parse(zipCode);
+            int code;
+            if (!int.TryParse(zipCode, out code)) return null;
 
             if (code < 37000) {
                 if (code < 19700) {
