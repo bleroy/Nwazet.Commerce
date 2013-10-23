@@ -28,6 +28,11 @@ Available model properties:
     <form method="POST" action="@sslService.SecureActionUrl("Checkout", "Stripe", new {area = "Nwazet.Commerce"})" class="stripe-checkout">
         @Html.AntiForgeryTokenOrchard()
         <input type="hidden" name="checkoutData" value="@Model.EncryptedData"/>
-        <input type="image" name="StripeCheckout" src="@Url.Content("~/Modules/Nwazet.Commerce/Content/checkout-with-stripe.png")" alt="@T("Checkout with Stripe")" class="checkout-button"/>
+        <input type="submit" value="@T("Checkout")" class="submit-button"/>
+        @T("with")
+        <input type="image" name="StripeCheckout" src="@Url.Content("~/Modules/Nwazet.Commerce/Content/accepted-cards.png")"
+               alt="@T("Secure Checkout with VISA, Mastercard, American Express, Discover, Diners, or JCB (payment handled by Stripe)")"
+               title="@T("Secure Checkout with VISA, Mastercard, American Express, Discover, Diners, or JCB (payment handled by Stripe)")"
+               class="checkout-button" />
     </form>
 }

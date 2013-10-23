@@ -66,6 +66,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\accepted-cards.png" />
     <Content Include="Content\checkout-with-stripe.png" />
     <Content Include="Content\menu.nwazet-commerce.png" />
     <Content Include="LICENSE.txt" />
@@ -385,7 +386,6 @@
     <Content Include="Views\OrderAdmin\List.cshtml" />
     <Content Include="Views\Order_CheckPassword.cshtml" />
     <Content Include="Views\Order_Confirmation.cshtml" />
-    <Content Include="Views\Stripe\Confirmation.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
