@@ -71,4 +71,4 @@
 }
 
 <div class="order-link">@T("You may view this order at a later time by going to this address: <a href=\"{2}{0}\">{0}</a>, using this password: \"{1}\".",
-                            Url.Action("Show", "OrderSsl", new {id = Model.OrderId}), Model.Password, Model.BaseUrl)</div>
+                            Url.Action("Show", "OrderSsl", new {id = Model.OrderId, area = "Nwazet.Commerce"}), Model.Password, Model.BaseUrl)</div>
