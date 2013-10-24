@@ -54,8 +54,11 @@ namespace Nwazet.Commerce.Tokens {
                 .Token("Shipping", c => (c ?? _shoppingCart).ShippingOption.ToString())
                 .Chain("Shipping", "ShippingOption", c => (c ?? _shoppingCart).ShippingOption)
                 .Token("Subtotal", c => (c ?? _shoppingCart).Subtotal().ToString("C"))
-                .Token("Taxes", c => (c ?? _shoppingCart).Taxes().Amount.ToString("C"))
-                .Chain("Taxes", "TaxAmount", c => (c ?? _shoppingCart).Taxes())
+                .Token("Taxes", c => {
+                    var taxes = (c ?? _shoppingCart).Taxes();
+                    return taxes == null ? 0.ToString("C") : taxes.Amount.ToString("C");
+                })
+                .Chain("Taxes", "TaxAmount", c => (c ?? _shoppingCart).Taxes() ?? new TaxAmount {Amount = 0, Name = ""})
                 .Token("Total", c => (c ?? _shoppingCart).Total().ToString("C"))
                 .Token("Count", c => (c ?? _shoppingCart).ItemCount());
 

@@ -118,6 +118,31 @@ namespace Nwazet.Commerce.Tests
             Assert.That(cart.Taxes().Amount, Is.EqualTo(subtotal * anyCountryTax.Rate));
         }
 
+        [Test]
+        public void NoApplicableTaxesYieldsNoTax() {
+            var frenchTax = GetFrenchTax();
+            var britishTax = GetBritishTax();
+            var washingtonTax = GetWashingtonTax();
+            var oregonTax = GetOregonTax();
+            var taxProvider = new FakeTaxProvider(new[] { washingtonTax, britishTax, frenchTax, oregonTax });
+            var cart = ShoppingCartHelpers.PrepareCart(null, new[] { taxProvider });
+
+            cart.Country = "Kazakhstan";
+            Assert.That(cart.Taxes(), Is.Null);
+        }
+
+        [Test]
+        public void NoNegativeTax()
+        {
+            var frenchTax = GetFrenchTax();
+            frenchTax.Rate = -0.5;
+            var taxProvider = new FakeTaxProvider(new[] { frenchTax });
+            var cart = ShoppingCartHelpers.PrepareCart(null, new[] { taxProvider });
+
+            cart.Country = frenchTax.Country;
+            Assert.That(cart.Taxes(), Is.Null);
+        }
+
         private static StateOrCountryTaxPart GetAnyStateTax()
         {
             var anyStateTax = new StateOrCountryTaxPart();

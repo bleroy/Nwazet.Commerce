@@ -27,7 +27,6 @@ namespace Nwazet.Commerce.Services {
             return _contentManager
                 .Query<StateOrCountryTaxPart, StateOrCountryTaxPartRecord>()
                 .ForVersion(VersionOptions.Published)
-                .OrderByDescending(t => t.Priority)
                 .List();
         }
     }

@@ -144,7 +144,8 @@ namespace Nwazet.Commerce.Models {
             return (
                 from tax in taxes
                 let name = tax.Name
-                let amount = tax.ComputeTax(GetProducts(), Subtotal(), shippingPrice, Country, ZipCode) where amount > 0
+                let amount = tax.ComputeTax(GetProducts(), Subtotal(), shippingPrice, Country, ZipCode)
+                where amount > 0
                 select new TaxAmount {Name = name, Amount = amount}
                 ).FirstOrDefault();
         }
@@ -155,8 +156,8 @@ namespace Nwazet.Commerce.Models {
                 if (ShippingOption == null) return Subtotal();
                 return Subtotal() + ShippingOption.Price;
             }
-            if (ShippingOption == null) return Subtotal() + Taxes().Amount;
-            return Subtotal() + Taxes().Amount + ShippingOption.Price;
+            if (ShippingOption == null) return Subtotal() + taxes.Amount;
+            return Subtotal() + taxes.Amount + ShippingOption.Price;
         }
 
         public double ItemCount() {
