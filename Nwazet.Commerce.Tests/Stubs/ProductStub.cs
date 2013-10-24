@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using Nwazet.Commerce.Models;
+using Nwazet.Commerce.Tests.Helpers;
 using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 
 namespace Nwazet.Commerce.Tests.Stubs {
     public class ProductStub : ProductPart {
         public ProductStub(int id = -1, IEnumerable<int> attributeIds = null) {
-            Helpers.PreparePart<ProductPart, ProductPartRecord>(this, "Product", id);
+            ContentHelpers.PreparePart<ProductPart, ProductPartRecord>(this, "Product", id);
             ContentItem.Weld(new InfosetPart());
             ShippingCost = -1;
             if (attributeIds != null) {

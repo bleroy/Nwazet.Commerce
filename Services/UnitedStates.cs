@@ -81,7 +81,7 @@ namespace Nwazet.Commerce.Services {
         }
 
         public static string State(string zipCode) {
-            var nonDigit = NonDigitEx.Match(zipCode);
+            var nonDigit = NonDigitEx.Match(zipCode ?? "");
             if (nonDigit.Success) {
                 zipCode = zipCode.Substring(0, nonDigit.Index);
             }

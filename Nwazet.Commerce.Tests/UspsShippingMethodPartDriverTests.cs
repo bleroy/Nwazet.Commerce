@@ -3,6 +3,7 @@ using NUnit.Framework;
 using Nwazet.Commerce.Drivers;
 using Nwazet.Commerce.Helpers;
 using Nwazet.Commerce.Models;
+using Nwazet.Commerce.Tests.Helpers;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -34,7 +35,7 @@ namespace Nwazet.Commerce.Tests
 ");
             var driver = new UspsShippingMethodPartDriver(null) as IContentPartDriver;
             var part = new UspsShippingMethodPart();
-            Helpers.PreparePart<UspsShippingMethodPart, UspsShippingMethodPartRecord>(part, "UspsShippingMethod");
+            ContentHelpers.PreparePart<UspsShippingMethodPart, UspsShippingMethodPartRecord>(part, "UspsShippingMethod");
             var context = new ImportContentContext(part.ContentItem, doc, new ImportContentSession(null));
             driver.Importing(context);
 
@@ -57,7 +58,7 @@ namespace Nwazet.Commerce.Tests
         public void ExportSetsAllAttributes() {
             var driver = new UspsShippingMethodPartDriver(null) as IContentPartDriver;
             var part = new UspsShippingMethodPart();
-            Helpers.PreparePart<UspsShippingMethodPart, UspsShippingMethodPartRecord>(part, "UspsShippingMethod");
+            ContentHelpers.PreparePart<UspsShippingMethodPart, UspsShippingMethodPartRecord>(part, "UspsShippingMethod");
             part.Name = "Foo";
             part.Size = "L";
             part.WidthInInches = 10;

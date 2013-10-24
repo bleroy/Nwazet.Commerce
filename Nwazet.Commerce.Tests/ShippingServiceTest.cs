@@ -3,6 +3,7 @@ using System.Linq;
 using NUnit.Framework;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
+using Nwazet.Commerce.Tests.Helpers;
 using Nwazet.Commerce.Tests.Stubs;
 
 namespace Nwazet.Commerce.Tests {
@@ -14,13 +15,13 @@ namespace Nwazet.Commerce.Tests {
                 new ShoppingCartQuantityProduct(1, new ProductStub {Weight = 3})
             };
 
-            var shippingMethod1 = Helpers.BuildWeightBasedShippingMethod(price: 3);
+            var shippingMethod1 = ShippingHelpers.BuildWeightBasedShippingMethod(price: 3);
             shippingMethod1.Name = "Shipping method 1";
             shippingMethod1.ShippingCompany = "Vandelay Import/Export";
             shippingMethod1.ExcludedShippingAreas = "a,b";
             shippingMethod1.IncludedShippingAreas = "c,d,e";
 
-            var shippingMethod2 = Helpers.BuildWeightBasedShippingMethod(price: 7);
+            var shippingMethod2 = ShippingHelpers.BuildWeightBasedShippingMethod(price: 7);
             shippingMethod2.Name = "Shipping method 2";
             shippingMethod2.ShippingCompany = "Northwind Shipping";
             shippingMethod2.ExcludedShippingAreas = "f,g,h";
@@ -52,8 +53,8 @@ namespace Nwazet.Commerce.Tests {
                 new ShoppingCartQuantityProduct(1, new ProductStub {Weight = 3})
             };
 
-            var shippingMethod1 = Helpers.BuildWeightBasedShippingMethod(price: 3);
-            var shippingMethod2 = Helpers.BuildWeightBasedShippingMethod(price: 3);
+            var shippingMethod1 = ShippingHelpers.BuildWeightBasedShippingMethod(price: 3);
+            var shippingMethod2 = ShippingHelpers.BuildWeightBasedShippingMethod(price: 3);
 
             var shippingMethods = new[] { shippingMethod1, shippingMethod2 };
 
@@ -68,13 +69,13 @@ namespace Nwazet.Commerce.Tests {
                 new ShoppingCartQuantityProduct(1, new ProductStub {Weight = 3})
             };
 
-            var shippingMethod1 = Helpers.BuildWeightBasedShippingMethod(price: 3);
+            var shippingMethod1 = ShippingHelpers.BuildWeightBasedShippingMethod(price: 3);
             shippingMethod1.Name = "Shipping method 1";
             shippingMethod1.ShippingCompany = "Vandelay Import/Export";
             shippingMethod1.ExcludedShippingAreas = "a,b";
             shippingMethod1.IncludedShippingAreas = "c,d,e";
 
-            var shippingMethod2 = Helpers.BuildWeightBasedShippingMethod(price: 7);
+            var shippingMethod2 = ShippingHelpers.BuildWeightBasedShippingMethod(price: 7);
             shippingMethod2.Name = "Shipping method 2";
             shippingMethod2.ShippingCompany = "Northwind Shipping";
             shippingMethod2.ExcludedShippingAreas = "f,g,h";

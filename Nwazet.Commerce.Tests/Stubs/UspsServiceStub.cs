@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
+using Nwazet.Commerce.Tests.Helpers;
 
 namespace Nwazet.Commerce.Tests.Stubs {
     internal class UspsServiceStub : IUspsService {
@@ -28,7 +29,7 @@ namespace Nwazet.Commerce.Tests.Stubs {
 
         public UspsSettingsPart GetSettings() {
             var settings = new UspsSettingsPart();
-            Helpers.PreparePart(settings, "Site");
+            ContentHelpers.PreparePart(settings, "Site");
             settings.UserId = _uspsUserId;
             settings.OriginZip = _originZip;
             settings.CommercialPrices = _commercialPrices;

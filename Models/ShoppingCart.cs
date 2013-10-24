@@ -136,14 +136,15 @@ namespace Nwazet.Commerce.Models {
         }
 
         public TaxAmount Taxes() {
-            if (ShippingOption == null || (Country == null && ZipCode == null)) return null;
+            if (Country == null && ZipCode == null) return null;
             var taxes = _taxProviders
                 .SelectMany(p => p.GetTaxes())
-                .OrderBy(t => t.Priority);
+                .OrderByDescending(t => t.Priority);
+            var shippingPrice = ShippingOption == null ? 0 : ShippingOption.Price;
             return (
                 from tax in taxes
                 let name = tax.Name
-                let amount = tax.ComputeTax(GetProducts(), Subtotal(), ShippingOption.Price, Country, ZipCode) where amount > 0
+                let amount = tax.ComputeTax(GetProducts(), Subtotal(), shippingPrice, Country, ZipCode) where amount > 0
                 select new TaxAmount {Name = name, Amount = amount}
                 ).FirstOrDefault();
         }

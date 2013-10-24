@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using Nwazet.Commerce.Models;
+using Nwazet.Commerce.Tests.Helpers;
 using Orchard.ContentManagement;
 using Nwazet.Commerce.Helpers;
 using Orchard.ContentManagement.FieldStorage.InfosetStorage;
@@ -10,7 +11,7 @@ namespace Nwazet.Commerce.Tests {
         [Test]
         public void StoreByNameSavesIntoInfoset() {
             var part = new TestPart();
-            Helpers.PreparePart(part, "Test");
+            ContentHelpers.PreparePart(part, "Test");
             part.Foo = 42;
             var infosetXml = part.As<InfosetPart>().Infoset.Element;
             var testPartElement = infosetXml.Element(typeof (TestPart).Name);
@@ -24,7 +25,7 @@ namespace Nwazet.Commerce.Tests {
         [Test]
         public void RetrieveSavesIntoInfoset() {
             var part = new TestPartWithRecord();
-            Helpers.PreparePart<TestPartWithRecord, TestPartWithRecordRecord>(part, "Test");
+            ContentHelpers.PreparePart<TestPartWithRecord, TestPartWithRecordRecord>(part, "Test");
             part.Record.Foo = 42;
             var infosetXml = part.As<InfosetPart>().Infoset.Element;
             var testPartElement = infosetXml.Element(typeof (TestPartWithRecord).Name);
