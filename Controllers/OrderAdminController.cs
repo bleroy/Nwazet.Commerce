@@ -74,7 +74,7 @@ namespace Nwazet.Commerce.Controllers {
                     query = query.Where(o => o.Status == filterOption);
                 }
                 else {
-                    query = query.Where(o => o.Status != OrderPart.Archived);
+                    query = query.Where(o => o.Status != OrderPart.Archived && o.Status != OrderPart.Cancelled);
                 }
 
                 switch (model.Options.OrderBy) {
