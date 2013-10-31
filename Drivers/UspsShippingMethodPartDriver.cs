@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Nwazet.Commerce.Helpers;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
 using Orchard.ContentManagement;

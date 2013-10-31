@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Nwazet.Commerce.Services;
 using Orchard;
+using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Usps.Shipping")]
-    public class UspsShippingMethodPart : InfosetContentPart<UspsShippingMethodPartRecord>, IShippingMethod {
+    public class UspsShippingMethodPart : ContentPart<UspsShippingMethodPartRecord>, IShippingMethod {
         public string Name {
             get { return Retrieve(r => r.Name); }
             set { Store(r => r.Name, value); }

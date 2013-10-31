@@ -1,6 +1,4 @@
-﻿using System;
-using Nwazet.Commerce.Helpers;
-using Nwazet.Commerce.Models;
+﻿using Nwazet.Commerce.Models;
 using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;

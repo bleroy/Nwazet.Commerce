@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.Attributes")]
-    public class ProductAttributesPart : InfosetContentPart<ProductAttributesPartRecord> {
+    public class ProductAttributesPart : ContentPart<ProductAttributesPartRecord> {
         public IEnumerable<int> AttributeIds {
             get {
                 var attributes = Retrieve(r => r.Attributes);

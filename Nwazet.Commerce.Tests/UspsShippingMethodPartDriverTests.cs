@@ -1,7 +1,6 @@
 ﻿using System.Xml.Linq;
 using NUnit.Framework;
 using Nwazet.Commerce.Drivers;
-using Nwazet.Commerce.Helpers;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Tests.Helpers;
 using Orchard.ContentManagement;

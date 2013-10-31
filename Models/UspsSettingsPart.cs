@@ -1,28 +1,27 @@
-﻿using Nwazet.Commerce.Helpers;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Usps.Shipping")]
     public class UspsSettingsPart : ContentPart {
         public string UserId {
-            get { return this.Retrieve<string>("UserId"); } 
-            set { this.Store("UserId", value); }
+            get { return Retrieve<string>("UserId"); } 
+            set { Store("UserId", value); }
         }
 
         public string OriginZip {
-            get { return this.Retrieve<string>("OriginZip"); }
-            set { this.Store("OriginZip", value); }
+            get { return Retrieve<string>("OriginZip"); }
+            set { Store("OriginZip", value); }
         }
 
         public bool CommercialPrices {
-            get { return this.Retrieve<bool>("CommercialPrices"); }
-            set { this.Store("CommercialPrices", value); }
+            get { return Retrieve<bool>("CommercialPrices"); }
+            set { Store("CommercialPrices", value); }
         }
 
         public bool CommercialPlusPrices {
-            get { return this.Retrieve<bool>("CommercialPlusPrices"); }
-            set { this.Store("CommercialPlusPrices", value); }
+            get { return Retrieve<bool>("CommercialPlusPrices"); }
+            set { Store("CommercialPlusPrices", value); }
         }
     }
 }

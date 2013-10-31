@@ -48,7 +48,6 @@
     <Compile Include="Helpers\ContentHelpers.cs" />
     <Compile Include="Helpers\ShippingHelpers.cs" />
     <Compile Include="Helpers\ShoppingCartHelpers.cs" />
-    <Compile Include="InfosetHelperTests.cs" />
     <Compile Include="ShippingServiceTest.cs" />
     <Compile Include="TaxTests.cs" />
     <Compile Include="UspsServiceInternationalTests.cs" />
@@ -72,7 +71,6 @@
     <Compile Include="UspsShippingMethodPartDriverTests.cs" />
     <Compile Include="WeightBasedShippingMethodTest.cs" />
     <Compile Include="Stubs\WorkContextAccessorStub.cs" />
-    <Compile Include="XmlHelperTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Orchard\Orchard.Framework.csproj">
