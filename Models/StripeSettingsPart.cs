@@ -7,18 +7,18 @@ namespace Nwazet.Commerce.Models {
     public class StripeSettingsPart : ContentPart {
         [Required]
         public string PublishableKey {
-            get { return Retrieve<string>("PublishableKey"); }
-            set { Store("PublishableKey", value); }
+            get { return this.Retrieve(p => p.PublishableKey); }
+            set { this.Store(p => p.PublishableKey, value); }
         }
 
         public string SecretKey {
-            get { return Retrieve<string>("SecretKey"); }
-            set { Store("SecretKey", value); }
+            get { return this.Retrieve(p => p.SecretKey); }
+            set { this.Store(p => p.SecretKey, value); }
         }
 
         public string Currency {
-            get { return Retrieve<string>("Currency"); }
-            set { Store("Currency", value); }
+            get { return this.Retrieve(p => p.Currency); }
+            set { this.Store(p => p.Currency, value); }
         }
     }
 }

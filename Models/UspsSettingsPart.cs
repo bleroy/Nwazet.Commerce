@@ -5,23 +5,23 @@ namespace Nwazet.Commerce.Models {
     [OrchardFeature("Usps.Shipping")]
     public class UspsSettingsPart : ContentPart {
         public string UserId {
-            get { return Retrieve<string>("UserId"); } 
-            set { Store("UserId", value); }
+            get { return this.Retrieve(p => p.UserId); } 
+            set { this.Store(p => p.UserId, value); }
         }
 
         public string OriginZip {
-            get { return Retrieve<string>("OriginZip"); }
-            set { Store("OriginZip", value); }
+            get { return this.Retrieve(p => p.OriginZip); }
+            set { this.Store(p => p.OriginZip, value); }
         }
 
         public bool CommercialPrices {
-            get { return Retrieve<bool>("CommercialPrices"); }
-            set { Store("CommercialPrices", value); }
+            get { return this.Retrieve(p => p.CommercialPrices); }
+            set { this.Store(p => p.CommercialPrices, value); }
         }
 
         public bool CommercialPlusPrices {
-            get { return Retrieve<bool>("CommercialPlusPrices"); }
-            set { Store("CommercialPlusPrices", value); }
+            get { return this.Retrieve(p => p.CommercialPlusPrices); }
+            set { this.Store(p => p.CommercialPlusPrices, value); }
         }
     }
 }
