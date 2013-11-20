@@ -146,18 +146,21 @@
                 }
             }
         </ul>
-
-        <ul>
-            @foreach (var category in Model.EventCategories) {
-                var stateid = ViewData.TemplateInfo.GetFullHtmlFieldId("EventCategory_" + category);
-                <li>
-                    @Html.RadioButton("EventCategory", category, new {@id = stateid, @class="new-order-event-category"})
-                    @Html.Label("EventCategory_" + category, Model.EventCategoryLabels[category].Text)
-                </li>
-            }
-        </ul>
-        <textarea class="new-order-event-description"></textarea>
-        <button type="button" class="new-order-event-add button grey">@T("Add")</button>
+        
+        <div class="order-event-add">
+            <ul>
+                @foreach (var category in Model.EventCategories)
+                {
+                    var stateid = ViewData.TemplateInfo.GetFullHtmlFieldId("EventCategory_" + category);
+                    <li>
+                        @Html.RadioButton("EventCategory", category, new { @id = stateid, @class = "new-order-event-category" })
+                        @Html.Label("EventCategory_" + category, Model.EventCategoryLabels[category].Text)
+                    </li>
+                }
+            </ul>
+            <textarea class="new-order-event-description"></textarea>
+            <button type="button" class="new-order-event-add button grey">@T("Add")</button>
+        </div>
     </fieldset>
 
     <div class="order-link">@T("You may view this order at a later time by going to this address: <a href=\"{0}\">{0}</a>, using this password: \"{1}\".",
