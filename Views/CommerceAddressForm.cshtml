@@ -25,6 +25,8 @@
 <div class="hint">@T("Please specify the state, province, prefecture, republic or region code as appropriate. For example, 'WA' for the state of Washington in the United States.")</div>
 <label for="@Html.Id(prefix + ".PostalCode")">@T("Postal or ZIP code")</label>
 <input id="@Html.Id(prefix + ".PostalCode")" type="text" name="@Html.Name(prefix + ".PostalCode")" value="@address.PostalCode" class="input-small"/>
-<label for="@Html.Id(prefix + ".Country")">@T("Country")</label>
-<input id="@Html.Id(prefix + ".Country")" type="text" name="@Html.Name(prefix + ".Country")" value="@address.Country" class="input-medium"/>
-<div class="hint">@T("You may leave this blank for the United States.")</div>
+@if (Model.IncludeCountry == true) {
+    <label for="@Html.Id(prefix + ".Country")">@T("Country")</label>
+    <input id="@Html.Id(prefix + ".Country")" type="text" name="@Html.Name(prefix + ".Country")" value="@address.Country" class="input-medium"/>
+    <div class="hint">@T("You may leave this blank for the United States.")</div>
+}

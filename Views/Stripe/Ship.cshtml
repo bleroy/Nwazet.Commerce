@@ -9,7 +9,7 @@
 @using (Html.BeginFormAntiForgeryPost(Url.Action("Ship", "Stripe", new {area = "Nwazet.Commerce"}), FormMethod.Post, new {@id="address-form"})) {
     <fieldset>
         <legend>@T("Shipping Address")</legend>
-        @Display.CommerceAddressForm(Prefix: "shippingAddress", Address: Model.ShippingAddress)
+        @Display.CommerceAddressForm(Prefix: "shippingAddress", Address: Model.ShippingAddress, IncludeCountry: true)
     </fieldset>
     <fieldset class="toggle-billing">
         <input id="toggle-billing-address" type="checkbox" checked="checked"/>
@@ -17,7 +17,8 @@
     </fieldset>
     <fieldset class="billing-address">
         <legend>@T("Billing Address")</legend>
-        @Display.CommerceAddressForm(Prefix: "billingAddress", Address: Model.BillingAddress)
+        @Display.CommerceAddressForm(Prefix: "billingAddress", Address: Model.BillingAddress, IncludeCountry: false)
+        <div class="hint">@T("The billing address must be in the same country as the shipping address. Please contact us directly to pass orders that don't satisfy that constraint.")</div>
     </fieldset>
 
     <label for="@Html.Id("Email")">@T("e-mail")</label>
