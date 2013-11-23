@@ -6,7 +6,10 @@ using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
 using Nwazet.Commerce.ViewModels;
 using Orchard;
+using Orchard.Localization;
+using Orchard.Logging;
 using Orchard.Themes;
+using Orchard.UI.Notify;
 using Orchard.Workflows.Services;
 
 namespace Nwazet.Commerce.Controllers {
@@ -18,18 +21,25 @@ namespace Nwazet.Commerce.Controllers {
         private readonly IOrderService _orderService;
         private readonly IWorkContextAccessor _wca;
         private readonly IWorkflowManager _workflowManager;
+        private readonly INotifier _notifier;
 
         public StripeController(
             IStripeService stripeService,
             IOrderService orderService,
             IWorkContextAccessor wca,
-            IWorkflowManager workflowManager) {
+            IWorkflowManager workflowManager,
+            INotifier notifier) {
 
             _stripeService = stripeService;
             _orderService = orderService;
             _wca = wca;
             _workflowManager = workflowManager;
+            _notifier = notifier;
+
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         [HttpPost]
         public ActionResult Checkout(string checkoutData) {
@@ -56,13 +66,16 @@ namespace Nwazet.Commerce.Controllers {
             return RedirectToAction("Pay");
         }
 
-        public ActionResult Pay() {
+        public ActionResult Pay(string errorMessage = null) {
             _wca.GetContext().Layout.IsCartPage = true;
             var checkoutData = GetCheckoutData();
             if (checkoutData.CheckoutItems == null || !checkoutData.CheckoutItems.Any()) {
                 return RedirectToAction("Index", "ShoppingCart");
             }
             checkoutData.PublishableKey = _stripeService.GetSettings().PublishableKey;
+            if (!String.IsNullOrEmpty(errorMessage)) {
+                _notifier.Error(new LocalizedString(errorMessage));
+            }
             return View(checkoutData);
         }
 
@@ -77,6 +90,18 @@ namespace Nwazet.Commerce.Controllers {
             var total = subTotal + taxes + checkoutData.ShippingOption.Price;
             // Call Stripe to charge card
             var stripeCharge = _stripeService.Charge(stripeToken, total);
+
+            if (stripeCharge.Error != null) {
+                Logger.Error(stripeCharge.Error.Type + ": " + stripeCharge.Error.Message);
+                _workflowManager.TriggerEvent("OrderError", null,
+                    () => new Dictionary<string, object> {
+                    {"CheckoutError", stripeCharge.Error}
+                });
+                if (stripeCharge.Error.Code == "card_error") {
+                    return Pay(stripeCharge.Error.Message);
+                }
+                throw new InvalidOperationException(stripeCharge.Error.Type + ": " + stripeCharge.Error.Message);
+            }
 
             var order = _orderService.CreateOrder(
                 stripeCharge,

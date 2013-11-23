@@ -45,6 +45,17 @@ namespace Nwazet.Commerce.Activities {
     }
 
     [OrchardFeature("Nwazet.Orders")]
+    public class OrderError : OrderActivity {
+        public override string Name {
+            get { return "OrderError"; }
+        }
+
+        public override LocalizedString Description {
+            get { return T("An order resulted in an error."); }
+        }
+    }
+
+    [OrchardFeature("Nwazet.Orders")]
     public class OrderStatusChanged : OrderActivity {
         public override string Name {
             get { return "OrderStatusChanged"; }
