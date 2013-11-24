@@ -93,8 +93,9 @@
 <div class="payment-errors"></div>
 
 <div id="payment-form">
-    <label for="@Html.Id("name")">@T("Name on card")</label>
+    <label for="@Html.Id("name")">@T("Name")</label>
     <input id="@Html.Id("name")" value="@nameFormatter.FullName(address)" type="text" size="20" autocomplete="off" class="card-name input-medium" />
+    <div class="hint">@T("as it appears on your card.")</div>
 
     <label for="@Html.Id("cardNumber")">@T("Card Number")</label>
     <input id="@Html.Id("cardNumber")" type="text" size="20" autocomplete="off" class="card-number input-medium"/>
