@@ -37,9 +37,11 @@ namespace Nwazet.Commerce.Controllers {
             _notifier = notifier;
 
             Logger = NullLogger.Instance;
+            T = NullLocalizer.Instance;
         }
 
         public ILogger Logger { get; set; }
+        public Localizer T { get; set; }
 
         [HttpPost]
         public ActionResult Checkout(string checkoutData) {
@@ -124,6 +126,7 @@ namespace Nwazet.Commerce.Controllers {
                     {"Content", order},
                     {"Order", order}
                 });
+            order.LogActivity(OrderPart.Event, T("Order created.").Text);
 
             return RedirectToAction("Confirmation", "OrderSsl");
         }
