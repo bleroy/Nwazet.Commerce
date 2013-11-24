@@ -2,4 +2,5 @@
 @{
     var items = (IEnumerable<CheckoutItem>)Model.OrderedProducts;
 }
-@(Html.Raw(String.Join(", ", items.Select(i => String.Format(T("{0} &times; {1}").Text, i.Quantity, i.Title)))))
+<div class="order-contents">@(Html.Raw(String.Join(", ", items.Select(i => String.Format(T("{0} &times; {1}").Text, i.Quantity, i.Title)))))</div>
+<div class="order-metadata">@T("Ordered {0}", Display.DateTimeRelative(dateTimeUtc: Model.ContentItem.CommonPart.CreatedUtc))</div>

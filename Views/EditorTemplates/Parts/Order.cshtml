@@ -9,6 +9,11 @@
     var charge = Model.Order.CreditCardCharge;
 }
 <div class="order-editor">
+    <fieldset class="order-metadata">
+        <legend>@T("Order:")</legend>
+        <div class="order-id">@T("ID: {0}", Model.Order.Id)</div>
+        <div class="order-date">@T("Ordered {0}", Display.DateTimeRelative(dateTimeUtc: ((dynamic)Model.Order.ContentItem).CommonPart.CreatedUtc))</div>
+    </fieldset>
     <fieldset class="order-status">
         <legend>@T("Status:")</legend>
         <ul>

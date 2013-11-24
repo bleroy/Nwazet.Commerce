@@ -26,8 +26,10 @@
     <Place Parts_ProductAttributes="-"/>
     <Place Parts_Order="Content:1;Alternate=OrderSummaryAdmin"/>
     <Match ContentType="Order">
-      <Place Parts_Contents_Publish_SummaryAdmin="-"
-       Parts_Contents_Clone_SummaryAdmin="-"/>
+      <Place
+        Parts_Contents_Publish_SummaryAdmin="-"
+        Parts_Contents_Clone_SummaryAdmin="-"
+        Parts_Common_Metadata_SummaryAdmin="-"/>
     </Match>
   </Match>
   <Match DisplayType="Thumbnail">
