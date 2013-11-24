@@ -4,5 +4,6 @@ using Orchard;
 namespace Nwazet.Commerce.Services {
     public interface IAddressFormatter : IDependency {
         string Format(Address address);
+        string FullName(Address address);
     }
 }

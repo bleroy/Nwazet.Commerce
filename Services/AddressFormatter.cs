@@ -144,5 +144,32 @@ namespace Nwazet.Commerce.Services {
                 {"switzerland", EuropeanPattern},
                 {"turkey", EuropeanPattern},
             };
+
+        public string FullName(Address address) {
+            string country = address.Country;
+            string pattern;
+            if (!_namePatterns.TryGetValue(country, out pattern)) {
+                pattern = DefaultNamePattern;
+            }
+            return pattern
+                .Replace("{Honorific}", address.Honorific)
+                .Replace("{FirstName}", address.FirstName)
+                .Replace("{LastName}", address.LastName);
+        }
+
+        private const string DefaultNamePattern = @"{Honorific} {FirstName} {LastName}";
+        private const string EastAsianNamePattern = @"{LastName} {FirstName} {Honorific}";
+        private const string HungarianNamePattern = @"{Honorific} {LastName} {FirstName}";
+        private const string RussianNamePattern = @"{LastName} {FirstName}";
+
+        private readonly Dictionary<string, string> _namePatterns =
+            new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) {
+                {"", DefaultNamePattern},
+                {"china", EastAsianNamePattern},
+                {"japan", EastAsianNamePattern},
+                {"korea", EastAsianNamePattern},
+                {"hungary", HungarianNamePattern},
+                {"russia", RussianNamePattern}
+            };
     }
 }

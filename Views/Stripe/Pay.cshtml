@@ -1,8 +1,12 @@
-﻿@model Nwazet.Commerce.ViewModels.StripeCheckoutViewModel
+﻿@using Newtonsoft.Json
+@using Nwazet.Commerce.Services
+@model Nwazet.Commerce.ViewModels.StripeCheckoutViewModel
 @{
     var title = Layout.Title = T("Checkout with Stripe - 2: Credit Card Information");
     Script.Require("jQuery");
     Script.Include("https://js.stripe.com/v1/");
+    var nameFormatter = WorkContext.Resolve<IAddressFormatter>();
+    var address = Model.BillingAddress;
     using (Script.Foot()) {
         <script type="text/javascript">
             Stripe.setPublishableKey("@Model.PublishableKey");
@@ -42,6 +46,13 @@
                                 Stripe.validateExpiry(expMonth.val(), expYear.val()),
                                 "@T("Invalid expiration date")");
                         }),
+                    name = $(".card-name"),
+                    addressLine1 = @Html.Raw(JsonConvert.SerializeObject(address.Address1)),
+                    addressLine2 = @Html.Raw(JsonConvert.SerializeObject(address.Address2)),
+                    city = @Html.Raw(JsonConvert.SerializeObject(address.City)),
+                    state = @Html.Raw(JsonConvert.SerializeObject(address.Province)),
+                    zip = @Html.Raw(JsonConvert.SerializeObject(address.PostalCode)),
+                    country = @Html.Raw(JsonConvert.SerializeObject(address.Country)),
                     submit = $(".submit-button")
                         .click(function(event) {
                             event.preventDefault();
@@ -51,7 +62,14 @@
                                 number: cardNumber.val(),
                                 cvc: cvc.val(),
                                 exp_month: expMonth.val(),
-                                exp_year: expYear.val()
+                                exp_year: expYear.val(),
+                                name: name.val(),
+                                address_line1: addressLine1,
+                                address_line2: addressLine2,
+                                address_city: city,
+                                address_state: state,
+                                address_zip: zip,
+                                address_country: country
                             }, stripeResponseHandler);
                             return false;
                         }),
@@ -75,6 +93,9 @@
 <div class="payment-errors"></div>
 
 <div id="payment-form">
+    <label for="@Html.Id("name")">@T("Name on card")</label>
+    <input id="@Html.Id("name")" value="@nameFormatter.FullName(address)" type="text" size="20" autocomplete="off" class="card-name input-medium" />
+
     <label for="@Html.Id("cardNumber")">@T("Card Number")</label>
     <input id="@Html.Id("cardNumber")" type="text" size="20" autocomplete="off" class="card-number input-medium"/>
 
