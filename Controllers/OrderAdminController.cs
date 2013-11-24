@@ -58,36 +58,37 @@ namespace Nwazet.Commerce.Controllers {
             var query = _contentManager.Query<OrderPart, OrderPartRecord>(VersionOptions.Latest);
             var states = OrderPart.States.ToList();
 
-            if (model.Options != null) {
-                if (!string.IsNullOrWhiteSpace(model.Options.Search)) {
-                    int id;
-                    query = int.TryParse(model.Options.Search, out id) ?
-                        query.Where(o => o.Id == id) :
-                        query.Where(o => o.Customer.Contains(model.Options.Search));
-                }
-                var filterOption = model.Options.SelectedFilter;
-                if (!string.IsNullOrWhiteSpace(filterOption)) {
-
-                    if (!states.Contains(filterOption))
-                        return HttpNotFound();
-
-                    query = query.Where(o => o.Status == filterOption);
-                }
-                else {
-                    query = query.Where(o => o.Status != OrderPart.Archived && o.Status != OrderPart.Cancelled);
-                }
-
-                switch (model.Options.OrderBy) {
-                    case ContentsOrder.Modified:
-                        query.OrderByDescending<CommonPartRecord>(cr => cr.ModifiedUtc);
-                        break;
-                    case ContentsOrder.Created:
-                        query.OrderByDescending<CommonPartRecord>(cr => cr.CreatedUtc);
-                        break;
-                }
-                model.Options.FilterOptions =
-                    _orderService.StatusLabels.Select(kvp => new KeyValuePair<string, string>(kvp.Key, kvp.Value.Text));
+            if (model.Options == null) {
+                model.Options = new ContentOptions {};
             }
+            if (!string.IsNullOrWhiteSpace(model.Options.Search)) {
+                int id;
+                query = int.TryParse(model.Options.Search, out id) ?
+                    query.Where(o => o.Id == id) :
+                    query.Where(o => o.Customer.Contains(model.Options.Search));
+            }
+            var filterOption = model.Options.SelectedFilter;
+            if (string.IsNullOrWhiteSpace(filterOption) ||
+                filterOption.Equals("active", StringComparison.OrdinalIgnoreCase)) {
+                query = query.Where(
+                    o => o.Status != OrderPart.Archived &&
+                            o.Status != OrderPart.Cancelled);
+            }
+            else if (!filterOption.Equals("any", StringComparison.OrdinalIgnoreCase)) {
+                if (!states.Contains(filterOption)) return HttpNotFound();
+                query = query.Where(o => o.Status == filterOption);
+            }
+
+            switch (model.Options.OrderBy) {
+                case ContentsOrder.Modified:
+                    query.OrderByDescending<CommonPartRecord>(cr => cr.ModifiedUtc);
+                    break;
+                case ContentsOrder.Created:
+                    query.OrderByDescending<CommonPartRecord>(cr => cr.CreatedUtc);
+                    break;
+            }
+            model.Options.FilterOptions =
+                _orderService.StatusLabels.Select(kvp => new KeyValuePair<string, string>(kvp.Key, kvp.Value.Text));
 
             var pagerShape = Shape.Pager(pager).TotalItemCount(query.Count());
             var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
@@ -110,7 +111,7 @@ namespace Nwazet.Commerce.Controllers {
             var routeValues = ControllerContext.RouteData.Values;
             if (options != null) {
                 routeValues["Options.OrderBy"] = options.OrderBy;
-                if (OrderPart.States.Any(
+                if ((OrderPart.States.Union(new[] {"any", "active"})).Any(
                         ctd => string.Equals(ctd, options.SelectedFilter, StringComparison.OrdinalIgnoreCase))) {
                     routeValues["Options.SelectedFilter"] = options.SelectedFilter;
                 }
