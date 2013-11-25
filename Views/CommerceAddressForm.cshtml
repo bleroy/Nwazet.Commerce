@@ -8,18 +8,18 @@
 <input id="@Html.Id(prefix + ".Honorific")" type="text" name="@Html.Name(prefix + ".Honorific")" value="@address.Honorific" class="honorific input-mini"/>
 <div class="hint">@T("Title or honorific, e.g. Mr., Mrs., Dr., San, etc.")</div>
 <label for="@Html.Id(prefix + ".FirstName")">@T("First Name")</label>
-<input id="@Html.Id(prefix + ".FirstName")" type="text" name="@Html.Name(prefix + ".FirstName")" value="@address.FirstName" class="input-large"/>
+<input id="@Html.Id(prefix + ".FirstName")" type="text" name="@Html.Name(prefix + ".FirstName")" value="@address.FirstName" class="input-large required" />
 <div class="hint">@T("Please include middle name or initial as appropriate.")</div>
 <label for="@Html.Id(prefix + ".LastName")">@T("Last Name")</label>
-<input id="@Html.Id(prefix + ".LastName")" type="text" name="@Html.Name(prefix + ".LastName")" value="@address.LastName" class="input-large"/>
+<input id="@Html.Id(prefix + ".LastName")" type="text" name="@Html.Name(prefix + ".LastName")" value="@address.LastName" class="input-large required" />
 <div class="hint">@T("Please include middle name or initial as appropriate.")</div>
 <label for="@Html.Id(prefix + ".Company")">@T("Company")</label>
 <input id="@Html.Id(prefix + ".Company")" type="text" name="@Html.Name(prefix + ".Company")" value="@address.Company" class="input-large"/>
 <label for="@Html.Id(prefix + ".Address1")">@T("Address")</label>
-<input id="@Html.Id(prefix + ".Address1")" type="text" name="@Html.Name(prefix + ".Address1")" value="@address.Address1" class="input-xxlarge"/>
+<input id="@Html.Id(prefix + ".Address1")" type="text" name="@Html.Name(prefix + ".Address1")" value="@address.Address1" class="input-xxlarge required" />
 <input id="@Html.Id(prefix + ".Address2")" type="text" name="@Html.Name(prefix + ".Address2")" value="@address.Address2" class="input-xxlarge"/>
 <label for="@Html.Id(prefix + ".City")">@T("City")</label>
-<input id="@Html.Id(prefix + ".City")" type="text" name="@Html.Name(prefix + ".City")" value="@address.City" class="input-large"/>
+<input id="@Html.Id(prefix + ".City")" type="text" name="@Html.Name(prefix + ".City")" value="@address.City" class="input-large required" />
 <label for="@Html.Id(prefix + ".Province")">@T("State, province, prefecture, republic or region")</label>
 <input id="@Html.Id(prefix + ".Province")" type="text" name="@Html.Name(prefix + ".Province")" value="@address.Province" class="input-mini"/>
 <div class="hint">@T("Please specify the state, province, prefecture, republic or region code as appropriate. For example, 'WA' for the state of Washington in the United States.")</div>

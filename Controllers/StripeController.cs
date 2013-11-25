@@ -64,7 +64,20 @@ namespace Nwazet.Commerce.Controllers {
             if (!String.IsNullOrWhiteSpace(back)) {
                 return RedirectToAction("Index", "ShoppingCart");
             }
-            GetCheckoutData(stripeData);
+            var checkoutData = GetCheckoutData(stripeData);
+            if (AnyEmptyString(
+                checkoutData.Email,
+                checkoutData.BillingAddress.FirstName,
+                checkoutData.BillingAddress.LastName,
+                checkoutData.BillingAddress.Address1,
+                checkoutData.BillingAddress.City,
+                checkoutData.ShippingAddress.FirstName,
+                checkoutData.ShippingAddress.LastName,
+                checkoutData.ShippingAddress.Address1,
+                checkoutData.ShippingAddress.City
+                )) {
+                return RedirectToAction("Ship");
+            }
             return RedirectToAction("Pay");
         }
 
@@ -175,6 +188,10 @@ namespace Nwazet.Commerce.Controllers {
             TempData[NwazetStripeCheckout] = checkoutData;
             TempData.Keep(NwazetStripeCheckout);
             return checkoutData;
+        }
+
+        private bool AnyEmptyString(params string[] strings) {
+            return strings.Any(String.IsNullOrWhiteSpace);
         }
     }
 }
