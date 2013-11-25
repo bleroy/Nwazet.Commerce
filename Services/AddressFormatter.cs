@@ -6,7 +6,7 @@ using Nwazet.Commerce.Models;
 namespace Nwazet.Commerce.Services {
     public class AddressFormatter : IAddressFormatter {
         public string Format(Address address) {
-            string country = address.Country;
+            string country = address.Country ?? Country.UnitedStates;
             string pattern;
             if (!_addressPatterns.TryGetValue(country, out pattern)) {
                 pattern = DefaultPattern;
@@ -146,7 +146,7 @@ namespace Nwazet.Commerce.Services {
             };
 
         public string FullName(Address address) {
-            string country = address.Country;
+            string country = address.Country ?? Country.UnitedStates;
             string pattern;
             if (!_namePatterns.TryGetValue(country, out pattern)) {
                 pattern = DefaultNamePattern;
