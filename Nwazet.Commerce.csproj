@@ -173,7 +173,6 @@
     <Compile Include="Drivers\ProductAttributePartDriver.cs" />
     <Compile Include="Drivers\DiscountPartDriver.cs" />
     <Compile Include="Drivers\SizeBasedShippingMethodPartDriver.cs" />
-    <Compile Include="Drivers\GoogleCheckoutSettingsPartDriver.cs" />
     <Compile Include="Drivers\ProductPartDriver.cs" />
     <Compile Include="Drivers\ShoppingCartWidgetDriver.cs" />
     <Compile Include="Drivers\WeightBasedShippingMethodPartDriver.cs" />
@@ -190,7 +189,6 @@
     <Compile Include="Handlers\DiscountPartHandler.cs" />
     <Compile Include="Handlers\SizeBasedShippingMethodPartHandler.cs" />
     <Compile Include="Handlers\WeightBasedShippingMethodPartHandler.cs" />
-    <Compile Include="Handlers\GoogleCheckoutSettingsPartHandler.cs" />
     <Compile Include="Handlers\ProductPartHandler.cs" />
     <Compile Include="Menus\AttributeAdminMenu.cs" />
     <Compile Include="Menus\OrderAdminMenu.cs" />
@@ -206,7 +204,6 @@
     <Compile Include="Migrations\UspsMigrations.cs" />
     <Compile Include="Migrations\DiscountMigrations.cs" />
     <Compile Include="Migrations\ShippingMigrations.cs" />
-    <Compile Include="Migrations\GoogleCheckoutMigrations.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\CheckoutItem.cs" />
     <Compile Include="Models\CheckoutError.cs" />
@@ -239,8 +236,6 @@
     <Compile Include="Models\ProductQuantity.cs" />
     <Compile Include="Models\WeightBasedShippingMethodPart.cs" />
     <Compile Include="Models\WeightBasedShippingMethodPartRecord.cs" />
-    <Compile Include="Models\GoogleCheckoutSettingsPart.cs" />
-    <Compile Include="Models\GoogleCheckoutSettingsPartRecord.cs" />
     <Compile Include="Models\IProduct.cs" />
     <Compile Include="Models\IShoppingCart.cs" />
     <Compile Include="Models\ProductPart.cs" />
@@ -291,8 +286,6 @@
     <Compile Include="Services\IShippingMethodProvider.cs" />
     <Compile Include="Services\ReferrerCartInfoProvider.cs" />
     <Compile Include="Services\ICheckoutService.cs" />
-    <Compile Include="Services\IGoogleCheckoutService.cs" />
-    <Compile Include="Services\GoogleCheckoutService.cs" />
     <Compile Include="Services\IShippingAreaProvider.cs" />
     <Compile Include="Services\IShippingMethod.cs" />
     <Compile Include="Services\UspsWebService.cs" />
@@ -320,7 +313,6 @@
     </Content>
     <Content Include="Views\EditorTemplates\Parts\GoogleCheckoutSettings.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\Product.cshtml" />
-    <Content Include="Views\GoogleCheckout.cshtml" />
     <Content Include="Views\Parts\Product.cshtml" />
   </ItemGroup>
   <ItemGroup>

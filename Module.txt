@@ -56,8 +56,3 @@ Features:
         Description: Stripe checkout for Nwazet.Commerce
         Category: Commerce
         Dependencies: Nwazet.Commerce, Nwazet.Orders
-    Google.Checkout:
-        Name: Google Checkout (deprecated)
-        Description: Google Checkout part that can be added to any content type. This feature is deprecated as Google is retiring this service.
-        Category: Commerce
-        Dependencies: Nwazet.Commerce, Nwazet.Shipping
