@@ -112,7 +112,7 @@ namespace Nwazet.Commerce.Controllers {
                     () => new Dictionary<string, object> {
                     {"CheckoutError", stripeCharge.Error}
                 });
-                if (stripeCharge.Error.Code == "card_error") {
+                if (stripeCharge.Error.Type == "card_error") {
                     return Pay(stripeCharge.Error.Message);
                 }
                 throw new InvalidOperationException(stripeCharge.Error.Type + ": " + stripeCharge.Error.Message);
