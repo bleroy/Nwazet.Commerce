@@ -2,21 +2,14 @@
 @using System.Linq;
 @{
     var attributeFieldName = Html.Name("productattributes");
-    var index = 0;
     var attributes = ((IEnumerable<ProductAttributePart>)Model.ProductAttributes).ToList();
 }
 @if (attributes != null && attributes.Any()) {
     foreach (ProductAttributePart attribute in attributes) {
-        <input type="hidden" name="@(attributeFieldName)[@(index)].Key" value="@attribute.Id"/>
-        <select name="@(attributeFieldName)[@(index)].Value" class="product-attribute">
+        <select name="@(attributeFieldName + ".a" + attribute.Id)" class="product-attribute">
             @foreach (var val in attribute.AttributeValues) {
                 <option>@val</option>
             }
         </select>
-        index++;
     }
-}
-else {
-    <input type="hidden" name="@(attributeFieldName)[0].Key" value="-1"/>
-    <input type="hidden" name="@(attributeFieldName)[0].Value" value="__none__" />
 }
