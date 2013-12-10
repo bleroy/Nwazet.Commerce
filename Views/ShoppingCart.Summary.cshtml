@@ -17,7 +17,7 @@
                     var product = (IProduct) item.Product;
                     var contentItem = (IContent) item.Product;
                     var title = item.Title
-                                + (item.ProductAttributes == null
+                                + (item.ProductAttributes == null || item.ProductAttributes.Count == 0
                                        ? "" : " (" + string.Join(", ", item.ProductAttributes.Values) + ")");
                     string imageUrl = (item.ProductImage != null ? item.ProductImage.Url : null);
                     var quantity = (int) item.Quantity;
