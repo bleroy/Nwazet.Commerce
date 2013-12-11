@@ -43,7 +43,10 @@ namespace Nwazet.Commerce.Controllers {
             var billingAddress = _addressFormatter.Format(order.BillingAddress);
             var shippingAddress = _addressFormatter.Format(order.ShippingAddress);
             var products = _contentManager
-                .GetMany<IContent>(order.Items.Select(p => p.ProductId), VersionOptions.Latest, QueryHints.Empty)
+                .GetMany<IContent>(
+                    order.Items.Select(p => p.ProductId).Distinct(),
+                    VersionOptions.Latest,
+                    QueryHints.Empty)
                 .ToDictionary(p => p.Id, p => p);
             var shape = _shapeFactory.Order_Confirmation(
                 OrderId: order.Id,
