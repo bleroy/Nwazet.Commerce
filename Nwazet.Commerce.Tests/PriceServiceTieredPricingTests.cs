@@ -24,65 +24,92 @@ namespace Nwazet.Commerce.Tests {
 
         [Test]
         public void TieredPriceIsNotUsedWhenQuantityBelowMinimumThreshold() {
-            var cart = PrepareCart();
+            var cart = PrepareCart(WorkContextAccessorSiteWideDisabledOverrideEnabled);
             cart.Add(1, 9);
             CheckCart(cart, 90);
         }
 
         [Test]
         public void CorrectPriceTierIsUsedBasedOnQuantity() {
-            var cart = PrepareCart();
+            var cart = PrepareCart(WorkContextAccessorSiteWideDisabledOverrideEnabled);
             cart.Add(2, 9);
             CheckCart(cart, 81);
         }
 
         [Test]
         public void TieredPriceIsNotUsedIfProductOverrideFlagIsFalse() {
-            var cart = PrepareCart();
+            var cart = PrepareCart(WorkContextAccessorSiteWideDisabledOverrideEnabled);
             cart.Add(3, 50);
             CheckCart(cart, 500);
         }
 
         [Test]
         public void TieredPriceIsUsedWhenExactTierQuantityIsOrdered() {
-            var cart = PrepareCart();
+            var cart = PrepareCart(WorkContextAccessorSiteWideDisabledOverrideEnabled);
             cart.Add(1, 50);
             CheckCart(cart, 400);
         }
 
         [Test]
         public void CorrectPercentageBasedPriceTierIsUsedBasedOnQuantity() {
-            var cart = PrepareCart();
+            var cart = PrepareCart(WorkContextAccessorSiteWideDisabledOverrideEnabled);
             cart.Add(4, 4);
             CheckCart(cart, 36);
         }
 
         [Test]
         public void AbsolutePriceIsUsedIfBothAbsoluteAndPercentageExist() {
-            var cart = PrepareCart();
+            var cart = PrepareCart(WorkContextAccessorSiteWideDisabledOverrideEnabled);
             cart.Add(5, 11);
             CheckCart(cart, 97.9);
         }
 
-        // TODO: Additional tiered pricing tests
-        // -------------------------------------
-        // Don't use tiered pricing if no site wide default and allow override site setting is false
-        // Site wide defaults are use if site wide is enabled and no product override is specified
-        // Site wide defaults are not used if site wide is disabled
-        // Site wide defaults are not used if product override is specified
+        [Test]
+        public void SiteWideDefaultsAreUsedIfEnabledAndNoOverrideExists() {
+            var cart = PrepareCart(WorkContextAccessorSiteWideEnabledOverrideEnabled);
+            cart.Add(6, 10);
+            CheckCart(cart, 75);
+        }
 
-        private static readonly IWorkContextAccessor WorkContextAccessor =
+        [Test]
+        public void NoTiersUsedWhenSiteWideDisabledAndProductOverrideEnabledButNotProvided() {
+            var cart = PrepareCart(WorkContextAccessorSiteWideDisabledOverrideEnabled);
+            cart.Add(6, 10);
+            CheckCart(cart, 100);
+        }
+
+        [Test]
+        public void SiteWideTiersNotUsedIfProductOverrideEnabledAndProvided() {
+            var cart = PrepareCart(WorkContextAccessorSiteWideEnabledOverrideDisabled);
+            cart.Add(1, 50);
+            CheckCart(cart, 500);
+        }
+
+
+
+        private static readonly IWorkContextAccessor WorkContextAccessorSiteWideDisabledOverrideEnabled =
             new WorkContextAccessorStub(new Dictionary<Type, object> {
-                {typeof(IUser),
-                    new UserStub(
-                        "Joe",
-                        "joe@orchardproject.net",
-                        new[] {
-                            "Moderator",
-                            "Reseller",
-                            "Customer"})},
-                {typeof(ISite), new SiteStub(true, false, new List<PriceTier>()) }
+                {typeof(ISite), new SiteStub(true, false, new List<PriceTier>() { 
+                    new PriceTier() { Quantity = 10, PricePercent = 75 },
+                    new PriceTier() { Quantity = 100, PricePercent = 50 }
+                }) }
             });
+
+        private static readonly IWorkContextAccessor WorkContextAccessorSiteWideEnabledOverrideEnabled =
+            new WorkContextAccessorStub(new Dictionary<Type, object> {
+                {typeof(ISite), new SiteStub(true, true, new List<PriceTier>() { 
+                    new PriceTier() { Quantity = 10, PricePercent = 75 },
+                    new PriceTier() { Quantity = 100, PricePercent = 50 }
+                })
+                }
+            });
+
+        private static readonly IWorkContextAccessor WorkContextAccessorSiteWideEnabledOverrideDisabled =
+            new WorkContextAccessorStub(new Dictionary<Type, object> {
+                {typeof(ISite), new SiteStub(false, true, new List<PriceTier>())
+                }
+            });
+
 
         private static readonly ProductStub[] Products = new[] {
             new ProductStub(1) {Price = 10, 
@@ -117,13 +144,16 @@ namespace Nwazet.Commerce.Tests {
                                 OverrideTieredPricing = true, 
                                 PriceTiers = new List<PriceTier>() {
                                     new PriceTier() { Quantity = 10, Price = 8.9, PricePercent = 90 }
-                                }}
+                                }},
+            new ProductStub(6) {Price = 10, 
+                                OverrideTieredPricing = false, 
+                                PriceTiers = new List<PriceTier>() }
         };
 
-        private static ShoppingCart PrepareCart() {
+        private static ShoppingCart PrepareCart(IWorkContextAccessor wca) {
             var contentManager = new ContentManagerStub(Products.Cast<IContent>());
             var cartStorage = new FakeCartStorage();
-            var priceService = new PriceService(new IPriceProvider[0], WorkContextAccessor, new TieredPriceProvider(WorkContextAccessor));
+            var priceService = new PriceService(new IPriceProvider[0], wca, new TieredPriceProvider(wca));
             var cart = new ShoppingCart(contentManager, cartStorage, priceService, null, null);
 
             return cart;

@@ -18,7 +18,7 @@ namespace Nwazet.Commerce.Tests.Stubs {
             };
             ContentItem.Weld(new InfosetPart());
 
-            var settings = new ProductSettingsStub(true, false, new List<PriceTier>(), ContentItem);
+            var settings = new ProductSettingsStub(allowOverrides, defineDefaults, sitePriceTiers, ContentItem);
             ContentItem.Weld(settings);
         }
 
