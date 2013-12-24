@@ -258,7 +258,7 @@ namespace Nwazet.Commerce.Tests {
         private static ShoppingCart PrepareCart() {
             var contentManager = new ContentManagerStub(Products.Cast<IContent>().Union(ProductAttributes));
             var cartStorage = new FakeCartStorage();
-            var priceService = new PriceService(new IPriceProvider[0]);
+            var priceService = new PriceService(new IPriceProvider[0], null);
             var attributeService = new ProductAttributeService(contentManager);
             var attributeDriver = new ProductAttributesPartDriver(attributeService);
             var cart = new ShoppingCart(contentManager, cartStorage, priceService, new[] {attributeDriver}, null);
