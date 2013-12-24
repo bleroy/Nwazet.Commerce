@@ -165,6 +165,7 @@
     <Compile Include="Controllers\StripeController.cs" />
     <Compile Include="Drivers\BundlePartDriver.cs" />
     <Compile Include="Drivers\OrderPartDriver.cs" />
+    <Compile Include="Drivers\ProductSettingsPartDriver.cs" />
     <Compile Include="Drivers\StateOrCountryTaxPartDriver.cs" />
     <Compile Include="Drivers\UspsShippingMethodPartDriver.cs" />
     <Compile Include="Drivers\UspsSettingsPartDriver.cs" />
@@ -182,6 +183,7 @@
     <Compile Include="Handlers\AttributePartHandler.cs" />
     <Compile Include="Handlers\AttributesPartHandler.cs" />
     <Compile Include="Handlers\OrderPartHandler.cs" />
+    <Compile Include="Handlers\ProductSettingsPartHandler.cs" />
     <Compile Include="Handlers\StateOrCountryTaxPartHandler.cs" />
     <Compile Include="Handlers\UspsShippingMethodPartHandler.cs" />
     <Compile Include="Handlers\UspsSettingsPartHandler.cs" />
@@ -210,6 +212,8 @@
     <Compile Include="Models\OrderEvent.cs" />
     <Compile Include="Models\OrderPart.cs" />
     <Compile Include="Models\OrderPartRecord.cs" />
+    <Compile Include="Models\PriceTier.cs" />
+    <Compile Include="Models\ProductSettingsPart.cs" />
     <Compile Include="Models\StateOrCountryTaxPart.cs" />
     <Compile Include="Models\StateOrCountryTaxPartRecord.cs" />
     <Compile Include="Models\CreditCardCharge.cs" />
@@ -258,6 +262,7 @@
     <Compile Include="Services\IStripeWebService.cs" />
     <Compile Include="Services\ITax.cs" />
     <Compile Include="Services\ITaxProvider.cs" />
+    <Compile Include="Services\ITieredPriceProvider.cs" />
     <Compile Include="Services\IUspsService.cs" />
     <Compile Include="Services\IUspsWebService.cs" />
     <Compile Include="Services\OrderService.cs" />
@@ -265,6 +270,7 @@
     <Compile Include="Services\ShippingService.cs" />
     <Compile Include="Services\StateOrCountryTaxProvider.cs" />
     <Compile Include="Services\StripeWebService.cs" />
+    <Compile Include="Services\TieredPriceProvider.cs" />
     <Compile Include="Services\UspsContainer.cs" />
     <Compile Include="Services\UspsService.cs" />
     <Compile Include="Services\UspsShippingMethodProvider.cs" />
@@ -298,6 +304,8 @@
     <Compile Include="ViewModels\BundleViewModel.cs" />
     <Compile Include="ViewModels\ListOrdersViewModel.cs" />
     <Compile Include="ViewModels\OrderEditorViewModel.cs" />
+    <Compile Include="ViewModels\PricingSettingsViewModel.cs" />
+    <Compile Include="ViewModels\ProductEditorViewModel.cs" />
     <Compile Include="ViewModels\TaxIndexViewModel.cs" />
     <Compile Include="ViewModels\DiscountEditorViewModel.cs" />
     <Compile Include="ViewModels\ProductAttributesPartEditViewModel.cs" />
@@ -376,7 +384,10 @@
     <Content Include="Views\Order_CheckPassword.cshtml" />
     <Content Include="Views\Order_Confirmation.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Views\EditorTemplates\Parts\ProductSettings.cshtml" />
+    <None Include="Views\Parts\Product.PriceTiers.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
+using System.Collections.Generic;
 
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.Commerce")]
@@ -50,6 +51,22 @@ namespace Nwazet.Commerce.Models {
         public bool AllowBackOrder {
             get { return Retrieve(r => r.AllowBackOrder); }
             set { Store(r => r.AllowBackOrder, value); }
+        }
+ 
+        public bool OverrideTieredPricing {
+            get { return Retrieve(r => r.OverrideTieredPricing); }
+            set { Store(r => r.OverrideTieredPricing, value); }
+        }
+
+        public List<PriceTier> PriceTiers {
+            get {
+                var rawTiers = Retrieve<string>("PriceTiers");
+                return PriceTier.DeserializePriceTiers(rawTiers);
+            }
+            set {
+                var serializedTiers = PriceTier.SerializePriceTiers(value);
+                Store("PriceTiers", serializedTiers ?? "");
+            }
         }
     }
 }

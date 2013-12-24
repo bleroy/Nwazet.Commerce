@@ -80,5 +80,13 @@ namespace Nwazet.Commerce.Migrations {
                 .AddColumn<string>("Size"));
             return 6;
         }
+
+        public int UpdateFrom6() {
+            SchemaBuilder.AlterTable("ProductPartRecord", table => table
+                .AddColumn<bool>("OverrideTieredPricing", c => c.WithDefault(false)));
+            SchemaBuilder.AlterTable("ProductPartRecord", table => table
+                .AddColumn<string>("PriceTiers"));
+            return 7;
+        }
     }
 }

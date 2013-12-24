@@ -1,0 +1,24 @@
+﻿@using System.Linq;
+@using Nwazet.Commerce.Models;
+@{
+    var priceTiers = new List<PriceTier>(Model.PriceTiers);
+    var discountedPriceTiers = new List<PriceTier>(Model.DiscountedPriceTiers);
+}
+@if (Model.PriceTiers != null && Enumerable.Count(Model.PriceTiers) > 0) {
+    <br />
+    <table>
+        <tr>
+            <td>Quantity</td>
+            <td>Price</td>
+        </tr>
+        @for (var i = 0; i < priceTiers.Count(); i++ ) {
+            <tr>
+                <td>@priceTiers[i].Quantity</td>
+                <td>
+                    <span class="inactive-price" style="text-decoration:line-through" title="@T("Was ${0}", priceTiers[i].Price)">$@priceTiers[i].Price</span>
+                    <span class="discounted-price" title="@T("Now ${0}", discountedPriceTiers[i].Price)">$@discountedPriceTiers[i].Price</span>
+                </td>
+            </tr>
+        }
+    </table>
+}

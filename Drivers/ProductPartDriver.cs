@@ -9,6 +9,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Environment.Extensions;
+using Nwazet.Commerce.ViewModels;
 
 namespace Nwazet.Commerce.Drivers {
     [OrchardFeature("Nwazet.Commerce")]
@@ -16,15 +17,18 @@ namespace Nwazet.Commerce.Drivers {
         private readonly IWorkContextAccessor _wca;
         private readonly IPriceService _priceService;
         private readonly IEnumerable<IProductAttributesDriver> _attributeProviders;
+        private readonly ITieredPriceProvider _tieredPriceProvider;
 
         public ProductPartDriver(
             IWorkContextAccessor wca,
             IPriceService priceService,
-            IEnumerable<IProductAttributesDriver> attributeProviders) {
+            IEnumerable<IProductAttributesDriver> attributeProviders,
+            ITieredPriceProvider tieredPriceProvider = null) {
 
             _wca = wca;
             _priceService = priceService;
             _attributeProviders = attributeProviders;
+            _tieredPriceProvider = tieredPriceProvider;
         }
 
         protected override string Prefix {
@@ -33,10 +37,13 @@ namespace Nwazet.Commerce.Drivers {
 
         protected override DriverResult Display(
             ProductPart part, string displayType, dynamic shapeHelper) {
-
             var inventory = GetInventory(part);
             var discountedPriceQuantity = _priceService.GetDiscountedPrice(new ShoppingCartQuantityProduct(1, part));
-            var productShape = ContentShape(
+            var priceTiers = _tieredPriceProvider != null ? _tieredPriceProvider.GetPriceTiers(part) : null;
+            var discountedPriceTiers = _priceService.GetDiscountedPriceTiers(part);
+            var shapes = new List<DriverResult>();
+
+            shapes.Add(ContentShape(
                 "Parts_Product",
                 () => shapeHelper.Parts_Product(
                     Sku: part.Sku,
@@ -52,11 +59,9 @@ namespace Nwazet.Commerce.Drivers {
                     IsDigital: part.IsDigital,
                     ContentPart: part
                     )
-                );
+                ));
             if (part.Inventory > 0 || part.AllowBackOrder) {
-                return Combined(
-                    productShape,
-                    ContentShape(
+                shapes.Add(ContentShape(
                         "Parts_Product_AddButton",
                         () => {
                             // Get attributes and add them to the add to cart shape
@@ -69,7 +74,18 @@ namespace Nwazet.Commerce.Drivers {
                         })
                     );
             }
-            return productShape;
+            if (priceTiers != null) {
+                shapes.Add(ContentShape(
+                        "Parts_Product_PriceTiers",
+                        () => {
+                            return shapeHelper.Parts_Product_PriceTiers(
+                                PriceTiers: priceTiers,
+                                DiscountedPriceTiers: discountedPriceTiers
+                                );
+                        })
+                    );
+            }
+            return Combined(shapes.ToArray());
         }
 
         private int GetInventory(ProductPart part) {
@@ -89,19 +105,64 @@ namespace Nwazet.Commerce.Drivers {
 
         //GET
         protected override DriverResult Editor(ProductPart part, dynamic shapeHelper) {
+            var allowTieredPricingOverride = false;
+            var productSettings = _wca.GetContext().CurrentSite.As<ProductSettingsPart>();
+
+            if (productSettings != null) allowTieredPricingOverride = productSettings.AllowProductOverrides;
+
             part.Weight = Math.Round(part.Weight, 3);
             part.Inventory = GetInventory(part);
             return ContentShape("Parts_Product_Edit",
                 () => shapeHelper.EditorTemplate(
                     TemplateName: "Parts/Product",
-                    Model: part,
+                    Model: new ProductEditorViewModel() {
+                        Sku = part.Sku,
+                        Price = part.Price,
+                        IsDigital = part.IsDigital,
+                        ShippingCost = part.ShippingCost,
+                        Weight = part.Weight,
+                        Size = part.Size,
+                        Inventory = part.Inventory,
+                        OutOfStockMessage = part.OutOfStockMessage,
+                        AllowBackOrder = part.AllowBackOrder,
+                        AllowProductOverrides = allowTieredPricingOverride,
+                        OverrideTieredPricing = part.OverrideTieredPricing,
+                        PriceTiers = part.PriceTiers
+                            .Select(t => new PriceTierViewModel() {
+                                Quantity = t.Quantity,
+                                Price = (t.PricePercent != null ? t.PricePercent.ToString() + "%" : t.Price.ToString())
+                            })
+                            .ToList()
+                    },
                     Prefix: Prefix));
         }
 
         //POST
         protected override DriverResult Editor(
             ProductPart part, IUpdateModel updater, dynamic shapeHelper) {
-            updater.TryUpdateModel(part, Prefix, null, null);
+            var model = new ProductEditorViewModel();
+            if (updater.TryUpdateModel(model, Prefix, null, null)) {
+                part.Sku = model.Sku;
+                part.Price = model.Price;
+                part.IsDigital = model.IsDigital;
+                part.ShippingCost = model.ShippingCost;
+                part.Weight = model.Weight;
+                part.Size = model.Size;
+                part.Inventory = model.Inventory;
+                part.OutOfStockMessage = model.OutOfStockMessage;
+                part.AllowBackOrder = model.AllowBackOrder;
+                part.OverrideTieredPricing = model.OverrideTieredPricing;
+                if (model.PriceTiers != null) {
+                    part.PriceTiers = model.PriceTiers.Select(t => new PriceTier() {
+                        Quantity = t.Quantity,
+                        Price = (!t.Price.EndsWith("%") ? PriceTier.ConvertStringToDouble(t.Price) : null),
+                        PricePercent = (t.Price.EndsWith("%") ? PriceTier.ConvertStringToDouble(t.Price.Substring(0, t.Price.Length - 1)) : null)
+                    }).ToList();
+                }
+                else {
+                    part.PriceTiers = new List<PriceTier>();
+                }
+            }
             return Editor(part, shapeHelper);
         }
 
