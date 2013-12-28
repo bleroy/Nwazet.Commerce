@@ -19,7 +19,7 @@ namespace Nwazet.Commerce.Models {
             set { this.Store(p => p.AllowProductOverrides, value); }
         }
 
-        public List<PriceTier> PriceTiers {
+        public IEnumerable<PriceTier> PriceTiers {
             get {
                 var rawTiers = Retrieve<string>("PriceTiers");
                 return PriceTier.DeserializePriceTiers(rawTiers);

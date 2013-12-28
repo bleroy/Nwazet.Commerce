@@ -8,7 +8,7 @@ namespace Nwazet.Commerce.Models {
         public double? Price { get; set; }
         public double? PricePercent { get; set; }
 
-        public static List<PriceTier> DeserializePriceTiers(string priceTiers) {
+        public static IEnumerable<PriceTier> DeserializePriceTiers(string priceTiers) {
             if (priceTiers != null) {
                 return priceTiers.Split(new[] { ';', ' ' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(t => t.Split('=')).Select(st => new PriceTier() {
@@ -24,7 +24,7 @@ namespace Nwazet.Commerce.Models {
             }
         }
 
-        public static string SerializePriceTiers(List<PriceTier> priceTiers) {
+        public static string SerializePriceTiers(IEnumerable<PriceTier> priceTiers) {
             if (priceTiers != null) {
                 return string.Join(";", priceTiers.Select(t => t.Quantity + "=" + (t.Price != null ? t.Price.ToString() : t.PricePercent.ToString() + "%")));
             }

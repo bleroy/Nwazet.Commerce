@@ -30,7 +30,6 @@ namespace Nwazet.Commerce.Services {
 
         public IEnumerable<PriceTier> GetDiscountedPriceTiers(ProductPart product) {
             var priceTiers = _tieredPriceProvider != null ?_tieredPriceProvider.GetPriceTiers(product) : null;
-            //IEnumerable<PriceTier> discountedPriceTiers = null;
             if (priceTiers != null) {
                 priceTiers = priceTiers.Select(t => new PriceTier() { Quantity = t.Quantity, Price = GetDiscountedPrice(new ShoppingCartQuantityProduct(t.Quantity, product)).Price });
             }
