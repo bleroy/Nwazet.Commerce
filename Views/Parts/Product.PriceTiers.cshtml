@@ -15,9 +15,18 @@
             <tr>
                 <td>@priceTiers[i].Quantity</td>
                 <td>
-                    <span class="inactive-price" style="text-decoration:line-through" title="@T("Was ${0}", priceTiers[i].Price)">$@priceTiers[i].Price</span>
-                    <span class="discounted-price" title="@T("Now ${0}", discountedPriceTiers[i].Price)">$@discountedPriceTiers[i].Price</span>
+                    @if (priceTiers[i].Price != discountedPriceTiers[i].Price) {
+                        <span class="inactive-price" style="text-decoration:line-through" title="@T("Was ${0}", priceTiers[i].Price)">$@priceTiers[i].Price</span>
+                        <span class="discounted-price" title="@T("Now ${0}", discountedPriceTiers[i].Price)">$@discountedPriceTiers[i].Price</span>
+                    }
+                    else {
+                        <span class="regular-price">$@priceTiers[i].Price</span>
+                    }
+
                 </td>
+
+
+
             </tr>
         }
     </table>
