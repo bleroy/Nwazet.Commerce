@@ -11,6 +11,7 @@ using Nwazet.Commerce.Services;
 using Orchard;
 using Orchard.Security;
 using Orchard.Settings;
+using Orchard.Services;
 
 namespace Nwazet.Commerce.Tests {
     [TestFixture]
@@ -85,7 +86,31 @@ namespace Nwazet.Commerce.Tests {
             CheckCart(cart, 500);
         }
 
+        [Test]
+        public void DiscountWithQuantityConstraintAppliedToTier() {
+            var cart = PrepareCart(WorkContextAccessorSiteWideDisabledOverrideEnabled,
+                new DiscountStub[] { new DiscountStub(1) {
+                    StartQuantity = 10,
+                    EndQuantity = 20,
+                    Discount = 5
+                }});
+            cart.Add(1, 10);
+            CheckCart(cart, 40);
+        }
 
+        [Test]
+        public void DiscountWithQuantityConstraintNotAppliedToTierWhenOutsideRange() {
+            var cart = PrepareCart(WorkContextAccessorSiteWideDisabledOverrideEnabled,
+                new DiscountStub[] { new DiscountStub(1) {
+                    StartQuantity = 10,
+                    EndQuantity = 20,
+                    Discount = 5
+                }});
+            cart.Add(1, 100);
+            CheckCart(cart, 500);
+        }
+
+        private static readonly IClock Now = new FakeClock(new DateTime(2012, 11, 24, 12, 0, 0, DateTimeKind.Utc));
 
         private static readonly IWorkContextAccessor WorkContextAccessorSiteWideDisabledOverrideEnabled =
             new WorkContextAccessorStub(new Dictionary<Type, object> {
@@ -150,11 +175,18 @@ namespace Nwazet.Commerce.Tests {
                                 PriceTiers = new List<PriceTier>() }
         };
 
-        private static ShoppingCart PrepareCart(IWorkContextAccessor wca) {
-            var contentManager = new ContentManagerStub(Products.Cast<IContent>());
+        private static ShoppingCart PrepareCart(IWorkContextAccessor wca, IEnumerable<DiscountStub> discounts = null, IEnumerable<ITaxProvider> taxProviders = null) {
+
+            var contentItems = discounts == null ? Products : Products.Cast<IContent>().Union(discounts);
+            var contentManager = new ContentManagerStub(contentItems);
             var cartStorage = new FakeCartStorage();
-            var priceService = new PriceService(new IPriceProvider[0], wca, new TieredPriceProvider(wca));
-            var cart = new ShoppingCart(contentManager, cartStorage, priceService, null, null);
+            var priceProviders = new IPriceProvider[] {
+                new DiscountPriceProvider(contentManager, wca, Now) {
+                    DisplayUrlResolver = item => ((ProductStub)item).Path
+                }
+            };
+            var priceService = new PriceService(priceProviders, wca, new TieredPriceProvider(wca));
+            var cart = new ShoppingCart(contentManager, cartStorage, priceService, null, taxProviders);
 
             return cart;
         }
