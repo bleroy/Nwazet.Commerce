@@ -11,7 +11,7 @@ namespace Nwazet.Commerce.Services {
         private readonly IEnumerable<IPriceProvider> _priceProviders;
         private readonly ITieredPriceProvider _tieredPriceProvider;
 
-        public PriceService(IEnumerable<IPriceProvider> priceProviders, IWorkContextAccessor wca, ITieredPriceProvider tieredPriceProvider = null) {
+        public PriceService(IEnumerable<IPriceProvider> priceProviders, ITieredPriceProvider tieredPriceProvider = null) {
             _priceProviders = priceProviders;
             _tieredPriceProvider = tieredPriceProvider;
         }
