@@ -115,18 +115,9 @@ namespace Nwazet.Commerce.Drivers {
             return ContentShape("Parts_Product_Edit",
                 () => shapeHelper.EditorTemplate(
                     TemplateName: "Parts/Product",
-                    Model: new ProductEditorViewModel() {
-                        Sku = part.Sku,
-                        Price = part.Price,
-                        IsDigital = part.IsDigital,
-                        ShippingCost = part.ShippingCost,
-                        Weight = part.Weight,
-                        Size = part.Size,
-                        Inventory = part.Inventory,
-                        OutOfStockMessage = part.OutOfStockMessage,
-                        AllowBackOrder = part.AllowBackOrder,
+                    Model: new ProductEditorViewModel {
+                        Product = part,
                         AllowProductOverrides = allowTieredPricingOverride,
-                        OverrideTieredPricing = part.OverrideTieredPricing,
                         PriceTiers = part.PriceTiers
                             .Select(t => new PriceTierViewModel() {
                                 Quantity = t.Quantity,
@@ -140,18 +131,8 @@ namespace Nwazet.Commerce.Drivers {
         //POST
         protected override DriverResult Editor(
             ProductPart part, IUpdateModel updater, dynamic shapeHelper) {
-            var model = new ProductEditorViewModel();
+            var model = new ProductEditorViewModel { Product = part };
             if (updater.TryUpdateModel(model, Prefix, null, null)) {
-                part.Sku = model.Sku;
-                part.Price = model.Price;
-                part.IsDigital = model.IsDigital;
-                part.ShippingCost = model.ShippingCost;
-                part.Weight = model.Weight;
-                part.Size = model.Size;
-                part.Inventory = model.Inventory;
-                part.OutOfStockMessage = model.OutOfStockMessage;
-                part.AllowBackOrder = model.AllowBackOrder;
-                part.OverrideTieredPricing = model.OverrideTieredPricing;
                 if (model.PriceTiers != null) {
                     part.PriceTiers = model.PriceTiers.Select(t => new PriceTier() {
                         Quantity = t.Quantity,
