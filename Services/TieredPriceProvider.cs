@@ -18,7 +18,9 @@ namespace Nwazet.Commerce.Services {
 
         public ShoppingCartQuantityProduct GetTieredPrice(ShoppingCartQuantityProduct quantityProduct) {
             var priceTiers = GetPriceTiers(quantityProduct.Product);
-            var priceTier = priceTiers != null ? priceTiers.Where(t => t.Quantity <= quantityProduct.Quantity).OrderByDescending(t => t.Quantity).Take(1).SingleOrDefault() : null;
+            var priceTier = priceTiers != null ? priceTiers
+                .Where(t => t.Quantity <= quantityProduct.Quantity)
+                .OrderByDescending(t => t.Quantity).Take(1).SingleOrDefault() : null;
             if (priceTier != null) {
                 quantityProduct.Price = (double)priceTier.Price;
             }
@@ -28,6 +30,7 @@ namespace Nwazet.Commerce.Services {
         public IEnumerable<PriceTier> GetPriceTiers(ProductPart product) {
             var productSettings = _wca.GetContext().CurrentSite.As<ProductSettingsPart>();
             IEnumerable<PriceTier> priceTiers = null;
+            List<PriceTier> adjustedPriceTiers = new List<PriceTier>();
 
             if (productSettings.AllowProductOverrides && product.OverrideTieredPricing) {
                 priceTiers = product.PriceTiers;
@@ -36,16 +39,24 @@ namespace Nwazet.Commerce.Services {
                 priceTiers = productSettings.PriceTiers;
             }
 
-            if (priceTiers != null) {
-                foreach (var tier in priceTiers) {
-                    if (tier.Price == null && tier.PricePercent != null) {
-                        tier.Price = product.Price * (double)tier.PricePercent / 100;
-                    }
-                }
-                return priceTiers.OrderBy(t => t.Quantity);
-            }
+            if (priceTiers == null)
+                return priceTiers;
 
-            return priceTiers;
+            foreach (var tier in priceTiers) {
+                var adjustedPrice = tier.Price;
+                
+                if (tier.Price == null && tier.PricePercent != null) {
+                    // Calculate absolute price from percentage value
+                    adjustedPrice = product.Price * (double)tier.PricePercent / 100;
+                }
+
+                adjustedPriceTiers.Add(new PriceTier {
+                    Price = adjustedPrice,
+                    Quantity = tier.Quantity,
+                    PricePercent = tier.PricePercent
+                });
+            }
+            return adjustedPriceTiers.OrderBy(t => t.Quantity);
         }
     }
 }
