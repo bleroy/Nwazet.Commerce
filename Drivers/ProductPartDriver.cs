@@ -136,8 +136,8 @@ namespace Nwazet.Commerce.Drivers {
                 if (model.PriceTiers != null) {
                     part.PriceTiers = model.PriceTiers.Select(t => new PriceTier() {
                         Quantity = t.Quantity,
-                        Price = (!t.Price.EndsWith("%") ? PriceTier.ConvertStringToDouble(t.Price) : null),
-                        PricePercent = (t.Price.EndsWith("%") ? PriceTier.ConvertStringToDouble(t.Price.Substring(0, t.Price.Length - 1)) : null)
+                        Price = (!t.Price.EndsWith("%") ? t.Price.ToDouble() : null),
+                        PricePercent = (t.Price.EndsWith("%") ? t.Price.Substring(0, t.Price.Length - 1).ToDouble() : null)
                     }).ToList();
                 }
                 else {

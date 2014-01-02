@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Nwazet.Commerce.Models {
     public class PriceTier {
@@ -13,8 +13,8 @@ namespace Nwazet.Commerce.Models {
                 return priceTiers.Split(new[] { ';', ' ' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(t => t.Split('=')).Select(st => new PriceTier() {
                         Quantity = Convert.ToInt32(st[0]),
-                        Price = (!st[1].EndsWith("%") ? ConvertStringToDouble(st[1]) : null),
-                        PricePercent = (st[1].EndsWith("%") ? ConvertStringToDouble(st[1].Substring(0, st[1].Length - 1)) : null)
+                        Price = (!st[1].EndsWith("%") ? st[1].ToDouble() : null),
+                        PricePercent = (st[1].EndsWith("%") ? st[1].Substring(0, st[1].Length - 1).ToDouble() : null)
                     })
                     .OrderBy(t => t.Quantity)
                     .ToList();
@@ -31,16 +31,6 @@ namespace Nwazet.Commerce.Models {
             else {
                 return string.Empty;
             }
-        }
-
-        public static double? ConvertStringToDouble(string ds) {
-            double o;
-            double? r = null;
-
-            if (double.TryParse(ds, out o)) {
-                r = o;
-            };
-            return r;
         }
     }
 }
