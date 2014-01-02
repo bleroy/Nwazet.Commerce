@@ -156,12 +156,17 @@ namespace Nwazet.Commerce.Drivers {
                 .FromAttr(p => p.OutOfStockMessage)
                 .FromAttr(p => p.AllowBackOrder)
                 .FromAttr(p => p.IsDigital)
-                .FromAttr(p => p.Weight);
+                .FromAttr(p => p.Weight)
+                .FromAttr(p => p.OverrideTieredPricing);
             var priceAttr = el.Attribute("Price");
             double price;
             if (priceAttr != null &&
                 double.TryParse(priceAttr.Value, NumberStyles.Currency, CultureInfo.InvariantCulture, out price)) {
                 part.Price = price;
+            }
+            var priceTiersAttr = el.Attribute("PriceTiers");
+            if (priceTiersAttr != null) {
+                part.PriceTiers = PriceTier.DeserializePriceTiers(priceTiersAttr.Value);
             }
             var shippingCostAttr = el.Attribute("ShippingCost");
             double shippingCost;
@@ -181,8 +186,10 @@ namespace Nwazet.Commerce.Drivers {
                 .ToAttr(p => p.OutOfStockMessage)
                 .ToAttr(p => p.AllowBackOrder)
                 .ToAttr(p => p.IsDigital)
-                .ToAttr(p => p.Weight);
+                .ToAttr(p => p.Weight)
+                .ToAttr(p => p.OverrideTieredPricing);
             el.SetAttributeValue("Price", part.Price.ToString("C", CultureInfo.InvariantCulture));
+            el.SetAttributeValue("PriceTiers", PriceTier.SerializePriceTiers(part.PriceTiers));
             if (part.ShippingCost != null) {
                 el.SetAttributeValue(
                     "ShippingCost", ((double) part.ShippingCost).ToString("C", CultureInfo.InvariantCulture));
