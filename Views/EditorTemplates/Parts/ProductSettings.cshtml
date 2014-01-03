@@ -1,4 +1,7 @@
 ﻿@model Nwazet.Commerce.ViewModels.PricingSettingsViewModel
+@{
+    Layout.Title = T("Price Settings").ToString();
+}
 <fieldset>
     @Html.CheckBoxFor(m => m.DefineSiteDefaults)
     <label class="sub" for="@Html.IdFor(m => m.DefineSiteDefaults)">@T("Define Site Defaults")</label>
@@ -10,7 +13,7 @@
 
 <fieldset id="NwazetCommerceProduct_PriceTierSection" style="display:@(Model.DefineSiteDefaults ? "block" : "none");">
     <legend>Tiered Pricing Defaults</legend>
-    <div class="hint">@T("Quantity is mimimun amount that must be ordered to trigger the price tier.")</div>
+    <div class="hint">@T("Quantity is minimum amount that must be ordered to trigger the price tier.")</div>
     <div class="hint">@T(@"Price can be a fixed amount or a percentage of the base price. ""90%"" makes the tiered price 90% of the base price. ""90"" makes the tiered price $90.")</div>
     <table id="NwazetCommerceProduct_PriceTiers">
         <tr>

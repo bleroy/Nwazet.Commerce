@@ -192,6 +192,8 @@
     <Compile Include="Handlers\SizeBasedShippingMethodPartHandler.cs" />
     <Compile Include="Handlers\WeightBasedShippingMethodPartHandler.cs" />
     <Compile Include="Handlers\ProductPartHandler.cs" />
+    <Compile Include="Menus\AdminMenu.cs" />
+    <Compile Include="Menus\PricingAdminMenu.cs" />
     <Compile Include="Menus\AttributeAdminMenu.cs" />
     <Compile Include="Menus\OrderAdminMenu.cs" />
     <Compile Include="Menus\TaxAdminMenu.cs" />
