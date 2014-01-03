@@ -1,5 +1,7 @@
 ﻿@{
     var productId = (int) Model.ProductId;
+    
+    Script.Require("MinimumOrderQuantity");
 }
 
 @using (Html.BeginFormAntiForgeryPost(
@@ -16,8 +18,14 @@
             @Display(productAttributeShape)
         }
     }
+
+    int quantityValue = Model.MinimumOrderQuantity > 1 ? Model.MinimumOrderQuantity : 1;
+    
     <div class="addtocart-quantity-and-button">
-        <input name="quantity" value="1" class="addtocart-quantity" type="number" />
+        <input name="quantity" value="@quantityValue" class="addtocart-quantity" type="number" min="@Model.MinimumOrderQuantity" />
         <button type="submit" class="addtocart-button">@T("Add to cart")</button>
+        @if ((int)Model.MinimumOrderQuantity > 1) {
+            <br /><strong>Minimum order of @Model.MinimumOrderQuantity required.</strong>
+        }
     </div>
 }

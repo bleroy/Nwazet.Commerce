@@ -160,6 +160,14 @@
         <button type="button" class="new-order-event-add button grey">@T("Add")</button>
     </fieldset>
 
+    <fieldset class="order-user">
+        <legend>@T("Order Username:")</legend>
+        <div class="order-user-edit">
+            @Html.TextBoxFor(m => m.UserName, new { @class = "text-medium order-user-edit-field" })
+            <span class="hint">@T("Associate this order with a username (optional unless any of the products in this order require authentication).")</span>
+        </div>
+    </fieldset>
+
     <div class="order-link">@T("You may view this order at a later time by going to this address: <a href=\"{0}\">{0}</a>, using this password: \"{1}\".",
                                 Url.Action("Show", "OrderSsl", new {id = Model.Order.Id, area = "Nwazet.Commerce"}), Model.Order.Password)</div>
 </div>

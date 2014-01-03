@@ -11,5 +11,6 @@ namespace Nwazet.Commerce.Models {
         public virtual string TrackingUrl { get; set; }
         public virtual string Password { get; set; }
         public virtual bool IsTestOrder { get; set; }
+        public virtual int UserId { get; set; }
     }
 }

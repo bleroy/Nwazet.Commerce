@@ -52,6 +52,16 @@ namespace Nwazet.Commerce.Controllers {
             if (productattributes != null && productattributes.Count == 1 && productattributes.Values.First() == "__none__") {
                 productattributes = null;
             }
+
+            // Retrieve minimum order quantity
+            var productPart = _contentManager.Get<ProductPart>(id);
+            if (productPart != null) {
+                if (quantity < productPart.MinimumOrderQuantity)
+                    quantity = productPart.MinimumOrderQuantity;
+                if (quantity < 0)
+                    quantity = 0;
+            }
+
             _shoppingCart.Add(id, quantity, productattributes);
 
             _workflowManager.TriggerEvent("CartUpdated",
@@ -98,6 +108,9 @@ namespace Nwazet.Commerce.Controllers {
             var productShapes = GetProductShapesFromQuantities(productQuantities);
             shape.ShopItems = productShapes;
 
+            var shopItemsAllDigital = productQuantities.Where(pq => pq.Product.IsDigital).Count() == productQuantities.Count();
+            shape.ShopItemsAllDigital = shopItemsAllDigital;
+
             var custom =
                 _extraCartInfoProviders == null
                     ? null
@@ -109,18 +122,38 @@ namespace Nwazet.Commerce.Controllers {
                 (!String.IsNullOrWhiteSpace(country) && country != Country.UnitedStates)) {
                 shape.Country = country;
                 shape.ZipCode = zipCode;
-                if (!isSummary && shippingOption == null) {
-                    var shippingMethods = _shippingMethodProviders
-                        .SelectMany(p => p.GetShippingMethods())
-                        .ToList();
-                    shape.ShippingOptions =
-                        ShippingService
-                            .GetShippingOptions(
-                                shippingMethods, productQuantities, country, zipCode, _wca).ToList();
+
+                if (!shopItemsAllDigital) {
+                    if (!isSummary && shippingOption == null) {
+                        var shippingMethods = _shippingMethodProviders
+                            .SelectMany(p => p.GetShippingMethods())
+                            .ToList();
+                        shape.ShippingOptions =
+                            ShippingService
+                                .GetShippingOptions(
+                                    shippingMethods, productQuantities, country, zipCode, _wca).ToList();
+                    }
                 }
             }
+
             var taxes = _shoppingCart.Taxes();
-            if (shippingOption != null) {
+
+            // Removed shippintOPtion != null check as some items do not require tax or shipping and this can be handled in the view / view override
+            //  ~ Alternatively we could add more options (checkboxes) to check if an item is taxable in the product setup
+            
+            // Check to see if any of the products require the user to be authenticated
+            var shopItemsAuthenticationRequired = productQuantities.Where(pq => pq.Product.AuthenticationRequired).Count() > 0;
+            shape.ShopItemsAuthenticationRequired = shopItemsAuthenticationRequired;
+
+            bool displayCheckoutButtons = true;
+            var currentUser = _wca.GetContext().CurrentUser;
+            if (currentUser == null) {
+                if (shopItemsAuthenticationRequired) {
+                    displayCheckoutButtons = false;
+                }
+            }
+            
+            if (displayCheckoutButtons) {
                 var checkoutShapes = _checkoutServices.Select(
                     service => service.BuildCheckoutButtonShape(
                         productShapes,
@@ -159,7 +192,8 @@ namespace Nwazet.Commerce.Controllers {
                     Price: productQuantity.Product.Price,
                     DiscountedPrice: productQuantity.Price,
                     ShippingCost: productQuantity.Product.ShippingCost,
-                    Weight: productQuantity.Product.Weight)).ToList();
+                    Weight: productQuantity.Product.Weight,
+                    MinimumOrderQuantity: productQuantity.Product.MinimumOrderQuantity)).ToList();                    
             return productShapes;
         }
 
@@ -196,7 +230,7 @@ namespace Nwazet.Commerce.Controllers {
             _shoppingCart.ZipCode = zipCode;
             _shoppingCart.ShippingOption = null;
 
-            UpdateShoppingCart(items.Reverse());
+            UpdateShoppingCart(items == null ? null : items.Reverse());
             return new ShapePartialResult(this,
                                           BuildCartShape(true, _shoppingCart.Country, _shoppingCart.ZipCode));
         }
@@ -232,7 +266,7 @@ namespace Nwazet.Commerce.Controllers {
                     .Where(item => !item.IsRemoved)
                     .Select(item => new ShoppingCartItem(
                                         item.ProductId,
-                                        item.Quantity < 0 ? 0 : item.Quantity,
+                                        item.Quantity <= 0 ? 0 : GetItemQuantity(item),
                                         item.AttributeIdsToValues))
                 );
 
@@ -243,6 +277,14 @@ namespace Nwazet.Commerce.Controllers {
                 () => new Dictionary<string, object> {
                     {"Cart", _shoppingCart}
                 });
+        }
+
+        private int GetItemQuantity(UpdateShoppingCartItemViewModel item) {
+            var product = _contentManager.Get<ProductPart>(item.ProductId);
+            if (product != null) {
+                return item.Quantity < product.MinimumOrderQuantity ? product.MinimumOrderQuantity : item.Quantity;
+            }
+            return item.Quantity;
         }
 
         public ActionResult ResetDestination() {

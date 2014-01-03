@@ -8,10 +8,12 @@ using Nwazet.Commerce.ViewModels;
 using Orchard;
 using Orchard.Themes;
 using Orchard.Workflows.Services;
+using Orchard.Environment.Extensions;
 
 namespace Nwazet.Commerce.Controllers {
     [Themed]
     [RequireHttps]
+    [OrchardFeature("Stripe")]
     public class StripeController : Controller {
         private const string NwazetStripeCheckout = "nwazet.stripe.checkout";
         private readonly IStripeService _stripeService;
@@ -78,6 +80,12 @@ namespace Nwazet.Commerce.Controllers {
             // Call Stripe to charge card
             var stripeCharge = _stripeService.Charge(stripeToken, total);
 
+            int userId = -1;
+            var currentUser = _wca.GetContext().CurrentUser;
+            if (currentUser != null) {
+                userId = currentUser.Id;
+            }
+
             var order = _orderService.CreateOrder(
                 stripeCharge,
                 checkoutData.CheckoutItems,
@@ -92,7 +100,8 @@ namespace Nwazet.Commerce.Controllers {
                 checkoutData.SpecialInstructions,
                 OrderPart.Pending,
                 null,
-                _stripeService.IsInTestMode());
+                _stripeService.IsInTestMode(),
+                userId);
             TempData["OrderId"] = order.Id;
             _workflowManager.TriggerEvent("NewOrder", order,
                 () => new Dictionary<string, object> {

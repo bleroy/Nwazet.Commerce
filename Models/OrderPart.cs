@@ -6,6 +6,7 @@ using Nwazet.Commerce.Helpers;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Environment.Extensions;
+using Orchard.Security;
 
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.Orders")]
@@ -318,6 +319,16 @@ namespace Nwazet.Commerce.Models {
                 BillingAddress.Honorific + " " + BillingAddress.FirstName + " " + BillingAddress.LastName + " - " +
                 Total.ToString("C") +
                 (IsTestOrder ? " - TEST" : ""); }
+        }
+
+        public int UserId {
+            get { return Record.UserId; }
+            set { Record.UserId = value; }
+        }
+
+        public IUser User {
+            get { return this.ContentItem.ContentManager.Get<IUser>(UserId); }
+            set { UserId = value == null ? -1 : value.Id; }
         }
     }
 }

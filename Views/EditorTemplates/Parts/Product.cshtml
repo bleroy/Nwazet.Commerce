@@ -22,6 +22,8 @@
     @Html.CheckBoxFor(m => m.AllowBackOrder)
     <label class="sub" for="@Html.IdFor(m => m.AllowBackOrder)">@T("allow back order")</label><br />
     <span class="hint">@T("If unchecked, the add button won't be visible on the product page when the inventory is zero or less.")</span>
+    <label class="sub" for="MinimumOrderQuantity">@T("Minimum order quantity")</label><br />
+    @Html.TextBoxFor(m => m.MinimumOrderQuantity, new { @class = "textMedium" })<br />
 </fieldset>
 <fieldset>
     <label class="sub" for="@Html.IdFor(m => m.Weight)">@T("Weight")</label><br />
@@ -59,4 +61,9 @@
 <fieldset>
     @Html.CheckBoxFor(m => m.IsDigital)
     <label class="sub" for="@Html.IdFor(m => m.IsDigital)">@T("digital product")</label>
+</fieldset>
+<fieldset>
+    @Html.CheckBoxFor(m => m.AuthenticationRequired)
+    <label class="sub" for="@Html.IdFor(m => m.AuthenticationRequired)">@T("authentication required")</label>
+    <span class="hint">@T("This allows for associating the order with the user but will force the user to log in prior to purchasing.")</span>
 </fieldset>

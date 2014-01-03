@@ -14,6 +14,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Workflows.Services;
+using Orchard.Security;
 
 namespace Nwazet.Commerce.Drivers {
     [OrchardFeature("Nwazet.Orders")]
@@ -24,6 +25,7 @@ namespace Nwazet.Commerce.Drivers {
         private readonly IWorkContextAccessor _wca;
         private readonly IOrchardServices _orchardServices;
         private readonly IWorkflowManager _workflowManager;
+        private readonly IMembershipService _membershipService;
 
         public OrderPartDriver(
             IOrderService orderService,
@@ -31,7 +33,8 @@ namespace Nwazet.Commerce.Drivers {
             IEnumerable<ICheckoutService> checkoutServices,
             IWorkContextAccessor wca,
             IOrchardServices orchardServices,
-            IWorkflowManager workflowManager) {
+            IWorkflowManager workflowManager,
+            IMembershipService membershipService) {
 
             _orderService = orderService;
             _addressFormatter = addressFormatter;
@@ -39,6 +42,7 @@ namespace Nwazet.Commerce.Drivers {
             _wca = wca;
             _orchardServices = orchardServices;
             _workflowManager = workflowManager;
+            _membershipService = membershipService;
             T = NullLocalizer.Instance;
         }
 
@@ -51,6 +55,7 @@ namespace Nwazet.Commerce.Drivers {
         private const string ShippingAddressName = "ShippingAddress";
         private const string ShippingName = "Shipping";
         private const string TaxesName = "Taxes";
+        private const string UserName = "User";
 
         protected override string Prefix {
             get { return "NwazetCommerceOrder"; }
@@ -110,7 +115,8 @@ namespace Nwazet.Commerce.Drivers {
                 StatusLabels = _orderService.StatusLabels,
                 EventCategories = OrderPart.EventCategories,
                 EventCategoryLabels = _orderService.EventCategoryLabels,
-                LinkToTransaction = linkToTransaction
+                LinkToTransaction = linkToTransaction,
+                UserName = part.User == null ? "" : part.User.UserName
             };
             return ContentShape("Parts_Order_Edit",
                 () => shapeHelper.EditorTemplate(
@@ -162,11 +168,21 @@ namespace Nwazet.Commerce.Drivers {
                         {"Order", part}
                     });
             }
+            
+            if (!String.IsNullOrEmpty(updateModel.UserName)) {
+                var user = _membershipService.GetUser(updateModel.UserName);
+                if (user != null) {
+                    part.UserId = user.Id;
+                }
+                else {
+                    eventText += T("Provided username does not exist. ");
+                }
+            }
 
             if (!String.IsNullOrWhiteSpace(eventText)) {
                 part.LogActivity(OrderPart.Event, eventText);
             }
-            
+
             return Editor(part, shapeHelper);
         }
 
@@ -240,6 +256,14 @@ namespace Nwazet.Commerce.Drivers {
                         .FromAttr(ev => ev.Description)
                         .Context);
             }
+
+            var userNameEl = xel.Element(UserName);
+            if (userNameEl != null) {
+                var userName = userNameEl.Attr("UserName");
+                if (!String.IsNullOrEmpty(userName)) {
+                    part.User = _membershipService.GetUser(userName);
+                }                
+            }
         }
 
         protected override void Exporting(OrderPart part, ExportContentContext context) {
@@ -256,12 +280,13 @@ namespace Nwazet.Commerce.Drivers {
                 .Element
 
                 .AddEl(new XElement(ItemsName,
-                    part.Items.Select(it =>
+                    part.Items == null ? new List<XElement>() : part.Items.Select(it =>
                         new XElement(ItemName).With(it)
                             .ToAttr(i => i.ProductId)
                             .ToAttr(i => i.Title)
                             .ToAttr(i => i.Quantity)
-                            .ToAttr(i => i.Price))))
+                            .ToAttr(i => i.Price)
+                            .Element)))
 
                 .AddEl(new XElement(ShippingName).With(part.ShippingOption)
                     .ToAttr(s => s.Description)
@@ -281,10 +306,15 @@ namespace Nwazet.Commerce.Drivers {
                     part.BillingAddress))
 
                 .AddEl(new XElement(ActivityName,
-                    part.Activity.Select(ev => new XElement(EventName).With(ev)
+                    part.Activity == null ? new List<XElement>() : part.Activity.Select(ev => new XElement(EventName).With(ev)
                         .ToAttr(e => e.Date)
                         .ToAttr(e => e.Category)
-                        .ToAttr(e => e.Description))));
+                        .ToAttr(e => e.Description)
+                        .Element)))
+
+                .AddEl(new XElement(UserName).With(part.User)
+                    .ToAttr(u => u.UserName)
+                );
         }
     }
 }

@@ -51,6 +51,7 @@ namespace Nwazet.Commerce.Drivers {
                     Size: part.Size,
                     ShippingCost: part.ShippingCost,
                     IsDigital: part.IsDigital,
+                    MinimumOrderQuantity: part.MinimumOrderQuantity,
                     ContentPart: part
                     )
                 );
@@ -66,6 +67,7 @@ namespace Nwazet.Commerce.Drivers {
                                 .ToList();
                             return shapeHelper.Parts_Product_AddButton(
                                 ProductId: part.Id,
+                                MinimumOrderQuantity: part.MinimumOrderQuantity,
                                 ProductAttributes: attributeShapes);
                         })
                     );
@@ -129,6 +131,16 @@ namespace Nwazet.Commerce.Drivers {
                     out shippingCost)) {
                 part.ShippingCost = shippingCost;
             }
+            var minimumOrderQuantityString = context.Attribute(part.PartDefinition.Name, "MinimumOrderQuantity");
+            int minimumOrderQuantity;
+            if (int.TryParse(minimumOrderQuantityString, NumberStyles.Integer, CultureInfo.InvariantCulture, out minimumOrderQuantity)) {
+                part.MinimumOrderQuantity = minimumOrderQuantity;
+            }
+            var authenticationRequiredString = context.Attribute(part.PartDefinition.Name, "AuthenticationRequired");
+            bool authenticationRequired;
+            if (bool.TryParse(authenticationRequiredString, out authenticationRequired)) {
+                part.AuthenticationRequired = authenticationRequired;
+            }
         }
 
         protected override void Exporting(ProductPart part, ExportContentContext context) {
@@ -140,7 +152,9 @@ namespace Nwazet.Commerce.Drivers {
                 .ToAttr(p => p.OutOfStockMessage)
                 .ToAttr(p => p.AllowBackOrder)
                 .ToAttr(p => p.IsDigital)
-                .ToAttr(p => p.Weight);
+                .ToAttr(p => p.Weight)
+                .ToAttr(p => p.MinimumOrderQuantity)
+                .ToAttr(p => p.AuthenticationRequired);
             el.SetAttributeValue("Price", part.Price.ToString("C", CultureInfo.InvariantCulture));
             if (part.ShippingCost != null) {
                 el.SetAttributeValue(

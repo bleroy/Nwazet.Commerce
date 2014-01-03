@@ -1,15 +1,15 @@
 ﻿@using Nwazet.Commerce.Models
 @using Orchard.ContentManagement
 @{
-    Script.Require("jQuery");
-    Script.Include("shoppingcart.js", "shoppingcart.min.js");
+    Script.Require("ShoppingCart");
+    Script.Require("MinimumOrderQuantity");    
     var items = (IList<dynamic>)Model.ShopItems;
     var subtotal = (double) Model.Subtotal;
     var readOnly = Model.ReadOnly != null && Model.ReadOnly == true;
 }
 <article class="shoppingcart">
     <div id="shopping-cart-notification" class="message-Information hide"></div>
-    @using (Html.BeginFormAntiForgeryPost(Url.Action("Update", "ShoppingCart", new {area = "Nwazet.Commerce"}))) {
+    @using (Html.BeginFormAntiForgeryPost(Url.Action("Update", "ShoppingCart", new { area = "Nwazet.Commerce" }))) {
         if (!items.Any()) {
             <p class="shopping-cart-container" data-got-cart="false">
                 @T("You don't have any items in your shopping cart.")
@@ -21,7 +21,7 @@
             </script>
         }
         else {
-            <div  class="shopping-cart-container">
+            <div class="shopping-cart-container">
                 <table>
                     <thead>
                         <tr>
@@ -38,19 +38,20 @@
                         @for (var i = 0; i < items.Count; i++) {
                             var item = items[i];
                             var propertyNamePrefix = string.Format("items[{0}]", i);
-                            var product = (IProduct) item.Product;
-                            var contentItem = (IContent) item.Product;
+                            var product = (IProduct)item.Product;
+                            var contentItem = (IContent)item.Product;
                             var title = item.Title
                                         + (item.ProductAttributes == null
                                                ? "" : " (" + string.Join(", ", item.ProductAttributes.Values) + ")");
                             string imageUrl = (item.ProductImage != null ? item.ProductImage.Url : null);
-                            var quantity = (int) item.Quantity;
-                            var unitPrice = (double) item.DiscountedPrice;
-                            var totalPrice = quantity*unitPrice;
+                            var quantity = (int)item.Quantity;
+                            var unitPrice = (double)item.DiscountedPrice;
+                            var totalPrice = quantity * unitPrice;
+                            var minimumOrderQuantity = item.MinimumOrderQuantity;
                             <tr>
                                 @if (imageUrl != null) {
                                     <td>
-                                        <a href="@Url.ItemDisplayUrl(contentItem)" class="product-image-link"><img src="@Href(imageUrl)" alt="@title" class="product-image"/></a>
+                                        <a href="@Url.ItemDisplayUrl(contentItem)" class="product-image-link"><img src="@Href(imageUrl)" alt="@title" class="product-image" /></a>
                                     </td>
                                     <td>
                                         <a href="@Url.ItemDisplayUrl(contentItem)" class="product-name">@title</a>
@@ -63,19 +64,22 @@
                                 <td class="numeric">
                                     @if (readOnly) {
                                         <span class="quantity">@quantity</span>
+                                        if (minimumOrderQuantity > 1) {
+                                            <br /><strong>Minimum order of @minimumOrderQuantity required.</strong>
+                                        }
                                     }
                                     else {
                                         if (item.ProductAttributes != null) {
                                             var attrIndex = 0;
                                             foreach (KeyValuePair<int, string> attribute in item.ProductAttributes) {
                                                 var attributeNamePrefix = propertyNamePrefix + ".AttributeIdsToValues[" + attrIndex + "]";
-                                                <input type="hidden" name="@(attributeNamePrefix).Key" value="@attribute.Key"/>
+                                                <input type="hidden" name="@(attributeNamePrefix).Key" value="@attribute.Key" />
                                                 <input type="hidden" name="@(attributeNamePrefix).Value" value="@attribute.Value" />
                                                 attrIndex++;
                                             }
                                         }
                                         <input name="@(propertyNamePrefix + ".ProductId")" type="hidden" value="@product.Id" />
-                                        <input name="@(propertyNamePrefix + ".Quantity")" type="number" class="quantity" value="@quantity" />
+                                        <input name="@(propertyNamePrefix + ".Quantity")" type="number" class="quantity addtocart-quantity" value="@quantity" min="@minimumOrderQuantity" />
                                     }
                                 </td>
                                 <td class="numeric amount">@totalPrice.ToString("c")</td>
@@ -84,7 +88,7 @@
                                 }
                             </tr>
                         }
-            
+
                     </tbody>
                     <tfoot>
                         <tr class="total">
@@ -100,7 +104,7 @@
                                 <td class="numeric amount">@Model.Taxes.Amount.ToString("c")</td>
                             </tr>
                         }
-                        @if (Model.ShippingOption != null) {
+                        @if (!Model.ShopItemsAllDigital && Model.ShippingOption != null) {
                             var shippingOption = (ShippingOption)Model.ShippingOption;
                             <tr class="total">
                                 <td class="numeric label" colspan="4">@T("{1} {0}", Html.Raw(shippingOption.Description), shippingOption.ShippingCompany):</td>
@@ -121,13 +125,26 @@
                     @Display.ShippingOptions(ShippingOptions: Model.ShippingOptions, Country: Model.Country, ZipCode: Model.ZipCode)
                 }
                 @if (Model.ShippingOption != null) {
-                    <p>@T("Click <a href=\"{0}\">here</a> to choose a different shipping option.",
-                           Url.Action("ResetShippingOption", "ShoppingCart", new {area = "Nwazet.Commerce"}))</p>
+                    <p>
+                        @T("Click <a href=\"{0}\">here</a> to choose a different shipping option.",
+                           Url.Action("ResetShippingOption", "ShoppingCart", new { area = "Nwazet.Commerce" }))
+                    </p>
+                }
+                else if (!String.IsNullOrWhiteSpace(Model.Country) && !String.IsNullOrWhiteSpace(Model.ZipCode)) {
+                    <p>@T("Shipping options are for {0} {1}. Click <a href=\"{2}\">here</a> to change your shipping destination.",
+                       Model.Country,
+                       Model.ZipCode,
+                       Url.Action("ResetDestination", "ShoppingCart", new {area = "Nwazet.Commerce"}))</p>
                 }
             </div>
         }
     }
-    @if (Model.CheckoutButtons != null) {
+    @if (Model.CheckoutButtons != null && (
+            Model.ShippingOption != null || (
+                Model.ShopItemsAllDigital && !String.IsNullOrWhiteSpace(Model.Country) && !String.IsNullOrWhiteSpace(Model.ZipCode)
+                )
+            )
+        ) {
         <ul class="checkout">
             @foreach (var checkoutButton in Model.CheckoutButtons) {
                 <li>
@@ -136,4 +153,8 @@
             }
         </ul>
     }
-</article >
+    @if (Model.ShopItemsAuthenticationRequired && !HttpContext.Current.User.Identity.IsAuthenticated) {
+        @T("Some products in your cart require you to be authenticated.")
+        <a href="/Users/Account/LogOn?ReturnUrl=Cart">@T("Please log on to complete your order")</a>
+    }
+</article>

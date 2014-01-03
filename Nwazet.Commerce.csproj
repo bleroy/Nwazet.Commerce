@@ -74,6 +74,10 @@
     <Content Include="Scripts\inventory.min.js">
       <DependentUpon>inventory.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\minimumorderquantity.js" />
+    <Content Include="Scripts\minimumorderquantity.min.js">
+      <DependentUpon>minimumorderquantity.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\order-admin.js" />
     <Content Include="Scripts\order-admin.min.js">
       <DependentUpon>order-admin.js</DependentUpon>
@@ -254,6 +258,7 @@
     <Compile Include="Models\ShoppingCartQuantityProduct.cs" />
     <Compile Include="Models\ShoppingCartWidgetPart.cs" />
     <Compile Include="Permissions\OrderPermissions.cs" />
+    <Compile Include="ResourceManifests\CommerceResourceManifest.cs" />
     <Compile Include="Routes\UspsRoutes.cs" />
     <Compile Include="Routes\StripeRoutes.cs" />
     <Compile Include="Routes\OrderRoutes.cs" />
@@ -387,7 +392,11 @@
     <Content Include="Views\Order_CheckPassword.cshtml" />
     <Content Include="Views\Order_Confirmation.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Scripts\minimumorderquantity.min.js.map">
+      <DependentUpon>minimumorderquantity.js</DependentUpon>
+    </Content>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

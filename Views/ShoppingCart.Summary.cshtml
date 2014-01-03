@@ -23,6 +23,7 @@
                     var quantity = (int) item.Quantity;
                     var unitPrice = (double) item.DiscountedPrice;
                     var totalPrice = quantity*unitPrice;
+                    var minimumOrderQuantity = item.MinimumOrderQuantity;
                     <li>
                         @if (imageUrl != null) {
                             <a href="@Url.ItemDisplayUrl(contentItem)" class="product-image-link"><img src="@(root + Href(imageUrl))" alt="@title" class="product-image"/></a>
@@ -44,9 +45,12 @@
                             }
                             <input name="@(propertyNamePrefix + ".ProductId")" type="hidden" value="@product.Id" />
                             <span class="numeric">
-                                <input name="@(propertyNamePrefix + ".Quantity")" type="number" class="quantity" value="@quantity" />
+                                <input name="@(propertyNamePrefix + ".Quantity")" type="number" class="quantity addtocart-quantity" value="@quantity" min="@minimumOrderQuantity" />
                             </span>
                             <span class="numeric">@totalPrice.ToString("c")</span>
+                            @if (minimumOrderQuantity > 1) {
+                                <br /><strong>Minimum order of @minimumOrderQuantity required.</strong>
+                            }
                         </span>
                     </li>
                 }

@@ -50,5 +50,15 @@ namespace Nwazet.Commerce.Models {
             get { return Retrieve(r => r.AllowBackOrder); }
             set { Store(r => r.AllowBackOrder, value); }
         }
+
+        public int MinimumOrderQuantity {
+            get { return Retrieve(r => r.MinimumOrderQuantity);  }
+            set { Store(r => r.MinimumOrderQuantity, value); }
+        }
+
+        public bool AuthenticationRequired {
+            get { return Retrieve(r => r.AuthenticationRequired); }
+            set { Store(r => r.AuthenticationRequired, value); }
+        }
     }
 }
