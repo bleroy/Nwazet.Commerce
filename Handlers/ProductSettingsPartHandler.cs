@@ -14,15 +14,5 @@ namespace Nwazet.Commerce.Handlers {
         }
 
         public Localizer T { get; set; }
-
-        protected override void GetItemMetadata(GetContentItemMetadataContext context) {
-            if (context.ContentItem.ContentType != "Site")
-                return;
-            base.GetItemMetadata(context);
-            context.Metadata.EditorGroupInfo.Add(new GroupInfo(T("Pricing")) {
-                Id = "Pricing",
-                Position = "4.2"
-            });
-        }
     }
 }

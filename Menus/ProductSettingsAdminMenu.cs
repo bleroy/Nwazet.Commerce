@@ -5,12 +5,12 @@ using Orchard.Settings;
 using Orchard.UI.Navigation;
 
 namespace Orchard.Core.Settings {
-    public class PricingAdminMenu : INavigationProvider {
+    public class ProductSettingsAdminMenu : INavigationProvider {
          public string MenuName {
             get { return "admin"; }
         }
 
-         public PricingAdminMenu() {
+         public ProductSettingsAdminMenu() {
             T = NullLocalizer.Instance;
         }
 
@@ -27,7 +27,7 @@ namespace Orchard.Core.Settings {
                     .Add(subItem => subItem
                         .Caption(T("Pricing"))
                         .Position("2.9")
-                        .Action("Index", "Admin", new { area = "Settings", groupInfoId = "Pricing" })
+                        .Action("Index", "ProductSettingsAdmin", new { area = "Nwazet.Commerce" })
                     )
                 );
         }

@@ -54,17 +54,17 @@ namespace Nwazet.Commerce.Drivers {
             if (el == null) return;
             el.With(part)
                 .FromAttr(p => p.DefineSiteDefaults)
-                .FromAttr(p => p.AllowProductOverrides)
-                .FromAttr(p => p.PriceTiers);
+                .FromAttr(p => p.AllowProductOverrides);
+            part.PriceTiers = PriceTier.DeserializePriceTiers(el.Attr("PriceTiers"));
         }
 
         protected override void Exporting(ProductSettingsPart part, ExportContentContext context) {
-            context
-                .Element(typeof(ProductSettingsPart).Name)
+            var el = context.Element(typeof(ProductSettingsPart).Name);
+            el
                 .With(part)
                 .ToAttr(p => p.DefineSiteDefaults)
-                .ToAttr(p => p.AllowProductOverrides)
-                .ToAttr(p => p.PriceTiers);
+                .ToAttr(p => p.AllowProductOverrides);
+            el.SetAttributeValue("PriceTiers", PriceTier.SerializePriceTiers(part.PriceTiers));
         }
     }
 }

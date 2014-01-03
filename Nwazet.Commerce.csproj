@@ -152,6 +152,7 @@
   <ItemGroup>
     <Compile Include="Activities\CommerceActivity.cs" />
     <Compile Include="Activities\OrderActivity.cs" />
+    <Compile Include="Controllers\ProductSettingsAdminController.cs" />
     <Compile Include="Controllers\BundleAdminController.cs" />
     <Compile Include="Controllers\AttributesAdminController.cs" />
     <Compile Include="Controllers\OrderAdminController.cs" />
@@ -192,8 +193,7 @@
     <Compile Include="Handlers\SizeBasedShippingMethodPartHandler.cs" />
     <Compile Include="Handlers\WeightBasedShippingMethodPartHandler.cs" />
     <Compile Include="Handlers\ProductPartHandler.cs" />
-    <Compile Include="Menus\AdminMenu.cs" />
-    <Compile Include="Menus\PricingAdminMenu.cs" />
+    <Compile Include="Menus\ProductSettingsAdminMenu.cs" />
     <Compile Include="Menus\AttributeAdminMenu.cs" />
     <Compile Include="Menus\OrderAdminMenu.cs" />
     <Compile Include="Menus\TaxAdminMenu.cs" />
@@ -388,6 +388,7 @@
     <Content Include="Views\Order_Confirmation.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\ProductSettingsAdmin\Index.cshtml" />
     <None Include="Views\EditorTemplates\Parts\ProductSettings.cshtml" />
     <None Include="Views\Parts\Product.PriceTiers.cshtml" />
   </ItemGroup>
