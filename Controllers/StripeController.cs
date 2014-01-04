@@ -6,6 +6,7 @@ using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
 using Nwazet.Commerce.ViewModels;
 using Orchard;
+using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Themes;
@@ -15,6 +16,7 @@ using Orchard.Workflows.Services;
 namespace Nwazet.Commerce.Controllers {
     [Themed]
     [RequireHttps]
+    [OrchardFeature("Stripe")]
     public class StripeController : Controller {
         private const string NwazetStripeCheckout = "nwazet.stripe.checkout";
         private readonly IStripeService _stripeService;
@@ -110,8 +112,8 @@ namespace Nwazet.Commerce.Controllers {
                 Logger.Error(stripeCharge.Error.Type + ": " + stripeCharge.Error.Message);
                 _workflowManager.TriggerEvent("OrderError", null,
                     () => new Dictionary<string, object> {
-                    {"CheckoutError", stripeCharge.Error}
-                });
+                        {"CheckoutError", stripeCharge.Error}
+                    });
                 if (stripeCharge.Error.Type == "card_error") {
                     return Pay(stripeCharge.Error.Message);
                 }
