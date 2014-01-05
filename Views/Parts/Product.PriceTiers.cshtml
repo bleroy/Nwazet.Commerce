@@ -5,11 +5,10 @@
     var discountedPriceTiers = new List<PriceTier>(Model.DiscountedPriceTiers);
 }
 @if (Model.PriceTiers != null && Enumerable.Count(Model.PriceTiers) > 0) {
-    <br />
-    <table>
+    <table class="tiered-prices">
         <tr>
-            <td>Quantity</td>
-            <td>Price</td>
+            <td>@T("Quantity")</td>
+            <td>@T("Price")</td>
         </tr>
         @for (var i = 0; i < priceTiers.Count(); i++ ) {
             <tr>
@@ -24,9 +23,6 @@
                     }
 
                 </td>
-
-
-
             </tr>
         }
     </table>

@@ -14,13 +14,13 @@
     }
 </fieldset>
 <fieldset id="NwazetCommerceProduct_PriceTierSection" style="display:@(Model.AllowProductOverrides && Model.Product.OverrideTieredPricing ? "block" : "none");">
-    <legend>Tiered Pricing</legend>
+    <legend>@T("Tiered Pricing")</legend>
     <div class="hint">@T("Quantity is mimimun amount that must be ordered to trigger the price tier.")</div>
     <div class="hint">@T(@"Price can be a fixed amount or a percentage of the base price. ""90%"" makes the tiered price 90% of the base price. ""90"" makes the tiered price $90.")</div>
     <table id="NwazetCommerceProduct_PriceTiers">
         <tr>
-            <td>Quantity</td>
-            <td>Price</td>
+            <td>@T("Quantity")</td>
+            <td>@T("Price")</td>
         </tr>
         @{int i = 0;}
         @foreach (var tier in Model.PriceTiers) {
@@ -38,7 +38,7 @@
             i++;
         }
     </table>
-    <button id="NwazetCommerceProduct_AddPriceTier">Add Price Tier</button>
+    <button id="NwazetCommerceProduct_AddPriceTier">@T("Add Price Tier")</button>
     @using (Script.Foot()) {
         <script type="text/javascript">
             (function ($) {
