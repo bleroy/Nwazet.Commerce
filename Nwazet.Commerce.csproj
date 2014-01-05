@@ -389,6 +389,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ProductSettingsAdmin\Index.cshtml" />
+    <Content Include="Views\PriceTiersAdmin.cshtml" />
     <None Include="Views\EditorTemplates\Parts\ProductSettings.cshtml" />
     <None Include="Views\Parts\Product.PriceTiers.cshtml" />
   </ItemGroup>

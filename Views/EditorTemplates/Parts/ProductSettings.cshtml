@@ -11,54 +11,6 @@
     <div class="hint">@T("Allow price tiers to be overriden for specific products")</div>
 </fieldset>
 
-<fieldset id="NwazetCommerceProduct_PriceTierSection" style="display:@(Model.DefineSiteDefaults ? "block" : "none");">
-    <legend>@T("Tiered Pricing Defaults")</legend>
-    <div class="hint">@T("Quantity is minimum amount that must be ordered to trigger the price tier.")</div>
-    <div class="hint">@T(@"Price can be a fixed amount or a percentage of the base price. ""90%"" makes the tiered price 90% of the base price. ""90"" makes the tiered price $90.")</div>
-    <table id="NwazetCommerceProduct_PriceTiers">
-        <tr>
-            <td>@T("Quantity")</td>
-            <td>@T("Price")</td>
-        </tr>
-        @{int i = 0;}
-        @foreach (var tier in Model.PriceTiers) {
-            <tr>
-                <td>
-                    <input type="hidden" name="ProductSettings.PriceTiers.Index" value="@i" />
-                    <input type="text" class="text" name="ProductSettings.PriceTiers[@i].Quantity" value="@tier.Quantity" />
-                </td>
-                <td>
-                    <input type="text" class="text" name="ProductSettings.PriceTiers[@i].Price" value="@tier.Price" />
-                </td>
-                <td><a href="#" class="nwazet-remove-price-tier">@T("Remove")</a></td>
-            </tr>
-
-            i++;
-        }
-    </table>
-    <button id="NwazetCommerceProduct_AddPriceTier">@T("Add Price Tier")</button>
-
-    @using (Script.Foot()) {
-        <script type="text/javascript">
-            (function ($) {
-                $(function () {
-                    $("#@Html.IdFor(m => m.DefineSiteDefaults)").click(function () {
-                        $("#NwazetCommerceProduct_PriceTierSection").toggle();
-                    });
-
-                    $("#NwazetCommerceProduct_AddPriceTier").click(function (event) {
-                        event.preventDefault();
-                        var rowId = (new Date()).getTime();
-                        $("#NwazetCommerceProduct_PriceTiers").append('<tr><td><input type="hidden" name="ProductSettings.PriceTiers.Index" value="' + rowId + '" /><input type="text" class="text" name="ProductSettings.PriceTiers[' + rowId + '].Quantity" value="" /></td><td><input type="text" class="text" name="ProductSettings.PriceTiers[' + rowId + '].Price" value="" /></td><td><a href="#" class="nwazet-remove-price-tier">Remove</a></td></tr>');
-                    });
-
-                    $("#NwazetCommerceProduct_PriceTiers").on("click", ".nwazet-remove-price-tier", function (event) {
-                        event.preventDefault();
-                        $(this).parents("tr").remove();
-                    });
-                });
-            })(jQuery);
-        </script>
-    }
+@Display.PriceTiersAdmin(PriceTiers: Model.PriceTiers, ShowPriceTiers: Model.DefineSiteDefaults, NamePrefix: Html.NameForModel(), ToggleCheckboxId: Html.IdFor(m => m.DefineSiteDefaults))
 
 </fieldset>

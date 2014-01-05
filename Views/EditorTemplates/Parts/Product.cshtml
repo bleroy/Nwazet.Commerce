@@ -13,55 +13,9 @@
         <label class="sub" for="@Html.IdFor(m => m.Product.OverrideTieredPricing)">@T("override tiered pricing")</label>
     }
 </fieldset>
-<fieldset id="NwazetCommerceProduct_PriceTierSection" style="display:@(Model.AllowProductOverrides && Model.Product.OverrideTieredPricing ? "block" : "none");">
-    <legend>@T("Tiered Pricing")</legend>
-    <div class="hint">@T("Quantity is mimimun amount that must be ordered to trigger the price tier.")</div>
-    <div class="hint">@T(@"Price can be a fixed amount or a percentage of the base price. ""90%"" makes the tiered price 90% of the base price. ""90"" makes the tiered price $90.")</div>
-    <table id="NwazetCommerceProduct_PriceTiers">
-        <tr>
-            <td>@T("Quantity")</td>
-            <td>@T("Price")</td>
-        </tr>
-        @{int i = 0;}
-        @foreach (var tier in Model.PriceTiers) {
-            <tr>
-                <td>
-                    <input type="hidden" name="NwazetCommerceProduct.PriceTiers.Index" value="@i" />
-                    <input type="text" class="text" name="NwazetCommerceProduct.PriceTiers[@i].Quantity" value="@tier.Quantity" />
-                </td>
-                <td>
-                    <input type="text" class="text" name="NwazetCommerceProduct.PriceTiers[@i].Price" value="@tier.Price" />
-                </td>
-                <td><a href="#" class="nwazet-remove-price-tier">Remove</a></td>
-            </tr>
 
-            i++;
-        }
-    </table>
-    <button id="NwazetCommerceProduct_AddPriceTier">@T("Add Price Tier")</button>
-    @using (Script.Foot()) {
-        <script type="text/javascript">
-            (function ($) {
-                $(function () {
-                    $("#@Html.IdFor(m => m.Product.OverrideTieredPricing)").click(function () {
-                        $("#NwazetCommerceProduct_PriceTierSection").toggle();
-                    });
+@Display.PriceTiersAdmin(PriceTiers: Model.PriceTiers, ShowPriceTiers: (Model.AllowProductOverrides && Model.Product.OverrideTieredPricing), NamePrefix: Html.NameForModel(), ToggleCheckboxId: Html.IdFor(m => m.Product.OverrideTieredPricing))
 
-                    $("#NwazetCommerceProduct_AddPriceTier").click(function (event) {
-                        event.preventDefault();
-                        var rowId = (new Date()).getTime();
-                        $("#NwazetCommerceProduct_PriceTiers").append('<tr><td><input type="hidden" name="NwazetCommerceProduct.PriceTiers.Index" value="' + rowId + '" /><input type="text" class="text" name="NwazetCommerceProduct.PriceTiers[' + rowId + '].Quantity" value="" /></td><td><input type="text" class="text" name="NwazetCommerceProduct.PriceTiers[' + rowId + '].Price" value="" /></td><td><a href="#" class="nwazet-remove-price-tier">Remove</a></td></tr>');
-                    });
-
-                    $("#NwazetCommerceProduct_PriceTiers").on("click", ".nwazet-remove-price-tier", function (event) {
-                        event.preventDefault();
-                        $(this).parents("tr").remove();
-                    });
-                });
-            })(jQuery);
-        </script>
-    }
-</fieldset>
 <fieldset>
     <label class="sub" for="@Html.IdFor(m => m.Product.Inventory)">@T("Inventory")</label>
     @if (Model.Product.Has<BundlePart>()) {
