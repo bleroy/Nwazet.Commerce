@@ -10,10 +10,12 @@ namespace Nwazet.Commerce.Services {
         private const double Epsilon = 0.001;
         private readonly IEnumerable<IPriceProvider> _priceProviders;
         private readonly ITieredPriceProvider _tieredPriceProvider;
+        private readonly IContentManager _contentManager;
 
-        public PriceService(IEnumerable<IPriceProvider> priceProviders, ITieredPriceProvider tieredPriceProvider = null) {
+        public PriceService(IEnumerable<IPriceProvider> priceProviders, IContentManager contentManager, ITieredPriceProvider tieredPriceProvider = null) {
             _priceProviders = priceProviders;
             _tieredPriceProvider = tieredPriceProvider;
+            _contentManager = contentManager;
         }
 
         public ShoppingCartQuantityProduct GetDiscountedPrice(
@@ -25,7 +27,18 @@ namespace Nwazet.Commerce.Services {
                 productQuantity = _tieredPriceProvider.GetTieredPrice(productQuantity);
             }
 
-            return GetDiscount(productQuantity, shoppingCartQuantities);
+            var discountedProductQuantity = GetDiscount(productQuantity, shoppingCartQuantities);
+
+            // Adjust price based on attributes selected
+            // TODO: Determine if applying attribute price adjustments should be done before or after discounting (thinking after is the right way to go)
+            if (discountedProductQuantity.AttributeIdsToValues != null) {
+                foreach (var attr in discountedProductQuantity.AttributeIdsToValues) {
+                    var value = _contentManager.Get(attr.Key).As<ProductAttributePart>().AttributeValues.Where(v => v.Text.Trim() == attr.Value.Trim()).Single();
+                    discountedProductQuantity.Price = discountedProductQuantity.Price + value.PriceAdjustment;
+                }
+            }
+
+            return discountedProductQuantity;
         }
 
         public IEnumerable<PriceTier> GetDiscountedPriceTiers(ProductPart product) {

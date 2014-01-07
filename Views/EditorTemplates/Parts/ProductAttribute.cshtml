@@ -1,6 +1,53 @@
 ﻿@model Nwazet.Commerce.Models.ProductAttributePart
+
 <fieldset>
-    <label class="sub" for="@Html.Id("AttributeValues")">@T("Values")</label><br />
-    @Html.TextArea("AttributeValues", String.Join("\r\n", Model.AttributeValues), 10, 80, new {})
-    <div class="hint">@T("Enter attributes values, one per line. The first one is the default.")</div>
+    <legend>@T("Attribute Value Options")</legend>
+    <div class="hint">@T("Name is the text value displayed for the user to select.")</div>
+    <div class="hint">@T(@"Price Adjustment is the amount the price will be adjusted for each item that has the attribute selected. Use negative adjustments to reduce the price.")</div>
+    <table id="NwazetCommerceAttribute_AttributeValues">
+        <tr>
+            <td>@T("Name")</td>
+            <td>@T("Price Adjustment")</td>
+        </tr>
+        @{int i = 0;}
+        @foreach (var value in Model.AttributeValues) {
+            <tr>
+                <td>
+                    <input type="hidden" name="NwazetCommerceAttribute.AttributeValues.Index" value="@i" />
+                    <input type="text" class="text" name="NwazetCommerceAttribute.AttributeValues[@i].Text" value="@value.Text" />
+                </td>
+                <td>
+                    <input type="text" class="text" name="NwazetCommerceAttribute.AttributeValues[@i].PriceAdjustment" value="@value.PriceAdjustment" />
+                </td>
+                <td><a href="#" class="nwazet-remove-attribute-value">Remove</a></td>
+            </tr>
+
+            i++;
+        }
+    </table>
+    <button id="NwazetCommerceAttribute_AddAttributeValue">@T("Add Attribute Value")</button>
 </fieldset>
+
+
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        (function ($) {
+            var i = @i; // indexer for mvc model binding new tiers
+
+            $("#NwazetCommerceAttribute_AddAttributeValue").click(function (event) {
+                event.preventDefault();
+                $("table#NwazetCommerceAttribute_AttributeValues").append('<tr><td><input type="hidden" name="NwazetCommerceAttribute.AttributeValues.Index" value="' + i + '" />' +
+                                                                '<input type="text" class="text" name="NwazetCommerceAttribute.AttributeValues[' + i + '].Text" value="" /></td>' +
+                                                                '<td><input type="text" class="text" name="NwazetCommerceAttribute.AttributeValues[' + i + '].PriceAdjustment" value="" /></td>' +
+                                                                '<td><a href="#" class="nwazet-remove-attribute-value">Remove</a></td></tr>');
+                i++;
+            });
+
+            $("table#NwazetCommerceAttribute_AttributeValues").on("click", ".nwazet-remove-attribute-value", function (event) {
+                event.preventDefault();
+                $(this).parents("tr").remove();
+            });
+
+        })(jQuery);
+    </script>
+}

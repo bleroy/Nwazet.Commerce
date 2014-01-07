@@ -216,6 +216,7 @@
     <Compile Include="Models\OrderPart.cs" />
     <Compile Include="Models\OrderPartRecord.cs" />
     <Compile Include="Models\PriceTier.cs" />
+    <Compile Include="Models\ProductAttributeValue.cs" />
     <Compile Include="Models\ProductSettingsPart.cs" />
     <Compile Include="Models\StateOrCountryTaxPart.cs" />
     <Compile Include="Models\StateOrCountryTaxPartRecord.cs" />
