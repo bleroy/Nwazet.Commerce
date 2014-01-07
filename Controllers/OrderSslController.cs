@@ -33,13 +33,14 @@ namespace Nwazet.Commerce.Controllers {
             _addressFormatter = addressFormatter;
         }
 
+        [OutputCache(NoStore = true, Duration = 0)]
         public ActionResult Confirmation() {
             if (!TempData.ContainsKey("OrderId")) {
                 return HttpNotFound();
             }
             var orderId = TempData["OrderId"];
             TempData.Keep("OrderId");
-            var order = _contentManager.Get<OrderPart>((int)orderId);
+            var order = _contentManager.Get<OrderPart>((int) orderId);
             var billingAddress = _addressFormatter.Format(order.BillingAddress);
             var shippingAddress = _addressFormatter.Format(order.ShippingAddress);
             var products = _contentManager
@@ -71,6 +72,7 @@ namespace Nwazet.Commerce.Controllers {
             return new ShapeResult(this, shape);
         }
 
+        [OutputCache(NoStore = true, Duration = 0)]
         public ActionResult Show(int id) {
             if (TempData.ContainsKey("OrderId")) {
                 return Confirmation();
