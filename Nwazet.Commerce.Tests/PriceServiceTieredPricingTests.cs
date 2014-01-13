@@ -185,7 +185,7 @@ namespace Nwazet.Commerce.Tests {
                     DisplayUrlResolver = item => ((ProductStub)item).Path
                 }
             };
-            var priceService = new PriceService(priceProviders, new TieredPriceProvider(wca));
+            var priceService = new PriceService(priceProviders, new ProductAttributeService(contentManager), new TieredPriceProvider(wca));
             var cart = new ShoppingCart(contentManager, cartStorage, priceService, null, taxProviders);
 
             return cart;

@@ -10,12 +10,12 @@ namespace Nwazet.Commerce.Services {
         private const double Epsilon = 0.001;
         private readonly IEnumerable<IPriceProvider> _priceProviders;
         private readonly ITieredPriceProvider _tieredPriceProvider;
-        private readonly IContentManager _contentManager;
+        private readonly IProductAttributeService _attributeService;
 
-        public PriceService(IEnumerable<IPriceProvider> priceProviders, IContentManager contentManager, ITieredPriceProvider tieredPriceProvider = null) {
+        public PriceService(IEnumerable<IPriceProvider> priceProviders, IProductAttributeService attributeService, ITieredPriceProvider tieredPriceProvider = null) {
             _priceProviders = priceProviders;
             _tieredPriceProvider = tieredPriceProvider;
-            _contentManager = contentManager;
+            _attributeService = attributeService;
         }
 
         public ShoppingCartQuantityProduct GetDiscountedPrice(
@@ -33,7 +33,7 @@ namespace Nwazet.Commerce.Services {
             // TODO: Determine if applying attribute price adjustments should be done before or after discounting (thinking after is the right way to go)
             if (discountedProductQuantity.AttributeIdsToValues != null) {
                 foreach (var attr in discountedProductQuantity.AttributeIdsToValues) {
-                    var value = _contentManager.Get(attr.Key).As<ProductAttributePart>().AttributeValues.Where(v => v.Text.Trim() == attr.Value.Trim()).Single();
+                    var value = _attributeService.GetAttributes(new int[] { attr.Key }).Single().AttributeValues.Where(v => v.Text.Trim() == attr.Value.Trim()).Single();
                     // If the adjustment is to the line, set it up, otherwise adjust the per item price
                     if (value.IsLineAdjustment) {
                         discountedProductQuantity.LinePriceAdjustment = value.PriceAdjustment;
