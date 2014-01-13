@@ -165,6 +165,7 @@ namespace Nwazet.Commerce.Controllers {
                     IsDigital: productQuantity.Product.IsDigital,
                     Price: productQuantity.Product.Price,
                     DiscountedPrice: productQuantity.Price,
+                    LinePriceAdjustment: productQuantity.LinePriceAdjustment,
                     ShippingCost: productQuantity.Product.ShippingCost,
                     Weight: productQuantity.Product.Weight)).ToList();
             return productShapes;

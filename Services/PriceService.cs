@@ -34,7 +34,13 @@ namespace Nwazet.Commerce.Services {
             if (discountedProductQuantity.AttributeIdsToValues != null) {
                 foreach (var attr in discountedProductQuantity.AttributeIdsToValues) {
                     var value = _contentManager.Get(attr.Key).As<ProductAttributePart>().AttributeValues.Where(v => v.Text.Trim() == attr.Value.Trim()).Single();
-                    discountedProductQuantity.Price = discountedProductQuantity.Price + value.PriceAdjustment;
+                    // If the adjustment is to the line, set it up, otherwise adjust the per item price
+                    if (value.IsLineAdjustment) {
+                        discountedProductQuantity.LinePriceAdjustment = value.PriceAdjustment;
+                    }
+                    else {
+                        discountedProductQuantity.Price = discountedProductQuantity.Price + value.PriceAdjustment;
+                    }                    
                 }
             }
 

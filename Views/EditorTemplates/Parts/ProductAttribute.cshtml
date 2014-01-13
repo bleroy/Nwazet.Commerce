@@ -4,10 +4,12 @@
     <legend>@T("Attribute Value Options")</legend>
     <div class="hint">@T("Name is the text value displayed for the user to select.")</div>
     <div class="hint">@T(@"Price Adjustment is the amount the price will be adjusted for each item that has the attribute selected. Use negative adjustments to reduce the price.")</div>
+    <div class="hint">@T(@"Line Adjustment determines whether the Price Adjustment amount is applied to each item or one time for the line.")</div>
     <table id="NwazetCommerceAttribute_AttributeValues">
         <tr>
             <td>@T("Name")</td>
             <td>@T("Price Adjustment")</td>
+            <td>@T("Line Adjustment")</td>
         </tr>
         @{int i = 0;}
         @foreach (var value in Model.AttributeValues) {
@@ -18,6 +20,9 @@
                 </td>
                 <td>
                     <input type="text" class="text" name="NwazetCommerceAttribute.AttributeValues[@i].PriceAdjustment" value="@value.PriceAdjustment" />
+                </td>
+                <td>
+                    <input type="checkbox" name="NwazetCommerceAttribute.AttributeValues[@i].IsLineAdjustment" @(value.IsLineAdjustment ? "checked='checked'" : "") value="True" />
                 </td>
                 <td><a href="#" class="nwazet-remove-attribute-value">Remove</a></td>
             </tr>
@@ -39,6 +44,7 @@
                 $("table#NwazetCommerceAttribute_AttributeValues").append('<tr><td><input type="hidden" name="NwazetCommerceAttribute.AttributeValues.Index" value="' + i + '" />' +
                                                                 '<input type="text" class="text" name="NwazetCommerceAttribute.AttributeValues[' + i + '].Text" value="" /></td>' +
                                                                 '<td><input type="text" class="text" name="NwazetCommerceAttribute.AttributeValues[' + i + '].PriceAdjustment" value="" /></td>' +
+                                                                '<td><input type="checkbox" name="NwazetCommerceAttribute.AttributeValues[' + i + '].IsLineAdjustment" value="True" /></td>' +
                                                                 '<td><a href="#" class="nwazet-remove-attribute-value">Remove</a></td></tr>');
                 i++;
             });

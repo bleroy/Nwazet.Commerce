@@ -132,7 +132,7 @@ namespace Nwazet.Commerce.Models {
         }
 
         public double Subtotal() {
-            return Math.Round(GetProducts().Sum(pq => Math.Round(pq.Price * pq.Quantity, 2)), 2);
+            return Math.Round(GetProducts().Sum(pq => Math.Round(pq.Price * pq.Quantity + pq.LinePriceAdjustment, 2)), 2);
         }
 
         public TaxAmount Taxes() {
