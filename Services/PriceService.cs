@@ -30,11 +30,10 @@ namespace Nwazet.Commerce.Services {
             var discountedProductQuantity = GetDiscount(productQuantity, shoppingCartQuantities);
 
             // Adjust price based on attributes selected
-            // TODO: Determine if applying attribute price adjustments should be done before or after discounting (thinking after is the right way to go)
             if (discountedProductQuantity.AttributeIdsToValues != null) {
                 foreach (var attr in discountedProductQuantity.AttributeIdsToValues) {
                     var value = _attributeService.GetAttributes(new int[] { attr.Key }).Single().AttributeValues.Where(v => v.Text.Trim() == attr.Value.Trim()).Single();
-                    // If the adjustment is to the line, set it up, otherwise adjust the per item price
+                    // If the adjustment is to the line, specify, otherwise adjust the per unit price
                     if (value.IsLineAdjustment) {
                         discountedProductQuantity.LinePriceAdjustment = value.PriceAdjustment;
                     }

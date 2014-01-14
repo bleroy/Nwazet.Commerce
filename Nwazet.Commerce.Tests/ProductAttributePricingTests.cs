@@ -13,10 +13,10 @@ namespace Nwazet.Commerce.Tests {
     public class ProductAttributePricingTests {
 
         [Test]
-        public void AttributeValuesWithNoPriceAdjustmentDoesNotChangePrice() {
+        public void AttributeValuesWithNoPriceAdjustmentDoNotChangePrice() {
             var cart = PrepareCart();
             cart.Add(1, 10, new Dictionary<int, string> { { 10, "Blue" }, { 11, "M" } });
-            CheckCart(cart, 250);
+            CheckCart(cart, 250); // 10 units x $25/unit
         }
 
         [Test]
@@ -34,7 +34,7 @@ namespace Nwazet.Commerce.Tests {
         }
 
         [Test]
-        public void MixedPerUnitAndLineAdjustmentsAreCalculatedCorrectly() {
+        public void MixedPerUnitAndLineAdjustmentAreCalculatedCorrectly() {
             var cart = PrepareCart();
             cart.Add(1, 3, new Dictionary<int, string> { { 10, "Green" }, { 11, "XL" } });
             CheckCart(cart, 91); // (3 units x ($25/unit + $2 unit adj)) + $10 line adj = $91 
