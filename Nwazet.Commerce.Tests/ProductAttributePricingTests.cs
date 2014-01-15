@@ -54,10 +54,26 @@ namespace Nwazet.Commerce.Tests {
             CheckCart(cart, 47); // (10 units x $5/unit) - $3 line adj = $47
         }
 
+        [Test]
+        public void MultipleLineAdjustmentsAreCumulative() {
+            var cart = PrepareCart();
+            cart.Add(4, 1, new Dictionary<int, string> { { 10, "Green" }, { 12, "Yes" } });
+            CheckCart(cart, 70); // (1 unit x $10/unit) + $60 line adj = $70
+        }
+
+        [Test]
+        public void MultiplePerUnitAdjustmentsAreCumulative() {
+            var cart = PrepareCart();
+            cart.Add(5, 10, new Dictionary<int, string> { { 11, "XXL" }, { 13, "With Sparkles" } });
+            CheckCart(cart, 110); // 10 units x ($7/unit + $4 unit adj) = 110
+        }
+
         private static readonly ProductStub[] Products = new[] {
             new ProductStub(1, new[] {10, 11}) {Price = 25},
             new ProductStub(2, new[] {10}) {Price = 5},
-            new ProductStub(3, new[] {11}) {Price = 10}
+            new ProductStub(3, new[] {11}) {Price = 10},
+            new ProductStub(4, new[] {10, 12}) { Price = 10 },
+            new ProductStub(5, new[] {11, 13}) { Price = 7 }
         };
 
         private static readonly ProductAttributeStub[] ProductAttributes = new[] {
@@ -73,6 +89,14 @@ namespace Nwazet.Commerce.Tests {
                 new ProductAttributeValue() { Text = "L", PriceAdjustment=1 },
                 new ProductAttributeValue() { Text = "XL", PriceAdjustment=2 },
                 new ProductAttributeValue() { Text = "XXL", PriceAdjustment=3 }
+            }),
+            new ProductAttributeStub(12, new List<ProductAttributeValue>() {
+                new ProductAttributeValue() { Text = "Yes", PriceAdjustment=50, IsLineAdjustment=true },
+                new ProductAttributeValue() { Text = "No", PriceAdjustment=0, IsLineAdjustment=true }
+            }),
+            new ProductAttributeStub(13, new List<ProductAttributeValue>() {
+                new ProductAttributeValue() { Text = "Without Sparkles", PriceAdjustment=0 },
+                new ProductAttributeValue() { Text = "With Sparkles", PriceAdjustment=1 }
             })
         };
 

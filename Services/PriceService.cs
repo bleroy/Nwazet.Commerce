@@ -36,10 +36,10 @@ namespace Nwazet.Commerce.Services {
                         .AttributeValues.Single(v => v.Text.Trim() == attr.Value.Trim());
                     // If the adjustment is to the line, specify, otherwise adjust the per unit price
                     if (value.IsLineAdjustment) {
-                        discountedProductQuantity.LinePriceAdjustment = value.PriceAdjustment;
+                        discountedProductQuantity.LinePriceAdjustment += value.PriceAdjustment;
                     }
                     else {
-                        discountedProductQuantity.Price = discountedProductQuantity.Price + value.PriceAdjustment;
+                        discountedProductQuantity.Price += value.PriceAdjustment;
                     }                    
                 }
             }
