@@ -39,10 +39,9 @@ namespace Nwazet.Commerce.Migrations {
 
         public int UpdateFrom1() {
             // Convert existing attribute data to new serlialization format (Attr1/nAttr2/n --> Attr1=0,False;Attr2=0,False)
-            var existingAttributes = _contentManager.Query("ProductAttribute").List();
-            foreach (var attr in existingAttributes) {
-                var attributePart = attr.As<ProductAttributePart>();
-                attributePart.AttributeValuesString = ConvertSerializedAttributeValues(attributePart.AttributeValuesString);
+            var existingAttributeParts = _contentManager.Query<ProductAttributePart>("ProductAttribute").List();
+            foreach (var attr in existingAttributeParts) {
+                attr.AttributeValuesString = ConvertSerializedAttributeValues(attr.AttributeValuesString);
             }
             return 2;
         }

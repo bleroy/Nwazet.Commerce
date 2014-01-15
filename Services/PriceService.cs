@@ -32,7 +32,8 @@ namespace Nwazet.Commerce.Services {
             // Adjust price based on attributes selected
             if (discountedProductQuantity.AttributeIdsToValues != null) {
                 foreach (var attr in discountedProductQuantity.AttributeIdsToValues) {
-                    var value = _attributeService.GetAttributes(new int[] { attr.Key }).Single().AttributeValues.Where(v => v.Text.Trim() == attr.Value.Trim()).Single();
+                    var value = _attributeService.GetAttributes(new int[] { attr.Key }).Single()
+                        .AttributeValues.Single(v => v.Text.Trim() == attr.Value.Trim());
                     // If the adjustment is to the line, specify, otherwise adjust the per unit price
                     if (value.IsLineAdjustment) {
                         discountedProductQuantity.LinePriceAdjustment = value.PriceAdjustment;

@@ -19,7 +19,7 @@ namespace Orchard.Core.Settings.Controllers {
     public class ProductSettingsAdminController : Controller, IUpdateModel {
         private readonly ISiteService _siteService;
         private readonly ICultureManager _cultureManager;
-        private readonly string groupInfoId = "Pricing";
+        private const string groupInfoId = "Pricing";
         public IOrchardServices Services { get; private set; }
 
         public ProductSettingsAdminController(
@@ -38,9 +38,8 @@ namespace Orchard.Core.Settings.Controllers {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage price settings")))
                 return new HttpUnauthorizedResult();
 
-            dynamic model;
             var site = _siteService.GetSiteSettings();
-            model = Services.ContentManager.BuildEditor(site, groupInfoId);
+            dynamic model = Services.ContentManager.BuildEditor(site, groupInfoId);
 
             if (model == null)
                 return HttpNotFound();
