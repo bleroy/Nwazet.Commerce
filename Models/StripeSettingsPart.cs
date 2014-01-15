@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Nwazet.Commerce.Helpers;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 
@@ -8,18 +7,18 @@ namespace Nwazet.Commerce.Models {
     public class StripeSettingsPart : ContentPart {
         [Required]
         public string PublishableKey {
-            get { return this.Retrieve<string>("PublishableKey"); }
-            set { this.Store("PublishableKey", value); }
+            get { return this.Retrieve(p => p.PublishableKey); }
+            set { this.Store(p => p.PublishableKey, value); }
         }
 
         public string SecretKey {
-            get { return this.Retrieve<string>("SecretKey"); }
-            set { this.Store("SecretKey", value); }
+            get { return this.Retrieve(p => p.SecretKey); }
+            set { this.Store(p => p.SecretKey, value); }
         }
 
         public string Currency {
-            get { return this.Retrieve<string>("Currency"); }
-            set { this.Store("Currency", value); }
+            get { return this.Retrieve(p => p.Currency); }
+            set { this.Store(p => p.Currency, value); }
         }
     }
 }

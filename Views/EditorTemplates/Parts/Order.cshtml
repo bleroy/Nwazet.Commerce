@@ -9,6 +9,11 @@
     var charge = Model.Order.CreditCardCharge;
 }
 <div class="order-editor">
+    <fieldset class="order-metadata">
+        <legend>@T("Order:")</legend>
+        <div class="order-id">@T("ID: {0}", Model.Order.Id)</div>
+        <div class="order-date">@T("Ordered {0}", Display.DateTimeRelative(dateTimeUtc: ((dynamic)Model.Order.ContentItem).CommonPart.CreatedUtc))</div>
+    </fieldset>
     <fieldset class="order-status">
         <legend>@T("Status:")</legend>
         <ul>
@@ -146,18 +151,21 @@
                 }
             }
         </ul>
-
-        <ul>
-            @foreach (var category in Model.EventCategories) {
-                var stateid = ViewData.TemplateInfo.GetFullHtmlFieldId("EventCategory_" + category);
-                <li>
-                    @Html.RadioButton("EventCategory", category, new {@id = stateid, @class="new-order-event-category"})
-                    @Html.Label("EventCategory_" + category, Model.EventCategoryLabels[category].Text)
-                </li>
-            }
-        </ul>
-        <textarea class="new-order-event-description"></textarea>
-        <button type="button" class="new-order-event-add button grey">@T("Add")</button>
+        
+        <div class="order-event-add">
+            <ul>
+                @foreach (var category in Model.EventCategories)
+                {
+                    var stateid = ViewData.TemplateInfo.GetFullHtmlFieldId("EventCategory_" + category);
+                    <li>
+                        @Html.RadioButton("EventCategory", category, new { @id = stateid, @class = "new-order-event-category" })
+                        @Html.Label("EventCategory_" + category, Model.EventCategoryLabels[category].Text)
+                    </li>
+                }
+            </ul>
+            <textarea class="new-order-event-description"></textarea>
+            <button type="button" class="new-order-event-add button grey">@T("Add")</button>
+        </div>
     </fieldset>
 
     <fieldset class="order-user">

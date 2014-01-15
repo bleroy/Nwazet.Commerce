@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.Commerce")]
-    public class ProductPart : InfosetContentPart<ProductPartRecord>, IProduct {
+    public class ProductPart : ContentPart<ProductPartRecord>, IProduct {
         [Required]
         public string Sku {
             get { return Retrieve(r => r.Sku); }

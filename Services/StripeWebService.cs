@@ -1,7 +1,7 @@
 ﻿using System.Collections.Specialized;
+using System.IO;
 using System.Net;
 using System.Text;
-using System.Web.Mvc;
 using Newtonsoft.Json.Linq;
 using Nwazet.Commerce.Exceptions;
 using Orchard.Environment.Extensions;
@@ -21,9 +21,13 @@ namespace Nwazet.Commerce.Services {
                 responseBytes = client.UploadValues(serviceUrl, "POST", parameters);
             }
             catch (WebException ex) {
+                var exceptionResponse = ex.Response;
+                var exceptionObject = exceptionResponse == null 
+                    ? null 
+                    : JObject.Parse(new StreamReader(exceptionResponse.GetResponseStream()).ReadToEnd());
                 throw new StripeException(ex.Message, ex.InnerException) {
                     Status = ex.Status,
-                    Response = ex.Response
+                    Response = exceptionObject
                 };
             }
             var responseText = Encoding.UTF8.GetString(responseBytes);

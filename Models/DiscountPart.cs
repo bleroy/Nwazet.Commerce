@@ -6,7 +6,7 @@ using Orchard.Environment.Extensions;
 
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.Promotions")]
-    public class DiscountPart : InfosetContentPart<DiscountPartRecord> {
+    public class DiscountPart : ContentPart<DiscountPartRecord> {
         public string Name { get { return Record.Name; } set { Record.Name = value; } }
 
         public double? DiscountPercent {

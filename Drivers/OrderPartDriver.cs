@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using Nwazet.Commerce.Helpers;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Permissions;
 using Nwazet.Commerce.Services;
@@ -101,7 +100,9 @@ namespace Nwazet.Commerce.Drivers {
 
             var contentManager = part.ContentItem.ContentManager;
             var products = contentManager
-                .GetMany<IContent>(part.Items.Select(p => p.ProductId), VersionOptions.Latest, QueryHints.Empty)
+                .GetMany<IContent>(
+                    part.Items.Select(p => p.ProductId).Distinct(),
+                    VersionOptions.Latest, QueryHints.Empty)
                 .ToDictionary(p => p.Id, p => p);
             var linkToTransaction = _checkoutServices
                 .Select(s => s.GetChargeAdminUrl(part.CreditCardCharge.TransactionId))

@@ -58,6 +58,11 @@ namespace Nwazet.Commerce.Tokens {
                 .Token("Province", T("Province"), T("Province, prefecture, state, or state / republic and region"), "Text")
                 .Token("PostalCode", T("PostalCode"), T("Postal or zip code"), "Text")
                 .Token("Country", T("Country"), T("Country"), "Text");
+
+            context.For("CheckoutError", T("Checkout Error"), T("An error during the checkout process."))
+                .Token("Type", T("Type"), T("Error type"), "Text")
+                .Token("Message", T("Message"), T("Error message"), "Text")
+                .Token("Code", T("Code"), T("Error code"), "Text");
         }
 
         public void Evaluate(EvaluateContext context) {
@@ -134,6 +139,14 @@ namespace Nwazet.Commerce.Tokens {
                 .Chain("PostalCode", "Text", a => a.PostalCode)
                 .Token("Country", a => a.Country)
                 .Chain("Country", "Text", a => a.Country);
+
+            context.For<CheckoutError>("CheckoutError")
+                .Token("Type", o => o.Type ?? "")
+                .Chain("Type", "Text", o => o.Type ?? "")
+                .Token("Message", o => o.Message ?? "")
+                .Chain("Message", "Text", o => o.Message ?? "")
+                .Token("Code", o => o.Code ?? "")
+                .Chain("Code", "Text", o => o.Code ?? "");
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Xml.Linq;
-using Nwazet.Commerce.Helpers;
+using Orchard.ContentManagement;
 
 namespace Nwazet.Commerce.Models {
     public class Address {

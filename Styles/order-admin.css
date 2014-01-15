@@ -76,3 +76,8 @@
   display: block;
   margin-bottom: 6px;
 }
+@media print {
+  .order-event-add {
+    display: none;
+  }
+}

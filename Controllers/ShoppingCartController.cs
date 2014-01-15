@@ -26,6 +26,8 @@ namespace Nwazet.Commerce.Controllers {
         private readonly IEnumerable<IExtraCartInfoProvider> _extraCartInfoProviders;
         private readonly IWorkflowManager _workflowManager;
 
+        private const string AttributePrefix = "productattributes.a";
+
         public ShoppingCartController(
             IShoppingCart shoppingCart,
             IShapeFactory shapeFactory,
@@ -47,11 +49,15 @@ namespace Nwazet.Commerce.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Add(int id, int quantity, IDictionary<int, string> productattributes = null) {
-            // Workaround MVC buggy behavior that won't correctly bind an empty dictionary
-            if (productattributes != null && productattributes.Count == 1 && productattributes.Values.First() == "__none__") {
-                productattributes = null;
-            }
+        public ActionResult Add(int id, int quantity) {
+            // Manually parse product attributes because of a breaking change
+            // in MVC 5 dictionary model binding
+            var form = HttpContext.Request.Form;
+            var productattributes = form.AllKeys
+                .Where(key => key.StartsWith(AttributePrefix))
+                .ToDictionary(
+                    key => int.Parse(key.Substring(AttributePrefix.Length)),
+                    key => form[key]);
 
             // Retrieve minimum order quantity
             var productPart = _contentManager.Get<ProductPart>(id);

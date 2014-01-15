@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Web.Security;
+using Newtonsoft.Json.Linq;
+using Nwazet.Commerce.Exceptions;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.ViewModels;
 using Orchard.Caching;
@@ -135,15 +137,28 @@ namespace Nwazet.Commerce.Services {
 
         public CreditCardCharge Charge(string token, double amount) {
             var settings = GetSettings();
-            var chargeResult = _webService.Query(
-                settings.SecretKey, "charges",
-                new NameValueCollection {
-                    {"amount", (amount * 100).ToString("F0")},
-                    {"currency", settings.Currency},
-                    {"card", token},
-                    {"description", _wca.GetContext().CurrentSite.SiteName}
-                });
-            if (chargeResult.Properties().Any(p => p.Name == "error")) {}
+            JObject chargeResult;
+            try {
+                chargeResult = _webService.Query(
+                    settings.SecretKey, "charges",
+                    new NameValueCollection {
+                        {"amount", (amount*100).ToString("F0")},
+                        {"currency", settings.Currency},
+                        {"card", token},
+                        {"description", _wca.GetContext().CurrentSite.SiteName}
+                    });
+            }
+            catch (StripeException ex) {
+                if (ex.Response == null) throw;
+                var exceptionResult = ex.Response["error"];
+                return new CreditCardCharge {
+                    Error = new CheckoutError {
+                        Type = exceptionResult.Value<string>("type"),
+                        Message = exceptionResult.Value<string>("message"),
+                        Code = exceptionResult.Value<string>("code")
+                    }
+                };
+            }
             var card = chargeResult["card"];
             return new CreditCardCharge {
                 TransactionId = Name + ":" + chargeResult.Value<string>("id"),

@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using Nwazet.Commerce.Services;
+using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.Taxes")]
-    public class StateOrCountryTaxPart : InfosetContentPart<StateOrCountryTaxPartRecord>, ITax {
+    public class StateOrCountryTaxPart : ContentPart<StateOrCountryTaxPartRecord>, ITax {
         public string State {
             get { return Retrieve(r => r.State); }
             set { Store(r => r.State, value); }

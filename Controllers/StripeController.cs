@@ -6,7 +6,11 @@ using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
 using Nwazet.Commerce.ViewModels;
 using Orchard;
+using Orchard.Environment.Extensions;
+using Orchard.Localization;
+using Orchard.Logging;
 using Orchard.Themes;
+using Orchard.UI.Notify;
 using Orchard.Workflows.Services;
 using Orchard.Environment.Extensions;
 
@@ -20,18 +24,27 @@ namespace Nwazet.Commerce.Controllers {
         private readonly IOrderService _orderService;
         private readonly IWorkContextAccessor _wca;
         private readonly IWorkflowManager _workflowManager;
+        private readonly INotifier _notifier;
 
         public StripeController(
             IStripeService stripeService,
             IOrderService orderService,
             IWorkContextAccessor wca,
-            IWorkflowManager workflowManager) {
+            IWorkflowManager workflowManager,
+            INotifier notifier) {
 
             _stripeService = stripeService;
             _orderService = orderService;
             _wca = wca;
             _workflowManager = workflowManager;
+            _notifier = notifier;
+
+            Logger = NullLogger.Instance;
+            T = NullLocalizer.Instance;
         }
+
+        public ILogger Logger { get; set; }
+        public Localizer T { get; set; }
 
         [HttpPost]
         public ActionResult Checkout(string checkoutData) {
@@ -54,17 +67,33 @@ namespace Nwazet.Commerce.Controllers {
             if (!String.IsNullOrWhiteSpace(back)) {
                 return RedirectToAction("Index", "ShoppingCart");
             }
-            GetCheckoutData(stripeData);
+            var checkoutData = GetCheckoutData(stripeData);
+            if (AnyEmptyString(
+                checkoutData.Email,
+                checkoutData.BillingAddress.FirstName,
+                checkoutData.BillingAddress.LastName,
+                checkoutData.BillingAddress.Address1,
+                checkoutData.BillingAddress.City,
+                checkoutData.ShippingAddress.FirstName,
+                checkoutData.ShippingAddress.LastName,
+                checkoutData.ShippingAddress.Address1,
+                checkoutData.ShippingAddress.City
+                )) {
+                return RedirectToAction("Ship");
+            }
             return RedirectToAction("Pay");
         }
 
-        public ActionResult Pay() {
+        public ActionResult Pay(string errorMessage = null) {
             _wca.GetContext().Layout.IsCartPage = true;
             var checkoutData = GetCheckoutData();
             if (checkoutData.CheckoutItems == null || !checkoutData.CheckoutItems.Any()) {
                 return RedirectToAction("Index", "ShoppingCart");
             }
             checkoutData.PublishableKey = _stripeService.GetSettings().PublishableKey;
+            if (!String.IsNullOrEmpty(errorMessage)) {
+                _notifier.Error(new LocalizedString(errorMessage));
+            }
             return View(checkoutData);
         }
 
@@ -80,11 +109,23 @@ namespace Nwazet.Commerce.Controllers {
             // Call Stripe to charge card
             var stripeCharge = _stripeService.Charge(stripeToken, total);
 
+            if (stripeCharge.Error != null) {
+                Logger.Error(stripeCharge.Error.Type + ": " + stripeCharge.Error.Message);
+                _workflowManager.TriggerEvent("OrderError", null,
+                    () => new Dictionary<string, object> {
+                        {"CheckoutError", stripeCharge.Error}
+                    });
+                if (stripeCharge.Error.Type == "card_error") {
+                    return Pay(stripeCharge.Error.Message);
+                }
+                throw new InvalidOperationException(stripeCharge.Error.Type + ": " + stripeCharge.Error.Message);
+            }
+            
             int userId = -1;
             var currentUser = _wca.GetContext().CurrentUser;
             if (currentUser != null) {
-                userId = currentUser.Id;
-            }
+                userId = currentUser.Id;            
+            }           
 
             var order = _orderService.CreateOrder(
                 stripeCharge,
@@ -108,6 +149,7 @@ namespace Nwazet.Commerce.Controllers {
                     {"Content", order},
                     {"Order", order}
                 });
+            order.LogActivity(OrderPart.Event, T("Order created.").Text);
 
             return RedirectToAction("Confirmation", "OrderSsl");
         }
@@ -127,10 +169,14 @@ namespace Nwazet.Commerce.Controllers {
                 if (updateModel.ShippingOption != null) {
                     checkoutData.ShippingOption = updateModel.ShippingOption;
                 }
-                if (updateModel.BillingAddress != null) {
-                    checkoutData.BillingAddress = updateModel.BillingAddress;
-                }
                 if (updateModel.ShippingAddress != null) {
+                    if (updateModel.BillingAddress != null) {
+                        checkoutData.BillingAddress = updateModel.BillingAddress;
+                        // We don't let billing country be different from shipping address
+                        // because that's a strong indicator of credit card fraud
+                        checkoutData.BillingAddress.Country =
+                            updateModel.ShippingAddress.Country;
+                    }
                     checkoutData.ShippingAddress = updateModel.ShippingAddress;
                 }
                 if (updateModel.Taxes != null) {
@@ -152,6 +198,10 @@ namespace Nwazet.Commerce.Controllers {
             TempData[NwazetStripeCheckout] = checkoutData;
             TempData.Keep(NwazetStripeCheckout);
             return checkoutData;
+        }
+
+        private bool AnyEmptyString(params string[] strings) {
+            return strings.Any(String.IsNullOrWhiteSpace);
         }
     }
 }
