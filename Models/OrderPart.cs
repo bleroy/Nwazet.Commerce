@@ -326,7 +326,15 @@ namespace Nwazet.Commerce.Models {
         }
 
         public IUser User {
-            get { return this.ContentItem.ContentManager.Get<IUser>(UserId); }
+            get {
+                IUser user = null;
+                if (this.ContentItem != null) {
+                    if (this.ContentItem.ContentManager != null) {
+                        user = this.ContentItem.ContentManager.Get<IUser>(UserId);
+                    }
+                }
+                return user;
+            }
             set { UserId = value == null ? -1 : value.Id; }
         }
     }

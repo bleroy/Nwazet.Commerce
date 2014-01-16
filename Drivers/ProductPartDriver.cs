@@ -116,7 +116,9 @@ namespace Nwazet.Commerce.Drivers {
                 .FromAttr(p => p.OutOfStockMessage)
                 .FromAttr(p => p.AllowBackOrder)
                 .FromAttr(p => p.IsDigital)
-                .FromAttr(p => p.Weight);
+                .FromAttr(p => p.Weight)
+                .FromAttr(p => p.MinimumOrderQuantity)
+                .FromAttr(p => p.AuthenticationRequired);
             var priceAttr = el.Attribute("Price");
             double price;
             if (priceAttr != null &&
@@ -129,16 +131,6 @@ namespace Nwazet.Commerce.Drivers {
                 double.TryParse(shippingCostAttr.Value, NumberStyles.Currency, CultureInfo.InvariantCulture,
                     out shippingCost)) {
                 part.ShippingCost = shippingCost;
-            }
-            var minimumOrderQuantityString = context.Attribute(part.PartDefinition.Name, "MinimumOrderQuantity");
-            int minimumOrderQuantity;
-            if (int.TryParse(minimumOrderQuantityString, NumberStyles.Integer, CultureInfo.InvariantCulture, out minimumOrderQuantity)) {
-                part.MinimumOrderQuantity = minimumOrderQuantity;
-            }
-            var authenticationRequiredString = context.Attribute(part.PartDefinition.Name, "AuthenticationRequired");
-            bool authenticationRequired;
-            if (bool.TryParse(authenticationRequiredString, out authenticationRequired)) {
-                part.AuthenticationRequired = authenticationRequired;
             }
         }
 

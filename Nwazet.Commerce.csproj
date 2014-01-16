@@ -110,7 +110,6 @@
       <DependentUpon>order-admin.less</DependentUpon>
     </Content>
     <Content Include="Web.config" />
-    <Content Include="Views\Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
@@ -209,8 +208,10 @@
     <Compile Include="Migrations\DiscountMigrations.cs" />
     <Compile Include="Migrations\ShippingMigrations.cs" />
     <Compile Include="Models\Address.cs" />
+    <Compile Include="Models\CheckoutError.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Models\CheckoutItem.cs" />
-    <Compile Include="Models\CheckoutError.cs" />
     <Compile Include="Models\OrderEvent.cs" />
     <Compile Include="Models\OrderPart.cs" />
     <Compile Include="Models\OrderPartRecord.cs" />
@@ -250,7 +251,6 @@
     <Compile Include="Models\ShoppingCartQuantityProduct.cs" />
     <Compile Include="Models\ShoppingCartWidgetPart.cs" />
     <Compile Include="Permissions\OrderPermissions.cs" />
-    <Compile Include="ResourceManifests\CommerceResourceManifest.cs" />
     <Compile Include="Routes\UspsRoutes.cs" />
     <Compile Include="Routes\StripeRoutes.cs" />
     <Compile Include="Routes\OrderRoutes.cs" />
@@ -385,6 +385,9 @@
     <Content Include="Scripts\minimumorderquantity.min.js.map">
       <DependentUpon>minimumorderquantity.js</DependentUpon>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -99,10 +99,11 @@ namespace Nwazet.Commerce.Drivers {
                 return null;
 
             var contentManager = part.ContentItem.ContentManager;
-            var products = contentManager
+            var productContents = contentManager
                 .GetMany<IContent>(
                     part.Items.Select(p => p.ProductId).Distinct(),
-                    VersionOptions.Latest, QueryHints.Empty)
+                    VersionOptions.Latest, QueryHints.Empty);
+            var products = productContents
                 .ToDictionary(p => p.Id, p => p);
             var linkToTransaction = _checkoutServices
                 .Select(s => s.GetChargeAdminUrl(part.CreditCardCharge.TransactionId))
@@ -117,7 +118,8 @@ namespace Nwazet.Commerce.Drivers {
                 EventCategories = OrderPart.EventCategories,
                 EventCategoryLabels = _orderService.EventCategoryLabels,
                 LinkToTransaction = linkToTransaction,
-                UserName = part.User == null ? "" : part.User.UserName
+                UserName = part.User == null ? "" : part.User.UserName,
+                UserNameNeeded = productContents.Any(p => p.As<ProductPart>() == null ? false : p.As<ProductPart>().AuthenticationRequired)
             };
             return ContentShape("Parts_Order_Edit",
                 () => shapeHelper.EditorTemplate(

@@ -1,7 +1,8 @@
 ﻿@{
-    var productId = (int) Model.ProductId;
-    
-    Script.Require("MinimumOrderQuantity");
+    var productId = (int)Model.ProductId;
+
+    Script.Require("jQuery");    
+    Script.Include("minimumorderquantity.js", "minimumorderquantity.min.js");
 }
 
 @using (Html.BeginFormAntiForgeryPost(

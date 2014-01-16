@@ -1,22 +1,14 @@
 ﻿jQuery(function ($) {
     $(document)
         .on("change", "input[type='number'].addtocart-quantity", function () {
-            var $element = $('input[type="number"]', $(this).parent());
+            var $element = $(this);
             var quantity = $element.val();
-            if ($.isNumeric(quantity)) {
-                if ($element.attr("min") != null) {
-                    if (quantity > parseInt($element.attr("min"), 0)) {
-                        $element.val(parseInt(quantity.toString(), 0));
-                    }
-                    else {
-                        $element.val(parseInt($element.attr("min"), 0));
-                    }
-                }
+            var min = parseInt($element.attr("min") || "1");
+            if ($.isNumeric(quantity)) {                
+                $element.val(parseInt(quantity) > min ? quantity.toString() : min);                
             }
-            else {
-                if ($element.attr("min") != null) {
-                    $element.val(parseInt($element.attr("min"), 0));
-                }
+            else {                
+                $element.val(min);
             }
         });
 });

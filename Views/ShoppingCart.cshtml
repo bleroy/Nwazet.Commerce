@@ -1,8 +1,9 @@
 ﻿@using Nwazet.Commerce.Models
 @using Orchard.ContentManagement
 @{
-    Script.Require("ShoppingCart");
-    Script.Require("MinimumOrderQuantity");    
+    Script.Require("jQuery");
+    Script.Include("shoppingcart.js", "shoppingcart.min.js");
+    Script.Include("minimumorderquantity.js", "minimumorderquantity.min.js");   
     var items = (IList<dynamic>)Model.ShopItems;
     var subtotal = (double) Model.Subtotal;
     var readOnly = Model.ReadOnly != null && Model.ReadOnly == true;
@@ -153,8 +154,8 @@
             }
         </ul>
     }
-    @if (Model.ShopItemsAuthenticationRequired && !HttpContext.Current.User.Identity.IsAuthenticated) {
-        @T("Some products in your cart require you to be authenticated.")
-        <a href="/Users/Account/LogOn?ReturnUrl=Cart">@T("Please log on to complete your order")</a>
+    @if (Model.ShopItemsAuthenticationRequired && !HttpContext.Current.User.Identity.IsAuthenticated) {        
+        <p>@T("Some products in your cart require you to be authenticated. <a href=\"{0}\">Please log on to complete your order.</a>",
+            Url.Action("LogOn", "Account", new { area = "Orchard.Users" }))</p>
     }
 </article>

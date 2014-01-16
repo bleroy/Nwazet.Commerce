@@ -64,8 +64,6 @@ namespace Nwazet.Commerce.Controllers {
             if (productPart != null) {
                 if (quantity < productPart.MinimumOrderQuantity)
                     quantity = productPart.MinimumOrderQuantity;
-                if (quantity < 0)
-                    quantity = 0;
             }
 
             _shoppingCart.Add(id, quantity, productattributes);
@@ -114,7 +112,7 @@ namespace Nwazet.Commerce.Controllers {
             var productShapes = GetProductShapesFromQuantities(productQuantities);
             shape.ShopItems = productShapes;
 
-            var shopItemsAllDigital = productQuantities.Where(pq => pq.Product.IsDigital).Count() == productQuantities.Count();
+            var shopItemsAllDigital = !(productQuantities.Any(pq => !(pq.Product.IsDigital)));
             shape.ShopItemsAllDigital = shopItemsAllDigital;
 
             var custom =
@@ -148,7 +146,7 @@ namespace Nwazet.Commerce.Controllers {
             //  ~ Alternatively we could add more options (checkboxes) to check if an item is taxable in the product setup
             
             // Check to see if any of the products require the user to be authenticated
-            var shopItemsAuthenticationRequired = productQuantities.Where(pq => pq.Product.AuthenticationRequired).Count() > 0;
+            var shopItemsAuthenticationRequired = productQuantities.Any(pq => pq.Product.AuthenticationRequired);
             shape.ShopItemsAuthenticationRequired = shopItemsAuthenticationRequired;
 
             bool displayCheckoutButtons = true;
@@ -267,12 +265,14 @@ namespace Nwazet.Commerce.Controllers {
             if (items == null)
                 return;
 
+            var itemQuantities = GetItemQuantities(items);
+
             _shoppingCart.AddRange(
                 items
                     .Where(item => !item.IsRemoved)
                     .Select(item => new ShoppingCartItem(
                                         item.ProductId,
-                                        item.Quantity <= 0 ? 0 : GetItemQuantity(item),
+                                        item.Quantity <= 0 ? 0 : itemQuantities[item.ProductId],
                                         item.AttributeIdsToValues))
                 );
 
@@ -285,12 +285,29 @@ namespace Nwazet.Commerce.Controllers {
                 });
         }
 
-        private int GetItemQuantity(UpdateShoppingCartItemViewModel item) {
-            var product = _contentManager.Get<ProductPart>(item.ProductId);
-            if (product != null) {
-                return item.Quantity < product.MinimumOrderQuantity ? product.MinimumOrderQuantity : item.Quantity;
+        private Dictionary<int, int> GetItemQuantities(IEnumerable<UpdateShoppingCartItemViewModel> items) {
+            Dictionary<int, int> minimumItemQuantites = new Dictionary<int, int>();
+            int defaultMinimumQuantity = 1;
+
+            if (items != null) {
+                var productIds = items.Select(i => i.ProductId);
+                var products = _contentManager.GetMany<ProductPart>(productIds, VersionOptions.Published, QueryHints.Empty).ToList();
+
+                // Because a product might not exist (may be unpublished or deleted but still in shopping cart) need to iterate instead of using .ToDictionary
+                foreach (var item in items) {
+                    var product = products.Where(p => p.Id == item.ProductId).FirstOrDefault();
+
+                    if (product != null) {
+                        minimumItemQuantites.Add(product.Id, item.Quantity < product.MinimumOrderQuantity ? product.MinimumOrderQuantity : item.Quantity);
+                    }
+                    else {
+                        // This ensures the dictionary will have all the keys needed for the items
+                        minimumItemQuantites.Add(item.ProductId, item.Quantity < defaultMinimumQuantity ? defaultMinimumQuantity : item.Quantity);
+                    }
+                }
             }
-            return item.Quantity;
+            
+            return minimumItemQuantites;
         }
 
         public ActionResult ResetDestination() {
