@@ -73,6 +73,7 @@ namespace Nwazet.Commerce.Services {
                     ProductId = p.Product.Id,
                     Quantity = p.Quantity,
                     Price = p.DiscountedPrice,
+                    LinePriceAdjustment = p.LinePriceAdjustment,
                     Title = p.Title
                             + (p.ProductAttributes == null
                                 ? ""

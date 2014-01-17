@@ -7,6 +7,7 @@ namespace Nwazet.Commerce.Models {
         public int ProductId { get; set; }
         public int Quantity { get; set; }
         public double Price { get; set; }
+        public double LinePriceAdjustment { get; set; }
         public string Title { get; set; }
 
         public override string ToString() {
