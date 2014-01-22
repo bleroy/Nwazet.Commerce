@@ -24,12 +24,9 @@
 .order-editor .addresses .billing-address input {
   margin-left: 0;
 }
-.order-editor .addresses .shipping-address .address-form,
-.order-editor .addresses .billing-address .address-form {
-  display: none;
-}
 .order-editor .addresses .shipping-address .address-view,
 .order-editor .addresses .billing-address .address-view {
+  display: none;
   cursor: pointer;
 }
 .order-editor .addresses .billing-address {
