@@ -161,14 +161,10 @@ namespace Nwazet.Commerce.Controllers {
                 if (updateModel.ShippingOption != null) {
                     checkoutData.ShippingOption = updateModel.ShippingOption;
                 }
+                if (updateModel.BillingAddress != null) {
+                    checkoutData.BillingAddress = updateModel.BillingAddress;
+                }
                 if (updateModel.ShippingAddress != null) {
-                    if (updateModel.BillingAddress != null) {
-                        checkoutData.BillingAddress = updateModel.BillingAddress;
-                        // We don't let billing country be different from shipping address
-                        // because that's a strong indicator of credit card fraud
-                        checkoutData.BillingAddress.Country =
-                            updateModel.ShippingAddress.Country;
-                    }
                     checkoutData.ShippingAddress = updateModel.ShippingAddress;
                 }
                 if (updateModel.Taxes != null) {
