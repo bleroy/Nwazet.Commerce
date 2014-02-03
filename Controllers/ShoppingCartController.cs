@@ -265,14 +265,14 @@ namespace Nwazet.Commerce.Controllers {
             if (items == null)
                 return;
 
-            var itemQuantities = GetItemQuantities(items);
-
+            var minimumOrderQuantities = GetMinimumOrderQuantities(items);
+            
             _shoppingCart.AddRange(
                 items
                     .Where(item => !item.IsRemoved)
                     .Select(item => new ShoppingCartItem(
                                         item.ProductId,
-                                        item.Quantity <= 0 ? 0 : itemQuantities[item.ProductId],
+                                        item.Quantity <= 0 ? 0 : item.Quantity < minimumOrderQuantities[item.ProductId] ? minimumOrderQuantities[item.ProductId] : item.Quantity,                                        
                                         item.AttributeIdsToValues))
                 );
 
@@ -285,29 +285,31 @@ namespace Nwazet.Commerce.Controllers {
                 });
         }
 
-        private Dictionary<int, int> GetItemQuantities(IEnumerable<UpdateShoppingCartItemViewModel> items) {
-            Dictionary<int, int> minimumItemQuantites = new Dictionary<int, int>();
+        private Dictionary<int, int> GetMinimumOrderQuantities(IEnumerable<UpdateShoppingCartItemViewModel> items) {
+            Dictionary<int, int> minimumOrderQuantites = new Dictionary<int, int>();
             int defaultMinimumQuantity = 1;
 
             if (items != null) {
-                var productIds = items.Select(i => i.ProductId);
+                var productIds = items.Select(i => i.ProductId).Distinct();
                 var products = _contentManager.GetMany<ProductPart>(productIds, VersionOptions.Published, QueryHints.Empty).ToList();
 
                 // Because a product might not exist (may be unpublished or deleted but still in shopping cart) need to iterate instead of using .ToDictionary
                 foreach (var item in items) {
-                    var product = products.Where(p => p.Id == item.ProductId).FirstOrDefault();
-
-                    if (product != null) {
-                        minimumItemQuantites.Add(product.Id, item.Quantity < product.MinimumOrderQuantity ? product.MinimumOrderQuantity : item.Quantity);
-                    }
-                    else {
-                        // This ensures the dictionary will have all the keys needed for the items
-                        minimumItemQuantites.Add(item.ProductId, item.Quantity < defaultMinimumQuantity ? defaultMinimumQuantity : item.Quantity);
+                    // Check to ensure productId doesn't exist (can happen when product in cart multiple times with different attributes
+                    if (!minimumOrderQuantites.ContainsKey(item.ProductId)) {
+                        var product = products.Where(p => p.Id == item.ProductId).FirstOrDefault();
+                        if (product != null) {
+                            minimumOrderQuantites.Add(product.Id, product.MinimumOrderQuantity);
+                        }
+                        else {
+                            // This ensures the dictionary will have all the keys needed for the items
+                            minimumOrderQuantites.Add(item.ProductId, defaultMinimumQuantity);
+                        }
                     }
                 }
             }
-            
-            return minimumItemQuantites;
+
+            return minimumOrderQuantites;
         }
 
         public ActionResult ResetDestination() {
