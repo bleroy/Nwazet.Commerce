@@ -71,7 +71,7 @@
     <label class="sub" for="@Html.IdFor(m => m.Product.IsDigital)">@T("digital product")</label>
 </fieldset>
 <fieldset>
-    @Html.CheckBoxFor(m => m.AuthenticationRequired)
-    <label class="sub" for="@Html.IdFor(m => m.AuthenticationRequired)">@T("authentication required")</label>
+    @Html.CheckBoxFor(m => m.Product.AuthenticationRequired)
+    <label class="sub" for="@Html.IdFor(m => m.Product.AuthenticationRequired)">@T("authentication required")</label>
     <span class="hint">@T("This allows for associating the order with the user but will force the user to log in prior to purchasing.")</span>
 </fieldset>
