@@ -56,6 +56,7 @@ namespace Nwazet.Commerce.Services {
             order.Status = status;
             order.TrackingUrl = trackingUrl;
             order.IsTestOrder = isTestOrder;
+            order.UserId = userId;
 
             var random = new byte[8];
             RngCsp.GetBytes(random);
