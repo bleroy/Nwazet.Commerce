@@ -30,8 +30,8 @@
     @Html.CheckBoxFor(m => m.Product.AllowBackOrder)
     <label class="sub" for="@Html.IdFor(m => m.Product.AllowBackOrder)">@T("allow back order")</label><br />
     <span class="hint">@T("If unchecked, the add button won't be visible on the product page when the inventory is zero or less.")</span>
-    <label class="sub" for="@Html.IdFor(m => m.MinimumOrderQuantity)">@T("Minimum order quantity")</label><br />
-    @Html.TextBoxFor(m => m.MinimumOrderQuantity, new { @class = "text-small", @type="number", min="1" })<br />
+    <label class="sub" for="@Html.IdFor(m => m.Product.MinimumOrderQuantity)">@T("Minimum order quantity")</label><br />
+    @Html.TextBoxFor(m => m.Product.MinimumOrderQuantity, new { @class = "text-small", @type="number", min="1" })<br />
 </fieldset>
 <fieldset>
     <label class="sub" for="@Html.IdFor(m => m.Product.Weight)">@T("Weight")</label><br />
