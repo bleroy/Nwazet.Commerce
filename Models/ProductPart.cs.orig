@@ -52,22 +52,12 @@ namespace Nwazet.Commerce.Models {
             get { return Retrieve(r => r.AllowBackOrder); }
             set { Store(r => r.AllowBackOrder, value); }
         }
+<<<<<<< local
  
         public bool OverrideTieredPricing {
             get { return Retrieve(r => r.OverrideTieredPricing); }
             set { Store(r => r.OverrideTieredPricing, value); }
-        }
-
-        public IEnumerable<PriceTier> PriceTiers {
-            get {
-                var rawTiers = Retrieve<string>("PriceTiers");
-                return PriceTier.DeserializePriceTiers(rawTiers);
-            }
-            set {
-                var serializedTiers = PriceTier.SerializePriceTiers(value);
-                Store("PriceTiers", serializedTiers ?? "");
-            }
-        }
+=======
 
         public int MinimumOrderQuantity {
             get {
@@ -78,11 +68,24 @@ namespace Nwazet.Commerce.Models {
                 var minimumOrderQuantity = value > 1 ? value : 1;
                 Store(r => r.MinimumOrderQuantity, minimumOrderQuantity); 
             }
+>>>>>>> other
         }
 
+<<<<<<< local
+        public IEnumerable<PriceTier> PriceTiers {
+            get {
+                var rawTiers = Retrieve<string>("PriceTiers");
+                return PriceTier.DeserializePriceTiers(rawTiers);
+            }
+            set {
+                var serializedTiers = PriceTier.SerializePriceTiers(value);
+                Store("PriceTiers", serializedTiers ?? "");
+            }
+=======
         public bool AuthenticationRequired {
             get { return Retrieve(r => r.AuthenticationRequired); }
             set { Store(r => r.AuthenticationRequired, value); }
+>>>>>>> other
         }
     }
 }

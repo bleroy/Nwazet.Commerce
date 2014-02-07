@@ -12,7 +12,6 @@ using Orchard.Logging;
 using Orchard.Themes;
 using Orchard.UI.Notify;
 using Orchard.Workflows.Services;
-using Orchard.Environment.Extensions;
 
 namespace Nwazet.Commerce.Controllers {
     [Themed]
@@ -104,7 +103,7 @@ namespace Nwazet.Commerce.Controllers {
                 return RedirectToAction("Ship");
             }
             var taxes = checkoutData.Taxes == null ? 0 : checkoutData.Taxes.Amount;
-            var subTotal = checkoutData.CheckoutItems.Sum(i => i.Price*i.Quantity);
+            var subTotal = checkoutData.CheckoutItems.Sum(i => i.Price*i.Quantity+i.LinePriceAdjustment);
             var total = subTotal + taxes + checkoutData.ShippingOption.Price;
             // Call Stripe to charge card
             var stripeCharge = _stripeService.Charge(stripeToken, total);

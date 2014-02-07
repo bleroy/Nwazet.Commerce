@@ -55,7 +55,7 @@ namespace Nwazet.Commerce.Drivers {
             // Get the actual attributes in order to verify the values
             var attributes = _attributeService.GetAttributes(attributeIdsToValues.Keys);
             // The values that got passed in must exist
-            return attributes.All(attribute => attribute.AttributeValues.Contains(attributeIdsToValues[attribute.Id].Trim()));
+            return attributes.All(attribute => attribute.AttributeValues.Any(v => v.Text == attributeIdsToValues[attribute.Id]));
         }
 
         //GET

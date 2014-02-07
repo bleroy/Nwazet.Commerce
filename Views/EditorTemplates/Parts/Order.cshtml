@@ -78,6 +78,7 @@
                     <th class="quantity"><abbr title="@T("Quantity")">@T("Qty")</abbr></th>
                     <th class="description">@T("Product")</th>
                     <th class="price">@T("Price")</th>
+                    <th class="price">@T("Adjustment")</th>
                 </tr>
             </thead>
             <tbody>
@@ -86,6 +87,7 @@
                         <td class="quantity">@item.Quantity &times;</td>
                         <td class="description"><a href="@Url.ItemDisplayUrl(Model.Products[item.ProductId])">@item.Title</a></td>
                         <td class="price">@item.Price.ToString("C")</td>
+                        <td class="price">@item.LinePriceAdjustment.ToString("C")</td>
                     </tr>
                 }
             </tbody>

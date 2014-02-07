@@ -67,11 +67,16 @@
     <span class="hint">@T("Specify a shipping cost if you want the shipping cost to be fixed. Otherwise, leave this empty and only specify the weight. The shipping will be computed based on the shipping provider that the customer will pick.")</span>
 </fieldset>
 <fieldset>
+<<<<<<< local
     @Html.CheckBoxFor(m => m.Product.IsDigital)
     <label class="sub" for="@Html.IdFor(m => m.Product.IsDigital)">@T("digital product")</label>
+=======
+    @Html.CheckBoxFor(m => m.IsDigital)
+    <label class="sub" for="@Html.IdFor(m => m.IsDigital)">@T("digital product")</label>
 </fieldset>
 <fieldset>
     @Html.CheckBoxFor(m => m.AuthenticationRequired)
     <label class="sub" for="@Html.IdFor(m => m.AuthenticationRequired)">@T("authentication required")</label>
     <span class="hint">@T("This allows for associating the order with the user but will force the user to log in prior to purchasing.")</span>
+>>>>>>> other
 </fieldset>

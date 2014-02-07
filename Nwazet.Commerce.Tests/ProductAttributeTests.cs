@@ -238,8 +238,19 @@ namespace Nwazet.Commerce.Tests {
         };
 
         private static readonly ProductAttributeStub[] ProductAttributes = new[] {
-            new ProductAttributeStub(10, "Green", "Blue", "Red"),
-            new ProductAttributeStub(11, "XS", "S", "M", "L", "XL", "XXL")
+            new ProductAttributeStub(10, new List<ProductAttributeValue>() {
+                new ProductAttributeValue() { Text = "Green", PriceAdjustment=0 },
+                new ProductAttributeValue() { Text = "Blue", PriceAdjustment=0 },
+                new ProductAttributeValue() { Text = "Red", PriceAdjustment=0 }
+            }),
+            new ProductAttributeStub(11, new List<ProductAttributeValue>() {
+                new ProductAttributeValue() { Text = "XS", PriceAdjustment=0 },
+                new ProductAttributeValue() { Text = "S", PriceAdjustment=0 },
+                new ProductAttributeValue() { Text = "M", PriceAdjustment=0 },
+                new ProductAttributeValue() { Text = "L", PriceAdjustment=0 },
+                new ProductAttributeValue() { Text = "XL", PriceAdjustment=0 },
+                new ProductAttributeValue() { Text = "XXL", PriceAdjustment=0 }
+            })
         };
 
         private static readonly ShoppingCartQuantityProduct[] OriginalQuantities = new[] {
@@ -258,8 +269,8 @@ namespace Nwazet.Commerce.Tests {
         private static ShoppingCart PrepareCart() {
             var contentManager = new ContentManagerStub(Products.Cast<IContent>().Union(ProductAttributes));
             var cartStorage = new FakeCartStorage();
-            var priceService = new PriceService(new IPriceProvider[0]);
             var attributeService = new ProductAttributeService(contentManager);
+            var priceService = new PriceService(new IPriceProvider[0], attributeService, null);
             var attributeDriver = new ProductAttributesPartDriver(attributeService);
             var cart = new ShoppingCart(contentManager, cartStorage, priceService, new[] {attributeDriver}, null);
             FillCart(cart);
