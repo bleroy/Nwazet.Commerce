@@ -80,21 +80,26 @@ namespace Nwazet.Commerce.Migrations {
                 .AddColumn<string>("Size"));
             return 6;
         }
+<<<<<<< local
+
+=======
         
+>>>>>>> other
         public int UpdateFrom6() {
             SchemaBuilder.AlterTable("ProductPartRecord", table => table
-                .AddColumn<int>("MinimumOrderQuantity"));
-            SchemaBuilder.AlterTable("ProductPartRecord", table => table
-                .AddColumn<bool>("AuthenticationRequired"));
-            return 7;
-        }
-
-        public int UpdateFrom7() {
-            SchemaBuilder.AlterTable("ProductPartRecord", table => table
+<<<<<<< local
                 .AddColumn<bool>("OverrideTieredPricing", c => c.WithDefault(false)));
+=======
+                .AddColumn<int>("MinimumOrderQuantity"));
+
+>>>>>>> other
             SchemaBuilder.AlterTable("ProductPartRecord", table => table
+<<<<<<< local
                 .AddColumn<string>("PriceTiers"));
-            return 8;
+=======
+                .AddColumn<bool>("AuthenticationRequired"));
+>>>>>>> other
+            return 7;
         }
     }
 }

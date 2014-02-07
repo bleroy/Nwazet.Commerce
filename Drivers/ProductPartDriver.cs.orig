@@ -159,9 +159,12 @@ namespace Nwazet.Commerce.Drivers {
                 .FromAttr(p => p.AllowBackOrder)
                 .FromAttr(p => p.IsDigital)
                 .FromAttr(p => p.Weight)
+<<<<<<< local
                 .FromAttr(p => p.OverrideTieredPricing);
+=======
                 .FromAttr(p => p.MinimumOrderQuantity)
                 .FromAttr(p => p.AuthenticationRequired);
+>>>>>>> other
             var priceAttr = el.Attribute("Price");
             double price;
             if (priceAttr != null &&
@@ -191,9 +194,12 @@ namespace Nwazet.Commerce.Drivers {
                 .ToAttr(p => p.AllowBackOrder)
                 .ToAttr(p => p.IsDigital)
                 .ToAttr(p => p.Weight)
-                .ToAttr(p => p.OverrideTieredPricing)
+<<<<<<< local
+                .ToAttr(p => p.OverrideTieredPricing);
+=======
                 .ToAttr(p => p.MinimumOrderQuantity)
                 .ToAttr(p => p.AuthenticationRequired);
+>>>>>>> other
             el.SetAttributeValue("Price", part.Price.ToString("C", CultureInfo.InvariantCulture));
             el.SetAttributeValue("PriceTiers", PriceTier.SerializePriceTiers(part.PriceTiers));
             if (part.ShippingCost != null) {

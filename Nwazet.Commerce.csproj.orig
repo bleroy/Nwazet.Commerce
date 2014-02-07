@@ -213,9 +213,15 @@
     <Compile Include="Migrations\DiscountMigrations.cs" />
     <Compile Include="Migrations\ShippingMigrations.cs" />
     <Compile Include="Models\Address.cs" />
-    <Compile Include="Models\CheckoutError.cs"/>
+    <Compile Include="Models\CheckoutError.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Models\CheckoutItem.cs" />
+<<<<<<< local
+    <Compile Include="Models\CheckoutError.cs" />
     <Compile Include="Models\ConversionUtilities.cs" />
+=======
+>>>>>>> other
     <Compile Include="Models\OrderEvent.cs" />
     <Compile Include="Models\OrderPart.cs" />
     <Compile Include="Models\OrderPartRecord.cs" />
@@ -393,15 +399,23 @@
     <Content Include="Views\Order_Confirmation.cshtml" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< local
     <Content Include="Views\ProductSettingsAdmin\Index.cshtml" />
     <Content Include="Views\PriceTiersAdmin.cshtml" />
-    <Content Include="Views\EditorTemplates\Parts\ProductSettings.cshtml" />
-    <Content Include="Views\Parts\Product.PriceTiers.cshtml" />
-  </ItemGroup>
+    <None Include="Views\EditorTemplates\Parts\ProductSettings.cshtml" />
+    <None Include="Views\Parts\Product.PriceTiers.cshtml" />
+=======
     <Content Include="Scripts\minimumorderquantity.min.js.map">
       <DependentUpon>minimumorderquantity.js</DependentUpon>
     </Content>
+>>>>>>> other
   </ItemGroup>
+<<<<<<< local
+=======
+  <ItemGroup>
+    <None Include="App.Config" />
+  </ItemGroup>
+>>>>>>> other
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

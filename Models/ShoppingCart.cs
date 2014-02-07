@@ -116,8 +116,11 @@ namespace Nwazet.Commerce.Models {
                 _contentManager.GetMany<ProductPart>(ids, VersionOptions.Published,
                 new QueryHints().ExpandParts<TitlePart, ProductPart, AutoroutePart>()).ToArray();
 
+            var productPartIds = productParts.Select(p => p.Id);
+
             var shoppingCartQuantities =
-                (from item in Items
+                (from item in Items  
+                 where productPartIds.Contains(item.ProductId)
                  select new ShoppingCartQuantityProduct(item.Quantity, productParts.First(p => p.Id == item.ProductId), item.AttributeIdsToValues))
                     .ToList();
 
