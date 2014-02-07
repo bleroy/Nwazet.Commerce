@@ -1,19 +1,15 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Web.Mvc;
-using Orchard.ContentManagement.Handlers;
-using Orchard.Core.Settings.ViewModels;
-using Orchard.Localization;
+﻿using System.Web.Mvc;
+using Orchard;
 using Orchard.ContentManagement;
+using Orchard.Environment.Extensions;
+using Orchard.Localization;
 using Orchard.Localization.Services;
 using Orchard.Security;
 using Orchard.Settings;
-using Orchard.UI.Notify;
-using Orchard.Environment.Extensions;
 using Orchard.UI.Admin;
+using Orchard.UI.Notify;
 
-namespace Orchard.Core.Settings.Controllers {
+namespace Nwazet.Commerce.Controllers {
     [OrchardFeature("Nwazet.TieredPricing")]
     [ValidateInput(false), Admin]
     public class ProductSettingsAdminController : Controller, IUpdateModel {

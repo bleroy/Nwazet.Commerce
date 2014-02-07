@@ -1,9 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 using System.Collections.Generic;
-using System;
-using System.Linq;
 
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.TieredPricing")]

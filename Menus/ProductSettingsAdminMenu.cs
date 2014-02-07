@@ -1,10 +1,9 @@
-﻿using Orchard.ContentManagement;
+﻿using Orchard.Environment.Extensions;
 using Orchard.Localization;
-using Orchard.Security;
-using Orchard.Settings;
 using Orchard.UI.Navigation;
 
-namespace Orchard.Core.Settings {
+namespace Nwazet.Commerce.Menus {
+    [OrchardFeature("Nwazet.TieredPricing")]
     public class ProductSettingsAdminMenu : INavigationProvider {
          public string MenuName {
             get { return "admin"; }
