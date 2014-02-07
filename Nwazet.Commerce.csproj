@@ -397,7 +397,6 @@
     <Content Include="Views\PriceTiersAdmin.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\ProductSettings.cshtml" />
     <Content Include="Views\Parts\Product.PriceTiers.cshtml" />
-  </ItemGroup>
     <Content Include="Scripts\minimumorderquantity.min.js.map">
       <DependentUpon>minimumorderquantity.js</DependentUpon>
     </Content>
