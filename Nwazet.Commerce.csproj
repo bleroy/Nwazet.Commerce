@@ -74,6 +74,10 @@
     <Content Include="Scripts\inventory.min.js">
       <DependentUpon>inventory.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\minimumorderquantity.js" />
+    <Content Include="Scripts\minimumorderquantity.min.js">
+      <DependentUpon>minimumorderquantity.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\order-admin.js" />
     <Content Include="Scripts\order-admin.min.js">
       <DependentUpon>order-admin.js</DependentUpon>
@@ -106,7 +110,6 @@
       <DependentUpon>order-admin.less</DependentUpon>
     </Content>
     <Content Include="Web.config" />
-    <Content Include="Views\Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
@@ -205,8 +208,10 @@
     <Compile Include="Migrations\DiscountMigrations.cs" />
     <Compile Include="Migrations\ShippingMigrations.cs" />
     <Compile Include="Models\Address.cs" />
+    <Compile Include="Models\CheckoutError.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Models\CheckoutItem.cs" />
-    <Compile Include="Models\CheckoutError.cs" />
     <Compile Include="Models\OrderEvent.cs" />
     <Compile Include="Models\OrderPart.cs" />
     <Compile Include="Models\OrderPartRecord.cs" />
@@ -376,7 +381,14 @@
     <Content Include="Views\Order_CheckPassword.cshtml" />
     <Content Include="Views\Order_Confirmation.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Scripts\minimumorderquantity.min.js.map">
+      <DependentUpon>minimumorderquantity.js</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

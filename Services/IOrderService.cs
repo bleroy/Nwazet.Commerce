@@ -18,8 +18,9 @@ namespace Nwazet.Commerce.Services {
             string customerPhone,
             string specialInstructions,
             string status,
-            string trackingUrl = null,
-            bool isTestOrder = false);
+            string trackingUrl = null,            
+            bool isTestOrder = false,
+            int userId = -1);
 
         OrderPart Get(int orderId);
         string GetDisplayUrl(OrderPart order);

@@ -50,6 +50,7 @@ namespace Nwazet.Commerce.Drivers {
                     Size: part.Size,
                     ShippingCost: part.ShippingCost,
                     IsDigital: part.IsDigital,
+                    MinimumOrderQuantity: part.MinimumOrderQuantity,
                     ContentPart: part
                     )
                 );
@@ -65,6 +66,7 @@ namespace Nwazet.Commerce.Drivers {
                                 .ToList();
                             return shapeHelper.Parts_Product_AddButton(
                                 ProductId: part.Id,
+                                MinimumOrderQuantity: part.MinimumOrderQuantity,
                                 ProductAttributes: attributeShapes);
                         })
                     );
@@ -114,7 +116,9 @@ namespace Nwazet.Commerce.Drivers {
                 .FromAttr(p => p.OutOfStockMessage)
                 .FromAttr(p => p.AllowBackOrder)
                 .FromAttr(p => p.IsDigital)
-                .FromAttr(p => p.Weight);
+                .FromAttr(p => p.Weight)
+                .FromAttr(p => p.MinimumOrderQuantity)
+                .FromAttr(p => p.AuthenticationRequired);
             var priceAttr = el.Attribute("Price");
             double price;
             if (priceAttr != null &&
@@ -139,7 +143,9 @@ namespace Nwazet.Commerce.Drivers {
                 .ToAttr(p => p.OutOfStockMessage)
                 .ToAttr(p => p.AllowBackOrder)
                 .ToAttr(p => p.IsDigital)
-                .ToAttr(p => p.Weight);
+                .ToAttr(p => p.Weight)
+                .ToAttr(p => p.MinimumOrderQuantity)
+                .ToAttr(p => p.AuthenticationRequired);
             el.SetAttributeValue("Price", part.Price.ToString("C", CultureInfo.InvariantCulture));
             if (part.ShippingCost != null) {
                 el.SetAttributeValue(

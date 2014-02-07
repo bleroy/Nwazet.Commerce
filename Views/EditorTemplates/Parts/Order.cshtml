@@ -168,6 +168,19 @@
         </div>
     </fieldset>
 
+    @if (Model.UserNameNeeded) { 
+        <fieldset class="order-user">
+            <legend>@T("Order Username:")</legend>
+            <div class="order-user-edit">
+                @Html.TextBoxFor(m => m.UserName, new { @class = "text-medium order-user-edit-field" })
+                <span class="hint">@T("Associate this order with a username.")</span>
+            </div>
+        </fieldset>
+    }
+    else {
+        @Html.HiddenFor(m => m.UserName)
+    }
+
     <div class="order-link">@T("You may view this order at a later time by going to this address: <a href=\"{0}\">{0}</a>, using this password: \"{1}\".",
                                 Url.Action("Show", "OrderSsl", new {id = Model.Order.Id, area = "Nwazet.Commerce"}), Model.Order.Password)</div>
 </div>

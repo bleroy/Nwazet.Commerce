@@ -14,5 +14,7 @@ namespace Nwazet.Commerce.ViewModels {
         public IEnumerable<string> EventCategories { get; set; }
         public IDictionary<string, LocalizedString> EventCategoryLabels { get; set; }
         public string LinkToTransaction { get; set; }
+        public string UserName { get; set; }
+        public bool UserNameNeeded { get; set; }
     }
 }
