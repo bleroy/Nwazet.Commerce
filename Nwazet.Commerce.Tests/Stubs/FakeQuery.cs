@@ -105,5 +105,13 @@ namespace Nwazet.Commerce.Tests.Stubs {
             where TRecord : ContentPartRecord {
             throw new NotImplementedException();
         }
+
+        public IContentQuery<TPart> WithQueryHints(QueryHints hints) {
+            return this;
+        }
+
+        public IContentQuery<TPart> WithQueryHintsFor(string contentType) {
+            return this;
+        }
     }
 }
