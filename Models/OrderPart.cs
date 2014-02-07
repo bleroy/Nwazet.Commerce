@@ -5,6 +5,7 @@ using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Environment.Extensions;
+using Orchard.Security;
 
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.Orders")]
@@ -317,6 +318,24 @@ namespace Nwazet.Commerce.Models {
                 BillingAddress.Honorific + " " + BillingAddress.FirstName + " " + BillingAddress.LastName + " - " +
                 Total.ToString("C") +
                 (IsTestOrder ? " - TEST" : ""); }
+        }
+
+        public int UserId {
+            get { return Record.UserId; }
+            set { Record.UserId = value; }
+        }
+
+        public IUser User {
+            get {
+                IUser user = null;
+                if (this.ContentItem != null) {
+                    if (this.ContentItem.ContentManager != null) {
+                        user = this.ContentItem.ContentManager.Get<IUser>(UserId);
+                    }
+                }
+                return user;
+            }
+            set { UserId = value == null ? -1 : value.Id; }
         }
     }
 }

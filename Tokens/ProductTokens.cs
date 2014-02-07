@@ -31,6 +31,7 @@ namespace Nwazet.Commerce.Tokens {
                 .Token("IsDigital", content => content.As<ProductPart>().IsDigital)
                 .Token("ShippingCost", content => content.As<ProductPart>().ShippingCost)
                 .Token("Weight", content => content.As<ProductPart>().Weight)
+                .Token("MinimumOrderQuantity", content => content.As<ProductPart>().MinimumOrderQuantity)
                 ;
         }
     }

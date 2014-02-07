@@ -71,7 +71,21 @@ namespace Nwazet.Commerce.Drivers {
             var model = new DiscountEditorViewModel();
             if (updater.TryUpdateModel(model, Prefix, null, null)) {
                 part.Name = model.Name;
-                part.Record.Discount = model.Discount;
+                string discountString = model.Discount;
+                double percent;
+                double discount;
+                if (!String.IsNullOrEmpty(discountString)) {
+                    if (discountString.Trim().EndsWith("%")) {
+                        if (double.TryParse(discountString.Substring(0, discountString.Length - 1), out percent)) {
+                            part.DiscountPercent = percent;
+                        }
+                    }
+                    else {
+                        if (double.TryParse(discountString, out discount)) {
+                            part.Discount = discount;
+                        }
+                    }
+                }
                 var currentCulture = Services.WorkContext.CurrentCulture;
                 var cultureInfo = CultureInfo.GetCultureInfo(currentCulture);
                 var timeZone = Services.WorkContext.CurrentTimeZone;

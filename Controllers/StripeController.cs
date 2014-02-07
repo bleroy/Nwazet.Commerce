@@ -12,6 +12,7 @@ using Orchard.Logging;
 using Orchard.Themes;
 using Orchard.UI.Notify;
 using Orchard.Workflows.Services;
+using Orchard.Environment.Extensions;
 
 namespace Nwazet.Commerce.Controllers {
     [Themed]
@@ -119,6 +120,12 @@ namespace Nwazet.Commerce.Controllers {
                 }
                 throw new InvalidOperationException(stripeCharge.Error.Type + ": " + stripeCharge.Error.Message);
             }
+            
+            int userId = -1;
+            var currentUser = _wca.GetContext().CurrentUser;
+            if (currentUser != null) {
+                userId = currentUser.Id;            
+            }           
 
             var order = _orderService.CreateOrder(
                 stripeCharge,
@@ -134,7 +141,8 @@ namespace Nwazet.Commerce.Controllers {
                 checkoutData.SpecialInstructions,
                 OrderPart.Pending,
                 null,
-                _stripeService.IsInTestMode());
+                _stripeService.IsInTestMode(),
+                userId);
             TempData["OrderId"] = order.Id;
             _workflowManager.TriggerEvent("NewOrder", order,
                 () => new Dictionary<string, object> {

@@ -46,7 +46,8 @@ namespace Nwazet.Commerce.Services {
             string specialInstructions,
             string status,
             string trackingUrl = null,
-            bool isTestOrder = false) {
+            bool isTestOrder = false,
+            int userId = -1) {
 
             var order = _contentManager.Create("Order").As<OrderPart>();
             order.Build(creditCardCharge, items, subTotal, total, taxes,

@@ -63,7 +63,7 @@ namespace Nwazet.Commerce.Services {
             _bundleProductsRepository.Create(
                 new BundleProductsRecord {
                     BundlePartRecord = record,
-                    ContentItemRecord = _contentManager.Get(product).Record,
+                    ContentItemRecord = _contentManager.Get(product, VersionOptions.Latest).Record,
                     Quantity = quantity
                 });
         }

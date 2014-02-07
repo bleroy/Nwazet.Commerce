@@ -80,5 +80,14 @@ namespace Nwazet.Commerce.Migrations {
                 .AddColumn<string>("Size"));
             return 6;
         }
+        
+        public int UpdateFrom6() {
+            SchemaBuilder.AlterTable("ProductPartRecord", table => table
+                .AddColumn<int>("MinimumOrderQuantity"));
+
+            SchemaBuilder.AlterTable("ProductPartRecord", table => table
+                .AddColumn<bool>("AuthenticationRequired"));
+            return 7;
+        }
     }
 }
