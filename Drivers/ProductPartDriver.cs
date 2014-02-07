@@ -159,7 +159,7 @@ namespace Nwazet.Commerce.Drivers {
                 .FromAttr(p => p.AllowBackOrder)
                 .FromAttr(p => p.IsDigital)
                 .FromAttr(p => p.Weight)
-                .FromAttr(p => p.OverrideTieredPricing);
+                .FromAttr(p => p.OverrideTieredPricing)
                 .FromAttr(p => p.MinimumOrderQuantity)
                 .FromAttr(p => p.AuthenticationRequired);
             var priceAttr = el.Attribute("Price");

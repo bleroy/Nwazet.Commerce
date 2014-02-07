@@ -12,7 +12,6 @@ using Orchard.Logging;
 using Orchard.Themes;
 using Orchard.UI.Notify;
 using Orchard.Workflows.Services;
-using Orchard.Environment.Extensions;
 
 namespace Nwazet.Commerce.Controllers {
     [Themed]
