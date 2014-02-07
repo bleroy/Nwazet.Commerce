@@ -79,7 +79,9 @@ namespace Nwazet.Commerce.Services {
                                 ? ""
                                 : " (" + string.Join(", ", p.ProductAttributes.Values) + ")")
                 }).ToArray(),
-                shippingOption.Price, shippingOption.Description, shippingOption.ShippingCompany,
+                shippingOption == null ? 0 : shippingOption.Price,
+                shippingOption == null ? null : shippingOption.Description,
+                shippingOption == null ? null : shippingOption.ShippingCompany,
                 taxes,
                 country,
                 zipCode);
