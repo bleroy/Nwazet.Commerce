@@ -74,3 +74,28 @@
 
 <div class="order-link">@T("You may view this order at a later time by going to this address: <a href=\"{2}{0}\">{0}</a>, using this password: \"{1}\".",
                             Url.Action("Show", "OrderSsl", new {id = Model.OrderId, area = "Nwazet.Commerce"}), Model.Password, Model.BaseUrl)</div>
+@{
+Script.Require("jQuery");
+using (Script.Foot()) {
+    <script>
+        // Clear the cart contents in localStorage
+        jQuery(function ($) {
+            var nwazetCart = "nwazet.cart",
+                emptyCart = function () {
+                    if (hasLocalStorage()) {
+                        localStorage.removeItem(nwazetCart);
+                    }
+                },
+                hasLocalStorage = function () {
+                    try {
+                        return "localStorage" in window && window.localStorage !== null;
+                    } catch (e) {
+                        return false;
+                    }
+                }
+
+            emptyCart();
+        });
+    </script>
+}
+}
