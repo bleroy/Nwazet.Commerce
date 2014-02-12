@@ -49,17 +49,20 @@ namespace Nwazet.Commerce.Services {
             bool isTestOrder = false,
             int userId = -1) {
 
-            var order = _contentManager.Create("Order").As<OrderPart>();
+            var order = _contentManager.Create("Order", VersionOptions.DraftRequired).As<OrderPart>();
             order.Build(creditCardCharge, items, subTotal, total, taxes,
                 shippingOption, shippingAddress, billingAddress, customerEmail,
                 customerPhone, specialInstructions);
             order.Status = status;
             order.TrackingUrl = trackingUrl;
             order.IsTestOrder = isTestOrder;
+            order.UserId = userId;
 
             var random = new byte[8];
             RngCsp.GetBytes(random);
             order.Password = Convert.ToBase64String(random);
+
+            _contentManager.Publish(order.ContentItem);
 
             return order;
         }
