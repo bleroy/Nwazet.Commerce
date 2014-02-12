@@ -8,7 +8,8 @@
     foreach (ProductAttributePart attribute in attributes) {
         <select name="@(attributeFieldName + ".a" + attribute.Id)" class="product-attribute">
             @foreach (var val in attribute.AttributeValues) {
-                <option>@val</option>
+                var priceAdjustment = val.PriceAdjustment != 0 ? "(" + (val.PriceAdjustment < 0 ? "-" : "+") + Math.Abs(val.PriceAdjustment).ToString("C") + ")" : "";
+                <option value="@val.Text">@val.Text @priceAdjustment</option>
             }
         </select>
     }

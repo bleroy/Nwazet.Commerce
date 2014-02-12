@@ -36,24 +36,27 @@ namespace Nwazet.Commerce.Services {
 {Address2}
 {City}, {Province} {PostalCode}
 {Country}";
-        private const string ChinesePattern = @"{Country}
-{Province} {City}
+        private const string ChinesePattern = @"{Honorific} {LastName} {FirstName}
+{Company}
 {Address1}
 {Address2}
-{LastName} {FirstName} {Honorific}";
+{City}
+{PostalCode} {Province} 
+{Country}";
         private const string BrazilianPattern = @"{Company}
 {Honorific} {FirstName} {LastName}
 {Address1}
 {Address2}
-{PostalCode} {City} {Province} 
+{City}-{Province} 
+{PostalCode}
 {Country}";
-        private const string BulgarianPattern = @"{Country}
-{State}
-{PostalCode} {City}
+        private const string BulgarianPattern = @"{Company}
+{Honorific} {FirstName}  {LastName}
 {Address1}
 {Address2}
-{Company}
-{Honorific} {FirstName}  {LastName}";
+{PostalCode} {City}
+{Province}
+{Country}";
         private const string EuropeanPattern = @"{Honorific} {FirstName} {LastName}
 {Company}
 {Address1}
@@ -65,7 +68,8 @@ namespace Nwazet.Commerce.Services {
 {Honorific} {FirstName}  {LastName}
 {Address1}
 {Address2}
-{Country} {PostalCode} {City}";
+{PostalCode} {City}
+{Country}";
         private const string HungarianPattern = @"{Honorific} {LastName} {FirstName}
 {Company}
 {City}
@@ -80,23 +84,27 @@ namespace Nwazet.Commerce.Services {
 {Address2}
 {PostalCode} {City} {Province}
 {Country}";
-        private const string JapanesePattern = @"{Country}
-{PostalCode} {Province} {City}
+        private const string JapanesePattern = @"{LastName} {FirstName} {Honorific}
+{Company}
 {Address1}
 {Address2}
+{City}
+{Province} {PostalCode}
+{Country}";
+        private const string KoreanPattern = @"{Honorific} {FirstName} {LastName}
 {Company}
-{LastName} {FirstName} {Honorific}";
-        private const string KoreanPattern = @"{Country}
-{PostalCode}
-{Province} {City} {Address1} {Address2}
-{Company}
-{LastName} {FirstName}  {Honorific}";
+{Address1}
+{Address2}
+{City} {PostalCode}
+{Province}
+{Country}";
         private const string MalaysianPattern = @"{Honorific} {FirstName} {LastName}
 {Company}
 {Address1}
 {Address2}
 {PostalCode} {City}
-{Province} {Country}";
+{Province}
+{Country}";
         private const string PortuguesePattern = @"{Honorific} {FirstName} {LastName}
 {Company}
 {Address1}
@@ -104,14 +112,14 @@ namespace Nwazet.Commerce.Services {
 {City}
 {PostalCode}
 {Country}";
-        private const string RussianPattern = @"{Country}
-{PostalCode}
-{Province} {City}
+        private const string RussianPattern = @"{LastName} {FirstName}
+{Company}
 {Address1}
 {Address2}
-{Company}
-{LastName}
-{FirstName}";
+{City}
+{Province} 
+{PostalCode}
+{Country}";
 
         private readonly Dictionary<string, string> _addressPatterns =
             new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) {

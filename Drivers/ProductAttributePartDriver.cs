@@ -6,6 +6,8 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Environment.Extensions;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Nwazet.Commerce.Drivers {
     [OrchardFeature("Nwazet.Attributes")]
@@ -41,13 +43,13 @@ namespace Nwazet.Commerce.Drivers {
         protected override DriverResult Editor(ProductAttributePart part, IUpdateModel updater, dynamic shapeHelper) {
             var editViewModel = new ProductAttributeEditViewModel();
             if (updater.TryUpdateModel(editViewModel, Prefix, null, null)) {
-                part.AttributeValuesString = editViewModel.AttributeValues;
+                part.AttributeValues = editViewModel.AttributeValues;
             }
             return Editor(part, shapeHelper);
         }
 
         private class ProductAttributeEditViewModel {
-            public string AttributeValues { get; [UsedImplicitly] set; }
+            public ICollection<ProductAttributeValue> AttributeValues { get; set; }
         }
 
         protected override void Importing(ProductAttributePart part, ImportContentContext context) {

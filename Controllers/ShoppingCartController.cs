@@ -142,9 +142,6 @@ namespace Nwazet.Commerce.Controllers {
 
             var taxes = _shoppingCart.Taxes();
 
-            // Removed shippintOPtion != null check as some items do not require tax or shipping and this can be handled in the view / view override
-            //  ~ Alternatively we could add more options (checkboxes) to check if an item is taxable in the product setup
-            
             // Check to see if any of the products require the user to be authenticated
             var shopItemsAuthenticationRequired = productQuantities.Any(pq => pq.Product.AuthenticationRequired);
             shape.ShopItemsAuthenticationRequired = shopItemsAuthenticationRequired;
@@ -195,6 +192,7 @@ namespace Nwazet.Commerce.Controllers {
                     IsDigital: productQuantity.Product.IsDigital,
                     Price: productQuantity.Product.Price,
                     DiscountedPrice: productQuantity.Price,
+                    LinePriceAdjustment: productQuantity.LinePriceAdjustment,
                     ShippingCost: productQuantity.Product.ShippingCost,
                     Weight: productQuantity.Product.Weight,
                     MinimumOrderQuantity: productQuantity.Product.MinimumOrderQuantity)).ToList();                    

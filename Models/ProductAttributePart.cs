@@ -7,19 +7,12 @@ using Orchard.Environment.Extensions;
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.Attributes")]
     public class ProductAttributePart : ContentPart<ProductAttributePartRecord> {
-        public IEnumerable<string> AttributeValues {
+        public IEnumerable<ProductAttributeValue> AttributeValues {
             get {
-                var values = AttributeValuesString;
-                return values == null
-                    ? new string[0]
-                    : values
-                        .Split(new[] {'\r', '\n'}, StringSplitOptions.RemoveEmptyEntries)
-                        .Select(v => v.Trim());
+                return ProductAttributeValue.DeserializeAttributeValues(AttributeValuesString);
             }
             set {
-                AttributeValuesString = value == null
-                    ? null
-                    : String.Join("\r\n", value.Select(v => v.Trim()));
+                AttributeValuesString = ProductAttributeValue.SerializeAttributeValues(value);
             }
         }
 

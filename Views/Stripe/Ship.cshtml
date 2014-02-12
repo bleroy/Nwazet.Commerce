@@ -24,8 +24,7 @@
     </fieldset>
     <fieldset class="billing-address">
         <legend>@T("Billing Address")</legend>
-        @Display.CommerceAddressForm(Prefix: "billingAddress", Address: Model.BillingAddress, IncludeCountry: false)
-        <div class="hint">@T("The billing address must be in the same country as the shipping address. Please contact us directly to pass orders that don't satisfy that constraint.")</div>
+        @Display.CommerceAddressForm(Prefix: "billingAddress", Address: Model.BillingAddress, IncludeCountry: true)
     </fieldset>
 
     <label for="@Html.Id("Email")">@T("e-mail")</label>

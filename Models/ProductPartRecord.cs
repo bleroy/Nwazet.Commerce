@@ -16,6 +16,8 @@ namespace Nwazet.Commerce.Models {
         public virtual int Inventory { get; set; }
         public virtual string OutOfStockMessage { get; set; }
         public virtual bool AllowBackOrder { get; set; }
+        public virtual bool OverrideTieredPricing { get; set; }
+        public virtual string PriceTiers { get; set; }
         public virtual int MinimumOrderQuantity { get; set; }
         public virtual bool AuthenticationRequired { get; set; }
     }

@@ -47,7 +47,8 @@
                             string imageUrl = (item.ProductImage != null ? item.ProductImage.Url : null);
                             var quantity = (int)item.Quantity;
                             var unitPrice = (double)item.DiscountedPrice;
-                            var totalPrice = quantity * unitPrice;
+                            var linePriceAdjustment = (double) item.LinePriceAdjustment;
+                            var totalPrice = quantity*unitPrice+linePriceAdjustment;
                             var minimumOrderQuantity = item.MinimumOrderQuantity;
                             <tr>
                                 @if (imageUrl != null) {

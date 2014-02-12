@@ -7,5 +7,6 @@ namespace Nwazet.Commerce.Services {
         ShoppingCartQuantityProduct GetDiscountedPrice(
             ShoppingCartQuantityProduct productQuantity,
             IEnumerable<ShoppingCartQuantityProduct> shoppingCartQuantities = null);
+        IEnumerable<PriceTier> GetDiscountedPriceTiers(ProductPart product);
     }
 }

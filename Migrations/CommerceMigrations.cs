@@ -84,10 +84,17 @@ namespace Nwazet.Commerce.Migrations {
         public int UpdateFrom6() {
             SchemaBuilder.AlterTable("ProductPartRecord", table => table
                 .AddColumn<int>("MinimumOrderQuantity"));
-
             SchemaBuilder.AlterTable("ProductPartRecord", table => table
                 .AddColumn<bool>("AuthenticationRequired"));
             return 7;
+        }
+
+        public int UpdateFrom7() {
+            SchemaBuilder.AlterTable("ProductPartRecord", table => table
+                .AddColumn<bool>("OverrideTieredPricing", c => c.WithDefault(false)));
+            SchemaBuilder.AlterTable("ProductPartRecord", table => table
+                .AddColumn<string>("PriceTiers"));
+            return 8;
         }
     }
 }

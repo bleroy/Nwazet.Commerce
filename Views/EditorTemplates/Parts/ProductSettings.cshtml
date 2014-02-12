@@ -1,0 +1,16 @@
+﻿@model Nwazet.Commerce.ViewModels.PricingSettingsViewModel
+@{
+    Layout.Title = T("Tiered Price Settings").ToString();
+}
+<fieldset>
+    @Html.CheckBoxFor(m => m.DefineSiteDefaults)
+    <label class="sub" for="@Html.IdFor(m => m.DefineSiteDefaults)">@T("Define Site Defaults")</label>
+    <div class="hint">@T("Set site-wide defaults for tiered pricing")</div>
+    @Html.CheckBoxFor(m => m.AllowProductOverrides)
+    <label class="sub" for="@Html.IdFor(m => m.AllowProductOverrides)">@T("Allow Product Overrides")</label>
+    <div class="hint">@T("Allow price tiers to be overriden for specific products")</div>
+</fieldset>
+
+@Display.PriceTiersAdmin(PriceTiers: Model.PriceTiers, ShowPriceTiers: Model.DefineSiteDefaults, NamePrefix: Html.NameForModel(), ToggleCheckboxId: Html.IdFor(m => m.DefineSiteDefaults))
+
+</fieldset>

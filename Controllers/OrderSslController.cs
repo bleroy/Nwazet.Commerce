@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
@@ -6,8 +7,10 @@ using Orchard;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions;
+using Orchard.Localization;
 using Orchard.Mvc;
 using Orchard.Themes;
+using Orchard.UI.Notify;
 
 namespace Nwazet.Commerce.Controllers {
     [Themed]
@@ -18,20 +21,29 @@ namespace Nwazet.Commerce.Controllers {
         private readonly IWorkContextAccessor _wca;
         private readonly dynamic _shapeFactory;
         private readonly IAddressFormatter _addressFormatter;
+        private readonly INotifier _notifier;
+        private readonly IShoppingCart _shoppingCart;
 
         public OrderSslController(
             IOrderService orderService,
             IContentManager contentManager,
             IWorkContextAccessor wca,
             IShapeFactory shapeFactory,
-            IAddressFormatter addressFormatter) {
+            IAddressFormatter addressFormatter,
+            INotifier notifier,
+            IShoppingCart shoppingCart) {
 
             _orderService = orderService;
             _contentManager = contentManager;
             _wca = wca;
             _shapeFactory = shapeFactory;
             _addressFormatter = addressFormatter;
+            _notifier = notifier;
+            _shoppingCart = shoppingCart;
+            T = NullLocalizer.Instance;
         }
+
+        public Localizer T { get; set; }
 
         [OutputCache(NoStore = true, Duration = 0)]
         public ActionResult Confirmation() {
@@ -39,7 +51,6 @@ namespace Nwazet.Commerce.Controllers {
                 return HttpNotFound();
             }
             var orderId = TempData["OrderId"];
-            TempData.Keep("OrderId");
             var order = _contentManager.Get<OrderPart>((int) orderId);
             var billingAddress = _addressFormatter.Format(order.BillingAddress);
             var shippingAddress = _addressFormatter.Format(order.ShippingAddress);
@@ -69,26 +80,31 @@ namespace Nwazet.Commerce.Controllers {
                 SpecialInstructions: order.SpecialInstructions,
                 BaseUrl: _wca.GetContext().CurrentSite.BaseUrl,
                 Password: order.Password);
+            _shoppingCart.Clear();
             return new ShapeResult(this, shape);
         }
 
         [OutputCache(NoStore = true, Duration = 0)]
-        public ActionResult Show(int id) {
+        public ActionResult Show(int id, string password = null) {
             if (TempData.ContainsKey("OrderId")) {
                 return Confirmation();
             }
+
+            if (!String.IsNullOrWhiteSpace(password)) {
+                var order = _contentManager.Get<OrderPart>(id);
+                if (!password.EndsWith("=")) {
+                    password += "=";
+                }
+                if (password != order.Password) {
+                    _notifier.Error(T("Wrong password"));
+                }
+                else {
+                    TempData["OrderId"] = id;
+                    return Confirmation();
+                }
+            }
             return new ShapeResult(this, _shapeFactory.Order_CheckPassword(
                 OrderId: id));
-        }
-
-        [HttpPost]
-        public ActionResult Show(int id, string password) {
-            var order = _contentManager.Get<OrderPart>(id);
-            if (password != order.Password) {
-                return RedirectToAction("Show", new {id});
-            }
-            TempData["OrderId"] = id;
-            return RedirectToAction("Show", new {id});
         }
     }
 }

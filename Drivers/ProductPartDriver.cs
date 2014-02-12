@@ -9,6 +9,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Environment.Extensions;
+using Nwazet.Commerce.ViewModels;
 
 namespace Nwazet.Commerce.Drivers {
     [OrchardFeature("Nwazet.Commerce")]
@@ -16,15 +17,18 @@ namespace Nwazet.Commerce.Drivers {
         private readonly IWorkContextAccessor _wca;
         private readonly IPriceService _priceService;
         private readonly IEnumerable<IProductAttributesDriver> _attributeProviders;
+        private readonly ITieredPriceProvider _tieredPriceProvider;
 
         public ProductPartDriver(
             IWorkContextAccessor wca,
             IPriceService priceService,
-            IEnumerable<IProductAttributesDriver> attributeProviders) {
+            IEnumerable<IProductAttributesDriver> attributeProviders,
+            ITieredPriceProvider tieredPriceProvider = null) {
 
             _wca = wca;
             _priceService = priceService;
             _attributeProviders = attributeProviders;
+            _tieredPriceProvider = tieredPriceProvider;
         }
 
         protected override string Prefix {
@@ -33,10 +37,13 @@ namespace Nwazet.Commerce.Drivers {
 
         protected override DriverResult Display(
             ProductPart part, string displayType, dynamic shapeHelper) {
-
             var inventory = GetInventory(part);
             var discountedPriceQuantity = _priceService.GetDiscountedPrice(new ShoppingCartQuantityProduct(1, part));
-            var productShape = ContentShape(
+            var priceTiers = _tieredPriceProvider != null ? _tieredPriceProvider.GetPriceTiers(part) : null;
+            var discountedPriceTiers = _priceService.GetDiscountedPriceTiers(part);
+            var shapes = new List<DriverResult>();
+
+            shapes.Add(ContentShape(
                 "Parts_Product",
                 () => shapeHelper.Parts_Product(
                     Sku: part.Sku,
@@ -53,11 +60,9 @@ namespace Nwazet.Commerce.Drivers {
                     MinimumOrderQuantity: part.MinimumOrderQuantity,
                     ContentPart: part
                     )
-                );
+                ));
             if (part.Inventory > 0 || part.AllowBackOrder) {
-                return Combined(
-                    productShape,
-                    ContentShape(
+                shapes.Add(ContentShape(
                         "Parts_Product_AddButton",
                         () => {
                             // Get attributes and add them to the add to cart shape
@@ -71,7 +76,18 @@ namespace Nwazet.Commerce.Drivers {
                         })
                     );
             }
-            return productShape;
+            if (priceTiers != null) {
+                shapes.Add(ContentShape(
+                        "Parts_Product_PriceTiers",
+                        () => {
+                            return shapeHelper.Parts_Product_PriceTiers(
+                                PriceTiers: priceTiers,
+                                DiscountedPriceTiers: discountedPriceTiers
+                                );
+                        })
+                    );
+            }
+            return Combined(shapes.ToArray());
         }
 
         private int GetInventory(ProductPart part) {
@@ -91,19 +107,45 @@ namespace Nwazet.Commerce.Drivers {
 
         //GET
         protected override DriverResult Editor(ProductPart part, dynamic shapeHelper) {
+            var allowTieredPricingOverride = false;
+            var productSettings = _wca.GetContext().CurrentSite.As<ProductSettingsPart>();
+
+            if (productSettings != null) allowTieredPricingOverride = productSettings.AllowProductOverrides;
+
             part.Weight = Math.Round(part.Weight, 3);
             part.Inventory = GetInventory(part);
             return ContentShape("Parts_Product_Edit",
                 () => shapeHelper.EditorTemplate(
                     TemplateName: "Parts/Product",
-                    Model: part,
+                    Model: new ProductEditorViewModel {
+                        Product = part,
+                        AllowProductOverrides = allowTieredPricingOverride,
+                        PriceTiers = part.PriceTiers
+                            .Select(t => new PriceTierViewModel() {
+                                Quantity = t.Quantity,
+                                Price = (t.PricePercent != null ? t.PricePercent.ToString() + "%" : t.Price.ToString())
+                            })
+                            .ToList()
+                    },
                     Prefix: Prefix));
         }
 
         //POST
         protected override DriverResult Editor(
             ProductPart part, IUpdateModel updater, dynamic shapeHelper) {
-            updater.TryUpdateModel(part, Prefix, null, null);
+            var model = new ProductEditorViewModel { Product = part };
+            if (updater.TryUpdateModel(model, Prefix, null, null)) {
+                if (model.PriceTiers != null) {
+                    part.PriceTiers = model.PriceTiers.Select(t => new PriceTier() {
+                        Quantity = t.Quantity,
+                        Price = (!t.Price.EndsWith("%") ? t.Price.ToDouble() : null),
+                        PricePercent = (t.Price.EndsWith("%") ? t.Price.Substring(0, t.Price.Length - 1).ToDouble() : null)
+                    }).ToList();
+                }
+                else {
+                    part.PriceTiers = new List<PriceTier>();
+                }
+            }
             return Editor(part, shapeHelper);
         }
 
@@ -117,6 +159,7 @@ namespace Nwazet.Commerce.Drivers {
                 .FromAttr(p => p.AllowBackOrder)
                 .FromAttr(p => p.IsDigital)
                 .FromAttr(p => p.Weight)
+                .FromAttr(p => p.OverrideTieredPricing)
                 .FromAttr(p => p.MinimumOrderQuantity)
                 .FromAttr(p => p.AuthenticationRequired);
             var priceAttr = el.Attribute("Price");
@@ -124,6 +167,10 @@ namespace Nwazet.Commerce.Drivers {
             if (priceAttr != null &&
                 double.TryParse(priceAttr.Value, NumberStyles.Currency, CultureInfo.InvariantCulture, out price)) {
                 part.Price = price;
+            }
+            var priceTiersAttr = el.Attribute("PriceTiers");
+            if (priceTiersAttr != null) {
+                part.PriceTiers = PriceTier.DeserializePriceTiers(priceTiersAttr.Value);
             }
             var shippingCostAttr = el.Attribute("ShippingCost");
             double shippingCost;
@@ -144,9 +191,11 @@ namespace Nwazet.Commerce.Drivers {
                 .ToAttr(p => p.AllowBackOrder)
                 .ToAttr(p => p.IsDigital)
                 .ToAttr(p => p.Weight)
+                .ToAttr(p => p.OverrideTieredPricing)
                 .ToAttr(p => p.MinimumOrderQuantity)
                 .ToAttr(p => p.AuthenticationRequired);
             el.SetAttributeValue("Price", part.Price.ToString("C", CultureInfo.InvariantCulture));
+            el.SetAttributeValue("PriceTiers", PriceTier.SerializePriceTiers(part.PriceTiers));
             if (part.ShippingCost != null) {
                 el.SetAttributeValue(
                     "ShippingCost", ((double) part.ShippingCost).ToString("C", CultureInfo.InvariantCulture));
