@@ -1,5 +1,4 @@
-﻿using Nwazet.Commerce.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Nwazet.Commerce.ViewModels {
     public class PricingSettingsViewModel {

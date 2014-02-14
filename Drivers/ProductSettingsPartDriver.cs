@@ -1,6 +1,5 @@
 ﻿using Nwazet.Commerce.Models;
 using Nwazet.Commerce.ViewModels;
-using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -11,9 +10,6 @@ namespace Nwazet.Commerce.Drivers {
     [OrchardFeature("Nwazet.TieredPricing")]
     public class ProductSettingsPartDriver : ContentPartDriver<ProductSettingsPart> {
 
-        public ProductSettingsPartDriver() {
-        }
-
         protected override string Prefix {
             get { return "ProductSettings"; }
         }
@@ -22,11 +18,11 @@ namespace Nwazet.Commerce.Drivers {
             return ContentShape("Parts_Product_Settings",
                 () => shapeHelper.EditorTemplate(
                     TemplateName: "Parts/ProductSettings",
-                    Model: new PricingSettingsViewModel() {
+                    Model: new PricingSettingsViewModel {
                         DefineSiteDefaults = part.DefineSiteDefaults,
                         AllowProductOverrides = part.AllowProductOverrides,
                         PriceTiers = part.PriceTiers
-                            .Select(t => new PriceTierViewModel() {
+                            .Select(t => new PriceTierViewModel {
                                 Quantity = t.Quantity,
                                 Price = (t.PricePercent != null ? t.PricePercent.ToString() + "%" : t.Price.ToString())
                             })
@@ -40,7 +36,7 @@ namespace Nwazet.Commerce.Drivers {
             if (updater.TryUpdateModel(model, Prefix, null, null)) {
                 part.DefineSiteDefaults = model.DefineSiteDefaults;
                 part.AllowProductOverrides = model.AllowProductOverrides;
-                part.PriceTiers = model.PriceTiers.Select(t => new PriceTier() {
+                part.PriceTiers = model.PriceTiers.Select(t => new PriceTier {
                     Quantity = t.Quantity,
                     Price = (!t.Price.EndsWith("%") ? t.Price.ToDouble() : null),
                     PricePercent = (t.Price.EndsWith("%") ? t.Price.Substring(0, t.Price.Length - 1).ToDouble() : null)
