@@ -1,4 +1,5 @@
-﻿using Nwazet.Commerce.Models;
+﻿using Nwazet.Commerce.Controllers;
+using Nwazet.Commerce.Models;
 using Nwazet.Commerce.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
@@ -33,7 +34,10 @@ namespace Nwazet.Commerce.Drivers {
 
         protected override DriverResult Editor(ProductSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
             var model = new PricingSettingsViewModel();
-            if (updater.TryUpdateModel(model, Prefix, null, null)) {
+            // Only update if the call was initiated from the product settings controller 
+            // to prevent wiping out product settings on updates to other site settings
+            if (updater is ProductSettingsAdminController &&
+                    updater.TryUpdateModel(model, Prefix, null, null)) {
                 part.DefineSiteDefaults = model.DefineSiteDefaults;
                 part.AllowProductOverrides = model.AllowProductOverrides;
                 part.PriceTiers = model.PriceTiers.Select(t => new PriceTier {

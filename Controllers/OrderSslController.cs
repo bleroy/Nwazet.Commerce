@@ -22,6 +22,7 @@ namespace Nwazet.Commerce.Controllers {
         private readonly dynamic _shapeFactory;
         private readonly IAddressFormatter _addressFormatter;
         private readonly INotifier _notifier;
+        private readonly IShoppingCart _shoppingCart;
 
         public OrderSslController(
             IOrderService orderService,
@@ -29,7 +30,8 @@ namespace Nwazet.Commerce.Controllers {
             IWorkContextAccessor wca,
             IShapeFactory shapeFactory,
             IAddressFormatter addressFormatter,
-            INotifier notifier) {
+            INotifier notifier,
+            IShoppingCart shoppingCart) {
 
             _orderService = orderService;
             _contentManager = contentManager;
@@ -37,6 +39,7 @@ namespace Nwazet.Commerce.Controllers {
             _shapeFactory = shapeFactory;
             _addressFormatter = addressFormatter;
             _notifier = notifier;
+            _shoppingCart = shoppingCart;
             T = NullLocalizer.Instance;
         }
 
@@ -77,6 +80,7 @@ namespace Nwazet.Commerce.Controllers {
                 SpecialInstructions: order.SpecialInstructions,
                 BaseUrl: _wca.GetContext().CurrentSite.BaseUrl,
                 Password: order.Password);
+            _shoppingCart.Clear();
             return new ShapeResult(this, shape);
         }
 

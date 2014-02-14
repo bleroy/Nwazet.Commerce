@@ -49,7 +49,7 @@ namespace Nwazet.Commerce.Services {
             bool isTestOrder = false,
             int userId = -1) {
 
-            var order = _contentManager.Create("Order").As<OrderPart>();
+            var order = _contentManager.Create("Order", VersionOptions.DraftRequired).As<OrderPart>();
             order.Build(creditCardCharge, items, subTotal, total, taxes,
                 shippingOption, shippingAddress, billingAddress, customerEmail,
                 customerPhone, specialInstructions);
@@ -61,6 +61,8 @@ namespace Nwazet.Commerce.Services {
             var random = new byte[8];
             RngCsp.GetBytes(random);
             order.Password = Convert.ToBase64String(random);
+
+            _contentManager.Publish(order.ContentItem);
 
             return order;
         }
