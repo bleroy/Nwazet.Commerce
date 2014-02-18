@@ -56,7 +56,7 @@ namespace Nwazet.Commerce.Controllers {
                     certificateOfMailing, electronicConfirmation);
                 return Json(prices);
             }
-            catch (UspsException ex) {
+            catch (ShippingException ex) {
                 return Json(new {
                     error = ex.Message
                 });

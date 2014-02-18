@@ -213,7 +213,7 @@
     <Compile Include="Migrations\DiscountMigrations.cs" />
     <Compile Include="Migrations\ShippingMigrations.cs" />
     <Compile Include="Models\Address.cs" />
-    <Compile Include="Models\CheckoutError.cs"/>
+    <Compile Include="Models\CheckoutError.cs" />
     <Compile Include="Models\CheckoutItem.cs" />
     <Compile Include="Models\ConversionUtilities.cs" />
     <Compile Include="Models\OrderEvent.cs" />
@@ -226,7 +226,7 @@
     <Compile Include="Models\StateOrCountryTaxPartRecord.cs" />
     <Compile Include="Models\CreditCardCharge.cs" />
     <Compile Include="Models\TaxAmount.cs" />
-    <Compile Include="Models\UspsException.cs" />
+    <Compile Include="Models\ShippingException.cs" />
     <Compile Include="Models\UspsShippingMethodPartRecord.cs" />
     <Compile Include="Models\UspsSettingsPart.cs" />
     <Compile Include="Models\ShippingOption.cs" />

@@ -9,9 +9,11 @@ using Orchard;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions;
+using Orchard.Localization;
 using Orchard.MediaLibrary.Fields;
 using Orchard.Mvc;
 using Orchard.Themes;
+using Orchard.UI.Notify;
 using Orchard.Workflows.Services;
 
 namespace Nwazet.Commerce.Controllers {
@@ -25,6 +27,7 @@ namespace Nwazet.Commerce.Controllers {
         private readonly IEnumerable<IShippingMethodProvider> _shippingMethodProviders;
         private readonly IEnumerable<IExtraCartInfoProvider> _extraCartInfoProviders;
         private readonly IWorkflowManager _workflowManager;
+        private readonly INotifier _notifier;
 
         private const string AttributePrefix = "productattributes.a";
 
@@ -36,7 +39,8 @@ namespace Nwazet.Commerce.Controllers {
             IEnumerable<ICheckoutService> checkoutServices,
             IEnumerable<IShippingMethodProvider> shippingMethodProviders,
             IEnumerable<IExtraCartInfoProvider> extraCartInfoProviders,
-            IWorkflowManager workflowManager) {
+            IWorkflowManager workflowManager,
+            INotifier notifier) {
 
             _shippingMethodProviders = shippingMethodProviders;
             _shoppingCart = shoppingCart;
@@ -46,6 +50,7 @@ namespace Nwazet.Commerce.Controllers {
             _checkoutServices = checkoutServices;
             _extraCartInfoProviders = extraCartInfoProviders;
             _workflowManager = workflowManager;
+            _notifier = notifier;
         }
 
         [HttpPost]
@@ -86,13 +91,22 @@ namespace Nwazet.Commerce.Controllers {
         [OutputCache(Duration = 0)]
         public ActionResult Index() {
             _wca.GetContext().Layout.IsCartPage = true;
-            return new ShapeResult(
-                this,
-                BuildCartShape(
-                    false,
-                    _shoppingCart.Country,
-                    _shoppingCart.ZipCode,
-                    _shoppingCart.ShippingOption));
+            try {
+                return new ShapeResult(
+                    this,
+                    BuildCartShape(
+                        false,
+                        _shoppingCart.Country,
+                        _shoppingCart.ZipCode,
+                        _shoppingCart.ShippingOption));
+            }
+            catch (ShippingException ex) {
+                _shoppingCart.Country = null;
+                _shoppingCart.ZipCode = null;
+                _shoppingCart.ShippingOption = null;
+                _notifier.Error(new LocalizedString(ex.Message));
+                return Redirect("~/");
+            }
         }
 
         private dynamic BuildCartShape(
@@ -201,8 +215,20 @@ namespace Nwazet.Commerce.Controllers {
 
         [OutputCache(Duration = 0)]
         public ActionResult NakedCart() {
-            return new ShapePartialResult(this,
-                                          BuildCartShape(true, _shoppingCart.Country, _shoppingCart.ZipCode));
+            try {
+                return new ShapePartialResult(this,
+                    BuildCartShape(
+                        true,
+                        _shoppingCart.Country,
+                        _shoppingCart.ZipCode));
+            }
+            catch (ShippingException ex) {
+                _shoppingCart.Country = null;
+                _shoppingCart.ZipCode = null;
+                _shoppingCart.ShippingOption = null;
+                _notifier.Error(new LocalizedString(ex.Message));
+                return Redirect("~/");
+            }
         }
 
         [HttpPost]
@@ -233,8 +259,20 @@ namespace Nwazet.Commerce.Controllers {
             _shoppingCart.ShippingOption = null;
 
             UpdateShoppingCart(items == null ? null : items.Reverse());
-            return new ShapePartialResult(this,
-                                          BuildCartShape(true, _shoppingCart.Country, _shoppingCart.ZipCode));
+            try {
+                return new ShapePartialResult(this,
+                    BuildCartShape(
+                        true,
+                        _shoppingCart.Country,
+                        _shoppingCart.ZipCode));
+            }
+            catch (ShippingException ex) {
+                _shoppingCart.Country = null;
+                _shoppingCart.ZipCode = null;
+                _shoppingCart.ShippingOption = null;
+                _notifier.Error(new LocalizedString(ex.Message));
+                return Redirect("~/");
+            }
         }
 
         [OutputCache(Duration = 0)]

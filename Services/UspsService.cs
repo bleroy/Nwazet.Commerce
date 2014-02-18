@@ -451,8 +451,8 @@ namespace Nwazet.Commerce.Services {
         private static void ThrowOnErrorResponse(XElement responseDocument) {
             if (responseDocument.DescendantsAndSelf("Error").Any()) {
                 var errorDescription = responseDocument.DescendantsAndSelf("Error").First().Element("Description");
-                if (errorDescription != null) throw new UspsException(errorDescription.Value);
-                throw new UspsException();
+                if (errorDescription != null) throw new ShippingException(errorDescription.Value);
+                throw new ShippingException();
             }
         }
 
