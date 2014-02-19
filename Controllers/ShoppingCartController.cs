@@ -105,7 +105,7 @@ namespace Nwazet.Commerce.Controllers {
                 _shoppingCart.ZipCode = null;
                 _shoppingCart.ShippingOption = null;
                 _notifier.Error(new LocalizedString(ex.Message));
-                return Redirect("~/");
+                return RedirectToAction("Index");
             }
         }
 
@@ -227,7 +227,7 @@ namespace Nwazet.Commerce.Controllers {
                 _shoppingCart.ZipCode = null;
                 _shoppingCart.ShippingOption = null;
                 _notifier.Error(new LocalizedString(ex.Message));
-                return Redirect("~/");
+                return RedirectToAction("Index");
             }
         }
 
@@ -271,7 +271,7 @@ namespace Nwazet.Commerce.Controllers {
                 _shoppingCart.ZipCode = null;
                 _shoppingCart.ShippingOption = null;
                 _notifier.Error(new LocalizedString(ex.Message));
-                return Redirect("~/");
+                return RedirectToAction("Index");
             }
         }
 
