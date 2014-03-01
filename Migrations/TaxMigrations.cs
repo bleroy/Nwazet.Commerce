@@ -20,5 +20,11 @@ namespace Nwazet.Commerce.Migrations {
 
             return 1;
         }
+
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterTypeDefinition("ZipCodeTax", cfg => cfg
+                .WithPart("ZipCodeTaxPart"));
+            return 2;
+        }
     }
 }

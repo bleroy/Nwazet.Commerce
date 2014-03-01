@@ -171,6 +171,7 @@
     <Compile Include="Drivers\BundlePartDriver.cs" />
     <Compile Include="Drivers\OrderPartDriver.cs" />
     <Compile Include="Drivers\ProductSettingsPartDriver.cs" />
+    <Compile Include="Drivers\ZipCodeTaxPartDriver.cs" />
     <Compile Include="Drivers\StateOrCountryTaxPartDriver.cs" />
     <Compile Include="Drivers\UspsShippingMethodPartDriver.cs" />
     <Compile Include="Drivers\UspsSettingsPartDriver.cs" />
@@ -222,6 +223,7 @@
     <Compile Include="Models\PriceTier.cs" />
     <Compile Include="Models\ProductAttributeValue.cs" />
     <Compile Include="Models\ProductSettingsPart.cs" />
+    <Compile Include="Models\ZipCodeTaxPart.cs" />
     <Compile Include="Models\StateOrCountryTaxPart.cs" />
     <Compile Include="Models\StateOrCountryTaxPartRecord.cs" />
     <Compile Include="Models\CreditCardCharge.cs" />
@@ -276,6 +278,7 @@
     <Compile Include="Services\OrderService.cs" />
     <Compile Include="Services\ProductAttributeService.cs" />
     <Compile Include="Services\ShippingService.cs" />
+    <Compile Include="Services\ZipCodeTaxProvider.cs" />
     <Compile Include="Services\StateOrCountryTaxProvider.cs" />
     <Compile Include="Services\StripeWebService.cs" />
     <Compile Include="Services\TieredPriceProvider.cs" />
@@ -400,6 +403,9 @@
     <Content Include="Scripts\minimumorderquantity.min.js.map">
       <DependentUpon>minimumorderquantity.js</DependentUpon>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\ZipCodeTax.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
