@@ -25,12 +25,15 @@ namespace Nwazet.Commerce.Filters {
                 var server = ctx.Request.ServerVariables["SERVER_NAME"];
                 var referrerString = ctx.Request.ServerVariables["HTTP_REFERER"];
                 if (referrerString == null) return;
-                var referrer = new Uri(referrerString).Host;
-                if (string.Compare(server, referrer, StringComparison.OrdinalIgnoreCase) == 0) {
-                    var cookie = ctx.Request.Cookies["referrer"];
-                    referrer = cookie == null ? null : cookie.Value;
+                try {
+                    var referrer = new Uri(referrerString).Host;
+                    if (string.Compare(server, referrer, StringComparison.OrdinalIgnoreCase) == 0) {
+                        var cookie = ctx.Request.Cookies["referrer"];
+                        referrer = cookie == null ? null : cookie.Value;
+                    }
+                    ctx.Items["Nwazet.Commerce.Referrer"] = referrer;
                 }
-                ctx.Items["Nwazet.Commerce.Referrer"] = referrer;
+                catch (UriFormatException) { }
             }
         }
 
