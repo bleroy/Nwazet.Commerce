@@ -26,7 +26,7 @@ namespace Nwazet.Commerce.Drivers {
         //POST
         protected override DriverResult Editor(ZipCodeTaxPart part, IUpdateModel updater, dynamic shapeHelper) {
             updater.TryUpdateModel(part, Prefix, null, null);
-            //part.Rate = part.Rate/100; // User will input a percentage
+            // User will input a percentage
             return Editor(part, shapeHelper);
         }
 
