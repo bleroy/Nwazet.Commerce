@@ -53,9 +53,8 @@ Features:
 		Dependencies: Nwazet.Commerce, Nwazet.Shipping
     Stripe:
         Name: Stripe
-        Description: Stripe checkout for Nwazet.Commerce
+        Description: Stripe services, and checkout for Nwazet.Commerce
         Category: Commerce
-        Dependencies: Nwazet.Commerce, Nwazet.Orders
 	Nwazet.TieredPricing:
         Name: Nwazet Tiered Pricing
         Description: Define different price tiers for products based on quantity ordered
