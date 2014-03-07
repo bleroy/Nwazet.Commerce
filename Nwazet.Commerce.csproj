@@ -74,10 +74,6 @@
     <Content Include="Scripts\inventory.min.js">
       <DependentUpon>inventory.js</DependentUpon>
     </Content>
-    <Content Include="Scripts\minimumorderquantity.js" />
-    <Content Include="Scripts\minimumorderquantity.min.js">
-      <DependentUpon>minimumorderquantity.js</DependentUpon>
-    </Content>
     <Content Include="Scripts\order-admin.js" />
     <Content Include="Scripts\order-admin.min.js">
       <DependentUpon>order-admin.js</DependentUpon>
@@ -397,9 +393,6 @@
     <Content Include="Views\PriceTiersAdmin.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\ProductSettings.cshtml" />
     <Content Include="Views\Parts\Product.PriceTiers.cshtml" />
-    <Content Include="Scripts\minimumorderquantity.min.js.map">
-      <DependentUpon>minimumorderquantity.js</DependentUpon>
-    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
