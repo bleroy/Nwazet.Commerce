@@ -29,18 +29,5 @@ namespace Nwazet.Commerce.Drivers {
             // User will input a percentage
             return Editor(part, shapeHelper);
         }
-
-        protected override void Importing(ZipCodeTaxPart part, ImportContentContext context) {
-            var el = context.Data.Element(typeof(ZipCodeTaxPart).Name);
-            if (el == null) return;
-            el.With(part)
-                .FromAttr(p => p.Priority);
-        }
-
-        protected override void Exporting(ZipCodeTaxPart part, ExportContentContext context) {
-            context.Element(typeof(ZipCodeTaxPart).Name)
-                .With(part)
-                .ToAttr(p => p.Priority);
-        }
     }
 }

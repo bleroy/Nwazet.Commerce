@@ -8,7 +8,7 @@
     @Html.TextBox("Name", zipCodeTaxPart.Name, new { @class = "text text-large" })<br />
     <span class="hint">@T("Title displayed to users at checkout.")</span><br />
     <label class="sub" for="@Html.Id("Rates")">@T("Zip Code Rates")</label><br />
-    @Html.TextArea("Rates", zipCodeTaxPart.Rates, new { placeholder = "52411, .07" })<br />
+    @Html.TextArea("Rates", zipCodeTaxPart.Rates)<br />
     <span class="hint">@T("One line for each zip/rate with the values seperated by a comma or tab. Tab seperated values are also supported to allow copying and pasting from spreadsheets.")</span><br />
     <label class="sub" for="@Html.Id("Priority")">@T("Priority")</label><br />
     @Html.TextBox("Priority", zipCodeTaxPart.Priority, new { @class = "text text-small" })<br />
