@@ -42,7 +42,11 @@ namespace Nwazet.Commerce.Models {
             double shippingCost, string country, string zipCode) {
 
             var rates = GetRates();
-            if (country == Country.UnitedStates && rates.ContainsKey(zipCode)) return rates[zipCode];
+            if (country == Country.UnitedStates && rates.ContainsKey(zipCode)) {
+                var rate = rates[zipCode];
+                var tax = (subtotal + shippingCost) * rate;
+                return tax;
+            }
 
             return 0;
         }

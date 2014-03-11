@@ -26,7 +26,7 @@ namespace Nwazet.Commerce.Tests
             cart.Country = "United States";
             cart.ZipCode = "52627";
 
-            CheckTaxes(cart.Taxes().Amount, 0.05);
+            CheckTaxes(cart.Taxes().Amount, 6.95);
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace Nwazet.Commerce.Tests
             cart.Country = "United States";
             cart.ZipCode = "52412";
 
-            CheckTaxes(cart.Taxes().Amount, 0.08);
+            CheckTaxes(cart.Taxes().Amount, 11.12);
         }
 
         [Test]
