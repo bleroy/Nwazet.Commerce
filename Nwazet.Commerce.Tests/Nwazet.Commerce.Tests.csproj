@@ -52,6 +52,7 @@
     <Compile Include="ProductAttributePricingTests.cs" />
     <Compile Include="ShippingServiceTest.cs" />
     <Compile Include="Stubs\SiteStub.cs" />
+    <Compile Include="TaxByZipTests.cs" />
     <Compile Include="TaxTests.cs" />
     <Compile Include="UspsServiceInternationalTests.cs" />
     <Compile Include="Stubs\UspsServiceStub.cs" />
