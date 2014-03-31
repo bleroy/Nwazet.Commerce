@@ -23,10 +23,12 @@ namespace Nwazet.Commerce.Tests.Stubs {
         }
 
         public ContentItem ContentItem { get; private set; }
+        public int MaxPageSize { get; set; }
         public string BaseUrl { get; set; }
         public string HomePage { get; set; }
         public int PageSize { get; set; }
         public string PageTitleSeparator { get { return ""; } }
+        public string SiteCalendar { get; set; }
         public ResourceDebugMode ResourceDebugMode { get; set; }
         public string SiteCulture { get; set; }
         public string SiteName { get; set; }
