@@ -45,7 +45,7 @@
                             }
                             <input name="@(propertyNamePrefix + ".ProductId")" type="hidden" value="@product.Id" />
                             <span class="numeric">
-                                <input name="@(propertyNamePrefix + ".Quantity")" type="number" class="quantity addtocart-quantity" value="@quantity" min="@minimumOrderQuantity" />
+                                <input name="@(propertyNamePrefix + ".Quantity")" type="number" class="quantity addtocart-quantity" value="@quantity" min="0" />
                             </span>
                             <span class="numeric">@totalPrice.ToString("c")</span>
                             @if (minimumOrderQuantity > 1) {
