@@ -122,11 +122,11 @@
     $(document)
         .on("click", ".shoppingcart .delete", function() {
             $(this).trigger("nwazet.removefromcart");
-            setQuantityToZero("tr")($(this)).submit();
+            setQuantityToZero("tr,li")($(this)).submit();
         })
         .on("click", ".minicart .delete", function() {
             $(this).trigger("nwazet.removefromcart");
-            return cartContainerLoad(setQuantityToZero("li")($(this)));
+            return cartContainerLoad(setQuantityToZero("tr,li")($(this)));
         })
         .on("click", ".minicart .update-button", function() {
             return cartContainerLoad($(this).closest("form"));
