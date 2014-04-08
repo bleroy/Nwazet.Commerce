@@ -73,6 +73,7 @@ namespace Nwazet.Commerce.Drivers {
                     SubTotal: part.SubTotal,
                     Total: part.Total,
                     Taxes: part.Taxes,
+                    AmountPaid: part.AmountPaid,
                     ShippingOption: part.ShippingOption,
                     BillingAddress: part.BillingAddress,
                     ShippingAddress: part.ShippingAddress,
@@ -243,7 +244,8 @@ namespace Nwazet.Commerce.Drivers {
                 Address.Get(xel.Element(BillingAddressName)),
                 el.Attr(p => p.CustomerEmail),
                 el.Attr(p => p.CustomerPhone),
-                el.Attr(p => p.SpecialInstructions));
+                el.Attr(p => p.SpecialInstructions),
+                el.Attr(p => p.AmountPaid));
             el.With(part)
                 .FromAttr(p => p.IsTestOrder)
                 .FromAttr(p => p.Password)
@@ -279,6 +281,7 @@ namespace Nwazet.Commerce.Drivers {
                 .ToAttr(o => o.Status)
                 .ToAttr(o => o.SubTotal)
                 .ToAttr(o => o.Total)
+                .ToAttr(o => o.AmountPaid)
                 .ToAttr(o => o.TrackingUrl)
                 .Element
 

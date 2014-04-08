@@ -63,6 +63,9 @@
 .order-editor .order-items table tfoot .total td {
   font-weight: bold;
 }
+.order-editor .order-items table tfoot .red input {
+  border: 1px solid red;
+}
 .order-editor .order-tracking .order-tracking-view {
   display: none;
 }

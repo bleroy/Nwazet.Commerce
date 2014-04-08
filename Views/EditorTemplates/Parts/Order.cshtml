@@ -109,6 +109,12 @@
                     <td colspan="2" class="label">@T("Total")</td>
                     <td class="price">@Model.Order.Total.ToString("C")</td>
                 </tr>
+                <tr class="amountPaid">
+                    <td colspan="2" class="label">@T("Amount Paid")</td>
+                    <td class="price@(Model.Order.AmountPaid < Model.Order.Total ? " red" : "")">
+                        @Html.TextBoxFor(m => m.Order.AmountPaid, new { @class = "text-small order-amount-field" })
+                    </td>
+                </tr>
             </tfoot>
         </table>
     </fieldset>

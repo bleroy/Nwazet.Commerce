@@ -50,6 +50,7 @@ namespace Nwazet.Commerce.Models {
         private const string SubtotalName = "subtotal";
         private const string TaxesName = "taxes";
         private const string TotalName = "total";
+        private const string AmountName = "amountPaid";
 
         public void Build(
             CreditCardCharge creditCardCharge,
@@ -62,11 +63,13 @@ namespace Nwazet.Commerce.Models {
             Address billingAddress,
             string customerEmail,
             string customerPhone,
-            string specialInstructions) {
+            string specialInstructions, 
+            double amountPaid = default(double)) {
 
             _contentDocument = new XElement(ContentName)
                 .Attr(SubtotalName, subTotal)
                 .Attr(TotalName, total)
+                .Attr(AmountName, amountPaid == default(double) ? total : amountPaid)
                 .AddEl(new XElement(CardName).With(creditCardCharge)
                     .ToAttr(c => c.TransactionId)
                     .ToAttr(c => c.Last4)
@@ -146,6 +149,18 @@ namespace Nwazet.Commerce.Models {
         public double Total {
             get {
                 return (double) ContentDocument.Attribute(TotalName);
+            }
+        }
+
+        public double AmountPaid {
+            get {
+                var attr = ContentDocument.Attribute(AmountName);
+                if (attr == null) return Total;
+                return (double) attr;
+            }
+            set {
+                ContentDocument.SetAttributeValue(AmountName, value);
+                Record.Contents = _contentDocument.ToString(SaveOptions.None);
             }
         }
 
