@@ -42,6 +42,7 @@ namespace Nwazet.Commerce.Tokens {
                 .Token("Subtotal", T("Subtotal"), T("The total price of all products in the order, without the tax and shipping costs."))
                 .Token("Taxes", T("Taxes"), T("The taxes to be paid on this order."), "TaxAmount")
                 .Token("Total", T("Total"), T("The total price of all products in the order, with the tax and shipping costs included."))
+                .Token("AmountPaid", T("Amount Paid"), T("The amount that the customer actually paid."))
                 .Token("Charge", T("Charge"), T("A charge on a credit card."), "CreditCardCharge");
 
             context.For("CheckoutItems", T("Checkout Items"), T("The list of product quantities and prices in the order."))
@@ -95,6 +96,7 @@ namespace Nwazet.Commerce.Tokens {
                 .Token("Taxes", o => o.Taxes.Amount.ToString("C"))
                 .Chain("Taxes", "TaxAmount", o => o.Taxes)
                 .Token("Total", o => o.Total.ToString("C"))
+                .Token("AmountPaid", o => o.AmountPaid.ToString("C"))
                 .Token("Charge", o => o.CreditCardCharge.ToString())
                 .Chain("Charge", "CreditCardCharge", o => o.CreditCardCharge);
 
