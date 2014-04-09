@@ -174,5 +174,6 @@
             } else {
                 cartContainerLoad(addForm);
             }
+            $(this).trigger("nwazet.addedtocart");
         });
 });
