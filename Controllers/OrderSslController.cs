@@ -85,7 +85,10 @@ namespace Nwazet.Commerce.Controllers {
         }
 
         [OutputCache(NoStore = true, Duration = 0)]
-        public ActionResult Show(int id, string password = null) {
+        public ActionResult Show(int id = -1, string password = null) {
+            if (id <= 0) {
+                return HttpNotFound();
+            }
             if (TempData.ContainsKey("OrderId")) {
                 return Confirmation();
             }
