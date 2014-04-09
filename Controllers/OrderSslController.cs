@@ -95,6 +95,9 @@ namespace Nwazet.Commerce.Controllers {
 
             if (!String.IsNullOrWhiteSpace(password)) {
                 var order = _contentManager.Get<OrderPart>(id);
+                if (order == null) {
+                    return HttpNotFound();
+                }
                 if (!password.EndsWith("=")) {
                     password += "=";
                 }
