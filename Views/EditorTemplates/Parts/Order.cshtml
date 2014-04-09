@@ -154,7 +154,7 @@
                         <p>
                             @orderEvent.Date.ToLocalTime().ToString(CultureInfo.CurrentCulture)
                             (@orderEvent.Category)
-                            @orderEvent.Description
+                            @Html.Raw(orderEvent.Description)
                         </p>
                     </li>
                 }
