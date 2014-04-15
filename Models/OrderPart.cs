@@ -83,6 +83,7 @@ namespace Nwazet.Commerce.Models {
                         .ToAttr(i => i.Title)
                         .ToAttr(i => i.Price)
                         .ToAttr(i => i.LinePriceAdjustment)
+                        .ToAttr(i => i.PromotionId)
                         .Element)))
                 .AddEl(new XElement(TaxesName).With(taxes)
                     .ToAttr(t => t.Name)
@@ -136,6 +137,7 @@ namespace Nwazet.Commerce.Models {
                         .FromAttr(i => i.Title)
                         .FromAttr(i => i.Price)
                         .FromAttr(i => i.LinePriceAdjustment)
+                        .FromAttr(i => i.PromotionId)
                         .Context);
             }
         }

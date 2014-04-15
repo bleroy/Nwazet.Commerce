@@ -171,6 +171,17 @@ namespace Nwazet.Commerce.Drivers {
                         {"Content", part},
                         {"Order", part}
                     });
+
+                foreach (var item in part.Items) {
+                    var content = _orchardServices.ContentManager.Get(item.ProductId);
+                    if (content != null) {
+                        _workflowManager.TriggerEvent("OrderStatusChangedProduct", content,
+                            () => new Dictionary<string, object> {
+                                {"Content", content},
+                                {"Order", part}
+                            });
+                    }
+                }
             }
             
             if (!String.IsNullOrEmpty(updateModel.UserName)) {
@@ -235,6 +246,8 @@ namespace Nwazet.Commerce.Drivers {
                             .FromAttr(coi => coi.Title)
                             .FromAttr(coi => coi.Quantity)
                             .FromAttr(coi => coi.Price)
+                            .FromAttr(coi => coi.LinePriceAdjustment)
+                            .FromAttr(coi => coi.PromotionId)
                             .Context),
                 el.Attr(p => p.SubTotal),
                 el.Attr(p => p.Total),
@@ -292,6 +305,8 @@ namespace Nwazet.Commerce.Drivers {
                             .ToAttr(i => i.Title)
                             .ToAttr(i => i.Quantity)
                             .ToAttr(i => i.Price)
+                            .ToAttr(i => i.LinePriceAdjustment)
+                            .ToAttr(i => i.PromotionId)
                             .Element)))
 
                 .AddEl(new XElement(ShippingName).With(part.ShippingOption)

@@ -43,7 +43,8 @@ namespace Nwazet.Commerce.Tokens {
                 .Token("Taxes", T("Taxes"), T("The taxes to be paid on this order."), "TaxAmount")
                 .Token("Total", T("Total"), T("The total price of all products in the order, with the tax and shipping costs included."))
                 .Token("AmountPaid", T("Amount Paid"), T("The amount that the customer actually paid."))
-                .Token("Charge", T("Charge"), T("A charge on a credit card."), "CreditCardCharge");
+                .Token("Charge", T("Charge"), T("A charge on a credit card."), "CreditCardCharge")
+                .Token("User", T("User"), T("User associated with the order."), "User");
 
             context.For("CheckoutItems", T("Checkout Items"), T("The list of product quantities and prices in the order."))
                 .Token("Format:*", T("Format:<separator>:<cart format>"), T("Formats the contents of the cart using a format string that uses $quantity for the quantity, $product for the product name (with attributes), and $price for the price. For example {Cart.Items.Format:, :$quantity x $product}"), "Text");
@@ -98,7 +99,9 @@ namespace Nwazet.Commerce.Tokens {
                 .Token("Total", o => o.Total.ToString("C"))
                 .Token("AmountPaid", o => o.AmountPaid.ToString("C"))
                 .Token("Charge", o => o.CreditCardCharge.ToString())
-                .Chain("Charge", "CreditCardCharge", o => o.CreditCardCharge);
+                .Chain("Charge", "CreditCardCharge", o => o.CreditCardCharge)
+                .Token("User", o => o.User == null ? "" : o.User.UserName)
+                .Chain("User", "User", o => o.User);
 
             context.For<IEnumerable<CheckoutItem>>("CheckoutItems")
                 .Token(s => s.StartsWith("Format:", StringComparison.OrdinalIgnoreCase) ? s.Substring("Format:".Length) : null,

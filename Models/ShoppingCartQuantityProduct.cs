@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Orchard.ContentManagement;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Nwazet.Commerce.Models {
@@ -14,7 +15,8 @@ namespace Nwazet.Commerce.Models {
         public ProductPart Product { get; private set; }
         public double Price { get; set; }
         // Captures attribute price adjustments that apply to the line item, not each item
-        public double LinePriceAdjustment { get; set; } 
+        public double LinePriceAdjustment { get; set; }
+        public IContent Promotion { get; set; }
         public string Comment { get; set; }
         public IDictionary<int, string> AttributeIdsToValues { get; set; }
 

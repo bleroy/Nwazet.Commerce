@@ -67,6 +67,7 @@ namespace Nwazet.Commerce.Services {
             var lowestPrice = modifiedPrices.FirstOrDefault(mp => Math.Abs(mp.Price - minPrice) < Epsilon);
             if (lowestPrice != null) {
                 result.Comment = lowestPrice.Comment;
+                result.Promotion = lowestPrice.Promotion;
             }
             return result;
         }

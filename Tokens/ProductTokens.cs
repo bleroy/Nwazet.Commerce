@@ -21,6 +21,7 @@ namespace Nwazet.Commerce.Tokens {
                 .Token("IsDigital", T("Is Digital"), T("True if this is a digital product."))
                 .Token("ShippingCost", T("Shipping Cost"), T("The fixed shipping cost of the product."))
                 .Token("Weight", T("Weight"), T("The weight of the item."))
+                .Token("AuthenticationRequired", T("Authentication Required"), T("True if this product requires user to be logged in to purchase."))
                 ;
         }
 
@@ -32,6 +33,7 @@ namespace Nwazet.Commerce.Tokens {
                 .Token("ShippingCost", content => content.As<ProductPart>().ShippingCost)
                 .Token("Weight", content => content.As<ProductPart>().Weight)
                 .Token("MinimumOrderQuantity", content => content.As<ProductPart>().MinimumOrderQuantity)
+                .Token("AuthenticationRequired", content => content.As<ProductPart>().AuthenticationRequired)
                 ;
         }
     }

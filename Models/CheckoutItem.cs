@@ -10,6 +10,17 @@ namespace Nwazet.Commerce.Models {
         public double LinePriceAdjustment { get; set; }
         public string Title { get; set; }
 
+        // Old order items will have a null promotionId, this ensures it will be defaulted to a 0.
+        int _promotionId;
+        public int? PromotionId {
+            get {
+                return this._promotionId;
+            }
+            set {
+                this._promotionId = value ?? 0;
+            }
+        }
+        
         public override string ToString() {
             return Quantity + " x " + Title + " " + Price.ToString("C");
         }

@@ -207,6 +207,7 @@ namespace Nwazet.Commerce.Controllers {
                     Price: productQuantity.Product.Price,
                     DiscountedPrice: productQuantity.Price,
                     LinePriceAdjustment: productQuantity.LinePriceAdjustment,
+                    Promotion: productQuantity.Promotion,
                     ShippingCost: productQuantity.Product.ShippingCost,
                     Weight: productQuantity.Product.Weight,
                     MinimumOrderQuantity: productQuantity.Product.MinimumOrderQuantity)).ToList();                    

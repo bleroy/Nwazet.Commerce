@@ -76,4 +76,15 @@ namespace Nwazet.Commerce.Activities {
             get { return T("The tracking URL of an order has changed."); }
         }
     }
+
+    [OrchardFeature("Nwazet.Orders")]
+    public class OrderStatusChangedProduct : OrderActivity {
+        public override string Name {
+            get { return "OrderStatusChangedProduct"; }
+        }
+
+        public override LocalizedString Description {
+            get { return T("The status of an order has changed - product access."); }
+        }
+    }
 }
