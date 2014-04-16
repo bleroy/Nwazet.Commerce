@@ -80,7 +80,7 @@
                                             }
                                         }
                                         <input name="@(propertyNamePrefix + ".ProductId")" type="hidden" value="@product.Id" />
-                                        <input name="@(propertyNamePrefix + ".Quantity")" type="number" class="quantity addtocart-quantity" value="@quantity" min="@minimumOrderQuantity" />
+                                        <input name="@(propertyNamePrefix + ".Quantity")" type="number" class="quantity addtocart-quantity" value="@quantity" min="0" />
                                     }
                                 </td>
                                 <td class="numeric amount">@totalPrice.ToString("c")</td>

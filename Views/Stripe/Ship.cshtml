@@ -36,7 +36,7 @@
     <div class="hint">@T("Please provide a phone number where we can reach you in case we need additional information. This is also required when shipping to some countries.")</div>
     
     <label for="@Html.Id("specialInstructions")">@T("Special Instructions")</label>
-    <textarea id="@Html.Id("specialInstructions")" name="@Html.Name("shippingAddress.Country")" rows="6" cols="80" class="input-xxlarge"></textarea>
+    <textarea id="@Html.Id("specialInstructions")" name="@Html.Name("SpecialInstructions")" rows="6" cols="80" class="input-xxlarge"></textarea>
     <input type="hidden" name="stripeToken" value="@Model.Token"/>
     <div class="actions">
         <input type="submit" name="next" class="submit-button" value="@T("Next >")"/>

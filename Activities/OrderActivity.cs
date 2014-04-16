@@ -84,7 +84,7 @@ namespace Nwazet.Commerce.Activities {
         }
 
         public override LocalizedString Description {
-            get { return T("The status of an order has changed - product access."); }
+            get { return T("Triggered for each product in the order when the status changes."); }
         }
     }
 }

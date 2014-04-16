@@ -94,6 +94,7 @@
     </Content>
     <Content Include="Styles\bundle.nwazet-commerce-admin.css" />
     <Content Include="Styles\attribute.nwazet-commerce-admin.css" />
+    <Content Include="Styles\workflows-activity-order-status-changed-product.css" />
     <Content Include="Styles\workflows-activity-order-tracking-url-changed.css" />
     <Content Include="Styles\workflows-activity-new-order.css" />
     <Content Include="Styles\workflows-activity-order-status-changed.css" />
