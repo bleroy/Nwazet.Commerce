@@ -154,7 +154,8 @@ namespace Nwazet.Commerce.Controllers {
                 }
             }
 
-            var taxes = _shoppingCart.Taxes();
+            var subtotal = _shoppingCart.Subtotal();
+            var taxes = _shoppingCart.Taxes(subtotal);
 
             // Check to see if any of the products require the user to be authenticated
             var shopItemsAuthenticationRequired = productQuantities.Any(pq => pq.Product.AuthenticationRequired);
@@ -181,9 +182,9 @@ namespace Nwazet.Commerce.Controllers {
                 shape.CheckoutButtons = checkoutShapes;
             }
 
-            shape.Subtotal = _shoppingCart.Subtotal();
+            shape.Subtotal = subtotal;
             shape.Taxes = taxes;
-            shape.Total = _shoppingCart.Total();
+            shape.Total = _shoppingCart.Total(subtotal, taxes);
             if (isSummary)
             {
                 shape.Metadata.Alternates.Add("ShoppingCart_Summary");

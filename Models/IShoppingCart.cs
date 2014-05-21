@@ -14,8 +14,8 @@ namespace Nwazet.Commerce.Models {
         ShoppingCartItem FindCartItem(int productId, IDictionary<int, string> attributeIdsToValues);
         void UpdateItems();
         double Subtotal();
-        TaxAmount Taxes();
-        double Total();
+        TaxAmount Taxes(double subTotal = 0);
+        double Total(double subTotal = 0, TaxAmount taxes = null);
         double ItemCount();
         void Clear();
     }
