@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
 using Orchard.Settings;
 using Nwazet.Commerce.Models;
 using Orchard.ContentManagement.FieldStorage.InfosetStorage;
-using Nwazet.Commerce.Tests.Helpers;
 
 namespace Nwazet.Commerce.Tests.Stubs {
-    public class SiteStub : ISite, IContent {
+    public class SiteStub : ISite {
         public SiteStub(bool allowOverrides, bool defineDefaults, List<PriceTier> sitePriceTiers) {
             ContentItem = new ContentItem {
                 VersionRecord = new ContentItemVersionRecord {
@@ -24,6 +22,7 @@ namespace Nwazet.Commerce.Tests.Stubs {
 
         public ContentItem ContentItem { get; private set; }
         public int MaxPageSize { get; set; }
+        public int MaxPagedCount { get; set; }
         public string BaseUrl { get; set; }
         public string HomePage { get; set; }
         public int PageSize { get; set; }
