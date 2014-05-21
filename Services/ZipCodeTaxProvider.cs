@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Nwazet.Commerce.Models;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
@@ -24,8 +25,13 @@ namespace Nwazet.Commerce.Services {
         }
 
         public IEnumerable<ITax> GetTaxes() {
+            var taxTypes = _contentManager
+                .GetContentTypeDefinitions()
+                .Where(d => d.Parts.Any(p => p.PartDefinition.Name == "ZipCodeTaxPart"))
+                .Select(d => d.Name)
+                .ToArray();
             return _contentManager
-                .Query<ZipCodeTaxPart>()
+                .Query<ZipCodeTaxPart>(taxTypes)
                 .ForVersion(VersionOptions.Published)
                 .List();
         }
