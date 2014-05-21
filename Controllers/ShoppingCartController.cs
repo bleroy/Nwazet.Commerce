@@ -54,7 +54,7 @@ namespace Nwazet.Commerce.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Add(int id, int quantity) {
+        public ActionResult Add(int id, int quantity = 1) {
             // Manually parse product attributes because of a breaking change
             // in MVC 5 dictionary model binding
             var form = HttpContext.Request.Form;
