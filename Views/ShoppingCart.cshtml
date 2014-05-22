@@ -99,7 +99,7 @@
                                 <td class="action"><button name="command" value="Update" type="submit" class="update-button">@T("Update All")</button></td>
                             }
                         </tr>
-                        @if (Model.Taxes != null) {
+                        @if (Model.Taxes != null && Model.Taxes.Name != null) {
                             <tr class="total">
                                 <td class="numeric label" colspan="4">@T("Taxes {0}", Model.Taxes.Name):</td>
                                 <td class="numeric amount">@Model.Taxes.Amount.ToString("c")</td>

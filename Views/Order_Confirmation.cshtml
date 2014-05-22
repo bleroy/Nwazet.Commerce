@@ -32,7 +32,7 @@
                 <td class="price">@Model.SubTotal.ToString("C")</td>
             </tr>
             <tr class="taxes">
-                <td colspan="2" class="label">@T("Taxes {0}", string.IsNullOrWhiteSpace(Model.Taxes.Name) ? T("Taxes").Text : Model.Taxes.Name)</td>
+                <td colspan="2" class="label">@T("Taxes {0}", string.IsNullOrWhiteSpace(Model.Taxes.Name) ? "" : Model.Taxes.Name)</td>
                 <td class="price">@Model.Taxes.Amount.ToString("C")</td>
             </tr>
             <tr class="shipping">
