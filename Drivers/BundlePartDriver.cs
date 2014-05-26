@@ -25,21 +25,23 @@ namespace Nwazet.Commerce.Drivers {
         }
 
         protected override DriverResult Display(BundlePart part, string displayType, dynamic shapeHelper) {
-            var products = _bundleService.GetProductQuantitiesFor(part);
-            var productShapes = products.Select(
-                p => {
-                    var contentShape = _contentManager.BuildDisplay(p.Product, "Thumbnail").Quantity(p.Quantity);
-                    // Also copy quantity onto all shapes under the Content zone
-                    foreach (dynamic shape in contentShape.Content.Items) {
-                        shape.Quantity(p.Quantity);
-                    }
-                    return contentShape;
-                });
             return ContentShape(
                 "Parts_Bundle",
-                () => shapeHelper.Parts_Bundle(
-                    ContentPart: part,
-                    Products: productShapes));
+                () => {
+                    var products = _bundleService.GetProductQuantitiesFor(part);
+                    var productShapes = products.Select(
+                        p => {
+                            var contentShape = _contentManager.BuildDisplay(p.Product, "Thumbnail").Quantity(p.Quantity);
+                            // Also copy quantity onto all shapes under the Content zone
+                            foreach (dynamic shape in contentShape.Content.Items) {
+                                shape.Quantity(p.Quantity);
+                            }
+                            return contentShape;
+                        });
+                    return shapeHelper.Parts_Bundle(
+                        ContentPart: part,
+                        Products: productShapes);
+                });
         }
 
         protected override DriverResult Editor(BundlePart part, dynamic shapeHelper) {

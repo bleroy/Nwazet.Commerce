@@ -36,6 +36,7 @@
   <Match DisplayType="Thumbnail">
     <Place Parts_Title="Content:2;Alternate=TitleWithLink"/>
     <Place Parts_Product="Content:3"/>
+    <Place Parts_Bundle="-"/>
     <Place Parts_Product_AddButton="-"/>
     <Place Parts_Product_PriceTiers="-"/>
     <Place Parts_Common_Body_Summary="-"/>
