@@ -4,8 +4,10 @@ using Nwazet.Commerce.Models;
 using Nwazet.Commerce.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
+using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.Environment.Extensions;
+using Orchard.MediaLibrary.Models;
 
 namespace Nwazet.Commerce.Services {
     public interface IBundleService : IDependency {
@@ -77,7 +79,9 @@ namespace Nwazet.Commerce.Services {
 
         public IEnumerable<ProductPartQuantity> GetProductQuantitiesFor(BundlePart bundle) {
             var quantities = bundle.ProductQuantities.ToDictionary(q => q.ProductId, q => q.Quantity);
-            var parts = _contentManager.GetMany<ProductPart>(quantities.Keys, VersionOptions.Published, QueryHints.Empty);
+            var queryHints = new QueryHints()
+                .ExpandRecords<TitlePartRecord, MediaPartRecord>();
+            var parts = _contentManager.GetMany<ProductPart>(quantities.Keys, VersionOptions.Published, queryHints);
             return parts.Select(p => new ProductPartQuantity {
                 Product = p,
                 Quantity = quantities[p.ContentItem.Id]
