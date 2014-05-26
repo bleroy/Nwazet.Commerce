@@ -97,7 +97,7 @@ namespace Nwazet.Commerce.Drivers {
                 var bundlePart = part.As<BundlePart>();
                 var ids = bundlePart.ProductIds.ToList();
                 if (!ids.Any()) return 0;
-                part.Inventory = inventory =
+                inventory =
                     bundleService
                         .GetProductQuantitiesFor(bundlePart)
                         .Min(p => p.Product.Inventory/p.Quantity);
