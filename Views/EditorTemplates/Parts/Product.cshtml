@@ -5,14 +5,21 @@
 <fieldset>
     <label class="sub" for="@Html.IdFor(m => m.Product.Sku)">@T("Sku")</label><br />
     @Html.TextBoxFor(m => m.Product.Sku, new { @class = "text" })<br />
-    <label class="sub" for="@Html.IdFor(m => m.Product.Price)">@T("Price")</label><br />
-    @Html.TextBoxFor(m => m.Product.Price, new { @class = "text" })
+    <label class="sub" for="@Html.IdFor(m => m.Product.Price)">@T("Regular Price")</label><br />
+    @Html.TextBox("Product.Price", Model.Product.Price.ToString("0.00"), new { @class = "small text" })<br/>
+    <label class="sub" for="@Html.Id("DiscountPrice")">@T("Discounted Price")</label><br />
+    @Html.TextBox("DiscountPrice", Model.Product.DiscountPrice >= 0
+        ? Model.Product.DiscountPrice.ToString("0.00")
+        : "",
+        new { @class = "small text" })
+    <p class="hint">@T("Leave the discounted price empty to have the regular price apply.")</p>
 
     @if (Model.AllowProductOverrides) {
         @Html.CheckBoxFor(m => m.Product.OverrideTieredPricing)
         <label class="sub" for="@Html.IdFor(m => m.Product.OverrideTieredPricing)">@T("override tiered pricing")</label>
     }
 </fieldset>
+
 
 @Display.PriceTiersAdmin(PriceTiers: Model.PriceTiers, ShowPriceTiers: (Model.AllowProductOverrides && Model.Product.OverrideTieredPricing), NamePrefix: Html.NameForModel(), ToggleCheckboxId: Html.IdFor(m => m.Product.OverrideTieredPricing))
 

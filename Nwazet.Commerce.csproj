@@ -274,6 +274,7 @@
     <Compile Include="Services\IUspsWebService.cs" />
     <Compile Include="Services\OrderService.cs" />
     <Compile Include="Services\ProductAttributeService.cs" />
+    <Compile Include="Services\ProductDiscountPriceProvider.cs" />
     <Compile Include="Services\ShippingService.cs" />
     <Compile Include="Services\ZipCodeTaxProvider.cs" />
     <Compile Include="Services\StateOrCountryTaxProvider.cs" />

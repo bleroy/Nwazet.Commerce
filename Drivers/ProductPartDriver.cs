@@ -133,18 +133,24 @@ namespace Nwazet.Commerce.Drivers {
         //POST
         protected override DriverResult Editor(
             ProductPart part, IUpdateModel updater, dynamic shapeHelper) {
-            var model = new ProductEditorViewModel { Product = part };
+
+            var model = new ProductEditorViewModel {
+                Product = part
+            };
             if (updater.TryUpdateModel(model, Prefix, null, null)) {
                 if (model.PriceTiers != null) {
                     part.PriceTiers = model.PriceTiers.Select(t => new PriceTier() {
                         Quantity = t.Quantity,
                         Price = (!t.Price.EndsWith("%") ? t.Price.ToDouble() : null),
-                        PricePercent = (t.Price.EndsWith("%") ? t.Price.Substring(0, t.Price.Length - 1).ToDouble() : null)
+                        PricePercent =
+                            (t.Price.EndsWith("%") ? t.Price.Substring(0, t.Price.Length - 1).ToDouble() : null)
                     }).ToList();
                 }
                 else {
                     part.PriceTiers = new List<PriceTier>();
                 }
+                part.DiscountPrice = model.DiscountPrice == null 
+                    ? -1 : (double)model.DiscountPrice;
             }
             return Editor(part, shapeHelper);
         }

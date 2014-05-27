@@ -18,6 +18,11 @@ namespace Nwazet.Commerce.Models {
             set { Store(r => r.Price, value); }
         }
 
+        public double DiscountPrice {
+            get { return Retrieve(r => r.DiscountPrice); }
+            set { Store(r => r.DiscountPrice, value); }
+        }
+
         public bool IsDigital {
             get { return Retrieve(r => r.IsDigital); }
             set { Store(r => r.IsDigital, value); }

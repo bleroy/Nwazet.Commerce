@@ -96,5 +96,12 @@ namespace Nwazet.Commerce.Migrations {
                 .AddColumn<string>("PriceTiers"));
             return 8;
         }
+
+        public int UpdateFrom8() {
+            SchemaBuilder.AlterTable("ProductPartRecord", table => table
+                .AddColumn<double>("DiscountPrice", column => column
+                    .NotNull().WithDefault(-1)));
+            return 9;
+        }
     }
 }
