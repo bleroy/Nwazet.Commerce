@@ -24,7 +24,10 @@ namespace Nwazet.Commerce.Tests
             Assert.That(cart.Taxes().Amount, Is.EqualTo(subtotal * oregonTax.Rate));
 
             cart.ZipCode = "92210";
-            Assert.That(cart.Taxes(), Is.Null);
+
+            var taxes = cart.Taxes();
+            Assert.That(taxes.Name, Is.Null);
+            Assert.That(taxes.Amount, Is.EqualTo(0));
         }
 
         [Test]
@@ -81,7 +84,10 @@ namespace Nwazet.Commerce.Tests
             Assert.That(cart.Taxes().Amount, Is.EqualTo(subtotal * britishTax.Rate));
 
             cart.Country = Country.UnitedStates;
-            Assert.That(cart.Taxes(), Is.Null);
+
+            var taxes = cart.Taxes();
+            Assert.That(taxes.Name, Is.Null);
+            Assert.That(taxes.Amount, Is.EqualTo(0));
         }
 
         [Test]
@@ -93,7 +99,9 @@ namespace Nwazet.Commerce.Tests
             cart.Country = "France";
             cart.ZipCode = "97218";
 
-            Assert.That(cart.Taxes(), Is.Null);
+            var taxes = cart.Taxes();
+            Assert.That(taxes.Name, Is.Null);
+            Assert.That(taxes.Amount, Is.EqualTo(0));
         }
 
         [Test]
@@ -128,7 +136,10 @@ namespace Nwazet.Commerce.Tests
             var cart = ShoppingCartHelpers.PrepareCart(null, new[] { taxProvider });
 
             cart.Country = "Kazakhstan";
-            Assert.That(cart.Taxes(), Is.Null);
+
+            var taxes = cart.Taxes();
+            Assert.That(taxes.Name, Is.Null);
+            Assert.That(taxes.Amount, Is.EqualTo(0));
         }
 
         [Test]
@@ -140,7 +151,10 @@ namespace Nwazet.Commerce.Tests
             var cart = ShoppingCartHelpers.PrepareCart(null, new[] { taxProvider });
 
             cart.Country = frenchTax.Country;
-            Assert.That(cart.Taxes(), Is.Null);
+
+            var taxes = cart.Taxes();
+            Assert.That(taxes.Name, Is.Null);
+            Assert.That(taxes.Amount, Is.EqualTo(0));
         }
 
         private static StateOrCountryTaxPart GetAnyStateTax()
