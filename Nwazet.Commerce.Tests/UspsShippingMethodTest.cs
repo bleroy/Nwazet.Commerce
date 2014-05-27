@@ -276,5 +276,182 @@ namespace Nwazet.Commerce.Tests {
                             largeInternationalShippingMethod.ComputePrice(cart, methods, Country.UnitedStates,
                                                                           "90220", wca).First().Price);
         }
+
+        [Test]
+        public void LessThanMinimumDistinctQuantityMisses() {
+            var cart = new[] {
+                new ShoppingCartQuantityProduct(1, new ProductStub {Weight = 3.0/16}),
+                new ShoppingCartQuantityProduct(2, new ProductStub {Weight = 2.0/16})
+            };
+            var defaultShippingMethod = ShippingHelpers.BuildUspsShippingMethod(
+                minimumQuantity: 3,
+                countDistinct: true);
+            var shippingMethods = new IShippingMethod[] { defaultShippingMethod };
+            var wca = ShippingHelpers.GetUspsWorkContextAccessor("foo", false, false, 3);
+            var prices = defaultShippingMethod.ComputePrice(cart, shippingMethods, Country.UnitedStates, "90220", wca);
+            Assert.That(prices, Is.Empty);
+        }
+
+        [Test]
+        public void MoreThanMaximumDistinctQuantityMisses() {
+            var cart = new[] {
+                new ShoppingCartQuantityProduct(1, new ProductStub {Weight = 3.0/16}),
+                new ShoppingCartQuantityProduct(2, new ProductStub {Weight = 2.0/16})
+            };
+            var defaultShippingMethod = ShippingHelpers.BuildUspsShippingMethod(
+                maximumQuantity: 1,
+                countDistinct: true);
+            var shippingMethods = new IShippingMethod[] { defaultShippingMethod };
+            var wca = ShippingHelpers.GetUspsWorkContextAccessor("foo", false, false, 3);
+            var prices = defaultShippingMethod.ComputePrice(cart, shippingMethods, Country.UnitedStates, "90220", wca);
+            Assert.That(prices, Is.Empty);
+        }
+
+        [Test]
+        public void LessThanMinimumTotalQuantityMisses() {
+            var cart = new[] {
+                new ShoppingCartQuantityProduct(1, new ProductStub {Weight = 3.0/16}),
+                new ShoppingCartQuantityProduct(2, new ProductStub {Weight = 2.0/16})
+            };
+            var defaultShippingMethod = ShippingHelpers.BuildUspsShippingMethod(
+                minimumQuantity: 4);
+            var shippingMethods = new IShippingMethod[] { defaultShippingMethod };
+            var wca = ShippingHelpers.GetUspsWorkContextAccessor("foo", false, false, 3);
+            var prices = defaultShippingMethod.ComputePrice(cart, shippingMethods, Country.UnitedStates, "90220", wca);
+            Assert.That(prices, Is.Empty);
+        }
+
+        [Test]
+        public void MoreThanMaximumTotalQuantityMisses() {
+            var cart = new[] {
+                new ShoppingCartQuantityProduct(1, new ProductStub {Weight = 3.0/16}),
+                new ShoppingCartQuantityProduct(2, new ProductStub {Weight = 2.0/16})
+            };
+            var defaultShippingMethod = ShippingHelpers.BuildUspsShippingMethod(
+                maximumQuantity: 2);
+            var shippingMethods = new IShippingMethod[] { defaultShippingMethod };
+            var wca = ShippingHelpers.GetUspsWorkContextAccessor("foo", false, false, 3);
+            var prices = defaultShippingMethod.ComputePrice(cart, shippingMethods, Country.UnitedStates, "90220", wca);
+            Assert.That(prices, Is.Empty);
+        }
+
+        [Test]
+        public void AtMaximumTotalQuantityHits() {
+            var cart = new[] {
+                new ShoppingCartQuantityProduct(1, new ProductStub {Weight = 3.0/16}),
+                new ShoppingCartQuantityProduct(2, new ProductStub {Weight = 2.0/16})
+            };
+            var defaultShippingMethod = ShippingHelpers.BuildUspsShippingMethod(
+                maximumQuantity: 3);
+            var shippingMethods = new IShippingMethod[] { defaultShippingMethod };
+            var wca = ShippingHelpers.GetUspsWorkContextAccessor("foo", false, false, 3);
+            var prices = defaultShippingMethod.ComputePrice(cart, shippingMethods, Country.UnitedStates, "90220", wca);
+            Assert.That(prices.Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void BelowMaximumTotalQuantityHits() {
+            var cart = new[] {
+                new ShoppingCartQuantityProduct(1, new ProductStub {Weight = 3.0/16}),
+                new ShoppingCartQuantityProduct(2, new ProductStub {Weight = 2.0/16})
+            };
+            var defaultShippingMethod = ShippingHelpers.BuildUspsShippingMethod(
+                maximumQuantity: 4);
+            var shippingMethods = new IShippingMethod[] { defaultShippingMethod };
+            var wca = ShippingHelpers.GetUspsWorkContextAccessor("foo", false, false, 3);
+            var prices = defaultShippingMethod.ComputePrice(cart, shippingMethods, Country.UnitedStates, "90220", wca);
+            Assert.That(prices.Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void AtMinimumTotalQuantityHits() {
+            var cart = new[] {
+                new ShoppingCartQuantityProduct(1, new ProductStub {Weight = 3.0/16}),
+                new ShoppingCartQuantityProduct(2, new ProductStub {Weight = 2.0/16})
+            };
+            var defaultShippingMethod = ShippingHelpers.BuildUspsShippingMethod(
+                minimumQuantity: 3);
+            var shippingMethods = new IShippingMethod[] { defaultShippingMethod };
+            var wca = ShippingHelpers.GetUspsWorkContextAccessor("foo", false, false, 3);
+            var prices = defaultShippingMethod.ComputePrice(cart, shippingMethods, Country.UnitedStates, "90220", wca);
+            Assert.That(prices.Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void AboveMinimumTotalQuantityHits() {
+            var cart = new[] {
+                new ShoppingCartQuantityProduct(1, new ProductStub {Weight = 3.0/16}),
+                new ShoppingCartQuantityProduct(2, new ProductStub {Weight = 2.0/16})
+            };
+            var defaultShippingMethod = ShippingHelpers.BuildUspsShippingMethod(
+                minimumQuantity: 2);
+            var shippingMethods = new IShippingMethod[] { defaultShippingMethod };
+            var wca = ShippingHelpers.GetUspsWorkContextAccessor("foo", false, false, 3);
+            var prices = defaultShippingMethod.ComputePrice(cart, shippingMethods, Country.UnitedStates, "90220", wca);
+            Assert.That(prices.Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void InIntervalTotalQuantityHits() {
+            var cart = new[] {
+                new ShoppingCartQuantityProduct(1, new ProductStub {Weight = 3.0/16}),
+                new ShoppingCartQuantityProduct(3, new ProductStub {Weight = 2.0/16})
+            };
+            var defaultShippingMethod = ShippingHelpers.BuildUspsShippingMethod(
+                minimumQuantity: 3,
+                maximumQuantity: 5);
+            var shippingMethods = new IShippingMethod[] { defaultShippingMethod };
+            var wca = ShippingHelpers.GetUspsWorkContextAccessor("foo", false, false, 3);
+            var prices = defaultShippingMethod.ComputePrice(cart, shippingMethods, Country.UnitedStates, "90220", wca);
+            Assert.That(prices.Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void InIntervalDistinctQuantityHits() {
+            var cart = new[] {
+                new ShoppingCartQuantityProduct(1, new ProductStub {Weight = 3.0/16}),
+                new ShoppingCartQuantityProduct(3, new ProductStub {Weight = 2.0/16})
+            };
+            var defaultShippingMethod = ShippingHelpers.BuildUspsShippingMethod(
+                minimumQuantity: 1,
+                maximumQuantity: 3,
+                countDistinct: true);
+            var shippingMethods = new IShippingMethod[] { defaultShippingMethod };
+            var wca = ShippingHelpers.GetUspsWorkContextAccessor("foo", false, false, 3);
+            var prices = defaultShippingMethod.ComputePrice(cart, shippingMethods, Country.UnitedStates, "90220", wca);
+            Assert.That(prices.Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void BadIntervalMisses() {
+            var cart = new[] {
+                new ShoppingCartQuantityProduct(1, new ProductStub {Weight = 3.0/16}),
+                new ShoppingCartQuantityProduct(3, new ProductStub {Weight = 2.0/16})
+            };
+            var defaultShippingMethod = ShippingHelpers.BuildUspsShippingMethod(
+                minimumQuantity: 3,
+                maximumQuantity: 1,
+                countDistinct: true);
+            var shippingMethods = new IShippingMethod[] { defaultShippingMethod };
+            var wca = ShippingHelpers.GetUspsWorkContextAccessor("foo", false, false, 3);
+            var prices = defaultShippingMethod.ComputePrice(cart, shippingMethods, Country.UnitedStates, "90220", wca);
+            Assert.That(prices, Is.Empty);
+        }
+
+        [Test]
+        public void NarrowIntervalHits() {
+            var cart = new[] {
+                new ShoppingCartQuantityProduct(1, new ProductStub {Weight = 3.0/16}),
+                new ShoppingCartQuantityProduct(3, new ProductStub {Weight = 2.0/16})
+            };
+            var defaultShippingMethod = ShippingHelpers.BuildUspsShippingMethod(
+                minimumQuantity: 2,
+                maximumQuantity: 2,
+                countDistinct: true);
+            var shippingMethods = new IShippingMethod[] { defaultShippingMethod };
+            var wca = ShippingHelpers.GetUspsWorkContextAccessor("foo", false, false, 3);
+            var prices = defaultShippingMethod.ComputePrice(cart, shippingMethods, Country.UnitedStates, "90220", wca);
+            Assert.That(prices.Count(), Is.EqualTo(1));
+        }
     }
 }

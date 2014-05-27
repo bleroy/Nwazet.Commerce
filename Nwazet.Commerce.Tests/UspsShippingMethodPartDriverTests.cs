@@ -23,6 +23,9 @@ namespace Nwazet.Commerce.Tests
         LengthInInches=""11""
         HeightInInches=""12""
         MaximumWeightInOunces=""1.3""
+        MinimumQuantity=""3""
+        MaximumQuantity=""7""
+        CountDistinct=""true""
         Priority=""14""
         International=""true""
         RegisteredMail=""true""
@@ -44,6 +47,9 @@ namespace Nwazet.Commerce.Tests
             Assert.That(part.LengthInInches, Is.EqualTo(11));
             Assert.That(part.HeightInInches, Is.EqualTo(12));
             Assert.That(part.MaximumWeightInOunces, Is.EqualTo(1.3));
+            Assert.That(part.MinimumQuantity, Is.EqualTo(3));
+            Assert.That(part.MaximumQuantity, Is.EqualTo(7));
+            Assert.That(part.CountDistinct, Is.True);
             Assert.That(part.Priority, Is.EqualTo(14));
             Assert.That(part.International, Is.True);
             Assert.That(part.RegisteredMail, Is.True);
@@ -64,6 +70,9 @@ namespace Nwazet.Commerce.Tests
             part.LengthInInches = 11;
             part.HeightInInches = 12;
             part.MaximumWeightInOunces = 1.3;
+            part.MinimumQuantity = 3;
+            part.MaximumQuantity = 7;
+            part.CountDistinct = true;
             part.Priority = 14;
             part.International = true;
             part.RegisteredMail = true;
@@ -84,6 +93,9 @@ namespace Nwazet.Commerce.Tests
             Assert.That(el.Attr("LengthInInches"), Is.EqualTo("11"));
             Assert.That(el.Attr("HeightInInches"), Is.EqualTo("12"));
             Assert.That(el.Attr("MaximumWeightInOunces"), Is.EqualTo("1.3"));
+            Assert.That(el.Attr("MinimumQuantity"), Is.EqualTo("3"));
+            Assert.That(el.Attr("MaximumQuantity"), Is.EqualTo("7"));
+            Assert.That(el.Attr("CountDistinct"), Is.EqualTo("true"));
             Assert.That(el.Attr("Priority"), Is.EqualTo("14"));
             Assert.That(el.Attr("International"), Is.EqualTo("true"));
             Assert.That(el.Attr("RegisteredMail"), Is.EqualTo("true"));

@@ -37,13 +37,19 @@ namespace Nwazet.Commerce.Tests.Helpers {
 
         public static UspsShippingMethodPart BuildUspsShippingMethod(
             string size = null,
-            int priority = 0) {
+            int priority = 0,
+            int minimumQuantity = 0,
+            int maximumQuantity = 0,
+            bool countDistinct = false) {
 
             var result = new UspsShippingMethodPart();
             ContentHelpers.PreparePart<UspsShippingMethodPart, UspsShippingMethodPartRecord>(result,
                 "UspsShippingMethod", 0);
             result.Size = size;
             result.Priority = priority;
+            result.MinimumQuantity = minimumQuantity;
+            result.MaximumQuantity = maximumQuantity;
+            result.CountDistinct = countDistinct;
             return result;
         }
 

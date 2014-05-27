@@ -10,18 +10,18 @@
 <fieldset><legend>@T("Service")</legend>
     @Html.CheckBoxFor(m => m.International, new {@class = "monitor-container"})<label class="forcheckbox" for="@Html.IdFor(m => m.International)">@T("International shipping")</label>
     <label for="@Html.IdFor(m => m.ServiceNameValidationExpression)">@T("Service name validation")</label>
-    @Html.TextBoxFor(m => m.ServiceNameValidationExpression)<br />
+    @Html.TextBoxFor(m => m.ServiceNameValidationExpression, new {@class = "large text"})<br />
     <span class="hint">@T("Services returned by USPS will be filtered to keep only the ones that match the above regular expression. Example: \"First-Class Package\". Leave empty to keep all services.")</span>
     <label for="@Html.IdFor(m => m.ServiceNameExclusionExpression)">@T("Service name exclusion")</label>
-    @Html.TextBoxFor(m => m.ServiceNameExclusionExpression)<br />
+    @Html.TextBoxFor(m => m.ServiceNameExclusionExpression, new { @class = "large text" })<br />
     <span class="hint">@T("Services returned by USPS will be filtered to keep only the ones that don't satisfy the above regular expression. Example: \"(DVD|Video|Library)\". Leave empty to keep all services.")</span>
 </fieldset>
 <fieldset><legend>@T("Adjustments")</legend>
     <label for="@Html.IdFor(m => m.Markup)">@T("Markup")</label>
-    $@Html.TextBoxFor(m => m.Markup, new { @class = "text-small", type = "number", step = "0.01", min = "0" })<br />
+    $@Html.TextBoxFor(m => m.Markup, new { @class = "small text", type = "number", step = "0.01", min = "0" })<br />
     <span class="hint">@T("The markup will be added to the price returned by the USPS service. It usually represents the price of the packaging.")</span>
     <label for="@Html.IdFor(m => m.WeightPaddingInOunces)">@T("Weight padding (ounces)")</label>
-    @Html.TextBoxFor(m => m.WeightPaddingInOunces, new { @class = "text-small", type = "number", step = "0.1", min = "0" })&nbsp;@T("oz")<br />
+    @Html.TextBoxFor(m => m.WeightPaddingInOunces, new { @class = "small text", type = "number", step = "0.1", min = "0" })&nbsp;@T("oz")<br />
     <span class="hint">@T("The weight padding will be added to the total weight of the products to ship. It usually represents the weight of the packaging.")</span>
 </fieldset>
 <fieldset><legend>@T("Package")</legend>
@@ -69,19 +69,29 @@
     }
     <div>
         <label for="@Html.IdFor(m => m.WidthInInches)">@T("Package dimensions (inches)")</label>
-        @T("W:")&nbsp;@Html.TextBoxFor(m => m.WidthInInches, new {@class="text-small monitor-container", type="number", min="1"}) x
-        @T("L:")&nbsp;@Html.TextBoxFor(m => m.LengthInInches, new {@class="text-small monitor-container", type="number", min="1"}) x
-        @T("H:")&nbsp;@Html.TextBoxFor(m => m.HeightInInches, new {@class="text-small monitor-container", type="number", min="1"})
+        @T("W:")&nbsp;@Html.TextBoxFor(m => m.WidthInInches, new {@class="small text monitor-container", type="number", min="1"}) x
+        @T("L:")&nbsp;@Html.TextBoxFor(m => m.LengthInInches, new {@class="small text monitor-container", type="number", min="1"}) x
+        @T("H:")&nbsp;@Html.TextBoxFor(m => m.HeightInInches, new {@class="small text monitor-container", type="number", min="1"})
     </div>
     <div>
         <label for="@Html.IdFor(m => m.MaximumWeightInOunces)">@T("Maximum package weight (ounces)")</label>
-        @Html.TextBoxFor(m => m.MaximumWeightInOunces, new { @class = "text-small", type = "number", step = "0.1", min = "0" })&nbsp;@T("oz")
+        @Html.TextBoxFor(m => m.MaximumWeightInOunces, new { @class = "small text", type = "number", step = "0.1", min = "0" })&nbsp;@T("oz")
+    </div>
+    <div>
+        <label for="@Html.IdFor(m => m.MinimumQuantity)">@T("Minimum article quantity")</label>
+        @Html.TextBoxFor(m => m.MinimumQuantity, new { @class = "small text", type = "number", step = "1", min = "0" })
+        <p class="hint">@T("Leave 0 for no minimum quantity.")</p>
+        <label for="@Html.IdFor(m => m.MaximumQuantity)">@T("Maximum article quantity")</label>
+        @Html.TextBoxFor(m => m.MaximumQuantity, new { @class = "small text", type = "number", step = "1", min = "0" })
+        <p class="hint">@T("Leave 0 for no maximum quantity.")</p>
+        @Html.CheckBoxFor(m => m.CountDistinct)<label class="forcheckbox" for="@Html.IdFor(m => m.CountDistinct)">@T("Count distinct articles")</label>
+        <p class="hint">@T("Check to apply minimum and maximum quantities to distinct articles. Leave unchecked to count the total number of articles, including articles ordered with a quantity of more than 1. For example, a cart with two Foos and one Bar is two distinct articles, but three total.")</p>
     </div>
     <div>
         <label class="sub" for="@Html.IdFor(m => m.Size)">@T("Item Size")</label>
-        @Html.TextBoxFor(m => m.Size, new { @class = "text-small" })
+        @Html.TextBoxFor(m => m.Size, new { @class = "small text" })
         <label class="sub" for="@Html.IdFor(m => m.Priority)">@T("Priority")</label>
-        @Html.TextBoxFor(m => m.Priority, new { @class = "text-small", type="number", step="1" })<br />
+        @Html.TextBoxFor(m => m.Priority, new { @class = "small text", type="number", step="1" })<br />
         <span class="hint">@T("Specify the size (usually S, M, L or XL) for which this shipping price is valid. Any product that matches this size will trigger the shipping method, unless another of higher priority takes precedence. Leave empty to define the default size-based shipping method.")</span>
     </div>
 </fieldset>

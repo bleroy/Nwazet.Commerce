@@ -58,6 +58,21 @@ namespace Nwazet.Commerce.Models {
             set { Store(r => r.WeightPaddingInOunces, value); }
         }
 
+        public int MinimumQuantity {
+            get { return Retrieve(r => r.MinimumQuantity); }
+            set { Store(r => r.MinimumQuantity, value); }
+        }
+
+        public int MaximumQuantity {
+            get { return Retrieve(r => r.MaximumQuantity); }
+            set { Store(r => r.MaximumQuantity, value); }
+        }
+
+        public bool CountDistinct {
+            get { return Retrieve(r => r.CountDistinct); }
+            set { Store(r => r.CountDistinct, value); }
+        }
+
         public string ServiceNameValidationExpression {
             get { return Retrieve(r => r.ServiceNameValidationExpression); }
             set { Store(r => r.ServiceNameValidationExpression, value); }
@@ -128,6 +143,16 @@ namespace Nwazet.Commerce.Models {
                 .Where(pq => (pq.Product.ShippingCost == null || pq.Product.ShippingCost < 0) &&
                              !pq.Product.IsDigital)
                 .ToList();
+
+            if (MinimumQuantity > 0 || (MaximumQuantity > 0 && MinimumQuantity <= MaximumQuantity)) {
+                var articleCount = CountDistinct
+                    ? relevantQuantities.Count
+                    : relevantQuantities.Sum(q => q.Quantity);
+                if ((articleCount < MinimumQuantity)
+                    || (MaximumQuantity > 0 && articleCount > MaximumQuantity)) {
+                    yield break;
+                }
+            }
 
             var wc = workContextAccessor.GetContext();
             var uspsService = wc.Resolve<IUspsService>();

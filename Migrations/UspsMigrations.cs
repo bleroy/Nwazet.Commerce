@@ -39,5 +39,18 @@ namespace Nwazet.Commerce.Migrations {
               .WithPart("TitlePart"));
             return 4;
         }
+
+        public int UpdateFrom4() {
+            SchemaBuilder.AlterTable("UspsShippingMethodPartRecord", table => table
+                .AddColumn<int>("MinimumQuantity", column => column
+                    .NotNull().WithDefault(0)));
+            SchemaBuilder.AlterTable("UspsShippingMethodPartRecord", table => table
+                .AddColumn<int>("MaximumQuantity", column => column
+                    .NotNull().WithDefault(0)));
+            SchemaBuilder.AlterTable("UspsShippingMethodPartRecord", table => table
+                .AddColumn<bool>("CountDistinct", column => column
+                    .NotNull().WithDefault(false)));
+            return 5;
+        }
     }
 }
