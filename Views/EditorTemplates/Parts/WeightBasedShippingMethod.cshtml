@@ -20,14 +20,14 @@
     <span class="hint">@T("Specify the weight interval for which this shipping price is valid. Leave the maximum weight field empty for unlimited weight. The weight will be computed for all non-digital products that don't have a shipping price overload specified.")</span><br/>
     <label class="sub" for="@Html.Id("IncludedShippingAreas")">@T("Areas for which this method is valid:")</label><br />
     @foreach(var area in shippingAreas) {
-        <input type="checkbox" name="@(Model.Prefix + ".IncludedShippingAreas")"@(includedAreas.Contains(area.Id) ? " checked=\"checked\"" : "") id="@(Model.Prefix + "_" + area.Id)" value="@area.Id"/>
-        <label class="forcheckbox" for="@(Model.Prefix + "_" + area.Id)">@area.Name</label>
+        <input type="checkbox" name="@(Model.Prefix + ".IncludedShippingAreas")"@(includedAreas.Contains(area.Id) ? " checked=\"checked\"" : "") id="@(Model.Prefix + "_included_" + area.Id)" value="@area.Id"/>
+        <label class="forcheckbox" for="@(Model.Prefix + "_included_" + area.Id)">@area.Name</label>
     }
     <br/>
     <label class="sub" for="@Html.Id("ExcludedShippingAreas")">@T("Areas for which this method is not valid:")</label><br />
     @foreach(var area in shippingAreas) {
-        <input type="checkbox" name="@(Model.Prefix + ".ExcludedShippingAreas")"@(excludedAreas.Contains(area.Id) ? " checked=\"checked\"" : "") id="@(Model.Prefix + "_" + area.Id)" value="@area.Id"/>
-        <label class="forcheckbox" for="@(Model.Prefix + "_" + area.Id)">@area.Name</label>
+        <input type="checkbox" name="@(Model.Prefix + ".ExcludedShippingAreas")"@(excludedAreas.Contains(area.Id) ? " checked=\"checked\"" : "") id="@(Model.Prefix + "_excluded_" + area.Id)" value="@area.Id"/>
+        <label class="forcheckbox" for="@(Model.Prefix + "_excluded_" + area.Id)">@area.Name</label>
     }
     <span class="hint">@T("Use this to restrict what areas this method is available from. For example, an international shipping method would have World included, but US excluded, so that it can't be selected for domestic shipping.")</span><br/>
 </fieldset>
