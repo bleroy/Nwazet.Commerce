@@ -176,6 +176,13 @@ namespace Nwazet.Commerce.Tests {
             CheckDiscounts(cart, new[] {0, 0, 0.5}, new[] {absoluteDiscount.Comment, absoluteDiscount.Comment, absoluteDiscount.Comment});
         }
 
+        [Test]
+        public void ProductDiscountApplies() {
+            var cart = ShoppingCartHelpers.PrepareCart(new DiscountStub[] {}, applyProductDiscounts: true);
+
+            CheckDiscounts(cart, new[] { 1, 1, 0.5 }, new[] { "", "", "" });
+        }
+
         private static void CheckDiscount(IShoppingCart cart, double discountRate, string comment) {
             const double epsilon = 0.001;
             var expectedSubTotal = Math.Round(ShoppingCartHelpers.OriginalQuantities.Sum(q => q.Quantity * Math.Round(q.Product.Price * discountRate, 2)), 2);
@@ -209,7 +216,7 @@ namespace Nwazet.Commerce.Tests {
         // Cart contents:
         // 3 x $ 10
         // 6 x $1.5
-        // 5 x $ 20
+        // 5 x $ 20 <- can be discounted to $ 10
         // --------
         //     $139
     }

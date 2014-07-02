@@ -21,6 +21,12 @@ namespace Nwazet.Commerce.Tests.Helpers {
             new ProductStub(3, Paths[2]) {Price = Prices[2]}
         };
 
+        private static readonly ProductStub[] ProductsWithDiscounts = {
+            new ProductStub(1, Paths[0]) {Price = Prices[0]},
+            new ProductStub(2, Paths[1]) {Price = Prices[1]},
+            new ProductStub(3, Paths[2]) {Price = Prices[2], DiscountPrice = 10}
+        };
+
         public static readonly ShoppingCartQuantityProduct[] OriginalQuantities = {
             new ShoppingCartQuantityProduct(Quantities[0], Products[0]), 
             new ShoppingCartQuantityProduct(Quantities[1], Products[1]), 
@@ -46,15 +52,20 @@ namespace Nwazet.Commerce.Tests.Helpers {
                 .Select(q => new ShoppingCartItem(q.Product.Id, q.Quantity)));
         }
 
-        public static ShoppingCart PrepareCart(IEnumerable<DiscountStub> discounts, IEnumerable<ITaxProvider> taxProviders = null) {
-
-            var contentItems = discounts == null ? Products : Products.Cast<IContent>().Union(discounts);
+        public static ShoppingCart PrepareCart(
+            IEnumerable<DiscountStub> discounts,
+            IEnumerable<ITaxProvider> taxProviders = null,
+            bool applyProductDiscounts = false
+            ) {
+            var products = applyProductDiscounts ? ProductsWithDiscounts : Products;
+            var contentItems = discounts == null ? products : products.Cast<IContent>().Union(discounts);
             var contentManager = new ContentManagerStub(contentItems);
             var cartStorage = new FakeCartStorage();
             var priceProviders = new IPriceProvider[] {
                 new DiscountPriceProvider(contentManager, WorkContextAccessor, Now) {
                     DisplayUrlResolver = item => ((ProductStub)item).Path
-                }
+                },
+                new ProductDiscountPriceProvider()
             };
             var priceService = new PriceService(priceProviders, null);
             var cart = new ShoppingCart(contentManager, cartStorage, priceService, null, taxProviders);

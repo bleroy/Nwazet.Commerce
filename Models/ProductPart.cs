@@ -19,7 +19,7 @@ namespace Nwazet.Commerce.Models {
         }
 
         public double DiscountPrice {
-            get { return Retrieve(r => r.DiscountPrice); }
+            get {return Retrieve(r => r.DiscountPrice, -1);}
             set { Store(r => r.DiscountPrice, value); }
         }
 
