@@ -72,6 +72,11 @@ namespace Nwazet.Commerce.Models {
             set { Store(r => r.Pattern, value); }
         }
 
+        public string ExclusionPattern {
+            get { return Retrieve(r => r.ExclusionPattern); }
+            set { Store(r => r.ExclusionPattern, value); }
+        }
+
         public string Comment {
             get { return Retrieve(r => r.Comment); }
             set { Store(r => r.Comment, value); }

@@ -13,6 +13,7 @@ namespace Nwazet.Commerce.Models {
         public virtual int? EndQuantity { get; set; }
         public virtual string Roles { get; set; }
         public virtual string Pattern { get; set; }
+        public virtual string ExclusionPattern { get; set; }
         public virtual string Comment { get; set; }
     }
 }

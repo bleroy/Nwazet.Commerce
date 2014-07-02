@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using Nwazet.Commerce.Models;
 using Orchard;
@@ -36,7 +37,7 @@ namespace Nwazet.Commerce.Services {
             if (DiscountPart.EndQuantity != null &&
                 DiscountPart.EndQuantity < quantityProduct.Quantity)
                 return false;
-            if (!string.IsNullOrWhiteSpace(DiscountPart.Pattern)) {
+            if (!string.IsNullOrWhiteSpace(DiscountPart.Pattern) || !string.IsNullOrWhiteSpace(DiscountPart.ExclusionPattern)) {
                 string path;
                 if (DiscountPart.DisplayUrlResolver != null) {
                     path = DiscountPart.DisplayUrlResolver(quantityProduct.Product);
@@ -45,8 +46,17 @@ namespace Nwazet.Commerce.Services {
                     var urlHelper = new UrlHelper(_wca.GetContext().HttpContext.Request.RequestContext);
                     path = urlHelper.ItemDisplayUrl(quantityProduct.Product);
                 }
-                if (!path.StartsWith(DiscountPart.Pattern, StringComparison.OrdinalIgnoreCase))
-                    return false;
+                if (!string.IsNullOrWhiteSpace(DiscountPart.Pattern)) {
+                    var patternExpression = new Regex(DiscountPart.Pattern, RegexOptions.Singleline | RegexOptions.IgnoreCase);
+                    if (!patternExpression.IsMatch(path))
+                        return false;
+                }
+                if (!string.IsNullOrWhiteSpace(DiscountPart.ExclusionPattern)) {
+                    var exclusionPatternExpression = new Regex(DiscountPart.ExclusionPattern,
+                        RegexOptions.Singleline | RegexOptions.IgnoreCase);
+                    if (exclusionPatternExpression.IsMatch(path))
+                        return false;
+                }
             }
             if (DiscountPart.Roles.Any()) {
                 var user = _wca.GetContext().CurrentUser;

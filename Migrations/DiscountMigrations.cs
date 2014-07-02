@@ -18,6 +18,7 @@ namespace Nwazet.Commerce.Migrations {
                 .Column("EndQuantity", DbType.Int32, column => column.Nullable())
                 .Column("Roles", DbType.String)
                 .Column("Pattern", DbType.String)
+                .Column("ExclusionPattern", DbType.String)
                 .Column("Comment", DbType.String)
             );
 
@@ -25,7 +26,14 @@ namespace Nwazet.Commerce.Migrations {
               .WithPart("DiscountPart")
               .WithPart("TitlePart"));
 
-            return 1;
+            return 2;
+        }
+
+        public int UpdateFrom1() {
+            SchemaBuilder.AlterTable("DiscountPartRecord", table => table
+                .AddColumn<string>("ExclusionPattern"));
+
+            return 2;
         }
     }
 }

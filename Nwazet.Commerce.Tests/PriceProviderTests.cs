@@ -142,6 +142,31 @@ namespace Nwazet.Commerce.Tests {
         }
 
         [Test]
+        public void ExclusionPatternExcludesRightItems() {
+            var patternDiscount = new DiscountStub(4) {
+                DiscountPercent = 10,
+                ExclusionPattern = "foo",
+                Comment = "Pattern discount"
+            };
+            var cart = ShoppingCartHelpers.PrepareCart(new[] { patternDiscount });
+
+            CheckDiscounts(cart, new[] { 1, 0.9, 1 }, new[] { "", patternDiscount.Comment, "" });
+        }
+
+        [Test]
+        public void ExclusionPatternExcludesRightItemsAfterPatternHasIncluded() {
+            var patternDiscount = new DiscountStub(4) {
+                DiscountPercent = 10,
+                Pattern = "bar",
+                ExclusionPattern = "baz",
+                Comment = "Pattern discount"
+            };
+            var cart = ShoppingCartHelpers.PrepareCart(new[] { patternDiscount });
+
+            CheckDiscounts(cart, new[] { 0.9, 1, 1 }, new[] { patternDiscount.Comment, "", "" });
+        }
+
+        [Test]
         public void RoleNotFoundDiscountDoesntApply() {
             var roleDiscount = new DiscountStub(4) {
                 DiscountPercent = 10,

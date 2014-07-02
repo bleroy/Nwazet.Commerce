@@ -13,6 +13,7 @@ namespace Nwazet.Commerce.ViewModels {
         public string[] DiscountRoles { get; set; }
         public IEnumerable<string> Roles { get; set; }
         public string Pattern { get; set; }
+        public string ExclusionPattern { get; set; }
         public string Comment { get; set; }
     }
 }

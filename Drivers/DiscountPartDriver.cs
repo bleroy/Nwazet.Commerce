@@ -62,6 +62,7 @@ namespace Nwazet.Commerce.Drivers {
                         Roles = _roleService.GetRoles().Select(r => r.Name).ToList(),
                         DiscountRoles = part.Roles.ToArray(),
                         Pattern = part.Pattern,
+                        ExclusionPattern = part.ExclusionPattern,
                         Comment = part.Comment
                     }));
         }
@@ -113,6 +114,7 @@ namespace Nwazet.Commerce.Drivers {
                 part.EndQuantity = model.EndQuantity;
                 part.Roles = model.DiscountRoles;
                 part.Pattern = model.Pattern;
+                part.ExclusionPattern = model.ExclusionPattern;
                 part.Comment = model.Comment;
             }
             return Editor(part, shapeHelper);
@@ -128,6 +130,7 @@ namespace Nwazet.Commerce.Drivers {
               .FromAttr(p => p.StartQuantity)
               .FromAttr(p => p.EndQuantity)
               .FromAttr(p => p.Pattern)
+              .FromAttr(p => p.ExclusionPattern)
               .FromAttr(p => p.Comment)
               .With(part.Record)
               .FromAttr(r => r.Discount)
@@ -143,6 +146,7 @@ namespace Nwazet.Commerce.Drivers {
                    .ToAttr(p => p.StartQuantity)
                    .ToAttr(p => p.EndQuantity)
                    .ToAttr(p => p.Pattern)
+                   .ToAttr(p => p.ExclusionPattern)
                    .ToAttr(p => p.Comment)
                    .With(part.Record)
                    .ToAttr(r => r.Discount)

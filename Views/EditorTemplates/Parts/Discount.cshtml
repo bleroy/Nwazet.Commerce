@@ -49,7 +49,11 @@
     
     <label class="sub" for="@Html.IdFor(m => m.Pattern)">@T("Url pattern")</label><br />
     @Html.TextBoxFor(m => m.Pattern, new { @class = "text" })<br />
-    <span class="hint">@T("If specified, this will restrict the applicability of the discount to products with a URL starting with it. For example, if you specify \"/modules\", a product with a path \"/modules/display\" would have the discount applied, but not a product with a path \"/components/standoff\".")</span><br/>
+    <span class="hint">@T("If specified, this regular expression will restrict the applicability of the discount to products with a URL matching it. For example, if you specify \"/modules\", a product with a path \"/modules/display\" would have the discount applied, but not a product with a path \"/components/standoff\".")</span><br/>
+
+    <label class="sub" for="@Html.IdFor(m => m.ExclusionPattern)">@T("Url exclusion pattern")</label><br />
+    @Html.TextBoxFor(m => m.ExclusionPattern, new { @class = "text" })<br />
+    <span class="hint">@T("If specified, this regular expression will restrict the applicability of the discount to products with a URL that is not matching it. For example, if you specify \"/modules\", a product with a path \"/modules/display\" would not have the discount applied, but a product with a path \"/components/standoff\" would.")</span><br />
     
     <label class="sub" for="@Html.IdFor(m => m.Comment)">@T("Comment")</label><br />
     @Html.TextBoxFor(m => m.Comment, new { @class = "text" })<br />
