@@ -1,51 +1,107 @@
-﻿@using Orchard.ContentManagement
+﻿@using Nwazet.Commerce.Models
+@using Orchard.ContentManagement
 @using Orchard.Mvc.Html
 @{
     var title = Layout.Title = T("Order #{0}", Model.OrderId);
+    var items = (Model.CheckoutItems as IEnumerable<CheckoutItem> ?? new CheckoutItem[] {}).ToList();
 }
 <h1>@title</h1>
 <p class="order-status">@T("Status: {0}", Model.Status)</p>
-<fieldset class="order-items">
-    <legend>@T("Products:")</legend>
-    <table>
-        <thead>
-            <tr>
-                <th class="quantity"><abbr title="@T("Quantity")">@T("Qty")</abbr></th>
-                <th class="description">@T("Product")</th>
-                <th class="price">@T("Price")</th>
-                <th class="adjustment">@T("Adjustment")</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Items) {
+@if (!String.IsNullOrWhiteSpace(Model.PurchaseOrder)) {
+    <p class="order-purchase-order">@T("Purchase Order, Invoice, or Reference Order: {0}", Model.PurchaseOrder)</p>
+}
+@if (items.Any()) {
+    <fieldset class="order-items">
+        <legend>@T("Products:")</legend>
+        <table>
+            <thead>
                 <tr>
-                    <td class="quantity">@item.Quantity &times;</td>
-                    <td class="description"><a href="@Url.ItemDisplayUrl((IContent)Model.Products[item.ProductId])">@item.Title</a></td>
-                    <td class="price">@item.Price.ToString("C")</td>
-                    <td class="price">@item.LinePriceAdjustment.ToString("C")</td>
+                    <th class="quantity"><abbr title="@T("Quantity")">@T("Qty")</abbr></th>
+                    <th class="description">@T("Product")</th>
+                    <th class="price">@T("Price")</th>
+                    <th class="adjustment">@T("Adjustment")</th>
                 </tr>
-            }
-        </tbody>
-        <tfoot>
-            <tr class="subtotal">
-                <td colspan="2" class="label">@T("Subtotal")</td>
-                <td class="price">@Model.SubTotal.ToString("C")</td>
-            </tr>
-            <tr class="taxes">
-                <td colspan="2" class="label">@T("Taxes {0}", string.IsNullOrWhiteSpace(Model.Taxes.Name) ? "" : Model.Taxes.Name)</td>
-                <td class="price">@Model.Taxes.Amount.ToString("C")</td>
-            </tr>
-            <tr class="shipping">
-                <td colspan="2" class="label">@T("{0} {1}", Model.ShippingOption.ShippingCompany, Model.ShippingOption.Description)</td>
-                <td class="price">@Model.ShippingOption.Price.ToString("C")</td>
-            </tr>
-            <tr class="total">
-                <td colspan="2" class="label">@T("Total")</td>
-                <td class="price">@Model.Total.ToString("C")</td>
-            </tr>
-        </tfoot>
-    </table>
-</fieldset>
+            </thead>
+            <tbody>
+                @foreach (var item in items) {
+                    <tr>
+                        <td class="quantity">@item.Quantity &times;</td>
+                        <td class="description"><a href="@Url.ItemDisplayUrl((IContent) Model.Products[item.ProductId])">@item.Title</a></td>
+                        <td class="price">@item.Price.ToString("C")</td>
+                        <td class="price">@item.LinePriceAdjustment.ToString("C")</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr class="subtotal">
+                    <td colspan="2" class="label">@T("Subtotal")</td>
+                    <td class="price">@Model.SubTotal.ToString("C")</td>
+                </tr>
+                <tr class="taxes">
+                    <td colspan="2" class="label">@T("Taxes {0}", string.IsNullOrWhiteSpace(Model.Taxes.Name) ? "" : Model.Taxes.Name)</td>
+                    <td class="price">@Model.Taxes.Amount.ToString("C")</td>
+                </tr>
+                <tr class="shipping">
+                    <td colspan="2" class="label">@T("{0} {1}", Model.ShippingOption.ShippingCompany, Model.ShippingOption.Description)</td>
+                    <td class="price">@Model.ShippingOption.Price.ToString("C")</td>
+                </tr>
+                <tr class="total">
+                    <td colspan="2" class="label">@T("Total")</td>
+                    <td class="price">@Model.Total.ToString("C")</td>
+                </tr>
+            </tfoot>
+        </table>
+    </fieldset>
+    Script.Require("jQuery");
+    using (Script.Foot()) {
+        <script>
+            // Clear the cart contents in localStorage
+            jQuery(function($) {
+                var nwazetCart = "nwazet.cart",
+                    emptyCart = function() {
+                        if (hasLocalStorage()) {
+                            localStorage.removeItem(nwazetCart);
+                        }
+                    },
+                    hasLocalStorage = function() {
+                        try {
+                            return "localStorage" in window && window.localStorage !== null;
+                        } catch (e) {
+                            return false;
+                        }
+                    }
+
+                emptyCart();
+            });
+        </script>
+    }
+}
+else {
+    <p class="total">@T("Total: {0:C}", Model.Total)</p>
+    Script.Require("jQuery");
+    using (Script.Foot()) {
+        <script>
+            // Clear the purchase order number from localStorage
+            jQuery(function($) {
+                var purchaseOrder = "PurchaseOrder",
+                    removePo = function() {
+                        if (hasLocalStorage()) {
+                            localStorage.removeItem(purchaseOrder);
+                        }
+                    },
+                    hasLocalStorage = function() {
+                        try {
+                            return "localStorage" in window && window.localStorage !== null;
+                        } catch (e) {
+                            return false;
+                        }
+                    }
+
+                removePo();
+            });
+        </script>
+    }
+}
 
 <fieldset>
     <legend>@T("Charged to:")</legend>
@@ -74,28 +130,3 @@
 
 <div class="order-link">@T("You may view this order at a later time by going to this address: <a href=\"{2}{0}\">{0}</a>, using this password: \"{1}\".",
                             Url.Action("Show", "OrderSsl", new {id = Model.OrderId, area = "Nwazet.Commerce"}), Model.Password, Model.BaseUrl)</div>
-@{
-Script.Require("jQuery");
-using (Script.Foot()) {
-    <script>
-        // Clear the cart contents in localStorage
-        jQuery(function ($) {
-            var nwazetCart = "nwazet.cart",
-                emptyCart = function () {
-                    if (hasLocalStorage()) {
-                        localStorage.removeItem(nwazetCart);
-                    }
-                },
-                hasLocalStorage = function () {
-                    try {
-                        return "localStorage" in window && window.localStorage !== null;
-                    } catch (e) {
-                        return false;
-                    }
-                }
-
-            emptyCart();
-        });
-    </script>
-}
-}

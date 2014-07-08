@@ -13,5 +13,7 @@ namespace Nwazet.Commerce.ViewModels {
         public string Email { get; set; }
         public string Phone { get; set; }
         public string SpecialInstructions { get; set; }
+        public string PurchaseOrder { get; set; }
+        public double Amount { get; set; }
     }
 }

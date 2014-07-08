@@ -55,9 +55,22 @@ namespace Nwazet.Commerce.Routes {
                             {"area", "Nwazet.Commerce"}
                         },
                         new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Route = new Route(
+                        "stripe/sendmoney",
+                        new RouteValueDictionary {
+                            {"area", "Nwazet.Commerce"},
+                            {"controller", "Stripe"},
+                            {"action", "SendMoney"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Nwazet.Commerce"}
+                        },
+                        new MvcRouteHandler())
                 }
             };
         }
-
    }
 }

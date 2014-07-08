@@ -54,16 +54,17 @@ namespace Nwazet.Commerce.Controllers {
             var order = _contentManager.Get<OrderPart>((int) orderId);
             var billingAddress = _addressFormatter.Format(order.BillingAddress);
             var shippingAddress = _addressFormatter.Format(order.ShippingAddress);
+            var items = order.Items.ToList();
             var products = _contentManager
                 .GetMany<IContent>(
-                    order.Items.Select(p => p.ProductId).Distinct(),
+                    items.Select(p => p.ProductId).Distinct(),
                     VersionOptions.Latest,
                     QueryHints.Empty)
                 .ToDictionary(p => p.Id, p => p);
             var shape = _shapeFactory.Order_Confirmation(
                 OrderId: order.Id,
                 Status: _orderService.StatusLabels[order.Status],
-                Items: order.Items,
+                CheckoutItems: items,
                 Products: products,
                 SubTotal: order.SubTotal,
                 Taxes: order.Taxes,
@@ -78,6 +79,7 @@ namespace Nwazet.Commerce.Controllers {
                 CardExpirationMonth: order.CreditCardCharge.ExpirationMonth,
                 CardExpirationYear: order.CreditCardCharge.ExpirationYear,
                 SpecialInstructions: order.SpecialInstructions,
+                PurchaseOrder: order.PurchaseOrder,
                 BaseUrl: _wca.GetContext().CurrentSite.BaseUrl,
                 Password: order.Password);
             _shoppingCart.Clear();

@@ -48,12 +48,13 @@ namespace Nwazet.Commerce.Services {
             string trackingUrl = null,
             bool isTestOrder = false,
             int userId = -1,
-            double amountPaid = 0) {
+            double amountPaid = 0,
+            string purchaseOrder = "") {
 
             var order = _contentManager.Create("Order", VersionOptions.DraftRequired).As<OrderPart>();
             order.Build(creditCardCharge, items, subTotal, total, taxes,
                 shippingOption, shippingAddress, billingAddress, customerEmail,
-                customerPhone, specialInstructions, amountPaid);
+                customerPhone, specialInstructions, amountPaid, purchaseOrder);
             order.Status = status;
             order.TrackingUrl = trackingUrl;
             order.IsTestOrder = isTestOrder;

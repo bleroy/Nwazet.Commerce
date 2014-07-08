@@ -1,6 +1,4 @@
 ﻿@using System.Globalization
-@using Nwazet.Commerce.Models
-@using Orchard.Localization
 @model Nwazet.Commerce.ViewModels.OrderEditorViewModel
 @{
     Script.Require("jQuery");
@@ -14,6 +12,11 @@
         <legend>@T("Order:")</legend>
         <div class="order-id">@T("ID: {0}", Model.Order.Id)</div>
         <div class="order-date">@T("Ordered {0}", Display.DateTimeRelative(dateTimeUtc: ((dynamic)Model.Order.ContentItem).CommonPart.CreatedUtc))</div>
+        <div class="order-user-edit">
+            @Orchard.Mvc.Html.HtmlHelperExtensions.LabelFor(Html, m => m.Order.PurchaseOrder, T("Purchase order:").Text)
+            @Html.TextBoxFor(m => m.Order.PurchaseOrder, new { @class = "text-medium order-purchase-order-edit-field" })
+            <span class="hint">@T("Associate this order with a purchase order, invoice or other order.")</span>
+        </div>
     </fieldset>
     <fieldset class="order-status">
         <legend>@T("Status:")</legend>
@@ -112,7 +115,7 @@
                 <tr class="amountPaid">
                     <td colspan="2" class="label">@T("Amount Paid")</td>
                     <td class="price@(Model.Order.AmountPaid < Model.Order.Total ? " red" : "")">
-                        @Html.TextBoxFor(m => m.Order.AmountPaid, new { @class = "text-small order-amount-field" })
+                        @Html.TextBoxFor(m => m.Order.AmountPaid, "{0:F2}", new { @class = "text-small order-amount-field" })
                     </td>
                 </tr>
             </tfoot>

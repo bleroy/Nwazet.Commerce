@@ -86,7 +86,7 @@ namespace Nwazet.Commerce.Controllers {
         public ActionResult Pay(string errorMessage = null) {
             _wca.GetContext().Layout.IsCartPage = true;
             var checkoutData = GetCheckoutData();
-            if (checkoutData.CheckoutItems == null || !checkoutData.CheckoutItems.Any()) {
+            if ((checkoutData.CheckoutItems == null || !checkoutData.CheckoutItems.Any()) && checkoutData.Amount <= 0) {
                 return RedirectToAction("Index", "ShoppingCart");
             }
             checkoutData.PublishableKey = _stripeService.GetSettings().PublishableKey;
@@ -100,11 +100,15 @@ namespace Nwazet.Commerce.Controllers {
         public ActionResult Pay(StripeCheckoutViewModel stripeData, string stripeToken, string next, string back) {
             var checkoutData = GetCheckoutData(stripeData);
             if (!String.IsNullOrWhiteSpace(back)) {
-                return RedirectToAction("Ship");
+                return RedirectToAction(checkoutData.Amount >= 0 ? "SendMoney" : "Ship");
             }
-            var taxes = checkoutData.Taxes == null ? 0 : checkoutData.Taxes.Amount;
-            var subTotal = checkoutData.CheckoutItems.Sum(i => i.Price*i.Quantity+i.LinePriceAdjustment);
-            var total = subTotal + taxes + checkoutData.ShippingOption.Price;
+            var subTotal = 0.0;
+            var total = checkoutData.Amount;
+            if (total <= 0) {
+                var taxes = checkoutData.Taxes == null ? 0 : checkoutData.Taxes.Amount;
+                subTotal = checkoutData.CheckoutItems.Sum(i => i.Price*i.Quantity + i.LinePriceAdjustment);
+                total = subTotal + taxes + checkoutData.ShippingOption.Price;
+            }
             // Call Stripe to charge card
             var stripeCharge = _stripeService.Charge(stripeToken, total);
 
@@ -120,7 +124,7 @@ namespace Nwazet.Commerce.Controllers {
                 throw new InvalidOperationException(stripeCharge.Error.Type + ": " + stripeCharge.Error.Message);
             }
             
-            int userId = -1;
+            var userId = -1;
             var currentUser = _wca.GetContext().CurrentUser;
             if (currentUser != null) {
                 userId = currentUser.Id;            
@@ -141,7 +145,9 @@ namespace Nwazet.Commerce.Controllers {
                 OrderPart.Pending,
                 null,
                 _stripeService.IsInTestMode(),
-                userId);
+                userId,
+                total,
+                checkoutData.PurchaseOrder);
             TempData["OrderId"] = order.Id;
             _workflowManager.TriggerEvent("NewOrder", order,
                 () => new Dictionary<string, object> {
@@ -151,6 +157,31 @@ namespace Nwazet.Commerce.Controllers {
             order.LogActivity(OrderPart.Event, T("Order created.").Text);
 
             return RedirectToAction("Confirmation", "OrderSsl");
+        }
+
+        public ActionResult SendMoney(string purchaseOrder = "", double amount = 0) {
+            _wca.GetContext().Layout.IsCartPage = true;
+            var checkoutData = new StripeCheckoutViewModel {
+                Amount = amount,
+                PurchaseOrder = purchaseOrder
+            };
+            checkoutData = GetCheckoutData(checkoutData);
+            return View(checkoutData);
+        }
+
+        [HttpPost]
+        public ActionResult SendMoney(StripeCheckoutViewModel stripeData, string next) {
+            var checkoutData = GetCheckoutData(stripeData);
+            if (AnyEmptyString(
+                checkoutData.Email,
+                checkoutData.BillingAddress.FirstName,
+                checkoutData.BillingAddress.LastName,
+                checkoutData.BillingAddress.Address1,
+                checkoutData.BillingAddress.City)
+                || checkoutData.Amount <= 0) {
+                return RedirectToAction("SendMoney");
+            }
+            return RedirectToAction("Pay");
         }
 
         private StripeCheckoutViewModel GetCheckoutData(StripeCheckoutViewModel updateModel = null) {
@@ -188,6 +219,12 @@ namespace Nwazet.Commerce.Controllers {
                 }
                 if (updateModel.Token != null) {
                     checkoutData.Token = updateModel.Token;
+                }
+                if (!String.IsNullOrWhiteSpace(updateModel.PurchaseOrder)) {
+                    checkoutData.PurchaseOrder = updateModel.PurchaseOrder;
+                }
+                if (updateModel.Amount > 0) {
+                    checkoutData.Amount = updateModel.Amount;
                 }
             }
             TempData[NwazetStripeCheckout] = checkoutData;

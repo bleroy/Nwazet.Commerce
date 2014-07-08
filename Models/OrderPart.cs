@@ -51,6 +51,7 @@ namespace Nwazet.Commerce.Models {
         private const string TaxesName = "taxes";
         private const string TotalName = "total";
         private const string AmountName = "amountPaid";
+        private const string PurchaseOrderName = "purchaseOrder";
 
         public void Build(
             CreditCardCharge creditCardCharge,
@@ -64,12 +65,14 @@ namespace Nwazet.Commerce.Models {
             string customerEmail,
             string customerPhone,
             string specialInstructions, 
-            double amountPaid = default(double)) {
+            double amountPaid = default(double),
+            string purchaseOrder = "") {
 
             _contentDocument = new XElement(ContentName)
                 .Attr(SubtotalName, subTotal)
                 .Attr(TotalName, total)
                 .Attr(AmountName, amountPaid == default(double) ? total : amountPaid)
+                .Attr(PurchaseOrderName, purchaseOrder)
                 .AddEl(new XElement(CardName).With(creditCardCharge)
                     .ToAttr(c => c.TransactionId)
                     .ToAttr(c => c.Last4)
@@ -105,8 +108,16 @@ namespace Nwazet.Commerce.Models {
                 .Attr(PhoneName, customerPhone)
                 .Attr(InstructionsName, specialInstructions);
 
+            PersistContents();
+            PersistCustomer();
+        }
+
+        private void PersistContents() {
             Record.Contents = _contentDocument.ToString(SaveOptions.None);
-            Record.Customer = _customerDocument.ToString(SaveOptions.None);
+        }
+
+        private void PersistCustomer() {
+            Record.Customer = CustomerDocument.ToString(SaveOptions.None);
         }
 
         public string Status {
@@ -162,7 +173,15 @@ namespace Nwazet.Commerce.Models {
             }
             set {
                 ContentDocument.SetAttributeValue(AmountName, value);
-                Record.Contents = _contentDocument.ToString(SaveOptions.None);
+                PersistContents();
+            }
+        }
+
+        public string PurchaseOrder {
+            get { return ContentDocument.Attr(PurchaseOrderName); }
+            set {
+                ContentDocument.Attr(PurchaseOrderName, value ?? "");
+                PersistContents();
             }
         }
 
@@ -225,7 +244,7 @@ namespace Nwazet.Commerce.Models {
                     CustomerDocument.Add(shippingAddressElement);
                 }
                 Address.Set(shippingAddressElement, value);
-                Record.Customer = CustomerDocument.ToString(SaveOptions.None);
+                PersistCustomer();
             }
         }
 
@@ -242,7 +261,7 @@ namespace Nwazet.Commerce.Models {
                     CustomerDocument.Add(billingAddressElement);
                 }
                 Address.Set(billingAddressElement, value);
-                Record.Customer = CustomerDocument.ToString(SaveOptions.None);
+                PersistCustomer();
             }
         }
 

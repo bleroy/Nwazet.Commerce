@@ -1,0 +1,52 @@
+﻿@model Nwazet.Commerce.ViewModels.StripeCheckoutViewModel
+@{
+    var title = Layout.Title = T("Send money with Stripe - 1: Billing");
+    Script.Require("jQuery");
+    Script.Include("ship.js");
+    using (Script.Foot()) {
+        <script type="text/javascript">
+            var requiredFormat = "@T("{0} is required.")",
+                required = "@T("Required information")";
+        </script>
+    }
+}
+<h1>@title</h1>
+<div class="ship-errors"></div>
+
+@using (Html.BeginFormAntiForgeryPost(Url.Action("SendMoney", "Stripe", new { area = "Nwazet.Commerce" }), FormMethod.Post, new { @id = "address-form" })) {
+    <fieldset>
+        <legend>@T("Shipping Address")</legend>
+        @Display.CommerceAddressForm(Prefix: "shippingAddress", Address: Model.ShippingAddress, IncludeCountry: true)
+    </fieldset>
+    <fieldset class="toggle-billing">
+        <input id="toggle-billing-address" type="checkbox" checked="checked"/>
+        <label for="toggle-billing-address" class="for-checkbox">@T("Bill me at the shipping address.")</label>
+    </fieldset>
+    <fieldset class="billing-address">
+        <legend>@T("Billing Address")</legend>
+        @Display.CommerceAddressForm(Prefix: "billingAddress", Address: Model.BillingAddress, IncludeCountry: true)
+    </fieldset>
+
+    <label for="@Html.Id("Email")">@T("e-mail")</label>
+    <input id="@Html.Id("Email")" type="text" name="@Html.Name("Email")" value="@Model.Email" class="input-large required" />
+    <div class="hint">@T("Please provide an e-mail address for us to use in order to give you updates on your order.")</div>
+
+    <label for="@Html.Id("Phone")">@T("Phone")</label>
+    <input id="@Html.Id("Phone")" type="text" name="@Html.Name("Phone")" value="@Model.Phone" class="input-large" />
+    <div class="hint">@T("Please provide a phone number where we can reach you in case we need additional information. This is also required when shipping to some countries.")</div>
+    
+    <label for="@Html.Id("PurchaseOrder")">@T("PurchaseOrder")</label>
+    <input id="@Html.Id("PurchaseOrder")" type="text" name="@Html.Name("PurchaseOrder")" value="@Model.PurchaseOrder" class="input-large" />
+    <div class="hint">@T("If this is related to an existing purchase order, invoice, or order, please specify the reference id for it here.")</div>
+
+    <label for="@Html.Id("Amount")">@T("Amount")</label>
+    <input id="@Html.Id("Amount")" type="number" min="0" step="0.01" name="@Html.Name("Amount")" value="@Model.Amount" class="input-mini" />
+    <div class="hint">@T("Specify the amount you'd like to send.")</div>
+
+    <label for="@Html.Id("specialInstructions")">@T("Special Instructions")</label>
+    <textarea id="@Html.Id("specialInstructions")" name="@Html.Name("SpecialInstructions")" rows="6" cols="80" class="input-xxlarge"></textarea>
+    <input type="hidden" name="stripeToken" value="@Model.Token" />
+    <div class="actions">
+        <input type="submit" name="next" class="submit-button" value="@T("Next >")" />
+    </div>
+}
