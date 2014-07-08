@@ -54,7 +54,9 @@ namespace Nwazet.Commerce.Controllers {
 
         public ActionResult Ship() {
             _wca.GetContext().Layout.IsCartPage = true;
-            var checkoutData = GetCheckoutData();
+            var checkoutData = GetCheckoutData(new StripeCheckoutViewModel {
+                Amount = 0
+            });
             if (checkoutData.CheckoutItems == null || !checkoutData.CheckoutItems.Any()) {
                 return RedirectToAction("Index", "ShoppingCart");
             }
@@ -104,7 +106,7 @@ namespace Nwazet.Commerce.Controllers {
             }
             var subTotal = 0.0;
             var total = checkoutData.Amount;
-            if (total <= 0) {
+            if (checkoutData.CheckoutItems.Any()) {
                 var taxes = checkoutData.Taxes == null ? 0 : checkoutData.Taxes.Amount;
                 subTotal = checkoutData.CheckoutItems.Sum(i => i.Price*i.Quantity + i.LinePriceAdjustment);
                 total = subTotal + taxes + checkoutData.ShippingOption.Price;
@@ -155,6 +157,8 @@ namespace Nwazet.Commerce.Controllers {
                     {"Order", order}
                 });
             order.LogActivity(OrderPart.Event, T("Order created.").Text);
+            // Clear checkout info from temp data
+            TempData.Remove(NwazetStripeCheckout);
 
             return RedirectToAction("Confirmation", "OrderSsl");
         }
@@ -163,7 +167,8 @@ namespace Nwazet.Commerce.Controllers {
             _wca.GetContext().Layout.IsCartPage = true;
             var checkoutData = new StripeCheckoutViewModel {
                 Amount = amount,
-                PurchaseOrder = purchaseOrder
+                PurchaseOrder = purchaseOrder,
+                CheckoutItems = new CheckoutItem[] { }
             };
             checkoutData = GetCheckoutData(checkoutData);
             return View(checkoutData);
