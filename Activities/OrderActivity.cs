@@ -45,6 +45,17 @@ namespace Nwazet.Commerce.Activities {
     }
 
     [OrchardFeature("Nwazet.Orders")]
+    public class NewPayment : OrderActivity {
+        public override string Name {
+            get { return "NewPayment"; }
+        }
+
+        public override LocalizedString Description {
+            get { return T("A new payment has been made."); }
+        }
+    }
+
+    [OrchardFeature("Nwazet.Orders")]
     public class OrderError : OrderActivity {
         public override string Name {
             get { return "OrderError"; }

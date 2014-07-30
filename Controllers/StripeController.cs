@@ -106,7 +106,8 @@ namespace Nwazet.Commerce.Controllers {
             }
             var subTotal = 0.0;
             var total = checkoutData.Amount;
-            if (checkoutData.CheckoutItems.Any()) {
+            var isProductOrder = checkoutData.CheckoutItems.Any();
+            if (isProductOrder) {
                 var taxes = checkoutData.Taxes == null ? 0 : checkoutData.Taxes.Amount;
                 subTotal = checkoutData.CheckoutItems.Sum(i => i.Price*i.Quantity + i.LinePriceAdjustment);
                 total = subTotal + taxes + checkoutData.ShippingOption.Price;
@@ -151,7 +152,9 @@ namespace Nwazet.Commerce.Controllers {
                 total,
                 checkoutData.PurchaseOrder);
             TempData["OrderId"] = order.Id;
-            _workflowManager.TriggerEvent("NewOrder", order,
+            _workflowManager.TriggerEvent(
+                isProductOrder ? "NewOrder" : "NewPayment",
+                order,
                 () => new Dictionary<string, object> {
                     {"Content", order},
                     {"Order", order}
