@@ -1,6 +1,6 @@
 ﻿@model Nwazet.Commerce.ViewModels.StripeCheckoutViewModel
 @{
-    var title = Layout.Title = T("Checkout with Stripe - 1: Shipping & Billing Addresses");
+    var title = Layout.Title = T("Checkout with <a href=\"https://stripe.com/\">Stripe</a> - 1: Shipping & Billing Addresses");
     Script.Require("jQuery");
     Script.Include("ship.js");
     using (Script.Foot()) {

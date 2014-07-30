@@ -2,7 +2,7 @@
 @using Nwazet.Commerce.Services
 @model Nwazet.Commerce.ViewModels.StripeCheckoutViewModel
 @{
-    var title = Layout.Title = T("Checkout with Stripe - 2: Credit Card Information");
+    var title = Layout.Title = T("Checkout with <a href=\"https://stripe.com/\">Stripe</a> - 2: Credit Card Information");
     Script.Require("jQuery");
     Script.Include("https://js.stripe.com/v1/");
     var nameFormatter = WorkContext.Resolve<IAddressFormatter>();
