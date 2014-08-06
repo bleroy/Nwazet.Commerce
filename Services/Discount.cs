@@ -39,7 +39,7 @@ namespace Nwazet.Commerce.Services {
                 DiscountPart.EndQuantity < quantityProduct.Quantity)
                 return false;
             if (!string.IsNullOrWhiteSpace(DiscountPart.Pattern) || !string.IsNullOrWhiteSpace(DiscountPart.ExclusionPattern)) {
-                string path;
+                string path = null;
                 if (DiscountPart.DisplayUrlResolver != null) {
                     path = DiscountPart.DisplayUrlResolver(quantityProduct.Product);
                 }
@@ -48,8 +48,11 @@ namespace Nwazet.Commerce.Services {
                     path = urlHelper.ItemDisplayUrl(quantityProduct.Product);
                 } else {
                     var autoroutePart = quantityProduct.Product.As<AutoroutePart>();
-                    path = "/" + autoroutePart.Path; // Discount patterns have leading slash
+                    if (autoroutePart != null) {
+                        path = "/" + autoroutePart.Path; // Discount patterns have leading slash
+                    }
                 }
+                if(path == null) return false;
                 if (!string.IsNullOrWhiteSpace(DiscountPart.Pattern)) {
                     var patternExpression = new Regex(DiscountPart.Pattern, RegexOptions.Singleline | RegexOptions.IgnoreCase);
                     if (!patternExpression.IsMatch(path))
