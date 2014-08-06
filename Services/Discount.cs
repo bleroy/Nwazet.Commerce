@@ -10,6 +10,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Mvc.Html;
 using Orchard.Roles.Models;
 using Orchard.Services;
+using Orchard.Autoroute.Models;
 
 namespace Nwazet.Commerce.Services {
     [OrchardFeature("Nwazet.Promotions")]
@@ -42,9 +43,12 @@ namespace Nwazet.Commerce.Services {
                 if (DiscountPart.DisplayUrlResolver != null) {
                     path = DiscountPart.DisplayUrlResolver(quantityProduct.Product);
                 }
-                else {
+                else if(_wca.GetContext().HttpContext != null) {
                     var urlHelper = new UrlHelper(_wca.GetContext().HttpContext.Request.RequestContext);
                     path = urlHelper.ItemDisplayUrl(quantityProduct.Product);
+                } else {
+                    var autoroutePart = quantityProduct.Product.As<AutoroutePart>();
+                    path = "/" + autoroutePart.Path; // Discount patterns have leading slash
                 }
                 if (!string.IsNullOrWhiteSpace(DiscountPart.Pattern)) {
                     var patternExpression = new Regex(DiscountPart.Pattern, RegexOptions.Singleline | RegexOptions.IgnoreCase);
