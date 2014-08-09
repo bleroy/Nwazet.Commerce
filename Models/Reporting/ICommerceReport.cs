@@ -8,6 +8,7 @@ namespace Nwazet.Commerce.Models.Reporting {
         string Description { get; }
         string DescriptionColumnHeader { get; }
         string ValueColumnHeader { get; }
+        string ValueFormat { get; }
         ChartType ChartType { get; }
 
         IEnumerable<ReportDataPoint> GetData(

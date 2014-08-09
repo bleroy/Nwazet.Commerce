@@ -5,7 +5,7 @@
     Layout.Title = T("Choose A Report").ToString();
 }
 <ul id="reports-available">
-    @foreach (var report in Model) {
+    @foreach (var report in Model.OrderBy(report => report.Name)) {
         <li>
             <a href="@Url.Action("Report", "Report", new {report=report.Name})">
                 <h2>@report.Name</h2>

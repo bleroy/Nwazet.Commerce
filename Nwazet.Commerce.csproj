@@ -273,6 +273,7 @@
     <Compile Include="Models\ShoppingCartWidgetPart.cs" />
     <Compile Include="Permissions\ReportPermissions.cs" />
     <Compile Include="Permissions\OrderPermissions.cs" />
+    <Compile Include="Reports\AverageSaleAmountReport.cs" />
     <Compile Include="Reports\NumberOfSalesReport.cs" />
     <Compile Include="Routes\UspsRoutes.cs" />
     <Compile Include="Routes\StripeRoutes.cs" />

@@ -61,12 +61,17 @@
         @foreach (var dataPoint in Model.DataPoints) {
             <tr>
                 <td class="description">@dataPoint.Description</td>
-                <td class="value">
-                    @if (!String.IsNullOrWhiteSpace(dataPoint.Url)) {
-                        <a href="@dataPoint.Url">@dataPoint.Value</a>
-                    }
-                    else {
-                        @dataPoint.Value
+                <td class="value" data-value="@dataPoint.Value">
+                    @{
+                        var valueString = String.IsNullOrWhiteSpace(Model.ValueFormat)
+                            ? dataPoint.Value.ToString()
+                            : dataPoint.Value.ToString(Model.ValueFormat);
+                        if (!String.IsNullOrWhiteSpace(dataPoint.Url)) {
+                            <a href="@dataPoint.Url">@valueString</a>
+                        }
+                        else {
+                            @valueString
+                        }
                     }
                 </td>
             </tr>

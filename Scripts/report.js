@@ -2,7 +2,7 @@
     var ctx = $("#report-chart").get(0).getContext("2d"),
         dataTable = $("#commerce-report-data-table"),
         labels = dataTable.find("tbody tr td.description").map(function() { return $(this).html(); }),
-        values = dataTable.find("tbody tr td.value").map(function () { return parseFloat($(this).html(), 10); }),
+        values = dataTable.find("tbody tr td.value").map(function () { return parseFloat($(this).data("value"), 10); }),
         chartType = dataTable.data("chart-type"),
         palette = ["hsla(164,34%,50%,1)","hsla(141,20%,64%,1)","hsla(34,54%,85%,1)","hsla(42,72%,68%,1)","hsla(7,68%,54%,1)","hsla(13,54%,33%,1)"],
         data = {

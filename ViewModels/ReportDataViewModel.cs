@@ -10,6 +10,7 @@ namespace Nwazet.Commerce.ViewModels {
         public string Description { get; set; }
         public string DescriptionColumnHeader { get; set; }
         public string ValueColumnHeader { get; set; }
+        public string ValueFormat { get; set; }
         public ChartType ChartType { get; set; }
         public string Preset { get; set; }
         public DateTimeEditor StartDateEditor { get; set; }

@@ -11,10 +11,10 @@ using Orchard.Localization;
 
 namespace Nwazet.Commerce.Reports {
     [OrchardFeature("Nwazet.Reports")]
-    public class NumberOfSalesReport : ICommerceReport {
+    public class AverageSaleAmountReport : ICommerceReport {
         private readonly IContentManager _contentManager;
 
-        public NumberOfSalesReport(IContentManager contentManager) {
+        public AverageSaleAmountReport(IContentManager contentManager) {
             _contentManager = contentManager;
             T = NullLocalizer.Instance;
         }
@@ -22,16 +22,16 @@ namespace Nwazet.Commerce.Reports {
         public Localizer T { get; set; }
 
         public string Name {
-            get { return T("Number of sales").Text; }
+            get { return T("Average amount of sales").Text; }
         }
 
         public string Description {
-            get { return T("Number of sales").Text; }
+            get { return T("Average amount of each sale").Text; }
         }
 
         public string DescriptionColumnHeader { get { return T("Period").Text; } }
-        public string ValueColumnHeader { get { return T("Number of sales").Text; } }
-        public string ValueFormat { get { return null; } }
+        public string ValueColumnHeader { get { return T("Amount of sales").Text; } }
+        public string ValueFormat { get { return "c"; } }
 
         public ChartType ChartType { get { return ChartType.Line; } }
 
@@ -53,12 +53,16 @@ namespace Nwazet.Commerce.Reports {
             var intervalStart = startDate;
             var intervalEnd = startDate + granularity;
             while (intervalStart < endDate) {
-                var count = orders.Count(
+                var ordersForInterval = orders.Where(
                     order => order.CreatedUtc >= intervalStart
-                             && order.CreatedUtc < intervalEnd);
+                             && order.CreatedUtc < intervalEnd)
+                    .ToList();
+                var amount = ordersForInterval.Any()
+                    ? ordersForInterval.Average(order => order.As<OrderPart>().AmountPaid)
+                    : 0.0;
                 results.Add(new ReportDataPoint {
                     Description = granularity.ToString(intervalStart, CultureInfo.CurrentUICulture),
-                    Value = count
+                    Value = amount
                 });
                 intervalStart = intervalEnd;
                 intervalEnd = intervalStart + granularity;

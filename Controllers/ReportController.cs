@@ -75,6 +75,7 @@ namespace Nwazet.Commerce.Controllers {
                 Description = reportService.Description,
                 DescriptionColumnHeader = reportService.DescriptionColumnHeader,
                 ValueColumnHeader = reportService.ValueColumnHeader,
+                ValueFormat = reportService.ValueFormat,
                 ChartType = reportService.ChartType,
                 DataPoints = reportService.GetData(startDate, endDate, granularity),
                 StartDateEditor = new DateTimeEditor {
