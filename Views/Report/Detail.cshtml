@@ -1,0 +1,75 @@
+﻿@model Nwazet.Commerce.ViewModels.ReportDataViewModel
+@using Nwazet.Commerce.Models.Reporting;
+@{
+    Style.Require("DateTimeEditor");
+    Style.Require("jQueryCalendars_Picker");
+    Style.Require("jQueryUI_Calendars_Picker");
+    Style.Require("jQueryTimeEntry");
+    Style.Require("jQueryDateTimeEditor");
+    Style.Include("reports-admin.css");
+
+    Script.Require("jQueryCalendars_All").AtFoot();
+    Script.Require("jQueryCalendars_Picker_Ext").AtFoot();
+    Script.Require("jQueryDateTimeEditor").AtFoot();
+    Script.Include("chartjs.js", "chartjs.min.js").AtFoot();
+    Script.Include("report.js", "report.min.js").AtFoot();
+    Layout.Title = Model.Name;
+
+    <fieldset class="bulk-actions report-filters">
+        @using (Html.BeginForm("Report", "Report", FormMethod.Get)) {
+            @Html.Hidden("report", Model.Name)
+            <label for="preset">@T("Preset:")</label>
+            <select id="preset" name="preset">
+                @Html.SelectOption(Model.Preset, "", T("Choose a preset...").ToString())
+                @Html.SelectOption(Model.Preset, "today", T("Today").ToString())
+                @Html.SelectOption(Model.Preset, "thisweek", T("This week").ToString())
+                @Html.SelectOption(Model.Preset, "currentmonth", T("This month").ToString())
+                @Html.SelectOption(Model.Preset, "lastfiveyears", T("Last five years").ToString())
+                @Html.SelectOption(Model.Preset, "yeartodate", T("Year to date").ToString())
+            </select>
+            <button type="submit">@T("Apply")</button>
+        }
+        @using (Html.BeginForm("Report", "Report", FormMethod.Get)) {
+            @Html.Hidden("report", Model.Name)
+            @Html.Label("startDate", T("Between").Text)
+            <label class="forpicker" for="startDate">@T("Date")</label>
+            <span class="date">@Html.TextBox("startDate", Model.StartDateEditor.Date, new { @class = "text-box single-line" })</span>
+            @Html.Label("startDate", T(" and ").Text)
+            <label class="forpicker" for="endDate">@T("Date")</label>
+            <span class="date">@Html.TextBox("endDate", Model.EndDateEditor.Date, new { @class = "text-box single-line" })</span>
+            <label for="granularity">@T("Granularity:")</label>
+            <select id="granularity" name="granularity">
+                @Html.SelectOption(Model.Granularity.ToString(), "", T("Choose a granularity...").ToString())
+                @Html.SelectOption(Model.Granularity.ToString(), TimePeriod.Hour.ToString(), T("Hour").ToString())
+                @Html.SelectOption(Model.Granularity.ToString(), TimePeriod.Day.ToString(), T("Day").ToString())
+                @Html.SelectOption(Model.Granularity.ToString(), TimePeriod.Week.ToString(), T("Week").ToString())
+                @Html.SelectOption(Model.Granularity.ToString(), TimePeriod.Month.ToString(), T("Month").ToString())
+                @Html.SelectOption(Model.Granularity.ToString(), TimePeriod.Trimester.ToString(), T("Trimester").ToString())
+                @Html.SelectOption(Model.Granularity.ToString(), TimePeriod.Year.ToString(), T("Year").ToString())
+            </select>
+            <button type="submit">@T("Apply")</button>
+        }
+    </fieldset>
+    <canvas id="report-chart" width="600" height="400"></canvas>
+    <table class="commerce-report-data" id="commerce-report-data-table" data-chart-type="@Model.ChartType.ToString()">
+        <thead>
+            <tr>
+                <th>@Model.DescriptionColumnHeader</th>
+                <th>@Model.ValueColumnHeader</th>
+            </tr>
+        </thead>
+        @foreach (var dataPoint in Model.DataPoints) {
+            <tr>
+                <td class="description">@dataPoint.Description</td>
+                <td class="value">
+                    @if (!String.IsNullOrWhiteSpace(dataPoint.Url)) {
+                        <a href="@dataPoint.Url">@dataPoint.Value</a>
+                    }
+                    else {
+                        @dataPoint.Value
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+}

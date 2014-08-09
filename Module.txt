@@ -46,6 +46,11 @@ Features:
         Description: Keeps track of the domain the user came from, in order to honor partner referral fees
         Category: Commerce
         Dependencies: Nwazet.Commerce
+    Nwazet.Reports:
+        Name: Nwazet Reports
+        Description: Generates reports for Nwazet Commerce
+        Category: Commerce
+        Dependencies: Nwazet.Commerce, Nwazet.Orders
     Usps.Shipping:
 		Name: USPS Shipping
 		Description: Dynamic USPS shipping method, using USPS web services for data that is always up-to-date

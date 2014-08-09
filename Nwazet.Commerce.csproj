@@ -70,6 +70,10 @@
     <Content Include="Content\checkout-with-stripe.png" />
     <Content Include="Content\menu.nwazet-commerce.png" />
     <Content Include="LICENSE.txt" />
+    <Content Include="Scripts\chartjs.js" />
+    <Content Include="Scripts\chartjs.min.js">
+      <DependentUpon>chartjs.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\inventory.js" />
     <Content Include="Scripts\inventory.min.js">
       <DependentUpon>inventory.js</DependentUpon>
@@ -81,6 +85,10 @@
     <Content Include="Scripts\referral.js" />
     <Content Include="Scripts\referral.min.js">
       <DependentUpon>referral.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\report.js" />
+    <Content Include="Scripts\report.min.js">
+      <DependentUpon>report.js</DependentUpon>
     </Content>
     <Content Include="Scripts\ship.js" />
     <Content Include="Scripts\ship.min.js">
@@ -94,6 +102,7 @@
     </Content>
     <Content Include="Styles\bundle.nwazet-commerce-admin.css" />
     <Content Include="Styles\attribute.nwazet-commerce-admin.css" />
+    <Content Include="Styles\reports-admin.css" />
     <Content Include="Styles\workflows-activity-order-status-changed-product.css" />
     <Content Include="Styles\workflows-activity-order-tracking-url-changed.css" />
     <Content Include="Styles\workflows-activity-new-order.css" />
@@ -158,6 +167,7 @@
     <Compile Include="Controllers\AttributesAdminController.cs" />
     <Compile Include="Controllers\OrderAdminController.cs" />
     <Compile Include="Controllers\OrderSslController.cs" />
+    <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\TaxAdminController.cs" />
     <Compile Include="Controllers\UspsAdminController.cs" />
     <Compile Include="Controllers\PromotionAdminController.cs" />
@@ -195,6 +205,7 @@
     <Compile Include="Handlers\SizeBasedShippingMethodPartHandler.cs" />
     <Compile Include="Handlers\WeightBasedShippingMethodPartHandler.cs" />
     <Compile Include="Handlers\ProductPartHandler.cs" />
+    <Compile Include="Menus\ReportsAdminMenu.cs" />
     <Compile Include="Menus\ProductSettingsAdminMenu.cs" />
     <Compile Include="Menus\AttributeAdminMenu.cs" />
     <Compile Include="Menus\OrderAdminMenu.cs" />
@@ -220,6 +231,10 @@
     <Compile Include="Models\PriceTier.cs" />
     <Compile Include="Models\ProductAttributeValue.cs" />
     <Compile Include="Models\ProductSettingsPart.cs" />
+    <Compile Include="Models\Reporting\ChartType.cs" />
+    <Compile Include="Models\Reporting\ICommerceReport.cs" />
+    <Compile Include="Models\Reporting\ReportDataPoint.cs" />
+    <Compile Include="Models\Reporting\TimePeriod.cs" />
     <Compile Include="Models\ZipCodeTaxPart.cs" />
     <Compile Include="Models\StateOrCountryTaxPart.cs" />
     <Compile Include="Models\StateOrCountryTaxPartRecord.cs" />
@@ -256,7 +271,9 @@
     <Compile Include="Models\ShoppingCartItem.cs" />
     <Compile Include="Models\ShoppingCartQuantityProduct.cs" />
     <Compile Include="Models\ShoppingCartWidgetPart.cs" />
+    <Compile Include="Permissions\ReportPermissions.cs" />
     <Compile Include="Permissions\OrderPermissions.cs" />
+    <Compile Include="Reports\NumberOfSalesReport.cs" />
     <Compile Include="Routes\UspsRoutes.cs" />
     <Compile Include="Routes\StripeRoutes.cs" />
     <Compile Include="Routes\OrderRoutes.cs" />
@@ -315,6 +332,7 @@
     <Compile Include="ViewModels\OrderEditorViewModel.cs" />
     <Compile Include="ViewModels\PricingSettingsViewModel.cs" />
     <Compile Include="ViewModels\ProductEditorViewModel.cs" />
+    <Compile Include="ViewModels\ReportDataViewModel.cs" />
     <Compile Include="ViewModels\TaxIndexViewModel.cs" />
     <Compile Include="ViewModels\DiscountEditorViewModel.cs" />
     <Compile Include="ViewModels\ProductAttributesPartEditViewModel.cs" />
@@ -404,6 +422,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Stripe\SendMoney.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\chartjs.min.js.map">
+      <DependentUpon>chartjs.js</DependentUpon>
+    </None>
+    <None Include="Scripts\report.min.js.map">
+      <DependentUpon>report.js</DependentUpon>
+    </None>
+    <None Include="Views\Report\Detail.cshtml" />
+    <None Include="Views\Report\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

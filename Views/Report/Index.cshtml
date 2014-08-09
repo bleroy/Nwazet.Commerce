@@ -1,0 +1,16 @@
+﻿@model List<ICommerceReport>
+@using Nwazet.Commerce.Models.Reporting;
+@{
+    Style.Include("reports-admin.css");
+    Layout.Title = T("Choose A Report").ToString();
+}
+<ul id="reports-available">
+    @foreach (var report in Model) {
+        <li>
+            <a href="@Url.Action("Report", "Report", new {report=report.Name})">
+                <h2>@report.Name</h2>
+                <span class="hint">@Html.Raw(report.Description)</span>
+            </a>
+        </li>
+    }
+</ul>

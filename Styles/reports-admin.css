@@ -1,0 +1,48 @@
+﻿#reports-available li {
+    border: 0;
+    padding: 0;
+}
+    #reports-available li a {
+        border: 1px solid #EAEAEA;
+        display: block;
+        padding: 5px 10px;
+    }
+    #reports-available li a:hover {
+        border-color: #487328;
+    }
+        #reports-available li a p {
+            margin-top: 5px;
+        }
+
+.bulk-actions.report-filters {
+    margin-bottom: 2em;
+    display: block;
+}
+    .bulk-actions.report-filters form {
+        display: inline-block;
+        margin-right: 3em;
+    }
+
+.commerce-report-data {
+    margin: 1em 0 1.4em 0;
+    background: #fff;
+    border: 1px solid #eaeaea;
+    border-bottom: none;
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+}
+
+    .commerce-report-data thead, .commerce-report-data th {
+        background: #f5f5f5;
+        overflow: hidden;
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    .commerce-report-data th, .commerce-report-data td {
+        border-bottom: 1px solid #eaeaea;
+        border-spacing: 0;
+        display: table-cell;
+        padding: 8px 12px;
+    }

@@ -59,7 +59,7 @@ namespace Nwazet.Commerce.Controllers {
             var states = OrderPart.States.ToList();
 
             if (model.Options == null) {
-                model.Options = new ContentOptions {};
+                model.Options = new ContentOptions();
             }
             if (!string.IsNullOrWhiteSpace(model.Options.Search)) {
                 int id;
