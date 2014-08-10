@@ -275,6 +275,7 @@
     <Compile Include="Permissions\OrderPermissions.cs" />
     <Compile Include="Reports\AverageSaleAmountReport.cs" />
     <Compile Include="Reports\BaseSalesReport.cs" />
+    <Compile Include="Reports\MostProfitableProductsReport.cs" />
     <Compile Include="Reports\BestSellingProductsReport.cs" />
     <Compile Include="Reports\TotalSalesReport.cs" />
     <Compile Include="Reports\NumberOfSalesReport.cs" />

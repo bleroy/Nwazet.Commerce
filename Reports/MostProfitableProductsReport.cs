@@ -9,10 +9,10 @@ using Orchard.Core.Title.Models;
 using Orchard.Localization;
 
 namespace Nwazet.Commerce.Reports {
-    public class BestSellingProductsReport : ICommerceReport {
+    public class MostProfitableProductsReport : ICommerceReport {
         private readonly IContentManager _contentManager;
 
-        public BestSellingProductsReport(IContentManager contentManager) {
+        public MostProfitableProductsReport(IContentManager contentManager) {
             _contentManager = contentManager;
             T = NullLocalizer.Instance;
         }
@@ -20,11 +20,11 @@ namespace Nwazet.Commerce.Reports {
         public Localizer T { get; set; }
 
         public string Name {
-            get { return T("Best Sellers").Text; }
+            get { return T("Most profitable products").Text; }
         }
 
         public string Description {
-            get { return T("Best selling products as a percentage of the total number of products sold.").Text; }
+            get { return T("Products that made the most money.").Text; }
         }
 
         public string DescriptionColumnHeader {
@@ -32,11 +32,11 @@ namespace Nwazet.Commerce.Reports {
         }
 
         public string ValueColumnHeader {
-            get { return T("Percentage of total number of products sold").Text; }
+            get { return T("Revenue").Text; }
         }
 
         public string ValueFormat {
-            get { return "p"; }
+            get { return "c"; }
         }
 
         public ChartType ChartType {
@@ -53,30 +53,29 @@ namespace Nwazet.Commerce.Reports {
                 .Where(order => order.Status != OrderPart.Cancelled)
                 .List()
                 .ToList();
-            var totalQuantities = new Dictionary<int, int>();
+            var totalRevenues = new Dictionary<int, double>();
             foreach (var order in orders) {
                 var checkoutItems = order.As<OrderPart>().Items;
                 foreach (var checkoutItem in checkoutItems) {
                     var productId = checkoutItem.ProductId;
-                    if (totalQuantities.ContainsKey(productId)) {
-                        totalQuantities[productId] += checkoutItem.Quantity;
+                    var totalPrice = checkoutItem.Quantity*checkoutItem.Price;
+                    if (totalRevenues.ContainsKey(productId)) {
+                        totalRevenues[productId] += totalPrice;
                     }
                     else {
-                        totalQuantities.Add(productId, checkoutItem.Quantity);
+                        totalRevenues.Add(productId, totalPrice);
                     }
                 }
             }
-            var totalProductsSold = totalQuantities.Values.Sum();
             var products = _contentManager.GetMany<TitlePart>(
-                totalQuantities.Keys,
+                totalRevenues.Keys,
                 VersionOptions.Published,
                 QueryHints.Empty)
                 .ToDictionary(title => title.Id, title => title.Title);
-            return totalQuantities
+            return totalRevenues
                 .Select(q => new ReportDataPoint {
                     Description = products[q.Key],
-                    Value = q.Value,
-                    ValueString = T("{0:p} ({1})", (double)q.Value / totalProductsSold, q.Value).Text
+                    Value = q.Value
                 })
                 .OrderByDescending(q => q.Value);
         }

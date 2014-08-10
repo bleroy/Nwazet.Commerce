@@ -1,5 +1,5 @@
 ﻿$(function() {
-    var cutoff = 30,
+    var cutoff = 31,
         ctx = $("#report-chart").get(0).getContext("2d"),
         dataTable = $("#commerce-report-data-table"),
         labels = dataTable.find("tbody tr td.description").map(function() { return $(this).html(); }),
