@@ -22,15 +22,15 @@ namespace Nwazet.Commerce.Reports {
         public Localizer T { get; set; }
 
         public string Name {
-            get { return T("Number of sales").Text; }
+            get { return T("Number of orders").Text; }
         }
 
         public string Description {
-            get { return T("Number of sales").Text; }
+            get { return T("Number of distinct successful orders").Text; }
         }
 
         public string DescriptionColumnHeader { get { return T("Period").Text; } }
-        public string ValueColumnHeader { get { return T("Number of sales").Text; } }
+        public string ValueColumnHeader { get { return T("Number of orders").Text; } }
         public string ValueFormat { get { return null; } }
 
         public ChartType ChartType { get { return ChartType.Line; } }

@@ -22,15 +22,15 @@ namespace Nwazet.Commerce.Reports {
         public Localizer T { get; set; }
 
         public string Name {
-            get { return T("Average amount of sales").Text; }
+            get { return T("Average order").Text; }
         }
 
         public string Description {
-            get { return T("Average amount of each sale").Text; }
+            get { return T("Average amount of one order over the period").Text; }
         }
 
         public string DescriptionColumnHeader { get { return T("Period").Text; } }
-        public string ValueColumnHeader { get { return T("Amount of sales").Text; } }
+        public string ValueColumnHeader { get { return T("Average amount of orders").Text; } }
         public string ValueFormat { get { return "c"; } }
 
         public ChartType ChartType { get { return ChartType.Line; } }
