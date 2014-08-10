@@ -1,5 +1,7 @@
 ﻿namespace Nwazet.Commerce.Models.Reporting {
     public enum ChartType {
-        Line, Bar
+        Line,
+        Bar,
+        Doughnut
     }
 }

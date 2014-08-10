@@ -1,4 +1,5 @@
 ﻿@model Nwazet.Commerce.ViewModels.ReportDataViewModel
+@using System.Globalization
 @using Nwazet.Commerce.Models.Reporting;
 @{
     Style.Require("DateTimeEditor");
@@ -32,10 +33,10 @@
         @using (Html.BeginForm("Report", "Report", FormMethod.Get)) {
             @Html.Hidden("report", Model.Name)
             @Html.Label("startDate", T("Between").Text)
-            <label class="forpicker" for="startDate">@T("Date")</label>
+            <label class="forpicker" for="@Html.Id("startDate")">@T("Date")</label>
             <span class="date">@Html.TextBox("startDate", Model.StartDateEditor.Date, new { @class = "text-box single-line" })</span>
             @Html.Label("startDate", T(" and ").Text)
-            <label class="forpicker" for="endDate">@T("Date")</label>
+            <label class="forpicker" for="@Html.Id("endDate")">@T("Date")</label>
             <span class="date">@Html.TextBox("endDate", Model.EndDateEditor.Date, new { @class = "text-box single-line" })</span>
             <label for="granularity">@T("Granularity:")</label>
             <select id="granularity" name="granularity">
@@ -51,7 +52,7 @@
         }
     </fieldset>
     <canvas id="report-chart" width="600" height="400"></canvas>
-    <table class="commerce-report-data" id="commerce-report-data-table" data-chart-type="@Model.ChartType.ToString()">
+    <table class="commerce-report-data" id="commerce-report-data-table" data-chart-type="@Model.ChartType.ToString()" data-other-text="@T("Other")">
         <thead>
             <tr>
                 <th>@Model.DescriptionColumnHeader</th>
@@ -59,19 +60,20 @@
             </tr>
         </thead>
         @foreach (var dataPoint in Model.DataPoints) {
+            var valueString =
+                String.IsNullOrWhiteSpace(dataPoint.ValueString)
+                    ? String.IsNullOrWhiteSpace(Model.ValueFormat)
+                        ? dataPoint.Value.ToString(CultureInfo.CurrentUICulture)
+                        : dataPoint.Value.ToString(Model.ValueFormat)
+                    : dataPoint.ValueString;
             <tr>
                 <td class="description">@dataPoint.Description</td>
-                <td class="value" data-value="@dataPoint.Value">
-                    @{
-                        var valueString = String.IsNullOrWhiteSpace(Model.ValueFormat)
-                            ? dataPoint.Value.ToString()
-                            : dataPoint.Value.ToString(Model.ValueFormat);
-                        if (!String.IsNullOrWhiteSpace(dataPoint.Url)) {
-                            <a href="@dataPoint.Url">@valueString</a>
-                        }
-                        else {
-                            @valueString
-                        }
+                <td class="value" data-value="@dataPoint.Value" data-value-string="@valueString">
+                    @if (!String.IsNullOrWhiteSpace(dataPoint.Url)) {
+                        <a href="@dataPoint.Url">@valueString</a>
+                    }
+                    else {
+                        @valueString
                     }
                 </td>
             </tr>

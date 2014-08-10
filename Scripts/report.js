@@ -1,26 +1,55 @@
 ﻿$(function() {
-    var ctx = $("#report-chart").get(0).getContext("2d"),
+    var cutoff = 30,
+        ctx = $("#report-chart").get(0).getContext("2d"),
         dataTable = $("#commerce-report-data-table"),
         labels = dataTable.find("tbody tr td.description").map(function() { return $(this).html(); }),
-        values = dataTable.find("tbody tr td.value").map(function () { return parseFloat($(this).data("value"), 10); }),
+        values = dataTable.find("tbody tr td.value").map(function() { return parseFloat($(this).data("value"), 10); }),
+        valueStrings = dataTable.find("tbody tr td.value").map(function () { return $(this).data("value-string"); }),
         chartType = dataTable.data("chart-type"),
-        palette = ["hsla(164,34%,50%,1)","hsla(141,20%,64%,1)","hsla(34,54%,85%,1)","hsla(42,72%,68%,1)","hsla(7,68%,54%,1)","hsla(13,54%,33%,1)"],
-        data = {
-            labels: labels,
-            datasets: [
-                {
-                    label: document.title,
-                    fillColor: "rgba(220,220,220,0.2)",
-                    strokeColor: "rgba(220,220,220,1)",
-                    pointColor: "rgba(220,220,220,1)",
-                    pointStrokeColor: "#fff",
-                    pointHighlightFill: "#fff",
-                    pointHighlightStroke: "rgba(220,220,220,1)",
-                    data: values
-                }
-            ]
+        palette = ["hsla(164,34%,50%,1)", "hsla(141,20%,64%,1)", "hsla(34,54%,85%,1)", "hsla(42,72%,68%,1)", "hsla(7,68%,54%,1)", "hsla(13,54%,33%,1)"],
+        otherText = dataTable.data("other-text"),
+        sum = function(array) {
+            var s = 0;
+            for (var i = 0; i < array.length; i++) {
+                s += array[i];
+            }
+            return s;
         },
-        chart = new Chart(ctx)[chartType](data, { bezierCurve: false });
+        appendIfHasValue = function (array, item) {
+            if (item.value) {
+                array.push(item);
+            }
+            return array;
+        },
+        data = chartType == "Doughnut"
+            ? appendIfHasValue(
+                $.map(values.slice(0, cutoff), function(value, index) {
+                    return {
+                        value: value,
+                        color: palette[index % palette.length],
+                        label: labels[index]
+                    };
+                }), {
+                    value: sum(values.slice(cutoff)),
+                    color: palette[cutoff % palette.length],
+                    label: otherText
+                })
+            : {
+                labels: labels,
+                datasets: [
+                    {
+                        label: document.title,
+                        fillColor: "rgba(220,220,220,0.2)",
+                        strokeColor: "rgba(220,220,220,1)",
+                        pointColor: "rgba(220,220,220,1)",
+                        pointStrokeColor: "#fff",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(220,220,220,1)",
+                        data: values
+                    }
+                ]
+            };
+    new Chart(ctx)[chartType](data, { bezierCurve: false });
 
     $("#startDate,#endDate").calendarsPicker({
         showAnim: "",
