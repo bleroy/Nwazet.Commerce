@@ -47,6 +47,7 @@ namespace Nwazet.Commerce.Drivers {
 
         private const string ActivityName = "Activity";
         private const string BillingAddressName = "BillingAddress";
+        private const string ChargeName = "Charge";
         private const string CardName = "Card";
         private const string EventName = "Event";
         private const string ItemName = "Item";
@@ -85,7 +86,7 @@ namespace Nwazet.Commerce.Drivers {
                     Status: part.Status,
                     StatusLabels: _orderService.StatusLabels,
                     TrackingUrl: part.TrackingUrl,
-                    CreditCardCharge: part.CreditCardCharge,
+                    Charge: part.Charge,
                     Activity: part.Activity,
 
                     ContentPart: part
@@ -107,7 +108,7 @@ namespace Nwazet.Commerce.Drivers {
             var products = productContents
                 .ToDictionary(p => p.Id, p => p);
             var linkToTransaction = _checkoutServices
-                .Select(s => s.GetChargeAdminUrl(part.CreditCardCharge.TransactionId))
+                .Select(s => s.GetChargeAdminUrl(part.Charge.TransactionId))
                 .FirstOrDefault(u => u != null);
             var model = new OrderEditorViewModel {
                 Order = part,
@@ -233,6 +234,14 @@ namespace Nwazet.Commerce.Drivers {
                     .FromAttr(c => c.Last4)
                     .FromAttr(c => c.ExpirationMonth)
                     .FromAttr(c => c.ExpirationYear);
+            }
+
+            var chargeEl = xel.Element(ChargeName);
+            var charge = new Charge();
+            if (chargeEl != null) {
+                chargeEl.With(charge)
+                    .FromAttr(c => c.TransactionId)
+                    .FromAttr(c => c.ChargeText);
             }
 
             var el = xel.With(part);

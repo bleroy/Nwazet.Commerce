@@ -5,7 +5,7 @@
     Style.Include("order-admin.css", "order-admin.min.css");
     Script.Include("order-admin.js", "order-admin.min.js");
 
-    var charge = Model.Order.CreditCardCharge;
+    var charge = Model.Order.Charge;
 }
 <div class="order-editor">
     <fieldset class="order-metadata">
@@ -124,8 +124,10 @@
 
     <fieldset>
         <legend>@T("Charged to:")</legend>
-        <p>@T("Card **** **** **** {0} expiring {1}/{2}.", charge.Last4, charge.ExpirationMonth, charge.ExpirationYear)</p>
-        <p>@T("Transaction <a href=\"{1}\">{0}</a>.", charge.TransactionId, Model.LinkToTransaction)</p>
+        <p>@charge.ChargeText</p>
+        @if (!string.IsNullOrEmpty(Model.LinkToTransaction)) { 
+            <p>@T("Transaction <a href=\"{1}\">{0}</a>.", charge.TransactionId, Model.LinkToTransaction)</p>
+        }
     </fieldset>
 
     <fieldset class="order-tracking">

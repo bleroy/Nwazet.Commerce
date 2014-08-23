@@ -225,6 +225,8 @@
     <Compile Include="Models\CheckoutError.cs" />
     <Compile Include="Models\CheckoutItem.cs" />
     <Compile Include="Models\ConversionUtilities.cs" />
+    <Compile Include="Models\Charge.cs" />
+    <Compile Include="Models\ICharge.cs" />
     <Compile Include="Models\OrderEvent.cs" />
     <Compile Include="Models\OrderPart.cs" />
     <Compile Include="Models\OrderPartRecord.cs" />

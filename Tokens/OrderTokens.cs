@@ -43,7 +43,7 @@ namespace Nwazet.Commerce.Tokens {
                 .Token("Taxes", T("Taxes"), T("The taxes to be paid on this order."), "TaxAmount")
                 .Token("Total", T("Total"), T("The total price of all products in the order, with the tax and shipping costs included."))
                 .Token("AmountPaid", T("Amount Paid"), T("The amount that the customer actually paid."))
-                .Token("Charge", T("Charge"), T("A charge on a credit card."), "CreditCardCharge")
+                .Token("Charge", T("Charge"), T("A charge, on a credit card for example."), "Charge")
                 .Token("User", T("User"), T("User associated with the order."), "User")
                 .Token("PurchaseOrder", T("Purchase Order"), T("A purchase order, invoice, or order reference number."), "Text");
 
@@ -99,8 +99,8 @@ namespace Nwazet.Commerce.Tokens {
                 .Chain("Taxes", "TaxAmount", o => o.Taxes)
                 .Token("Total", o => o.Total.ToString("C"))
                 .Token("AmountPaid", o => o.AmountPaid.ToString("C"))
-                .Token("Charge", o => o.CreditCardCharge.ToString())
-                .Chain("Charge", "CreditCardCharge", o => o.CreditCardCharge)
+                .Token("Charge", o => o.Charge.ToString())
+                .Chain("Charge", "Charge", o => o.Charge)
                 .Token("User", o => o.User == null ? "" : o.User.UserName)
                 .Chain("User", "User", o => o.User)
                 .Token("PurchaseOrder", o => o.PurchaseOrder)
