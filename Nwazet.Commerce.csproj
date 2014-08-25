@@ -429,14 +429,14 @@
     <Content Include="Views\Stripe\SendMoney.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scripts\chartjs.min.js.map">
+    <Content Include="Scripts\chartjs.min.js.map">
       <DependentUpon>chartjs.js</DependentUpon>
-    </None>
-    <None Include="Scripts\report.min.js.map">
+    </Content>
+    <Content Include="Scripts\report.min.js.map">
       <DependentUpon>report.js</DependentUpon>
-    </None>
-    <None Include="Views\Report\Detail.cshtml" />
-    <None Include="Views\Report\Index.cshtml" />
+    </Content>
+    <Content Include="Views\Report\Detail.cshtml" />
+    <Content Include="Views\Report\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
