@@ -6,7 +6,7 @@ using Orchard.Localization;
 namespace Nwazet.Commerce.Services {
     public interface IOrderService : IDependency {
         OrderPart CreateOrder(
-            CreditCardCharge creditCardCharge,
+            ICharge charge,
             IEnumerable<CheckoutItem> items,
             double subTotal,
             double total,

@@ -33,7 +33,7 @@ namespace Nwazet.Commerce.Services {
         }
 
         public OrderPart CreateOrder(
-            CreditCardCharge creditCardCharge,
+            ICharge charge,
             IEnumerable<CheckoutItem> items,
             double subTotal,
             double total,
@@ -52,7 +52,7 @@ namespace Nwazet.Commerce.Services {
             string purchaseOrder = "") {
 
             var order = _contentManager.Create("Order", VersionOptions.DraftRequired).As<OrderPart>();
-            order.Build(creditCardCharge, items, subTotal, total, taxes,
+            order.Build(charge, items, subTotal, total, taxes,
                 shippingOption, shippingAddress, billingAddress, customerEmail,
                 customerPhone, specialInstructions, amountPaid, purchaseOrder);
             order.Status = status;
