@@ -106,7 +106,7 @@ else {
 <fieldset>
     <legend>@T("Charged to:")</legend>
     <p>@Html.Raw(Html.Encode(Model.BillingAddress).Replace(Environment.NewLine, "<br/>"))</p>
-    <p>@T("Card **** **** **** {0} expiring {1}/{2}.", Model.CardLast4, Model.CardExpirationMonth, Model.CardExpirationYear)</p>
+    <p>@Model.ChargeText</p>
 </fieldset>
 
 <fieldset class="shipping-address">

@@ -35,6 +35,7 @@ namespace Nwazet.Commerce.Models {
 
         private const string ActivityName = "activity";
         private const string BillingAddressName = "billingAddress";
+        private const string ChargeName = "charge"; 
         private const string CardName = "card";
         private const string ContentName = "content";
         private const string CustomerName = "customer";
@@ -54,7 +55,7 @@ namespace Nwazet.Commerce.Models {
         private const string PurchaseOrderName = "purchaseOrder";
 
         public void Build(
-            CreditCardCharge creditCardCharge,
+            ICharge charge,
             IEnumerable<CheckoutItem> items,
             double subTotal,
             double total,
@@ -73,11 +74,9 @@ namespace Nwazet.Commerce.Models {
                 .Attr(TotalName, total)
                 .Attr(AmountName, amountPaid == default(double) ? total : amountPaid)
                 .Attr(PurchaseOrderName, purchaseOrder)
-                .AddEl(new XElement(CardName).With(creditCardCharge)
+                .AddEl(new XElement(ChargeName).With(charge)
                     .ToAttr(c => c.TransactionId)
-                    .ToAttr(c => c.Last4)
-                    .ToAttr(c => c.ExpirationMonth)
-                    .ToAttr(c => c.ExpirationYear)
+                    .ToAttr(c => c.ChargeText)
                     .Element)
                 .AddEl(new XElement(ItemsName, items.Select(it =>
                     new XElement(ItemName).With(it)
@@ -185,15 +184,23 @@ namespace Nwazet.Commerce.Models {
             }
         }
 
-        public CreditCardCharge CreditCardCharge {
+        public ICharge Charge {
             get {
-                var cardElement = ContentDocument.Element(CardName);
-                if (cardElement == null) return null;
-                return cardElement.With(new CreditCardCharge())
+                var chargeElement = ContentDocument.Element(ChargeName);
+                if (chargeElement == null) {
+                    // Handle card specific data, prior to ICharge
+                    var cardElement = ContentDocument.Element(CardName);
+                    if (cardElement == null) return null;
+                    return cardElement.With(new CreditCardCharge())
+                        .FromAttr(c => c.TransactionId)
+                        .FromAttr(c => c.Last4)
+                        .FromAttr(c => c.ExpirationMonth)
+                        .FromAttr(c => c.ExpirationYear)
+                        .Context;
+                }
+                return chargeElement.With(new Charge())
                     .FromAttr(c => c.TransactionId)
-                    .FromAttr(c => c.Last4)
-                    .FromAttr(c => c.ExpirationMonth)
-                    .FromAttr(c => c.ExpirationYear)
+                    .FromAttr(c => c.ChargeText)
                     .Context;
             }
         }
