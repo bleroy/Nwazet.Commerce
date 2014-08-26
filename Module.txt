@@ -60,6 +60,7 @@ Features:
         Name: Stripe
         Description: Stripe services, and checkout for Nwazet.Commerce
         Category: Commerce
+        Dependencies: Nwazet.Orders
 	Nwazet.TieredPricing:
         Name: Nwazet Tiered Pricing
         Description: Define different price tiers for products based on quantity ordered
