@@ -3,14 +3,24 @@
     Style.Include("attribute.nwazet-commerce-admin.css");
 }
 <fieldset>
+    <label class="sub" for="@Html.IdFor(m => m.DisplayName)">@T("Display Name")</label><br />
+    @Html.TextBoxFor(m => m.DisplayName, new { @class = "text medium" })
+    <span class="hint">@T("Label for attribute drop-down list. Leave empty to hide label.")</span><br />
+    <label class="sub" for="@Html.IdFor(m => m.SortOrder)">@T("Sort Order")</label><br />
+    @Html.TextBoxFor(m => m.SortOrder, new { @class = "text small" })<br />
+    <span class="hint">@T("Order in which attributes are displayed.")</span><br />
+</fieldset>
+<fieldset>
     <legend>@T("Attribute Value Options")</legend>
     <div class="hint">@T("Name is the option text displayed for the user to select.")</div>
+    <div class="hint">@T("Sort Order determines the order in which options are displayed relative to each other.")</div>
     <div class="hint">@T(@"Price Adjustment is the amount the price will be adjusted for each item that has the attribute selected. Use negative adjustments to reduce the price.")</div>
     <div class="hint">@T(@"When checked, Apply To Line causes the price adjustment to be applied to the line total. By default, the adjustment is applied to the unit price.")</div>
     <table id="NwazetCommerceAttribute_AttributeValues">
         <thead>
             <tr>
                 <td>@T("Name")</td>
+                <td>@T("Sort Order")</td>
                 <td>@T("Price Adjustment")</td>
                 <td>@T("Apply To Line")</td>
             </tr>
@@ -22,6 +32,9 @@
                     <td>
                         <input type="hidden" name="NwazetCommerceAttribute.AttributeValues.Index" value="@i" />
                         <input type="text" class="text" name="NwazetCommerceAttribute.AttributeValues[@i].Text" value="@value.Text" />
+                    </td>
+                    <td>
+                        <input type="text" class="text small" name="NwazetCommerceAttribute.AttributeValues[@i].SortOrder" value="@value.SortOrder" />
                     </td>
                     <td>
                         <input type="text" class="text" name="NwazetCommerceAttribute.AttributeValues[@i].PriceAdjustment" value="@value.PriceAdjustment" />
@@ -49,6 +62,7 @@
                 event.preventDefault();
                 $("table#NwazetCommerceAttribute_AttributeValues").append('<tr><td><input type="hidden" name="NwazetCommerceAttribute.AttributeValues.Index" value="' + i + '" />' +
                                                                 '<input type="text" class="text" name="NwazetCommerceAttribute.AttributeValues[' + i + '].Text" value="" /></td>' +
+                                                                '<td><input type="text" class="text small" name="NwazetCommerceAttribute.AttributeValues[' + i + '].SortOrder" value="" /></td>' +
                                                                 '<td><input type="text" class="text" name="NwazetCommerceAttribute.AttributeValues[' + i + '].PriceAdjustment" value="" /></td>' +
                                                                 '<td><input type="checkbox" name="NwazetCommerceAttribute.AttributeValues[' + i + '].IsLineAdjustment" value="True" /></td>' +
                                                                 '<td><a href="#" class="nwazet-remove-attribute-value">Remove</a></td></tr>');

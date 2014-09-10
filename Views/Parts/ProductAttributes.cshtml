@@ -6,7 +6,10 @@
 }
 @if (attributes != null && attributes.Any()) {
     foreach (ProductAttributePart attribute in attributes) {
-        <select name="@(attributeFieldName + ".a" + attribute.Id)" class="product-attribute">
+        if (!string.IsNullOrEmpty(attribute.DisplayName)) {
+            <label for="@attribute.Id" class="product-attribute-label">@attribute.DisplayName</label>
+        }
+        <select name="@(attributeFieldName + ".a" + attribute.Id)" id="@attribute.Id" class="product-attribute">
             @foreach (var val in attribute.AttributeValues) {
                 var priceAdjustment = val.PriceAdjustment != 0 ? "(" + (val.PriceAdjustment < 0 ? "-" : "+") + Math.Abs(val.PriceAdjustment).ToString("C") + ")" : "";
                 <option value="@val.Text">@val.Text @priceAdjustment</option>
