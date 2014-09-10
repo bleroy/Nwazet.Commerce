@@ -38,7 +38,7 @@ namespace Nwazet.Commerce.Drivers {
                 : _attributeService.GetAttributes(attributesPart.AttributeIds);
             return shapeHelper.Parts_ProductAttributes(
                 ContentItem: product,
-                ProductAttributes: attributes
+                ProductAttributes: attributes.OrderBy(a => a.SortOrder)
                 );
         }
 

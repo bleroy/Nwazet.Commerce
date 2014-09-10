@@ -16,6 +16,16 @@ namespace Nwazet.Commerce.Models {
             }
         }
 
+        public int SortOrder {
+            get { return Retrieve(r => r.SortOrder); }
+            set { Store(r => r.SortOrder, value); }
+        }
+
+        public string DisplayName {
+            get { return Retrieve(r => r.DisplayName); }
+            set { Store(r => r.DisplayName, value); }
+        }
+
         internal string AttributeValuesString {
             get {
                 return Retrieve(r => r.AttributeValues);

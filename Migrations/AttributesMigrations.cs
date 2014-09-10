@@ -46,6 +46,14 @@ namespace Nwazet.Commerce.Migrations {
             return 2;
         }
 
+        public int UpdateFrom2() {
+            SchemaBuilder.AlterTable("ProductAttributePartRecord", table => table
+                .AddColumn<int>("SortOrder", c => c.WithDefault(0)));
+            SchemaBuilder.AlterTable("ProductAttributePartRecord", table => table
+                .AddColumn<string>("DisplayName"));
+            return 3;
+        }
+
         private static string ConvertSerializedAttributeValues(string values) {
             var newValues = values.Split(new[] {'\r', '\n'}, StringSplitOptions.RemoveEmptyEntries)
                          .Select(a => a + "=0,False");

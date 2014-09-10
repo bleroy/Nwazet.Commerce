@@ -44,12 +44,16 @@ namespace Nwazet.Commerce.Drivers {
             var editViewModel = new ProductAttributeEditViewModel();
             if (updater.TryUpdateModel(editViewModel, Prefix, null, null)) {
                 part.AttributeValues = editViewModel.AttributeValues;
+                part.SortOrder = editViewModel.SortOrder;
+                part.DisplayName = editViewModel.DisplayName;
             }
             return Editor(part, shapeHelper);
         }
 
         private class ProductAttributeEditViewModel {
             public ICollection<ProductAttributeValue> AttributeValues { get; set; }
+            public int SortOrder { get; set; }
+            public string DisplayName { get; set; }
         }
 
         protected override void Importing(ProductAttributePart part, ImportContentContext context) {
