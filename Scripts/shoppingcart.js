@@ -1,5 +1,6 @@
 ﻿jQuery(function($) {
-    var nwazetCart = "nwazet.cart",
+    var loading = false,
+        nwazetCart = "nwazet.cart",
         cartContainer = $(".shopping-cart-container"),
         setQuantityToZero = function(parentTag) {
             return function(button) {
@@ -12,7 +13,8 @@
             };
         },
         cartContainerLoad = function (form) {
-            if (form && form.length > 0) {
+            if (!loading && form && form.length > 0) {
+                loading = true;
                 cartContainer.load(form[0].action || updateUrl, form.serializeArray(), onCartLoad);
                 $(this).trigger("nwazet.cartupdating");
             }
@@ -63,9 +65,16 @@
                             delete cart.__RequestVerificationToken;
                             localStorage[nwazetCart] = JSON.stringify(cart);
                         }
+                        loading = false;
                     } else {
                         var cachedCart, cachedCartString = localStorage[nwazetCart];
                         if (cachedCartString) {
+                            if (loading) {
+                                localStorage[nwazetCart] = JSON.stringify({
+                                    Country: localStorage[nwazetCart].Country || null,
+                                    ZipCode: localStorage[nwazetCart].ZipCode || null
+                                });
+                            }
                             try {
                                 cachedCart = JSON.parse(cachedCartString);
                             } catch(ex) {
