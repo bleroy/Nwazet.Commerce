@@ -79,6 +79,8 @@ namespace Nwazet.Commerce.Controllers {
             if (reportService == null) {
                 return HttpNotFound(T("Report {0} not found", report).Text);
             }
+            var data = reportService.GetData(startDate, endDate, granularity);
+            var series = data.Series;
             var model = new ReportDataViewModel {
                 Name = reportService.Name,
                 Description = reportService.Description,
@@ -86,7 +88,8 @@ namespace Nwazet.Commerce.Controllers {
                 ValueColumnHeader = reportService.ValueColumnHeader,
                 ValueFormat = reportService.ValueFormat,
                 ChartType = reportService.ChartType,
-                DataPoints = reportService.GetData(startDate, endDate, granularity),
+                DataPoints = data.DataPoints,
+                Series = series,
                 StartDateEditor = new DateTimeEditor {
                     Date = _dateServices.ConvertToLocalDateString(startDate.ToUniversalTime()),
                     ShowDate = true,

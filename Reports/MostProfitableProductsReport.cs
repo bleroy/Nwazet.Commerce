@@ -43,7 +43,7 @@ namespace Nwazet.Commerce.Reports {
             get { return ChartType.Doughnut; }
         }
 
-        public IEnumerable<ReportDataPoint> GetData(DateTime startDate, DateTime endDate, TimePeriod granularity) {
+        public ReportData GetData(DateTime startDate, DateTime endDate, TimePeriod granularity) {
             var orders = _contentManager
                 .Query<CommonPart, CommonPartRecord>("Order")
                 .Where(r =>
@@ -72,12 +72,14 @@ namespace Nwazet.Commerce.Reports {
                 VersionOptions.Published,
                 QueryHints.Empty)
                 .ToDictionary(title => title.Id, title => title.Title);
-            return totalRevenues
-                .Select(q => new ReportDataPoint {
-                    Description = products[q.Key],
-                    Value = q.Value
-                })
-                .OrderByDescending(q => q.Value);
+            return new ReportData {
+                DataPoints = totalRevenues
+                    .Select(q => new ReportDataPoint {
+                        Description = products[q.Key],
+                        Value = q.Value
+                    })
+                    .OrderByDescending(q => q.Value)
+            };
         }
     }
 }

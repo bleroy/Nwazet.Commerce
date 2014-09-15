@@ -31,7 +31,7 @@ namespace Nwazet.Commerce.Reports {
 
         public abstract double ComputeResultForInterval(IList<OrderPart> ordersForInterval);
 
-        public IEnumerable<ReportDataPoint> GetData(DateTime startDate, DateTime endDate, TimePeriod granularity) {
+        public ReportData GetData(DateTime startDate, DateTime endDate, TimePeriod granularity) {
             startDate = granularity.BeginningDate(startDate);
             endDate = granularity.EndingDate(endDate);
             var orders = _contentManager
@@ -61,7 +61,9 @@ namespace Nwazet.Commerce.Reports {
                 intervalStart = intervalEnd;
                 intervalEnd = intervalStart + granularity;
             }
-            return results;
+            return new ReportData {
+                DataPoints = results
+            };
         }
     }
 }
