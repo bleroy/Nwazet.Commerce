@@ -133,6 +133,8 @@ namespace Nwazet.Commerce.Controllers {
                     writer.WriteLine(
                         T("ID").Text + "," +
                         T("Email").Text + "," +
+                        T("Country").Text + "," +
+                        T("Zip").Text + "," +
                         T("Date").Text + "," +
                         T("SubTotal").Text + "," +
                         T("Taxes").Text + "," +
@@ -159,6 +161,8 @@ namespace Nwazet.Commerce.Controllers {
                         writer.WriteLine(
                             order.Id + "," +
                             "\"" + order.CustomerEmail + "\"," +
+                            "\"" + order.ShippingAddress.Country + "\"," +
+                            "\"" + order.ShippingAddress.PostalCode + "\"," +
                             orderDate + "," +
                             order.SubTotal.ToString("F") + "," +
                             order.Taxes.Amount.ToString("F") + "," +
