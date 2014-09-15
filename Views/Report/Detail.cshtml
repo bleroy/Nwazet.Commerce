@@ -56,7 +56,7 @@
         <thead>
             <tr>
                 <th>@Model.DescriptionColumnHeader</th>
-                <th>@Model.ValueColumnHeader</th>
+                <th class="value-header">@Model.ValueColumnHeader</th>
                 @if (Model.Series != null && Model.Series.Any()) {
                     foreach (var series in Model.Series) {
                         <th class="series-description">@series</th>
@@ -87,7 +87,7 @@
                             ? dataPoint.Series[series]
                             : null;
                         if (seriesDataPoint == null) {
-                            <td>@T(" - ")</td>
+                            <td class="series-value" data-value="0" data-value-string="0">@T(" - ")</td>
                         }
                         else {
                             var seriesValueString =

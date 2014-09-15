@@ -46,3 +46,11 @@
         display: table-cell;
         padding: 8px 12px;
     }
+
+    .commerce-report-data td.value, .commerce-report-data td.series-value {
+        text-align: right;
+    }
+
+    .commerce-report-data th.series-description, .commerce-report-data th.value-header {
+        text-align: right;
+    }
