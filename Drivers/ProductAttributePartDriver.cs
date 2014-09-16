@@ -41,19 +41,8 @@ namespace Nwazet.Commerce.Drivers {
 
         //POST
         protected override DriverResult Editor(ProductAttributePart part, IUpdateModel updater, dynamic shapeHelper) {
-            var editViewModel = new ProductAttributeEditViewModel();
-            if (updater.TryUpdateModel(editViewModel, Prefix, null, null)) {
-                part.AttributeValues = editViewModel.AttributeValues;
-                part.SortOrder = editViewModel.SortOrder;
-                part.DisplayName = editViewModel.DisplayName;
-            }
+            updater.TryUpdateModel(part, Prefix, null, null);
             return Editor(part, shapeHelper);
-        }
-
-        private class ProductAttributeEditViewModel {
-            public ICollection<ProductAttributeValue> AttributeValues { get; set; }
-            public int SortOrder { get; set; }
-            public string DisplayName { get; set; }
         }
 
         protected override void Importing(ProductAttributePart part, ImportContentContext context) {
