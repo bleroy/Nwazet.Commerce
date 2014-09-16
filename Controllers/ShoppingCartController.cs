@@ -161,7 +161,7 @@ namespace Nwazet.Commerce.Controllers {
             var shopItemsAuthenticationRequired = productQuantities.Any(pq => pq.Product.AuthenticationRequired);
             shape.ShopItemsAuthenticationRequired = shopItemsAuthenticationRequired;
 
-            bool displayCheckoutButtons = true;
+            var displayCheckoutButtons = productQuantities.Any();
             var currentUser = _wca.GetContext().CurrentUser;
             if (currentUser == null) {
                 if (shopItemsAuthenticationRequired) {

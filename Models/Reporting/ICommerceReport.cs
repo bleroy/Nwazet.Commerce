@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Orchard;
 
 namespace Nwazet.Commerce.Models.Reporting {
@@ -11,7 +10,7 @@ namespace Nwazet.Commerce.Models.Reporting {
         string ValueFormat { get; }
         ChartType ChartType { get; }
 
-        IEnumerable<ReportDataPoint> GetData(
+        ReportData GetData(
             DateTime startDate, 
             DateTime endDate,
             TimePeriod granularity);

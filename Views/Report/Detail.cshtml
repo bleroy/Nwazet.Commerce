@@ -56,7 +56,12 @@
         <thead>
             <tr>
                 <th>@Model.DescriptionColumnHeader</th>
-                <th>@Model.ValueColumnHeader</th>
+                <th class="value-header">@Model.ValueColumnHeader</th>
+                @if (Model.Series != null && Model.Series.Any()) {
+                    foreach (var series in Model.Series) {
+                        <th class="series-description">@series</th>
+                    }
+                }
             </tr>
         </thead>
         @foreach (var dataPoint in Model.DataPoints) {
@@ -76,6 +81,32 @@
                         @valueString
                     }
                 </td>
+                @if (Model.Series != null && dataPoint.Series != null && dataPoint.Series.Any()) {
+                    foreach (var series in Model.Series) {
+                        var seriesDataPoint = dataPoint.Series.ContainsKey(series)
+                            ? dataPoint.Series[series]
+                            : null;
+                        if (seriesDataPoint == null) {
+                            <td class="series-value" data-value="0" data-value-string="0">@T(" - ")</td>
+                        }
+                        else {
+                            var seriesValueString =
+                                String.IsNullOrWhiteSpace(seriesDataPoint.ValueString)
+                                    ? String.IsNullOrWhiteSpace(Model.ValueFormat)
+                                        ? seriesDataPoint.Value.ToString(CultureInfo.CurrentUICulture)
+                                        : seriesDataPoint.Value.ToString(Model.ValueFormat)
+                                    : seriesDataPoint.ValueString;
+                            <td class="series-value" data-value="@seriesDataPoint.Value" data-value-string="@seriesValueString">
+                                @if (!String.IsNullOrWhiteSpace(seriesDataPoint.Url)) {
+                                    <a href="@seriesDataPoint.Url">@seriesValueString</a>
+                                }
+                                else {
+                                    @seriesValueString
+                                }
+                            </td>
+                        }
+                    }
+                }
             </tr>
         }
     </table>

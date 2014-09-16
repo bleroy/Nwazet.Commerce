@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Nwazet.Commerce.Models.Reporting;
 using Orchard.Core.Common.ViewModels;
@@ -16,5 +15,6 @@ namespace Nwazet.Commerce.ViewModels {
         public DateTimeEditor StartDateEditor { get; set; }
         public DateTimeEditor EndDateEditor { get; set; }
         public TimePeriod Granularity { get; set; }
+        public IEnumerable<string> Series { get; set; } 
     }
 }

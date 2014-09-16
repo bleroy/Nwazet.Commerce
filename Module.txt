@@ -52,16 +52,16 @@ Features:
         Category: Commerce
         Dependencies: Nwazet.Commerce, Nwazet.Orders
     Usps.Shipping:
-		Name: USPS Shipping
-		Description: Dynamic USPS shipping method, using USPS web services for data that is always up-to-date
-		Category: Commerce
-		Dependencies: Nwazet.Commerce, Nwazet.Shipping
+        Name: USPS Shipping
+        Description: Dynamic USPS shipping method, using USPS web services for data that is always up-to-date
+        Category: Commerce
+        Dependencies: Nwazet.Commerce, Nwazet.Shipping
     Stripe:
         Name: Stripe
         Description: Stripe services, and checkout for Nwazet.Commerce
         Category: Commerce
         Dependencies: Nwazet.Orders
-	Nwazet.TieredPricing:
+    Nwazet.TieredPricing:
         Name: Nwazet Tiered Pricing
         Description: Define different price tiers for products based on quantity ordered
         Category: Commerce
