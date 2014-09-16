@@ -69,6 +69,7 @@
     <Content Include="Content\accepted-cards.png" />
     <Content Include="Content\checkout-with-stripe.png" />
     <Content Include="Content\menu.nwazet-commerce.png" />
+    <Content Include="Content\move.gif" />
     <Content Include="LICENSE.txt" />
     <Content Include="Scripts\chartjs.js" />
     <Content Include="Scripts\chartjs.min.js">
@@ -77,6 +78,10 @@
     <Content Include="Scripts\inventory.js" />
     <Content Include="Scripts\inventory.min.js">
       <DependentUpon>inventory.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\attribute-admin.js" />
+    <Content Include="Scripts\order-admin - Copy.min.js">
+      <DependentUpon>attribute-admin.js</DependentUpon>
     </Content>
     <Content Include="Scripts\order-admin.js" />
     <Content Include="Scripts\order-admin.min.js">
@@ -441,6 +446,11 @@
     </Content>
     <Content Include="Views\Report\Detail.cshtml" />
     <Content Include="Views\Report\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\order-admin - Copy.min.js.map">
+      <DependentUpon>attribute-admin.js</DependentUpon>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
