@@ -8,13 +8,13 @@ using System.ComponentModel;
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.Attributes")]
     public class ProductAttributeValue {
-        [Required]
+        [Required, DisplayName("Value Name")]
         public string Text { get; set; }
-        [Required]
+        [Required, DisplayName("Price Adjustment")]
         public double PriceAdjustment { get; set; }
-        [DefaultValue(false)]
+        [DefaultValue(false), DisplayName("Is Line Adjustment")]
         public bool IsLineAdjustment { get; set; }
-        [DefaultValue(0)]
+        [DefaultValue(0), DisplayName("Sort Order")]
         public int SortOrder { get; set; }
 
         public static IEnumerable<ProductAttributeValue> DeserializeAttributeValues(string attributeValues) {

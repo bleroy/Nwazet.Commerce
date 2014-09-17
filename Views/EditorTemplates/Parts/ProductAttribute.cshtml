@@ -62,8 +62,8 @@
                 event.preventDefault();
                 $("table#NwazetCommerceAttribute_AttributeValues").append('<tr><td><input type="hidden" name="NwazetCommerceAttribute.AttributeValues.Index" value="' + i + '" />' +
                                                                 '<input type="text" class="text" name="NwazetCommerceAttribute.AttributeValues[' + i + '].Text" value="" /></td>' +
-                                                                '<td><input type="text" class="text small" name="NwazetCommerceAttribute.AttributeValues[' + i + '].SortOrder" value="" /></td>' +
-                                                                '<td><input type="text" class="text" name="NwazetCommerceAttribute.AttributeValues[' + i + '].PriceAdjustment" value="" /></td>' +
+                                                                '<td><input type="text" class="text small" name="NwazetCommerceAttribute.AttributeValues[' + i + '].SortOrder" value="0" /></td>' +
+                                                                '<td><input type="text" class="text" name="NwazetCommerceAttribute.AttributeValues[' + i + '].PriceAdjustment" value="0" /></td>' +
                                                                 '<td><input type="checkbox" name="NwazetCommerceAttribute.AttributeValues[' + i + '].IsLineAdjustment" value="True" /></td>' +
                                                                 '<td><a href="#" class="nwazet-remove-attribute-value">Remove</a></td></tr>');
                 i++;
