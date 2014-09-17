@@ -1,7 +1,9 @@
 ﻿@model Nwazet.Commerce.Models.ProductAttributePart
 @{
     Style.Include("attribute.nwazet-commerce-admin.css");
+    
     Script.Require("jQueryUI_Sortable").AtFoot();
+    Script.Include("mustache.js");
     Script.Include("attribute-admin.js").AtFoot();
 }
 <fieldset>
@@ -38,11 +40,27 @@
                 <div class="apply-line">
                     <input type="checkbox" name="NwazetCommerceAttribute.AttributeValues[@i].IsLineAdjustment" @(value.IsLineAdjustment ? "checked='checked'" : "") value="True" />
                 </div>
-                <div><a href="#" class="nwazet-remove-attribute-value">Delete</a></div>
+                <div><a href="#" class="nwazet-remove-attribute-value">@T("Delete")</a></div>
             </li>
-
             i++;
         }
     </ul>
     <button id="NwazetCommerceAttribute_AddAttributeValue">@T("Add Attribute Value")</button>
 </fieldset>
+
+<script type="x-tmpl-mustache" id="valueTemplate">
+    <li class="option">
+        <div class="option-name">
+            <input type="hidden" name="NwazetCommerceAttribute.AttributeValues.Index" value="{{ index }}" />
+            <input type="hidden" name="NwazetCommerceAttribute.AttributeValues[{{ index }}].SortOrder" value="{{ sort }}" />
+            <input type="text" class="text" name="NwazetCommerceAttribute.AttributeValues[{{ index }}].Text" />
+        </div>
+        <div class="price-adj">
+            <input type="text" class="text small" name="NwazetCommerceAttribute.AttributeValues[{{ index }}].PriceAdjustment" value="0" />
+        </div>
+        <div class="apply-line">
+            <input type="checkbox" name="NwazetCommerceAttribute.AttributeValues[{{ index }}].IsLineAdjustment" value="True" />
+        </div>
+        <div><a href="#" class="nwazet-remove-attribute-value">@T("Delete")</a></div>
+    </li>
+</script>
