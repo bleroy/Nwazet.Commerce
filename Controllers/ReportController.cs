@@ -171,7 +171,7 @@ namespace Nwazet.Commerce.Controllers {
                             String.Join(",", productIds.Select(
                             id => quantities.ContainsKey(id) ? quantities[id].Quantity : 0)) + "," +
                             String.Join(",", productIds.Select(
-                            id => (quantities.ContainsKey(id) ? quantities[id].Quantity * quantities[id].Total : 0).ToString("F"))));
+                            id => (quantities.ContainsKey(id) ? quantities[id].Total : 0).ToString("F"))));
                     }
                 }
                 return new FileContentResult(resultStream.ToArray(), "text/csv") {
