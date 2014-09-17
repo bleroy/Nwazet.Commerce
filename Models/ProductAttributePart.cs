@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
+using System.ComponentModel;
 
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.Attributes")]
@@ -16,11 +17,13 @@ namespace Nwazet.Commerce.Models {
             }
         }
 
+        [DisplayName("Price Adjustment")]
         public int SortOrder {
             get { return Retrieve(r => r.SortOrder); }
             set { Store(r => r.SortOrder, value); }
         }
 
+        [DisplayName("Price Adjustment")]
         public string DisplayName {
             get { return Retrieve(r => r.DisplayName); }
             set { Store(r => r.DisplayName, value); }
