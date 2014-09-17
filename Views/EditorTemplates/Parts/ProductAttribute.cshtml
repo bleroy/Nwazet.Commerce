@@ -1,6 +1,10 @@
 ﻿@model Nwazet.Commerce.Models.ProductAttributePart
 @{
     Style.Include("attribute.nwazet-commerce-admin.css");
+    
+    Script.Require("jQueryUI_Sortable").AtFoot();
+    Script.Include("mustache.js");
+    Script.Include("attribute-admin.js").AtFoot();
 }
 <fieldset>
     <label class="sub" for="@Html.IdFor(m => m.DisplayName)">@T("Display Name")</label><br />
@@ -16,64 +20,47 @@
     <div class="hint">@T("Sort Order determines the order in which options are displayed relative to each other.")</div>
     <div class="hint">@T(@"Price Adjustment is the amount the price will be adjusted for each item that has the attribute selected. Use negative adjustments to reduce the price.")</div>
     <div class="hint">@T(@"When checked, Apply To Line causes the price adjustment to be applied to the line total. By default, the adjustment is applied to the unit price.")</div>
-    <table id="NwazetCommerceAttribute_AttributeValues">
-        <thead>
-            <tr>
-                <td>@T("Name")</td>
-                <td>@T("Sort Order")</td>
-                <td>@T("Price Adjustment")</td>
-                <td>@T("Apply To Line")</td>
-            </tr>
-        </thead>
-        <tbody>
-            @{int i = 0;}
-            @foreach (var value in Model.AttributeValues) {
-                <tr>
-                    <td>
-                        <input type="hidden" name="NwazetCommerceAttribute.AttributeValues.Index" value="@i" />
-                        <input type="text" class="text" name="NwazetCommerceAttribute.AttributeValues[@i].Text" value="@value.Text" />
-                    </td>
-                    <td>
-                        <input type="text" class="text small" name="NwazetCommerceAttribute.AttributeValues[@i].SortOrder" value="@value.SortOrder" />
-                    </td>
-                    <td>
-                        <input type="text" class="text" name="NwazetCommerceAttribute.AttributeValues[@i].PriceAdjustment" value="@value.PriceAdjustment" />
-                    </td>
-                    <td>
-                        <input type="checkbox" name="NwazetCommerceAttribute.AttributeValues[@i].IsLineAdjustment" @(value.IsLineAdjustment ? "checked='checked'" : "") value="True" />
-                    </td>
-                    <td><a href="#" class="nwazet-remove-attribute-value">Remove</a></td>
-                </tr>
-
-                i++;
-            }
-        </tbody>
-    </table>
+    <ul id="NwazetCommerceAttribute_AttributeValues">
+        <li class="header">
+            <div class="option-name">@T("Name")</div>
+            <div class="price-adj">@T("Price Adjustment")</div>
+            <div class="apply-line">@T("Apply To Line")</div>
+        </li>
+        @{int i = 0;}
+        @foreach (var value in Model.AttributeValues) {
+            <li class="option">
+                <div class="option-name">
+                    <input type="hidden" name="NwazetCommerceAttribute.AttributeValues.Index" value="@i" />
+                    <input type="hidden" name="NwazetCommerceAttribute.AttributeValues[@i].SortOrder" value="@value.SortOrder" />
+                    <input type="text" class="text" name="NwazetCommerceAttribute.AttributeValues[@i].Text" value="@value.Text" />
+                </div>
+                <div class="price-adj">
+                    <input type="text" class="text small" name="NwazetCommerceAttribute.AttributeValues[@i].PriceAdjustment" value="@value.PriceAdjustment" />
+                </div>
+                <div class="apply-line">
+                    <input type="checkbox" name="NwazetCommerceAttribute.AttributeValues[@i].IsLineAdjustment" @(value.IsLineAdjustment ? "checked='checked'" : "") value="True" />
+                </div>
+                <div><a href="#" class="nwazet-remove-attribute-value">@T("Delete")</a></div>
+            </li>
+            i++;
+        }
+    </ul>
     <button id="NwazetCommerceAttribute_AddAttributeValue">@T("Add Attribute Value")</button>
 </fieldset>
 
-
-@using (Script.Foot()) {
-    <script type="text/javascript">
-        (function ($) {
-            var i = @i; // indexer for mvc model binding new tiers
-
-            $("#NwazetCommerceAttribute_AddAttributeValue").click(function (event) {
-                event.preventDefault();
-                $("table#NwazetCommerceAttribute_AttributeValues").append('<tr><td><input type="hidden" name="NwazetCommerceAttribute.AttributeValues.Index" value="' + i + '" />' +
-                                                                '<input type="text" class="text" name="NwazetCommerceAttribute.AttributeValues[' + i + '].Text" value="" /></td>' +
-                                                                '<td><input type="text" class="text small" name="NwazetCommerceAttribute.AttributeValues[' + i + '].SortOrder" value="0" /></td>' +
-                                                                '<td><input type="text" class="text" name="NwazetCommerceAttribute.AttributeValues[' + i + '].PriceAdjustment" value="0" /></td>' +
-                                                                '<td><input type="checkbox" name="NwazetCommerceAttribute.AttributeValues[' + i + '].IsLineAdjustment" value="True" /></td>' +
-                                                                '<td><a href="#" class="nwazet-remove-attribute-value">Remove</a></td></tr>');
-                i++;
-            });
-
-            $("table#NwazetCommerceAttribute_AttributeValues").on("click", ".nwazet-remove-attribute-value", function (event) {
-                event.preventDefault();
-                $(this).parents("tr").remove();
-            });
-
-        })(jQuery);
-    </script>
-}
+<script type="x-tmpl-mustache" id="valueTemplate">
+    <li class="option">
+        <div class="option-name">
+            <input type="hidden" name="NwazetCommerceAttribute.AttributeValues.Index" value="{{ index }}" />
+            <input type="hidden" name="NwazetCommerceAttribute.AttributeValues[{{ index }}].SortOrder" value="{{ sort }}" />
+            <input type="text" class="text" name="NwazetCommerceAttribute.AttributeValues[{{ index }}].Text" />
+        </div>
+        <div class="price-adj">
+            <input type="text" class="text small" name="NwazetCommerceAttribute.AttributeValues[{{ index }}].PriceAdjustment" value="0" />
+        </div>
+        <div class="apply-line">
+            <input type="checkbox" name="NwazetCommerceAttribute.AttributeValues[{{ index }}].IsLineAdjustment" value="True" />
+        </div>
+        <div><a href="#" class="nwazet-remove-attribute-value">@T("Delete")</a></div>
+    </li>
+</script>

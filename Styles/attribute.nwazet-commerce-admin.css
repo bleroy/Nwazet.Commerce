@@ -1,3 +1,42 @@
-﻿table#NwazetCommerceAttribute_AttributeValues > tbody > tr > td {
+﻿ul#NwazetCommerceAttribute_AttributeValues {
+    width: 475px;
+}
+
+ul#NwazetCommerceAttribute_AttributeValues > li.header  {
+	padding: 2px 10px 2px 25px;
+    margin: 2px 0;
+}
+
+ul#NwazetCommerceAttribute_AttributeValues > li.option  {
+	border: 1px solid #ccc;
+	cursor: move;
+	padding: 1px 10px 1px 25px;
+    margin: 3px 0;
+	background: #eee;
+}
+
+ul#NwazetCommerceAttribute_AttributeValues > li.option:hover  {
+	background: #eee url(../Content/move.gif) no-repeat 6px 8px;
+	border: 1px solid #999;
+}
+
+ul#NwazetCommerceAttribute_AttributeValues > li > div {
+    display: inline-block;
+}
+
+.option-name {
+    width: 175px;
+}
+
+.price-adj {
+    width: 100px;
+}
+
+.price-adj input {
+    text-align: right;
+}
+
+.apply-line {
+    width: 100px;
     text-align: center;
 }
