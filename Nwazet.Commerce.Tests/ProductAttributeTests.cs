@@ -7,6 +7,7 @@ using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
 using Nwazet.Commerce.Tests.Stubs;
 using Orchard.ContentManagement;
+using Orchard.UI.Notify;
 
 namespace Nwazet.Commerce.Tests {
     [TestFixture]
@@ -190,46 +191,51 @@ namespace Nwazet.Commerce.Tests {
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
-        public void AddProductWithBadAttributeValueThrows() {
+        public void AddProductWithBadAttributeValueDoesntAddTheProduct() {
             var cart = PrepareCart();
 
             cart.Add(1, 8, new Dictionary<int, string> {{10, "NotAValidColor"}, {11, "M"}});
+
+            CheckCart(cart, OriginalQuantities);
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
-        public void AddProductWithTooFewAttributeValueThrows() {
+        public void AddProductWithTooFewAttributeValueDoesntAddTheProduct() {
             var cart = PrepareCart();
 
             cart.Add(1, 8, new Dictionary<int, string> { { 11, "M" } });
+
+            CheckCart(cart, OriginalQuantities);
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
-        public void AddProductWithTooManyAttributeValueThrows() {
+        public void AddProductWithTooManyAttributeValueDoesntAddTheProduct() {
             var cart = PrepareCart();
 
             cart.Add(2, 8, new Dictionary<int, string> { { 10, "Green" }, { 11, "M" } });
+
+            CheckCart(cart, OriginalQuantities);
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
-        public void AddProductWithAttributeValuesWhereProductHasNoneThrows() {
+        public void AddProductWithAttributeValuesWhereProductHasNoneDoesntAddTheProduct() {
             var cart = PrepareCart();
 
             cart.Add(2, 8, new Dictionary<int, string> { { 11, "M" } });
+
+            CheckCart(cart, OriginalQuantities);
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
-        public void AddProductWithDifferentAttributesThrows() {
+        public void AddProductWithDifferentAttributesDoesntAddTheProduct() {
             var cart = PrepareCart();
 
             cart.Add(2, 8, new Dictionary<int, string> { { 10, "Green" } });
+
+            CheckCart(cart, OriginalQuantities);
         }
 
-        private static readonly ProductStub[] Products = new[] {
+        private static readonly ProductStub[] Products = {
             new ProductStub(1, new[] {10, 11}) {Price = 10},
             new ProductStub(2, new int[0]) {Price = 1.5},
             new ProductStub(3, new[] {11}) {Price = 20},
@@ -237,23 +243,23 @@ namespace Nwazet.Commerce.Tests {
             new ProductStub(5, new[] {10, 11}) {Price = 27} 
         };
 
-        private static readonly ProductAttributeStub[] ProductAttributes = new[] {
-            new ProductAttributeStub(10, new List<ProductAttributeValue>() {
-                new ProductAttributeValue() { Text = "Green", PriceAdjustment=0 },
-                new ProductAttributeValue() { Text = "Blue", PriceAdjustment=0 },
-                new ProductAttributeValue() { Text = "Red", PriceAdjustment=0 }
+        private static readonly ProductAttributeStub[] ProductAttributes = {
+            new ProductAttributeStub(10, new List<ProductAttributeValue> {
+                new ProductAttributeValue { Text = "Green", PriceAdjustment=0 },
+                new ProductAttributeValue { Text = "Blue", PriceAdjustment=0 },
+                new ProductAttributeValue { Text = "Red", PriceAdjustment=0 }
             }),
-            new ProductAttributeStub(11, new List<ProductAttributeValue>() {
-                new ProductAttributeValue() { Text = "XS", PriceAdjustment=0 },
-                new ProductAttributeValue() { Text = "S", PriceAdjustment=0 },
-                new ProductAttributeValue() { Text = "M", PriceAdjustment=0 },
-                new ProductAttributeValue() { Text = "L", PriceAdjustment=0 },
-                new ProductAttributeValue() { Text = "XL", PriceAdjustment=0 },
-                new ProductAttributeValue() { Text = "XXL", PriceAdjustment=0 }
+            new ProductAttributeStub(11, new List<ProductAttributeValue> {
+                new ProductAttributeValue { Text = "XS", PriceAdjustment=0 },
+                new ProductAttributeValue { Text = "S", PriceAdjustment=0 },
+                new ProductAttributeValue { Text = "M", PriceAdjustment=0 },
+                new ProductAttributeValue { Text = "L", PriceAdjustment=0 },
+                new ProductAttributeValue { Text = "XL", PriceAdjustment=0 },
+                new ProductAttributeValue { Text = "XXL", PriceAdjustment=0 }
             })
         };
 
-        private static readonly ShoppingCartQuantityProduct[] OriginalQuantities = new[] {
+        private static readonly ShoppingCartQuantityProduct[] OriginalQuantities = {
             new ShoppingCartQuantityProduct(3, Products[0], new Dictionary<int, string> {{10, "Green"}, {11, "L"}}), 
             new ShoppingCartQuantityProduct(1, Products[0], new Dictionary<int, string> {{10, "Green"}, {11, "M"}}), 
             new ShoppingCartQuantityProduct(7, Products[0], new Dictionary<int, string> {{10, "Blue"}, {11, "XS"}}), 
@@ -270,9 +276,9 @@ namespace Nwazet.Commerce.Tests {
             var contentManager = new ContentManagerStub(Products.Cast<IContent>().Union(ProductAttributes));
             var cartStorage = new FakeCartStorage();
             var attributeService = new ProductAttributeService(contentManager);
-            var priceService = new PriceService(new IPriceProvider[0], attributeService, null);
+            var priceService = new PriceService(new IPriceProvider[0], attributeService);
             var attributeDriver = new ProductAttributesPartDriver(attributeService);
-            var cart = new ShoppingCart(contentManager, cartStorage, priceService, new[] {attributeDriver}, null);
+            var cart = new ShoppingCart(contentManager, cartStorage, priceService, new[] { attributeDriver }, null, new Notifier());
             FillCart(cart);
 
             return cart;

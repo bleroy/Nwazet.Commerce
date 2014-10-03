@@ -6,6 +6,8 @@ using Orchard.Autoroute.Models;
 using Orchard.ContentManagement;
 using Orchard.Core.Title.Models;
 using Orchard.Environment.Extensions;
+using Orchard.Localization;
+using Orchard.UI.Notify;
 
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.Commerce")]
@@ -15,6 +17,7 @@ namespace Nwazet.Commerce.Models {
         private readonly IPriceService _priceService;
         private readonly IEnumerable<IProductAttributesDriver> _attributesDrivers;
         private readonly IEnumerable<ITaxProvider> _taxProviders;
+        private readonly INotifier _notifier;
 
         private IEnumerable<ShoppingCartQuantityProduct> _products; 
 
@@ -23,14 +26,19 @@ namespace Nwazet.Commerce.Models {
             IShoppingCartStorage cartStorage,
             IPriceService priceService,
             IEnumerable<IProductAttributesDriver> attributesDrivers,
-            IEnumerable<ITaxProvider> taxProviders) {
+            IEnumerable<ITaxProvider> taxProviders,
+            INotifier notifier) {
 
             _contentManager = contentManager;
             _cartStorage = cartStorage;
             _priceService = priceService;
             _attributesDrivers = attributesDrivers;
             _taxProviders = taxProviders;
+            _notifier = notifier;
+            T = NullLocalizer.Instance;
         }
+
+        public Localizer T { get; set; }
 
         public IEnumerable<ShoppingCartItem> Items {
             get { return ItemsInternal.AsReadOnly(); }
@@ -58,7 +66,11 @@ namespace Nwazet.Commerce.Models {
         }
 
         public void Add(int productId, int quantity = 1, IDictionary<int, string> attributeIdsToValues = null) {
-            ValidateAttributes(productId, attributeIdsToValues);
+            if (!ValidateAttributes(productId, attributeIdsToValues)) {
+                // If attributes don't validate, don't add the product, but notify
+                _notifier.Warning(T("Couldn't add this product because of invalid attributes. Please refresh the page and try again."));
+                return;
+            }
             var item = FindCartItem(productId, attributeIdsToValues);
             if (item != null) {
                 item.Quantity += quantity;
@@ -81,16 +93,13 @@ namespace Nwazet.Commerce.Models {
                      && i.AttributeIdsToValues.All(attributeIdsToValues.Contains));
         }
 
-        private void ValidateAttributes(int productId, IDictionary<int, string> attributeIdsToValues) {
+        private bool ValidateAttributes(int productId, IDictionary<int, string> attributeIdsToValues) {
             if (_attributesDrivers == null ||
                 attributeIdsToValues == null ||
-                !attributeIdsToValues.Any()) return;
+                !attributeIdsToValues.Any()) return true;
 
             var product = _contentManager.Get(productId);
-            if (_attributesDrivers.Any(d => !d.ValidateAttributes(product, attributeIdsToValues))) {
-                // Throwing because this should only happen from malicious payloads
-                throw new ArgumentException("Invalid product attributes", "attributeIdsToValues");
-            }
+            return _attributesDrivers.All(d => d.ValidateAttributes(product, attributeIdsToValues));
         }
 
         public void AddRange(IEnumerable<ShoppingCartItem> items) {

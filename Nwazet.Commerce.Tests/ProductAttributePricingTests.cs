@@ -7,6 +7,7 @@ using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
 using Nwazet.Commerce.Tests.Stubs;
 using Orchard.ContentManagement;
+using Orchard.UI.Notify;
 
 namespace Nwazet.Commerce.Tests {
     [TestFixture]
@@ -68,7 +69,7 @@ namespace Nwazet.Commerce.Tests {
             CheckCart(cart, 110); // 10 units x ($7/unit + $4 unit adj) = 110
         }
 
-        private static readonly ProductStub[] Products = new[] {
+        private static readonly ProductStub[] Products = {
             new ProductStub(1, new[] {10, 11}) {Price = 25},
             new ProductStub(2, new[] {10}) {Price = 5},
             new ProductStub(3, new[] {11}) {Price = 10},
@@ -76,27 +77,27 @@ namespace Nwazet.Commerce.Tests {
             new ProductStub(5, new[] {11, 13}) { Price = 7 }
         };
 
-        private static readonly ProductAttributeStub[] ProductAttributes = new[] {
-            new ProductAttributeStub(10, new List<ProductAttributeValue>() {
-                new ProductAttributeValue() { Text = "Green", PriceAdjustment=10, IsLineAdjustment=true },
-                new ProductAttributeValue() { Text = "Blue", PriceAdjustment=0 },
-                new ProductAttributeValue() { Text = "Red", PriceAdjustment=-3, IsLineAdjustment=true }
+        private static readonly ProductAttributeStub[] ProductAttributes = {
+            new ProductAttributeStub(10, new List<ProductAttributeValue> {
+                new ProductAttributeValue { Text = "Green", PriceAdjustment=10, IsLineAdjustment=true },
+                new ProductAttributeValue { Text = "Blue", PriceAdjustment=0 },
+                new ProductAttributeValue { Text = "Red", PriceAdjustment=-3, IsLineAdjustment=true }
             }),
-            new ProductAttributeStub(11, new List<ProductAttributeValue>() {
-                new ProductAttributeValue() { Text = "XS", PriceAdjustment=-1 },
-                new ProductAttributeValue() { Text = "S", PriceAdjustment=0 },
-                new ProductAttributeValue() { Text = "M", PriceAdjustment=0 },
-                new ProductAttributeValue() { Text = "L", PriceAdjustment=1 },
-                new ProductAttributeValue() { Text = "XL", PriceAdjustment=2 },
-                new ProductAttributeValue() { Text = "XXL", PriceAdjustment=3 }
+            new ProductAttributeStub(11, new List<ProductAttributeValue> {
+                new ProductAttributeValue { Text = "XS", PriceAdjustment=-1 },
+                new ProductAttributeValue { Text = "S", PriceAdjustment=0 },
+                new ProductAttributeValue { Text = "M", PriceAdjustment=0 },
+                new ProductAttributeValue { Text = "L", PriceAdjustment=1 },
+                new ProductAttributeValue { Text = "XL", PriceAdjustment=2 },
+                new ProductAttributeValue { Text = "XXL", PriceAdjustment=3 }
             }),
-            new ProductAttributeStub(12, new List<ProductAttributeValue>() {
-                new ProductAttributeValue() { Text = "Yes", PriceAdjustment=50, IsLineAdjustment=true },
-                new ProductAttributeValue() { Text = "No", PriceAdjustment=0, IsLineAdjustment=true }
+            new ProductAttributeStub(12, new List<ProductAttributeValue> {
+                new ProductAttributeValue { Text = "Yes", PriceAdjustment=50, IsLineAdjustment=true },
+                new ProductAttributeValue { Text = "No", PriceAdjustment=0, IsLineAdjustment=true }
             }),
-            new ProductAttributeStub(13, new List<ProductAttributeValue>() {
-                new ProductAttributeValue() { Text = "Without Sparkles", PriceAdjustment=0 },
-                new ProductAttributeValue() { Text = "With Sparkles", PriceAdjustment=1 }
+            new ProductAttributeStub(13, new List<ProductAttributeValue> {
+                new ProductAttributeValue { Text = "Without Sparkles", PriceAdjustment=0 },
+                new ProductAttributeValue { Text = "With Sparkles", PriceAdjustment=1 }
             })
         };
 
@@ -104,10 +105,9 @@ namespace Nwazet.Commerce.Tests {
             var contentManager = new ContentManagerStub(Products.Cast<IContent>().Union(ProductAttributes));
             var cartStorage = new FakeCartStorage();
             var attributeService = new ProductAttributeService(contentManager);
-            var priceService = new PriceService(new IPriceProvider[0], attributeService, null);
+            var priceService = new PriceService(new IPriceProvider[0], attributeService);
             var attributeDriver = new ProductAttributesPartDriver(attributeService);
-            var cart = new ShoppingCart(contentManager, cartStorage, priceService, new[] {attributeDriver}, null);
-            //FillCart(cart);
+            var cart = new ShoppingCart(contentManager, cartStorage, priceService, new[] { attributeDriver }, null, new Notifier());
 
             return cart;
         }

@@ -2,16 +2,14 @@
 using System.Linq;
 using NUnit.Framework;
 using Nwazet.Commerce.Models;
-using Nwazet.Commerce.Tests.Helpers;
 using Nwazet.Commerce.Tests.Stubs;
 using System.Collections.Generic;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Records;
 using Nwazet.Commerce.Services;
 using Orchard;
-using Orchard.Security;
 using Orchard.Settings;
 using Orchard.Services;
+using Orchard.UI.Notify;
 
 namespace Nwazet.Commerce.Tests {
     [TestFixture]
@@ -89,7 +87,7 @@ namespace Nwazet.Commerce.Tests {
         [Test]
         public void DiscountWithQuantityConstraintAppliedToTier() {
             var cart = PrepareCart(WorkContextAccessorSiteWideDisabledOverrideEnabled,
-                new DiscountStub[] { new DiscountStub(1) {
+                new [] { new DiscountStub(1) {
                     StartQuantity = 10,
                     EndQuantity = 20,
                     Discount = 5
@@ -101,7 +99,7 @@ namespace Nwazet.Commerce.Tests {
         [Test]
         public void DiscountWithQuantityConstraintNotAppliedToTierWhenOutsideRange() {
             var cart = PrepareCart(WorkContextAccessorSiteWideDisabledOverrideEnabled,
-                new DiscountStub[] { new DiscountStub(1) {
+                new [] { new DiscountStub(1) {
                     StartQuantity = 10,
                     EndQuantity = 20,
                     Discount = 5
@@ -114,17 +112,17 @@ namespace Nwazet.Commerce.Tests {
 
         private static readonly IWorkContextAccessor WorkContextAccessorSiteWideDisabledOverrideEnabled =
             new WorkContextAccessorStub(new Dictionary<Type, object> {
-                {typeof(ISite), new SiteStub(true, false, new List<PriceTier>() { 
-                    new PriceTier() { Quantity = 10, PricePercent = 75 },
-                    new PriceTier() { Quantity = 100, PricePercent = 50 }
+                {typeof(ISite), new SiteStub(true, false, new List<PriceTier> { 
+                    new PriceTier { Quantity = 10, PricePercent = 75 },
+                    new PriceTier { Quantity = 100, PricePercent = 50 }
                 }) }
             });
 
         private static readonly IWorkContextAccessor WorkContextAccessorSiteWideEnabledOverrideEnabled =
             new WorkContextAccessorStub(new Dictionary<Type, object> {
-                {typeof(ISite), new SiteStub(true, true, new List<PriceTier>() { 
-                    new PriceTier() { Quantity = 10, PricePercent = 75 },
-                    new PriceTier() { Quantity = 100, PricePercent = 50 }
+                {typeof(ISite), new SiteStub(true, true, new List<PriceTier> { 
+                    new PriceTier { Quantity = 10, PricePercent = 75 },
+                    new PriceTier { Quantity = 100, PricePercent = 50 }
                 })
                 }
             });
@@ -136,39 +134,39 @@ namespace Nwazet.Commerce.Tests {
             });
 
 
-        private static readonly ProductStub[] Products = new[] {
+        private static readonly ProductStub[] Products = {
             new ProductStub(1) {Price = 10, 
                                 OverrideTieredPricing = true, 
-                                PriceTiers = new List<PriceTier>() {
-                                    new PriceTier() { Quantity = 10, Price = 9.0 },
-                                    new PriceTier() { Quantity = 50, Price = 8.0 },
-                                    new PriceTier() { Quantity = 100, Price = 5.0 }
+                                PriceTiers = new List<PriceTier> {
+                                    new PriceTier { Quantity = 10, Price = 9.0 },
+                                    new PriceTier { Quantity = 50, Price = 8.0 },
+                                    new PriceTier { Quantity = 100, Price = 5.0 }
                                 }},
             new ProductStub(2) {Price = 10, 
                                 OverrideTieredPricing = true, 
-                                PriceTiers = new List<PriceTier>() {
-                                    new PriceTier() { Quantity = 5, Price = 9.0 },
-                                    new PriceTier() { Quantity = 10, Price = 8.0 },
-                                    new PriceTier() { Quantity = 15, Price = 7.0 }
+                                PriceTiers = new List<PriceTier> {
+                                    new PriceTier { Quantity = 5, Price = 9.0 },
+                                    new PriceTier { Quantity = 10, Price = 8.0 },
+                                    new PriceTier { Quantity = 15, Price = 7.0 }
                                 }},
             new ProductStub(3) {Price = 10, 
                                 OverrideTieredPricing = false, 
-                                PriceTiers = new List<PriceTier>() {
-                                    new PriceTier() { Quantity = 10, Price = 9.0 },
-                                    new PriceTier() { Quantity = 50, Price = 8.0 },
-                                    new PriceTier() { Quantity = 100, Price = 5.0 }
+                                PriceTiers = new List<PriceTier> {
+                                    new PriceTier { Quantity = 10, Price = 9.0 },
+                                    new PriceTier { Quantity = 50, Price = 8.0 },
+                                    new PriceTier { Quantity = 100, Price = 5.0 }
                                 }},
             new ProductStub(4) {Price = 10, 
                                 OverrideTieredPricing = true, 
-                                PriceTiers = new List<PriceTier>() {
-                                    new PriceTier() { Quantity = 2, PricePercent = 90 },
-                                    new PriceTier() { Quantity = 5, PricePercent = 80 },
-                                    new PriceTier() { Quantity = 10, PricePercent = 70 }
+                                PriceTiers = new List<PriceTier> {
+                                    new PriceTier { Quantity = 2, PricePercent = 90 },
+                                    new PriceTier { Quantity = 5, PricePercent = 80 },
+                                    new PriceTier { Quantity = 10, PricePercent = 70 }
                                 }},
             new ProductStub(5) {Price = 10, 
                                 OverrideTieredPricing = true, 
-                                PriceTiers = new List<PriceTier>() {
-                                    new PriceTier() { Quantity = 10, Price = 8.9, PricePercent = 90 }
+                                PriceTiers = new List<PriceTier> {
+                                    new PriceTier { Quantity = 10, Price = 8.9, PricePercent = 90 }
                                 }},
             new ProductStub(6) {Price = 10, 
                                 OverrideTieredPricing = false, 
@@ -186,7 +184,7 @@ namespace Nwazet.Commerce.Tests {
                 }
             };
             var priceService = new PriceService(priceProviders, new ProductAttributeService(contentManager), new TieredPriceProvider(wca));
-            var cart = new ShoppingCart(contentManager, cartStorage, priceService, null, taxProviders);
+            var cart = new ShoppingCart(contentManager, cartStorage, priceService, null, taxProviders, new Notifier());
 
             return cart;
         }
