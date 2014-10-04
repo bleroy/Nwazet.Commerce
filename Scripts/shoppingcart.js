@@ -12,7 +12,7 @@
             }
             return loading = !!state;
         },
-        loading = hasLocalStorage() ? !!localStorage["nwazet-cart-loading"] : false,
+        loading = hasLocalStorage() ? localStorage["nwazet-cart-loading"] == "true" : false,
         nwazetCart = "nwazet.cart",
         cartContainer = $(".shopping-cart-container"),
         setQuantityToZero = function(parentTag) {
@@ -101,12 +101,15 @@
                             } else {
                                 setLoading(true);
                                 cartContainer.closest("form").submit();
+                                return;
                             }
                         }
                     }
                 }
                 if (cartContainer.hasClass("minicart")) {
                     cartContainer.parent().toggle(gotCart);
+                } else {
+                    setLoading(false);
                 }
                 $(this).trigger("nwazet.cartupdated");
             }
