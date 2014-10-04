@@ -122,7 +122,10 @@ namespace Nwazet.Commerce.Controllers {
                 shape.ShippingOption = shippingOption;
             }
 
-            var productQuantities = _shoppingCart.GetProducts().ToList();
+            var productQuantities = _shoppingCart
+                .GetProducts()
+                .Where(p => p.Quantity > 0)
+                .ToList();
             var productShapes = GetProductShapesFromQuantities(productQuantities);
             shape.ShopItems = productShapes;
 

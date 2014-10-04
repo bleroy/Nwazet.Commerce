@@ -32,15 +32,19 @@ namespace Nwazet.Commerce.Services {
             // Adjust price based on attributes selected
             if (discountedProductQuantity.AttributeIdsToValues != null) {
                 foreach (var attr in discountedProductQuantity.AttributeIdsToValues) {
-                    var value = _attributeService.GetAttributes(new int[] { attr.Key }).Single()
-                        .AttributeValues.Single(v => v.Text.Trim() == attr.Value.Trim());
+                    var value = _attributeService.GetAttributes(new [] { attr.Key }).Single()
+                        .AttributeValues.FirstOrDefault(v => v.Text.Trim() == attr.Value.Trim());
+                    if (value == null) {
+                        // If the attribute doesn't exist, remove the product
+                        return new ShoppingCartQuantityProduct(0, productQuantity.Product, productQuantity.AttributeIdsToValues);
+                    }
                     // If the adjustment is to the line, specify, otherwise adjust the per unit price
                     if (value.IsLineAdjustment) {
                         discountedProductQuantity.LinePriceAdjustment += value.PriceAdjustment;
                     }
                     else {
                         discountedProductQuantity.Price += value.PriceAdjustment;
-                    }                    
+                    }
                 }
             }
 

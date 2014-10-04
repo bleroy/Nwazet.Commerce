@@ -129,12 +129,13 @@ namespace Nwazet.Commerce.Models {
 
             var shoppingCartQuantities =
                 (from item in Items  
-                 where productPartIds.Contains(item.ProductId)
+                 where productPartIds.Contains(item.ProductId) && item.Quantity > 0
                  select new ShoppingCartQuantityProduct(item.Quantity, productParts.First(p => p.Id == item.ProductId), item.AttributeIdsToValues))
                     .ToList();
 
             return _products = shoppingCartQuantities
                 .Select(q => _priceService.GetDiscountedPrice(q, shoppingCartQuantities))
+                .Where(q => q.Quantity > 0)
                 .ToList();
         }
 

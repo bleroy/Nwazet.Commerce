@@ -1,5 +1,18 @@
 ﻿jQuery(function($) {
-    var loading = false,
+    var hasLocalStorage = function() {
+            try {
+                return "localStorage" in window && window.localStorage !== null;
+            } catch(e) {
+                return false;
+            }
+        },
+        setLoading = function(state) {
+            if (hasLocalStorage()) {
+                localStorage["nwazet-cart-loading"] = !!state;
+            }
+            return loading = !!state;
+        },
+        loading = hasLocalStorage() ? !!localStorage["nwazet-cart-loading"] : false,
         nwazetCart = "nwazet.cart",
         cartContainer = $(".shopping-cart-container"),
         setQuantityToZero = function(parentTag) {
@@ -14,18 +27,11 @@
         },
         cartContainerLoad = function (form) {
             if (!loading && form && form.length > 0) {
-                loading = true;
+                setLoading(true);
                 cartContainer.load(form[0].action || updateUrl, form.serializeArray(), onCartLoad);
                 $(this).trigger("nwazet.cartupdating");
             }
             return false;
-        },
-        hasLocalStorage = function() {
-            try {
-                return "localStorage" in window && window.localStorage !== null;
-            } catch(e) {
-                return false;
-            }
         },
         buildForm = function(state, container) {
             $.each(state, function (key, value) {
@@ -65,7 +71,7 @@
                             delete cart.__RequestVerificationToken;
                             localStorage[nwazetCart] = JSON.stringify(cart);
                         }
-                        loading = false;
+                        setLoading(false);
                     } else {
                         var cachedCart, cachedCartString = localStorage[nwazetCart];
                         if (cachedCartString) {
@@ -74,6 +80,8 @@
                                     Country: localStorage[nwazetCart].Country || null,
                                     ZipCode: localStorage[nwazetCart].ZipCode || null
                                 });
+                                setLoading(false);
+                                return;
                             }
                             try {
                                 cachedCart = JSON.parse(cachedCartString);
@@ -91,6 +99,7 @@
                             if (cartContainer.hasClass("minicart")) {
                                 cartContainerLoad(cartContainerForm);
                             } else {
+                                setLoading(true);
                                 cartContainer.closest("form").submit();
                             }
                         }
