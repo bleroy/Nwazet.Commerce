@@ -65,7 +65,7 @@ namespace Nwazet.Commerce.Models {
             }
         }
 
-        public void Add(int productId, int quantity = 1, IDictionary<int, string> attributeIdsToValues = null) {
+        public void Add(int productId, int quantity = 1, IDictionary<int, ProductAttributeValueExtended> attributeIdsToValues = null) {
             if (!ValidateAttributes(productId, attributeIdsToValues)) {
                 // If attributes don't validate, don't add the product, but notify
                 _notifier.Warning(T("Couldn't add this product because of invalid attributes. Please refresh the page and try again."));
@@ -81,7 +81,7 @@ namespace Nwazet.Commerce.Models {
             _products = null;
         }
 
-        public ShoppingCartItem FindCartItem(int productId, IDictionary<int, string> attributeIdsToValues = null) {
+        public ShoppingCartItem FindCartItem(int productId, IDictionary<int, ProductAttributeValueExtended> attributeIdsToValues = null) {
             if (attributeIdsToValues == null || attributeIdsToValues.Count == 0) {
                 return Items.FirstOrDefault(i => i.ProductId == productId
                       && (i.AttributeIdsToValues == null || i.AttributeIdsToValues.Count == 0));
@@ -93,7 +93,7 @@ namespace Nwazet.Commerce.Models {
                      && i.AttributeIdsToValues.All(attributeIdsToValues.Contains));
         }
 
-        private bool ValidateAttributes(int productId, IDictionary<int, string> attributeIdsToValues) {
+        private bool ValidateAttributes(int productId, IDictionary<int, ProductAttributeValueExtended> attributeIdsToValues) {
             if (_attributesDrivers == null ||
                 attributeIdsToValues == null ||
                 !attributeIdsToValues.Any()) return true;
@@ -108,7 +108,7 @@ namespace Nwazet.Commerce.Models {
             }
         }
 
-        public void Remove(int productId, IDictionary<int, string> attributeIdsToValues = null) {
+        public void Remove(int productId, IDictionary<int, ProductAttributeValueExtended> attributeIdsToValues = null) {
             var item = FindCartItem(productId, attributeIdsToValues);
             if (item == null) return;
 

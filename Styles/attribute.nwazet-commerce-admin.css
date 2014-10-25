@@ -1,5 +1,5 @@
 ﻿ul#NwazetCommerceAttribute_AttributeValues {
-    width: 475px;
+    width: 650px;
 }
 
 ul#NwazetCommerceAttribute_AttributeValues > li.header  {
@@ -39,4 +39,8 @@ ul#NwazetCommerceAttribute_AttributeValues > li > div {
 .apply-line {
     width: 100px;
     text-align: center;
+}
+
+.extra-label {
+    width: 175px;
 }

@@ -8,7 +8,7 @@ namespace Nwazet.Commerce.Models {
         private int _quantity;
 
         public int ProductId { get; private set; }
-        public IDictionary<int, string> AttributeIdsToValues { get; set; }
+        public IDictionary<int, ProductAttributeValueExtended> AttributeIdsToValues { get; set; }
 
         public int Quantity {
             get { return _quantity; }
@@ -20,7 +20,7 @@ namespace Nwazet.Commerce.Models {
 
         public ShoppingCartItem() {}
 
-        public ShoppingCartItem(int productId, int quantity = 1, IDictionary<int, string> attributeIdsToValues = null) {
+        public ShoppingCartItem(int productId, int quantity = 1, IDictionary<int, ProductAttributeValueExtended> attributeIdsToValues = null) {
             ProductId = productId;
             Quantity = quantity;
             AttributeIdsToValues = attributeIdsToValues;
@@ -31,7 +31,7 @@ namespace Nwazet.Commerce.Models {
                 if (AttributeIdsToValues == null || !AttributeIdsToValues.Any()) {
                     return "";
                 }
-                return "(" + string.Join(", ", AttributeIdsToValues.Values) + ")";
+                return "(" + string.Join(", ", AttributeIdsToValues.Values.Select(v => v.Value)) + ")";
             }
         }
 

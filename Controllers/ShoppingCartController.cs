@@ -28,8 +28,10 @@ namespace Nwazet.Commerce.Controllers {
         private readonly IEnumerable<IExtraCartInfoProvider> _extraCartInfoProviders;
         private readonly IWorkflowManager _workflowManager;
         private readonly INotifier _notifier;
+        private readonly IEnumerable<IProductAttributeExtensionProvider> _attributeExtensionProviders;
 
         private const string AttributePrefix = "productattributes.a";
+        private const string ExtensionPrefix = "ext.";
 
         public ShoppingCartController(
             IShoppingCart shoppingCart,
@@ -40,7 +42,8 @@ namespace Nwazet.Commerce.Controllers {
             IEnumerable<IShippingMethodProvider> shippingMethodProviders,
             IEnumerable<IExtraCartInfoProvider> extraCartInfoProviders,
             IWorkflowManager workflowManager,
-            INotifier notifier) {
+            INotifier notifier,
+            IEnumerable<IProductAttributeExtensionProvider> attributeExtensionProviders) {
 
             _shippingMethodProviders = shippingMethodProviders;
             _shoppingCart = shoppingCart;
@@ -51,6 +54,7 @@ namespace Nwazet.Commerce.Controllers {
             _extraCartInfoProviders = extraCartInfoProviders;
             _workflowManager = workflowManager;
             _notifier = notifier;
+            _attributeExtensionProviders = attributeExtensionProviders;
         }
 
         [HttpPost]
@@ -58,11 +62,26 @@ namespace Nwazet.Commerce.Controllers {
             // Manually parse product attributes because of a breaking change
             // in MVC 5 dictionary model binding
             var form = HttpContext.Request.Form;
+            var files = HttpContext.Request.Files;
             var productattributes = form.AllKeys
                 .Where(key => key.StartsWith(AttributePrefix))
                 .ToDictionary(
                     key => int.Parse(key.Substring(AttributePrefix.Length)),
-                    key => form[key]);
+                    key => {
+                        var extensionProvider = _attributeExtensionProviders.SingleOrDefault(e => e.Name == form[ExtensionPrefix + key + ".provider"]);
+                        Dictionary<string, string> extensionFormValues = null;
+                        if (extensionProvider != null) {
+                            extensionFormValues = form.AllKeys.Where(k => k.StartsWith(ExtensionPrefix + key + "."))
+                                .ToDictionary(
+                                    k => k.Substring((ExtensionPrefix + key + ".").Length),
+                                    k => form[k]);
+                        }
+                        return new ProductAttributeValueExtended { 
+                            Value = form[key],
+                            ExtendedValue = extensionProvider != null ? extensionProvider.Serialize(form[ExtensionPrefix + key], extensionFormValues, files) : "",
+                            ExtensionProvider = extensionProvider != null ? extensionProvider.Name : ""
+                        };
+                    });
 
             // Retrieve minimum order quantity
             var productPart = _contentManager.Get<ProductPart>(id);

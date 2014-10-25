@@ -89,6 +89,10 @@
     <Content Include="Scripts\referral.min.js">
       <DependentUpon>referral.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\attribute-extensions.js" />
+    <Content Include="Scripts\report - Copy.min.js">
+      <DependentUpon>attribute-extensions.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\report.js" />
     <Content Include="Scripts\report.min.js">
       <DependentUpon>report.js</DependentUpon>
@@ -235,6 +239,7 @@
     <Compile Include="Models\OrderPartRecord.cs" />
     <Compile Include="Models\PriceTier.cs" />
     <Compile Include="Models\ProductAttributeValue.cs" />
+    <Compile Include="Models\ProductAttributeValueExtended.cs" />
     <Compile Include="Models\ProductSettingsPart.cs" />
     <Compile Include="Models\Reporting\ChartType.cs" />
     <Compile Include="Models\Reporting\ICommerceReport.cs" />
@@ -293,6 +298,10 @@
     <Compile Include="Services\AddressFormatter.cs" />
     <Compile Include="Services\BundleService.cs" />
     <Compile Include="Services\Country.cs" />
+    <Compile Include="Services\ImageProductAttributeExtensionProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Services\IProductAttributeExtensionProvider.cs" />
     <Compile Include="Services\IOrderService.cs" />
     <Compile Include="Services\IProductAttributeService.cs" />
     <Compile Include="Services\IStripeWebService.cs" />
@@ -305,6 +314,7 @@
     <Compile Include="Services\ProductAttributeService.cs" />
     <Compile Include="Services\ProductDiscountPriceProvider.cs" />
     <Compile Include="Services\ShippingService.cs" />
+    <Compile Include="Services\TextProductAttributeExtensionProvider.cs" />
     <Compile Include="Services\ZipCodeTaxProvider.cs" />
     <Compile Include="Services\StateOrCountryTaxProvider.cs" />
     <Compile Include="Services\StripeWebService.cs" />
@@ -338,6 +348,8 @@
     <Compile Include="Tokens\CartTokens.cs" />
     <Compile Include="Tokens\OrderTokens.cs" />
     <Compile Include="Tokens\ProductTokens.cs" />
+    <Compile Include="ViewModels\ProductAttributePartDisplayViewModel.cs" />
+    <Compile Include="ViewModels\ProductAttributePartEditViewModel.cs" />
     <Compile Include="ViewModels\AttributesIndexViewModel.cs" />
     <Compile Include="ViewModels\BundleViewModel.cs" />
     <Compile Include="ViewModels\ListOrdersViewModel.cs" />
@@ -444,6 +456,23 @@
     </Content>
     <Content Include="Views\Report\Detail.cshtml" />
     <Content Include="Views\Report\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\TextProductAttributeExtensionInput.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ImageProductAttributeExtensionAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ImageProductAttributeExtensionInput.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\TextProductAttributeExtensionAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\report - Copy.min.js.map">
+      <DependentUpon>attribute-extensions.js</DependentUpon>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

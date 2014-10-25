@@ -17,8 +17,9 @@
                     var product = (IProduct) item.Product;
                     var contentItem = (IContent) item.Product;
                     var title = item.Title
-                                + (item.ProductAttributes == null || item.ProductAttributes.Count == 0
-                                       ? "" : " (" + string.Join(", ", item.ProductAttributes.Values) + ")");
+                                        + (item.ProductAttributes == null || item.ProductAttributes.Count == 0
+                                               ? "" : " (" + string.Join(", ", ((Dictionary<int, ProductAttributeValueExtended>)item.ProductAttributes).Values
+                                               .Select(v => v.Value + (v.ExtensionProviderInstance != null ? v.ExtensionProviderInstance.DisplayString(v.ExtendedValue) : ""))) + ")");
                     string imageUrl = (item.ProductImage != null ? item.ProductImage.Url : null);
                     var quantity = (int) item.Quantity;
                     var unitPrice = (double) item.DiscountedPrice;
@@ -36,10 +37,12 @@
                         <span class="price">
                             @if (item.ProductAttributes != null) {
                                 var attrIndex = 0;
-                                foreach (KeyValuePair<int, string> attribute in item.ProductAttributes) {
+                                foreach (KeyValuePair<int, ProductAttributeValueExtended> attribute in item.ProductAttributes) {
                                     var attributeNamePrefix = propertyNamePrefix + ".AttributeIdsToValues[" + attrIndex + "]";
                                     <input type="hidden" name="@(attributeNamePrefix).Key" value="@attribute.Key"/>
-                                    <input type="hidden" name="@(attributeNamePrefix).Value" value="@attribute.Value" />
+                                    <input type="hidden" name="@(attributeNamePrefix).Value.Value" value="@attribute.Value.Value" />
+                                    <input type="hidden" name="@(attributeNamePrefix).Value.Extra" value="@attribute.Value.ExtendedValue" />
+                                    <input type="hidden" name="@(attributeNamePrefix).Value.ExtensionProvider" value="@attribute.Value.ExtensionProvider" />
                                     attrIndex++;
                                 }
                             }

@@ -7,11 +7,11 @@ namespace Nwazet.Commerce.Models {
         string Country { get; set; }
         string ZipCode { get; set; }
         ShippingOption ShippingOption { get; set; }
-        void Add(int productId, int quantity = 1, IDictionary<int, string> attributeIdsToValues = null);
+        void Add(int productId, int quantity = 1, IDictionary<int, ProductAttributeValueExtended> attributeIdsToValues = null);
         void AddRange(IEnumerable<ShoppingCartItem> items);
-        void Remove(int productId, IDictionary<int, string> attributeIdsToValues = null);
+        void Remove(int productId, IDictionary<int, ProductAttributeValueExtended> attributeIdsToValues = null);
         IEnumerable<ShoppingCartQuantityProduct> GetProducts();
-        ShoppingCartItem FindCartItem(int productId, IDictionary<int, string> attributeIdsToValues);
+        ShoppingCartItem FindCartItem(int productId, IDictionary<int, ProductAttributeValueExtended> attributeIdsToValues);
         void UpdateItems();
         double Subtotal();
         TaxAmount Taxes(double subTotal = 0);

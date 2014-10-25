@@ -15,11 +15,15 @@ namespace Nwazet.Commerce.Drivers {
     [OrchardFeature("Nwazet.Attributes")]
     public class ProductAttributesPartDriver : ContentPartDriver<ProductAttributesPart>, IProductAttributesDriver {
         private readonly IProductAttributeService _attributeService;
+        private readonly IEnumerable<IProductAttributeExtensionProvider> _attributeExtensions;
 
         public ProductAttributesPartDriver(
-            IProductAttributeService attributeService) {
+            IProductAttributeService attributeService,
+            IEnumerable<IProductAttributeExtensionProvider> attributeExtensions) {
 
             _attributeService = attributeService;
+            _attributeExtensions = attributeExtensions;
+
         }
 
         protected override string Prefix { get { return "NwazetCommerceAttribute"; } }
@@ -39,10 +43,16 @@ namespace Nwazet.Commerce.Drivers {
             return shapeHelper.Parts_ProductAttributes(
                 ContentItem: product,
                 ProductAttributes: attributes.OrderBy(a => a.SortOrder)
+                    .Select(a => new ProductAttributePartDisplayViewModel {
+                        Part = a,
+                        // Return all possible attribute extensions input shapes
+                        AttributeExtensionShapes = _attributeExtensions.Where(e => a.AttributeValues.Any(av => av.ExtensionProvider == e.Name))
+                            .Select(e => e.BuildInputShape(a))
+                    })
                 );
         }
 
-        public bool ValidateAttributes(IContent product, IDictionary<int, string> attributeIdsToValues) {
+        public bool ValidateAttributes(IContent product, IDictionary<int, ProductAttributeValueExtended> attributeIdsToValues) {
             var attributesPart = product.As<ProductAttributesPart>();
             //if (attributeIdsToValues.Count == 1 &&
             //    attributeIdsToValues[0].)
@@ -55,7 +65,7 @@ namespace Nwazet.Commerce.Drivers {
             // Get the actual attributes in order to verify the values
             var attributes = _attributeService.GetAttributes(attributeIdsToValues.Keys);
             // The values that got passed in must exist
-            return attributes.All(attribute => attribute.AttributeValues.Any(v => v.Text == attributeIdsToValues[attribute.Id]));
+            return attributes.All(attribute => attribute.AttributeValues.Any(v => v.Text == attributeIdsToValues[attribute.Id].Value));
         }
 
         //GET

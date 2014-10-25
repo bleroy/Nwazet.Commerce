@@ -174,23 +174,34 @@
                         name: prefix + "Quantity",
                         value: quantity
                     }));
+                var key, value, extra, attributePrefix;
                 $.each(addFormData, function() {
                     var name = this.name;
                     if (name.substr(0, 19) === "productattributes.a") {
-                        var key = name.substr(19),
+                        key = name.substr(19),
                             value = this.value,
+                            extra = "testing",
                             attributePrefix = prefix + "AttributeIdsToValues[" + attrIndex++ + "].";
-                        minicartForm
-                            .append($(inputTag).attr({
-                                name: attributePrefix + "Key",
-                                value: key
-                            }))
-                            .append($(inputTag).attr({
-                                name: attributePrefix + "Value",
-                                value: value
-                            }));
+                    }
+                    if (name.substr(0, 25) === "ext.productattributes.a") {
+                        extra = this.value;
                     }
                 });
+                if (key && value) {
+                    minicartForm
+                        .append($(inputTag).attr({
+                            name: attributePrefix + "Key",
+                            value: key
+                        }))
+                        .append($(inputTag).attr({
+                            name: attributePrefix + "Value.Value",
+                            value: value
+                        }))
+                        .append($(inputTag).attr({
+                            name: attributePrefix + "Value.ExtendedValue",
+                            value: extra
+                        }));
+                }
                 cartContainerLoad(minicartForm);
             } else {
                 cartContainerLoad(addForm);

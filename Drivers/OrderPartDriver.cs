@@ -25,6 +25,7 @@ namespace Nwazet.Commerce.Drivers {
         private readonly IOrchardServices _orchardServices;
         private readonly IWorkflowManager _workflowManager;
         private readonly IMembershipService _membershipService;
+        private readonly IEnumerable<IProductAttributeExtensionProvider> _extensionProviders;
 
         public OrderPartDriver(
             IOrderService orderService,
@@ -33,7 +34,8 @@ namespace Nwazet.Commerce.Drivers {
             IWorkContextAccessor wca,
             IOrchardServices orchardServices,
             IWorkflowManager workflowManager,
-            IMembershipService membershipService) {
+            IMembershipService membershipService,
+            IEnumerable<IProductAttributeExtensionProvider> extensionProviders) {
 
             _orderService = orderService;
             _addressFormatter = addressFormatter;
@@ -42,6 +44,7 @@ namespace Nwazet.Commerce.Drivers {
             _orchardServices = orchardServices;
             _workflowManager = workflowManager;
             _membershipService = membershipService;
+            _extensionProviders = extensionProviders;
             T = NullLocalizer.Instance;
         }
 
@@ -110,8 +113,16 @@ namespace Nwazet.Commerce.Drivers {
             var linkToTransaction = _checkoutServices
                 .Select(s => s.GetChargeAdminUrl(part.Charge.TransactionId))
                 .FirstOrDefault(u => u != null);
+            var orderItems = part.Items.ToList();
+            // Add attribute extension provider instances to order item attributes
+            foreach (var item in orderItems) {
+                foreach (var attr in item.Attributes) {
+                    attr.Value.ExtensionProviderInstance = _extensionProviders.SingleOrDefault(e => e.Name == attr.Value.ExtensionProvider);
+                }
+            }
             var model = new OrderEditorViewModel {
                 Order = part,
+                OrderItems = orderItems,
                 Products = products,
                 BillingAddressText = _addressFormatter.Format(part.BillingAddress),
                 ShippingAddressText = _addressFormatter.Format(part.ShippingAddress),

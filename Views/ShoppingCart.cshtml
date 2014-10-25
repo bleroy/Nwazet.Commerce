@@ -1,5 +1,6 @@
 ﻿@using Nwazet.Commerce.Models
 @using Orchard.ContentManagement
+@using System.Collections.Generic
 @{
     Script.Require("jQuery");
     Script.Include("shoppingcart.js", "shoppingcart.min.js");
@@ -42,12 +43,13 @@
                             var contentItem = (IContent)item.Product;
                             var title = item.Title
                                         + (item.ProductAttributes == null || item.ProductAttributes.Count == 0
-                                               ? "" : " (" + string.Join(", ", item.ProductAttributes.Values) + ")");
+                                               ? "" : " (" + string.Join(", ", ((Dictionary<int, ProductAttributeValueExtended>)item.ProductAttributes).Values
+                                                    .Select(v => v.Value + (v.ExtensionProviderInstance != null ? v.ExtensionProviderInstance.DisplayString(v.ExtendedValue) : ""))) + ")");
                             string imageUrl = (item.ProductImage != null ? item.ProductImage.Url : null);
                             var quantity = (int)item.Quantity;
                             var unitPrice = (double)item.DiscountedPrice;
-                            var linePriceAdjustment = (double) item.LinePriceAdjustment;
-                            var totalPrice = quantity*unitPrice+linePriceAdjustment;
+                            var linePriceAdjustment = (double)item.LinePriceAdjustment;
+                            var totalPrice = quantity * unitPrice + linePriceAdjustment;
                             var minimumOrderQuantity = item.MinimumOrderQuantity;
                             <tr>
                                 @if (imageUrl != null) {
@@ -57,8 +59,7 @@
                                     <td>
                                         <a href="@Url.ItemDisplayUrl(contentItem)" class="product-name">@title</a>
                                     </td>
-                                }
-                                else {
+                                } else {
                                     <td colspan="2"><a href="@Url.ItemDisplayUrl(contentItem)">@title</a></td>
                                 }
                                 <td class="numeric">@unitPrice.ToString("c")</td>
@@ -68,14 +69,15 @@
                                         if (minimumOrderQuantity > 1) {
                                             <br /><strong>Minimum order of @minimumOrderQuantity required.</strong>
                                         }
-                                    }
-                                    else {
+                                    } else {
                                         if (item.ProductAttributes != null) {
                                             var attrIndex = 0;
-                                            foreach (KeyValuePair<int, string> attribute in item.ProductAttributes) {
+                                            foreach (KeyValuePair<int, ProductAttributeValueExtended> attribute in item.ProductAttributes) {
                                                 var attributeNamePrefix = propertyNamePrefix + ".AttributeIdsToValues[" + attrIndex + "]";
                                                 <input type="hidden" name="@(attributeNamePrefix).Key" value="@attribute.Key" />
-                                                <input type="hidden" name="@(attributeNamePrefix).Value" value="@attribute.Value" />
+                                                <input type="hidden" name="@(attributeNamePrefix).Value.Value" value="@attribute.Value.Value" />
+                                                <input type="hidden" name="@(attributeNamePrefix).Value.ExtendedValue" value="@attribute.Value.ExtendedValue" />
+                                                <input type="hidden" name="@(attributeNamePrefix).Value.ExtensionProvider" value="@attribute.Value.ExtensionProvider" />
                                                 attrIndex++;
                                             }
                                         }
@@ -91,6 +93,7 @@
                         }
 
                     </tbody>
+
                     <tfoot>
                         <tr class="total">
                             <td class="numeric label" colspan="4">@T("Subtotal:")</td>

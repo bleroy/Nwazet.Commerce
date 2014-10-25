@@ -86,15 +86,27 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.Order.Items) {
+                @foreach (var item in Model.OrderItems) {
                     <tr>
                         <td class="quantity">@item.Quantity &times;</td>
                         <td class="description"><a href="@Url.ItemDisplayUrl(Model.Products[item.ProductId])">@item.Title</a></td>
                         <td class="price">@item.Price.ToString("C")</td>
                         <td class="price">@item.LinePriceAdjustment.ToString("C")</td>
                     </tr>
+                    if (item.Attributes.Any(a => a.Value.ExtensionProviderInstance != null)) {
+                        <tr>
+                            <td colspan="2">
+                                @foreach (var attr in item.Attributes) {
+                                    if (attr.Value.ExtensionProviderInstance != null) {
+                                        @Display(attr.Value.ExtensionProviderInstance.BuildAdminShape(attr.Value.ExtendedValue))
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    }
                 }
             </tbody>
+
             <tfoot>
                 <tr class="subtotal">
                     <td colspan="2" class="label">@T("Subtotal")</td>

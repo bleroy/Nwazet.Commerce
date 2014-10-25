@@ -10,7 +10,8 @@
     FormMethod.Post,
     new Dictionary<string, object> {
         {"class", "addtocart"},
-        {"data-productid", productId}
+        {"data-productid", productId},
+        {"enctype", "multipart/form-data"}
     })) {
 
     if (Model.ProductAttributes != null) {
