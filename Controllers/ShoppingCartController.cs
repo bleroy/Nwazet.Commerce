@@ -15,6 +15,8 @@ using Orchard.Mvc;
 using Orchard.Themes;
 using Orchard.UI.Notify;
 using Orchard.Workflows.Services;
+using System.Collections.Specialized;
+using System.Web;
 
 namespace Nwazet.Commerce.Controllers {
     [OrchardFeature("Nwazet.Commerce")]
@@ -59,29 +61,11 @@ namespace Nwazet.Commerce.Controllers {
 
         [HttpPost]
         public ActionResult Add(int id, int quantity = 1) {
-            // Manually parse product attributes because of a breaking change
-            // in MVC 5 dictionary model binding
+
             var form = HttpContext.Request.Form;
             var files = HttpContext.Request.Files;
-            var productattributes = form.AllKeys
-                .Where(key => key.StartsWith(AttributePrefix))
-                .ToDictionary(
-                    key => int.Parse(key.Substring(AttributePrefix.Length)),
-                    key => {
-                        var extensionProvider = _attributeExtensionProviders.SingleOrDefault(e => e.Name == form[ExtensionPrefix + key + ".provider"]);
-                        Dictionary<string, string> extensionFormValues = null;
-                        if (extensionProvider != null) {
-                            extensionFormValues = form.AllKeys.Where(k => k.StartsWith(ExtensionPrefix + key + "."))
-                                .ToDictionary(
-                                    k => k.Substring((ExtensionPrefix + key + ".").Length),
-                                    k => form[k]);
-                        }
-                        return new ProductAttributeValueExtended { 
-                            Value = form[key],
-                            ExtendedValue = extensionProvider != null ? extensionProvider.Serialize(form[ExtensionPrefix + key], extensionFormValues, files) : "",
-                            ExtensionProvider = extensionProvider != null ? extensionProvider.Name : ""
-                        };
-                    });
+
+            var productattributes = GetProductAttributes(form, files);
 
             // Retrieve minimum order quantity
             var productPart = _contentManager.Get<ProductPart>(id);
@@ -261,7 +245,7 @@ namespace Nwazet.Commerce.Controllers {
             string country = null,
             string zipCode = null,
             string shippingOption = null) {
-
+            
             _shoppingCart.Country = country;
             _shoppingCart.ZipCode = zipCode;
             _shoppingCart.ShippingOption = String.IsNullOrWhiteSpace(shippingOption) ? null : ShippingService.RebuildShippingOption(shippingOption);
@@ -274,15 +258,25 @@ namespace Nwazet.Commerce.Controllers {
 
         [HttpPost]
         public ActionResult AjaxUpdate(
-            UpdateShoppingCartItemViewModel[] items,
+            List<UpdateShoppingCartItemViewModel> items,
+            int id = 0, int quantity = 1,
             string country = null,
             string zipCode = null) {
+
+            if (id != 0) {
+                var item = new UpdateShoppingCartItemViewModel {
+                    ProductId = id,
+                    Quantity = quantity,
+                    AttributeIdsToValues = GetProductAttributes(HttpContext.Request.Form, HttpContext.Request.Files)
+                };
+                items.Add(item);
+            }
 
             _shoppingCart.Country = country;
             _shoppingCart.ZipCode = zipCode;
             _shoppingCart.ShippingOption = null;
 
-            UpdateShoppingCart(items == null ? null : items.Reverse());
+            UpdateShoppingCart(items == null ? null : items.ToArray().Reverse());
             try {
                 return new ShapePartialResult(this,
                     BuildCartShape(
@@ -370,6 +364,32 @@ namespace Nwazet.Commerce.Controllers {
             }
 
             return minimumOrderQuantites;
+        }
+
+        private Dictionary<int, ProductAttributeValueExtended> GetProductAttributes(
+            NameValueCollection form, HttpFileCollectionBase files) {
+            // Manually parse product attributes because of a breaking change
+            // in MVC 5 dictionary model binding
+            var productattributes = form.AllKeys
+                .Where(key => key.StartsWith(AttributePrefix))
+                .ToDictionary(
+                    key => int.Parse(key.Substring(AttributePrefix.Length)),
+                    key => {
+                        var extensionProvider = _attributeExtensionProviders.SingleOrDefault(e => e.Name == form[ExtensionPrefix + key + ".provider"]);
+                        Dictionary<string, string> extensionFormValues = null;
+                        if (extensionProvider != null) {
+                            extensionFormValues = form.AllKeys.Where(k => k.StartsWith(ExtensionPrefix + key + "."))
+                                .ToDictionary(
+                                    k => k.Substring((ExtensionPrefix + key + ".").Length),
+                                    k => form[k]);
+                        }
+                        return new ProductAttributeValueExtended {
+                            Value = form[key],
+                            ExtendedValue = extensionProvider != null ? extensionProvider.Serialize(form[ExtensionPrefix + key], extensionFormValues, files) : null,
+                            ExtensionProvider = extensionProvider != null ? extensionProvider.Name : null
+                        };
+                    });
+            return productattributes;
         }
 
         public ActionResult ResetDestination() {

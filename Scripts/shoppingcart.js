@@ -28,7 +28,22 @@
         cartContainerLoad = function (form) {
             if (!loading && form && form.length > 0) {
                 setLoading(true);
-                cartContainer.load(form[0].action || updateUrl, form.serializeArray(), onCartLoad);
+                // If we need to handle file inputs use an iframe
+                if ($("input[type=file]:enabled").length) {
+                    $.ajax(form[0].action || updateUrl, {
+                        type: "POST",
+                        data: form.serializeArray(),
+                        files: $(form).find("input[type=file]"),
+                        iframe: true,
+                        processData: $("input[type=file]").length
+                    }).done(function(content) {
+                        console.log(content);
+                        cartContainer.html(content);
+                    });
+                } else {
+                    cartContainer.load(form[0].action || updateUrl, form.serializeArray(), onCartLoad);
+                }
+
                 $(this).trigger("nwazet.cartupdating");
             }
             return false;
@@ -165,43 +180,27 @@
                 attrIndex = 0,
                 prefix = "items[" + maxIndex + "].";
             if (minicartForm.length !== 0) {
-                minicartForm
-                    .append($(inputTag).attr({
-                        name: prefix + "ProductId",
-                        value: productId
-                    }))
-                    .append($(inputTag).attr({
-                        name: prefix + "Quantity",
-                        value: quantity
-                    }));
-                var key, value, extra, attributePrefix;
-                $.each(addFormData, function() {
-                    var name = this.name;
-                    if (name.substr(0, 19) === "productattributes.a") {
-                        key = name.substr(19),
-                            value = this.value,
-                            extra = "testing",
-                            attributePrefix = prefix + "AttributeIdsToValues[" + attrIndex++ + "].";
+                // Transfer input elements from add form to mini cart
+                addForm.find("input").each(function(index, element) {
+                    // We don't want the crsf token, mini cart has it's own
+                    if (element.name != "__RequestVerificationToken" && element.type != "file") {
+                        $(element).clone().appendTo(minicartForm);
                     }
-                    if (name.substr(0, 25) === "ext.productattributes.a") {
-                        extra = this.value;
+                    if (element.type == "file") {
+                        // Cloning loses value, move the actual input and replace with the clone
+                        var $element = $(element),
+                            $clone = $element.clone();
+                        $clone.after($element);
+                        $element.appendTo(minicartForm);                        
                     }
                 });
-                if (key && value) {
-                    minicartForm
-                        .append($(inputTag).attr({
-                            name: attributePrefix + "Key",
-                            value: key
-                        }))
-                        .append($(inputTag).attr({
-                            name: attributePrefix + "Value.Value",
-                            value: value
-                        }))
-                        .append($(inputTag).attr({
-                            name: attributePrefix + "Value.ExtendedValue",
-                            value: extra
-                        }));
-                }
+                addForm.find("select").each(function(index, element) {
+                    var $clone = $(element).clone();
+                    // Cloning loses selected option, reset it
+                    $clone.val($(element).val());
+                    $clone.appendTo(minicartForm);
+
+                });
                 cartContainerLoad(minicartForm);
             } else {
                 cartContainerLoad(addForm);

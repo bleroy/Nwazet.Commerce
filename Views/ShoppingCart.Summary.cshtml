@@ -6,7 +6,8 @@
     var root = HttpContext.Current.Request.ApplicationPath;
     var cartUrl = Url.Action("Index", "ShoppingCart", new {area = "NWazet.Commerce"});
     if (items.Any()) {
-        using (Html.BeginFormAntiForgeryPost(Url.Action("AjaxUpdate", "ShoppingCart", new {area = "Nwazet.Commerce"}))) {
+        using (Html.BeginFormAntiForgeryPost(Url.Action("AjaxUpdate", "ShoppingCart", new {area = "Nwazet.Commerce"}), FormMethod.Post,
+            new Dictionary<string, object> {{"enctype", "multipart/form-data"}})) {
             @Html.Hidden("Country", (string) Model.Country)
             @Html.Hidden("ZipCode", (string) Model.ZipCode)
             <h1><a href="@cartUrl">@T("Your Cart")</a></h1>
@@ -41,7 +42,7 @@
                                     var attributeNamePrefix = propertyNamePrefix + ".AttributeIdsToValues[" + attrIndex + "]";
                                     <input type="hidden" name="@(attributeNamePrefix).Key" value="@attribute.Key"/>
                                     <input type="hidden" name="@(attributeNamePrefix).Value.Value" value="@attribute.Value.Value" />
-                                    <input type="hidden" name="@(attributeNamePrefix).Value.Extra" value="@attribute.Value.ExtendedValue" />
+                                    <input type="hidden" name="@(attributeNamePrefix).Value.ExtendedValue" value="@attribute.Value.ExtendedValue" />
                                     <input type="hidden" name="@(attributeNamePrefix).Value.ExtensionProvider" value="@attribute.Value.ExtensionProvider" />
                                     attrIndex++;
                                 }
