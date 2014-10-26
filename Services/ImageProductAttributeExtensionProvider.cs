@@ -12,7 +12,8 @@ using Orchard.ContentManagement;
 namespace Nwazet.Commerce.Services {
     [OrchardFeature("Nwazet.AttributeExtensions")]
     public class ImageProductAttributeExtensionProvider : IProductAttributeExtensionProvider {
-        public const string folder = "ImageAttributeExtension";
+        private const string folder = "ImageAttributeExtension";
+        private readonly string[] allowedFileExtensions = new string[] {".jpg", ".jpeg", ".png"};
 
         private readonly dynamic _shapeFactory;
         private readonly IMediaLibraryService _mediaService;
@@ -41,15 +42,17 @@ namespace Nwazet.Commerce.Services {
             // we'll store as part of the shopping cart and order
 
             // Save image from form post to media library
-            string name = "no images";
+            string name = "no image";
             foreach (string fileName in files) {
                 HttpPostedFileBase file = files[fileName];
                 if (!_mediaService.GetMediaFolders(null).Any(f => f.Name == folder)) {
                     _mediaService.CreateFolder(null, folder);
                 }
-                var mediaPart = _mediaService.ImportMedia(file.InputStream, folder, file.FileName);
-                _contentManager.Create(mediaPart);
-                name = mediaPart.FileName;
+                if (file.ContentLength > 0 && allowedFileExtensions.Contains(Path.GetExtension(file.FileName))) {
+                    var mediaPart = _mediaService.ImportMedia(file.InputStream, folder, file.FileName);
+                    _contentManager.Create(mediaPart);
+                    name = mediaPart.FileName;
+                }
             }
 
             return name;
@@ -72,11 +75,13 @@ namespace Nwazet.Commerce.Services {
 
         public dynamic BuildAdminShape(string value) {
             // Builds the shape used to display the extended attribute info on back-end
-
-            var src = _mediaService.GetMediaPublicUrl(folder, value);
+            var src = string.Empty;
+            if (value != "no image") {
+                src = _mediaService.GetMediaPublicUrl(folder, value);
+            }
             return _shapeFactory.ImageProductAttributeExtensionAdmin(
-                ImageUrl: src,
-                FileName: value);
+                    ImageUrl: src,
+                    FileName: value);
         }        
     }
 }

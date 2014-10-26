@@ -29,16 +29,16 @@
             if (!loading && form && form.length > 0) {
                 setLoading(true);
                 // If we need to handle file inputs use an iframe
-                if ($("input[type=file]:enabled").length) {
+                var $files = $("input[type=file]:enabled", form);
+                if ($files.length) {
                     $.ajax(form[0].action || updateUrl, {
                         type: "POST",
                         data: form.serializeArray(),
-                        files: $(form).find("input[type=file]"),
-                        iframe: true,
-                        processData: $("input[type=file]").length
+                        files: $files,
+                        iframe: true
                     }).done(function(content) {
-                        console.log(content);
                         cartContainer.html(content);
+                        onCartLoad();
                     });
                 } else {
                     cartContainer.load(form[0].action || updateUrl, form.serializeArray(), onCartLoad);
@@ -184,21 +184,21 @@
                 addForm.find("input").each(function(index, element) {
                     // We don't want the crsf token, mini cart has it's own
                     if (element.name != "__RequestVerificationToken" && element.type != "file") {
-                        $(element).clone().appendTo(minicartForm);
+                        $(element).clone().hide().appendTo(minicartForm);
                     }
                     if (element.type == "file") {
                         // Cloning loses value, move the actual input and replace with the clone
                         var $element = $(element),
                             $clone = $element.clone();
-                        $clone.after($element);
-                        $element.appendTo(minicartForm);                        
+                        $element.after($clone);
+                        $element.hide().appendTo(minicartForm);                        
                     }
                 });
                 addForm.find("select").each(function(index, element) {
                     var $clone = $(element).clone();
                     // Cloning loses selected option, reset it
                     $clone.val($(element).val());
-                    $clone.appendTo(minicartForm);
+                    $clone.hide().appendTo(minicartForm);
 
                 });
                 cartContainerLoad(minicartForm);

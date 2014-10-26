@@ -116,8 +116,10 @@ namespace Nwazet.Commerce.Drivers {
             var orderItems = part.Items.ToList();
             // Add attribute extension provider instances to order item attributes
             foreach (var item in orderItems) {
-                foreach (var attr in item.Attributes) {
-                    attr.Value.ExtensionProviderInstance = _extensionProviders.SingleOrDefault(e => e.Name == attr.Value.ExtensionProvider);
+                if (item.Attributes != null) {
+                    foreach (var attr in item.Attributes) {
+                        attr.Value.ExtensionProviderInstance = _extensionProviders.SingleOrDefault(e => e.Name == attr.Value.ExtensionProvider);
+                    }
                 }
             }
             var model = new OrderEditorViewModel {

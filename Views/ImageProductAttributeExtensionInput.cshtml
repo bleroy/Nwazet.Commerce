@@ -8,5 +8,5 @@
 @{
     var namePrefix = "ext.productattributes.a" + Model.Part.Id;
 }
-<input type="file" name="@(namePrefix).file" />
+<input type="file" name="@(namePrefix).file" required />
 <input type="hidden" name="@(namePrefix).provider" value="@Model.ExtensionName" />

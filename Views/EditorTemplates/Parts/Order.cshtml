@@ -93,7 +93,7 @@
                         <td class="price">@item.Price.ToString("C")</td>
                         <td class="price">@item.LinePriceAdjustment.ToString("C")</td>
                     </tr>
-                    if (item.Attributes.Any(a => a.Value.ExtensionProviderInstance != null)) {
+                    if (item.Attributes != null && item.Attributes.Any(a => a.Value.ExtensionProviderInstance != null)) {
                         <tr>
                             <td colspan="2">
                                 @foreach (var attr in item.Attributes) {

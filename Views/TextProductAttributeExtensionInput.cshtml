@@ -8,5 +8,5 @@
 @{
     var namePrefix = "ext.productattributes.a" + Model.Part.Id;
 }
-<input type="text" name="@namePrefix" />
+<input type="text" name="@namePrefix" required placeholder="Enter text" />
 <input type="hidden" name="@(namePrefix).provider" value="@Model.ExtensionName" />

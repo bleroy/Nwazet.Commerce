@@ -80,6 +80,7 @@
     <Content Include="Scripts\inventory.min.js">
       <DependentUpon>inventory.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\jquery.iframe-transport.js" />
     <Content Include="Scripts\mustache.js" />
     <Content Include="Scripts\order-admin.js" />
     <Content Include="Scripts\order-admin.min.js">
