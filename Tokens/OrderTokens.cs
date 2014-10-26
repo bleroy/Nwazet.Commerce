@@ -6,6 +6,7 @@ using Nwazet.Commerce.Services;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Tokens;
+using System.Net;
 
 namespace Nwazet.Commerce.Tokens {
     [OrchardFeature("Nwazet.Orders")]
@@ -118,12 +119,18 @@ namespace Nwazet.Commerce.Tokens {
                         var format = s
                             .Replace("$quantity", "{0}")
                             .Replace("$product", "{1}")
-                            .Replace("$price", "{2}");
-                        return String.Join(separator, q.Select(qp =>
+                            .Replace("$price", "{2}")
+                            .Replace("$lineadjustment", "{3}")
+                            .Replace("$linetotal", "{4}");
+                        // Html decoding so we can use html in format string.
+                        // For example: {Order.Items.Format:<tr><td>$quantity</td><td>$product</td></tr>}
+                        return WebUtility.HtmlDecode(String.Join(separator, q.Select(qp =>
                             String.Format(format,
                                 qp.Quantity,
                                 qp.Title,
-                                qp.Price.ToString("C"))));
+                                qp.Price.ToString("C"),
+                                qp.LinePriceAdjustment.ToString("C"),
+                                (qp.Quantity * qp.Price + qp.LinePriceAdjustment).ToString("C")))));
                     });
 
             context.For<Address>("Address")
