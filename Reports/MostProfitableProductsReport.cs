@@ -58,7 +58,7 @@ namespace Nwazet.Commerce.Reports {
                 var checkoutItems = order.As<OrderPart>().Items;
                 foreach (var checkoutItem in checkoutItems) {
                     var productId = checkoutItem.ProductId;
-                    var totalPrice = checkoutItem.Quantity*checkoutItem.Price;
+                    var totalPrice = (checkoutItem.Quantity*checkoutItem.Price) + checkoutItem.LinePriceAdjustment;
                     if (totalRevenues.ContainsKey(productId)) {
                         totalRevenues[productId] += totalPrice;
                     }

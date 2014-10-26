@@ -69,7 +69,7 @@ namespace Nwazet.Commerce.Reports {
                     .Items
                     .Select(item => new {
                         Id = item.ProductId,
-                        Amount = item.Quantity * item.Price
+                        Amount = (item.Quantity * item.Price) + item.LinePriceAdjustment
                     }))
                 .GroupBy(item => item.Id)
                 .Select(group => new {
@@ -105,7 +105,7 @@ namespace Nwazet.Commerce.Reports {
                         .ToDictionary(
                             group => series[group.Key],
                             group => new ReportDataPoint {
-                                Value = group.Sum(item => item.Quantity*item.Price)
+                                Value = group.Sum(item => (item.Quantity*item.Price) + item.LinePriceAdjustment)
                             })
                 });
                 intervalStart = intervalEnd;

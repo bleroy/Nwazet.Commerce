@@ -152,7 +152,7 @@ namespace Nwazet.Commerce.Controllers {
                             .Select(group => new {
                                 ProductId = group.Key,
                                 Quantity = group.Sum(item => item.Quantity),
-                                Total = group.Sum(item => item.Quantity * item.Price)
+                                Total = group.Sum(item => (item.Quantity * item.Price) + item.LinePriceAdjustment)
                             })
                             .ToDictionary(
                                 item => item.ProductId,
