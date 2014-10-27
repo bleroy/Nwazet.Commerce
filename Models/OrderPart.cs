@@ -89,14 +89,14 @@ namespace Nwazet.Commerce.Models {
                         .ToAttr(i => i.LinePriceAdjustment)
                         .ToAttr(i => i.PromotionId)
                         .Element
-                    .AddEl(new XElement(AttributesName, it.Attributes.Select(at => {
-                        var attrEl = new XElement(AttributeName);
-                        attrEl.SetAttributeValue("Key", at.Key);
-                        attrEl.SetAttributeValue("Value", at.Value.Value);
-                        attrEl.SetAttributeValue("Extra", at.Value.ExtendedValue);
-                        attrEl.SetAttributeValue("ExtensionProvider", at.Value.ExtensionProvider);
-                        return attrEl;
-                    }))))))
+                    .AddEl(new XElement(AttributesName, it.Attributes != null ? it.Attributes.Select(at => {
+                            var attrEl = new XElement(AttributeName);
+                            attrEl.SetAttributeValue("Key", at.Key);
+                            attrEl.SetAttributeValue("Value", at.Value.Value);
+                            attrEl.SetAttributeValue("Extra", at.Value.ExtendedValue);
+                            attrEl.SetAttributeValue("ExtensionProvider", at.Value.ExtensionProvider);
+                            return attrEl;
+                            }) : null)))))
                 .AddEl(new XElement(TaxesName).With(taxes)
                     .ToAttr(t => t.Name)
                     .ToAttr(t => t.Amount)
@@ -161,14 +161,16 @@ namespace Nwazet.Commerce.Models {
                         .FromAttr(i => i.PromotionId)
                         .Context;
                         if (el.Element(AttributesName) != null) {
-                            checkoutItem.Attributes = new Dictionary<int, ProductAttributeValueExtended>();
-                            foreach (var ael in el.Element(AttributesName).Elements(AttributeName)) {
-                                checkoutItem.Attributes.Add(Convert.ToInt32(ael.Attr("Key")), new ProductAttributeValueExtended {
-                                    Value = ael.Attr("Value"),
-                                    ExtendedValue = ael.Attr("Extra"),
-                                    ExtensionProvider = ael.Attr("ExtensionProvider")
-                                });
-                            }
+                            checkoutItem.Attributes =
+                                el.Elements(AttributesName).Elements(AttributeName).Select(a =>
+                                    new {
+                                        Key = Convert.ToInt32(a.Attr("Key")),
+                                        Value = new ProductAttributeValueExtended {
+                                            Value = a.Attr("Value"),
+                                            ExtendedValue = a.Attr("Extra"),
+                                            ExtensionProvider = a.Attr("ExtensionProvider")
+                                        }
+                                    }).ToDictionary(k => k.Key, k => k.Value);
                         }
                         return checkoutItem;
                     });
