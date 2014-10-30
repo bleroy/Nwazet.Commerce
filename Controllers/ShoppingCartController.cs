@@ -15,8 +15,6 @@ using Orchard.Mvc;
 using Orchard.Themes;
 using Orchard.UI.Notify;
 using Orchard.Workflows.Services;
-using System.Collections.Specialized;
-using System.Web;
 
 namespace Nwazet.Commerce.Controllers {
     [OrchardFeature("Nwazet.Commerce")]
@@ -60,12 +58,35 @@ namespace Nwazet.Commerce.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Add(int id, int quantity = 1) {
-
+        public ActionResult Add(int id, int quantity = 1, bool isAjaxRequest = false) {
+            // Manually parse product attributes because of a breaking change
+            // in MVC 5 dictionary model binding
             var form = HttpContext.Request.Form;
             var files = HttpContext.Request.Files;
-
-            var productattributes = GetProductAttributes(form, files);
+            var productattributes = form.AllKeys
+                .Where(key => key.StartsWith(AttributePrefix))
+                .ToDictionary(
+                    key => int.Parse(key.Substring(AttributePrefix.Length)),
+                    key => {
+                        var extensionProvider = _attributeExtensionProviders.SingleOrDefault(e => e.Name == form[ExtensionPrefix + key + ".provider"]);
+                        Dictionary<string, string> extensionFormValues = null;
+                        if (extensionProvider != null) {
+                            extensionFormValues = form.AllKeys.Where(k => k.StartsWith(ExtensionPrefix + key + "."))
+                                .ToDictionary(
+                                    k => k.Substring((ExtensionPrefix + key + ".").Length),
+                                    k => form[k]);
+                            return new ProductAttributeValueExtended {
+                                Value = form[key],
+                                ExtendedValue = extensionProvider.Serialize(form[ExtensionPrefix + key], extensionFormValues, files),
+                                ExtensionProvider = extensionProvider.Name
+                            };
+                        }
+                        return new ProductAttributeValueExtended {
+                            Value = form[key],
+                            ExtendedValue = null,
+                            ExtensionProvider = null
+                        };
+                    });
 
             // Retrieve minimum order quantity
             var productPart = _contentManager.Get<ProductPart>(id);
@@ -82,7 +103,8 @@ namespace Nwazet.Commerce.Controllers {
                     {"Cart", _shoppingCart}
                 });
 
-            if (Request.IsAjaxRequest()) {
+            // Test isAjaxRequest too because iframe posts won't return true for Request.IsAjaxRequest()
+            if (Request.IsAjaxRequest() || isAjaxRequest) {
                 return new ShapePartialResult(
                     this,
                     BuildCartShape(true, _shoppingCart.Country, _shoppingCart.ZipCode));
@@ -102,7 +124,7 @@ namespace Nwazet.Commerce.Controllers {
                         _shoppingCart.Country,
                         _shoppingCart.ZipCode,
                         _shoppingCart.ShippingOption));
-            }
+            } 
             catch (ShippingException ex) {
                 _shoppingCart.Country = null;
                 _shoppingCart.ZipCode = null;
@@ -114,8 +136,8 @@ namespace Nwazet.Commerce.Controllers {
 
         private dynamic BuildCartShape(
             bool isSummary = false,
-            string country = null, 
-            string zipCode = null, 
+            string country = null,
+            string zipCode = null,
             ShippingOption shippingOption = null) {
 
             var shape = _shapeFactory.ShoppingCart();
@@ -174,7 +196,7 @@ namespace Nwazet.Commerce.Controllers {
                     displayCheckoutButtons = false;
                 }
             }
-            
+
             if (displayCheckoutButtons) {
                 var checkoutShapes = _checkoutServices.Select(
                     service => service.BuildCheckoutButtonShape(
@@ -191,8 +213,7 @@ namespace Nwazet.Commerce.Controllers {
             shape.Subtotal = subtotal;
             shape.Taxes = taxes;
             shape.Total = _shoppingCart.Total(subtotal, taxes);
-            if (isSummary)
-            {
+            if (isSummary) {
                 shape.Metadata.Alternates.Add("ShoppingCart_Summary");
             }
             return shape;
@@ -209,7 +230,7 @@ namespace Nwazet.Commerce.Controllers {
                     ProductAttributes: productQuantity.AttributeIdsToValues,
                     ContentItem: (productQuantity.Product).ContentItem,
                     ProductImage:
-                        ((MediaLibraryPickerField) productQuantity.Product.Fields.FirstOrDefault(f => f.Name == "ProductImage")),
+                        ((MediaLibraryPickerField)productQuantity.Product.Fields.FirstOrDefault(f => f.Name == "ProductImage")),
                     IsDigital: productQuantity.Product.IsDigital,
                     Price: productQuantity.Product.Price,
                     DiscountedPrice: productQuantity.Price,
@@ -217,7 +238,7 @@ namespace Nwazet.Commerce.Controllers {
                     Promotion: productQuantity.Promotion,
                     ShippingCost: productQuantity.Product.ShippingCost,
                     Weight: productQuantity.Product.Weight,
-                    MinimumOrderQuantity: productQuantity.Product.MinimumOrderQuantity)).ToList();                    
+                    MinimumOrderQuantity: productQuantity.Product.MinimumOrderQuantity)).ToList();
             return productShapes;
         }
 
@@ -229,7 +250,7 @@ namespace Nwazet.Commerce.Controllers {
                         true,
                         _shoppingCart.Country,
                         _shoppingCart.ZipCode));
-            }
+            } 
             catch (ShippingException ex) {
                 _shoppingCart.Country = null;
                 _shoppingCart.ZipCode = null;
@@ -245,7 +266,7 @@ namespace Nwazet.Commerce.Controllers {
             string country = null,
             string zipCode = null,
             string shippingOption = null) {
-            
+
             _shoppingCart.Country = country;
             _shoppingCart.ZipCode = zipCode;
             _shoppingCart.ShippingOption = String.IsNullOrWhiteSpace(shippingOption) ? null : ShippingService.RebuildShippingOption(shippingOption);
@@ -258,32 +279,22 @@ namespace Nwazet.Commerce.Controllers {
 
         [HttpPost]
         public ActionResult AjaxUpdate(
-            List<UpdateShoppingCartItemViewModel> items,
-            int id = 0, int quantity = 1,
+            UpdateShoppingCartItemViewModel[] items,
             string country = null,
             string zipCode = null) {
-
-            if (id != 0) {
-                var item = new UpdateShoppingCartItemViewModel {
-                    ProductId = id,
-                    Quantity = quantity,
-                    AttributeIdsToValues = GetProductAttributes(HttpContext.Request.Form, HttpContext.Request.Files)
-                };
-                items.Add(item);
-            }
 
             _shoppingCart.Country = country;
             _shoppingCart.ZipCode = zipCode;
             _shoppingCart.ShippingOption = null;
 
-            UpdateShoppingCart(items == null ? null : items.ToArray().Reverse());
+            UpdateShoppingCart(items == null ? null : items.Reverse());
             try {
                 return new ShapePartialResult(this,
                     BuildCartShape(
                         true,
                         _shoppingCart.Country,
                         _shoppingCart.ZipCode));
-            }
+            } 
             catch (ShippingException ex) {
                 _shoppingCart.Country = null;
                 _shoppingCart.ZipCode = null;
@@ -320,13 +331,13 @@ namespace Nwazet.Commerce.Controllers {
                 return;
 
             var minimumOrderQuantities = GetMinimumOrderQuantities(items);
-            
+
             _shoppingCart.AddRange(
                 items
                     .Where(item => !item.IsRemoved)
                     .Select(item => new ShoppingCartItem(
                                         item.ProductId,
-                                        item.Quantity <= 0 ? 0 : item.Quantity < minimumOrderQuantities[item.ProductId] ? minimumOrderQuantities[item.ProductId] : item.Quantity,                                        
+                                        item.Quantity <= 0 ? 0 : item.Quantity < minimumOrderQuantities[item.ProductId] ? minimumOrderQuantities[item.ProductId] : item.Quantity,
                                         item.AttributeIdsToValues))
                 );
 
@@ -354,7 +365,7 @@ namespace Nwazet.Commerce.Controllers {
                         var product = products.Where(p => p.Id == item.ProductId).FirstOrDefault();
                         if (product != null) {
                             minimumOrderQuantites.Add(product.Id, product.MinimumOrderQuantity);
-                        }
+                        } 
                         else {
                             // This ensures the dictionary will have all the keys needed for the items
                             minimumOrderQuantites.Add(item.ProductId, defaultMinimumQuantity);
@@ -364,37 +375,6 @@ namespace Nwazet.Commerce.Controllers {
             }
 
             return minimumOrderQuantites;
-        }
-
-        private Dictionary<int, ProductAttributeValueExtended> GetProductAttributes(
-            NameValueCollection form, HttpFileCollectionBase files) {
-            // Manually parse product attributes because of a breaking change
-            // in MVC 5 dictionary model binding
-            var productattributes = form.AllKeys
-                .Where(key => key.StartsWith(AttributePrefix))
-                .ToDictionary(
-                    key => int.Parse(key.Substring(AttributePrefix.Length)),
-                    key => {
-                        var extensionProvider = _attributeExtensionProviders.SingleOrDefault(e => e.Name == form[ExtensionPrefix + key + ".provider"]);
-                        Dictionary<string, string> extensionFormValues = null;
-                        if (extensionProvider != null) {
-                            extensionFormValues = form.AllKeys.Where(k => k.StartsWith(ExtensionPrefix + key + "."))
-                                .ToDictionary(
-                                    k => k.Substring((ExtensionPrefix + key + ".").Length),
-                                    k => form[k]);
-                            return new ProductAttributeValueExtended {
-                                Value = form[key],
-                                ExtendedValue = extensionProvider.Serialize(form[ExtensionPrefix + key], extensionFormValues, files),
-                                ExtensionProvider = extensionProvider.Name
-                            };
-                        }
-                        return new ProductAttributeValueExtended {
-                            Value = form[key],
-                            ExtendedValue = null,
-                            ExtensionProvider = null
-                        };
-                    });
-            return productattributes;
         }
 
         public ActionResult ResetDestination() {

@@ -28,22 +28,7 @@
         cartContainerLoad = function (form) {
             if (!loading && form && form.length > 0) {
                 setLoading(true);
-                // If we need to handle file inputs use an iframe
-                var fileInputs = $("input[type=file]:enabled", form);
-                if (fileInputs.length) {
-                    $.ajax(form[0].action || updateUrl, {
-                        type: "POST",
-                        data: form.serializeArray(),
-                        files: fileInputs,
-                        iframe: true
-                    }).done(function(content) {
-                        cartContainer.html(content);
-                        onCartLoad();
-                    });
-                } else {
-                    cartContainer.load(form[0].action || updateUrl, form.serializeArray(), onCartLoad);
-                }
-
+                cartContainer.load(form[0].action || updateUrl, form.serializeArray(), onCartLoad);
                 $(this).trigger("nwazet.cartupdating");
             }
             return false;
@@ -172,38 +157,22 @@
             e.preventDefault();
             var addForm = $(this),
                 addFormData = addForm.serializeArray(),
-                minicartForm = cartContainer.find("form"),
-                productId = addForm.data("productid"),
-                quantity = addForm.find("input[name=\"quantity\"]").val(),
-                inputTag = "<input type=\"hidden\"/>",
-                maxIndex = findNextIndex(minicartForm),
-                attrIndex = 0,
-                prefix = "items[" + maxIndex + "].";
-            if (minicartForm.length !== 0) {
-                // Transfer input elements from add form to mini cart
-                addForm.find("input").each(function(index, element) {
-                    // We don't want the crsf token, mini cart has it's own
-                    if (element.name != "__RequestVerificationToken" && element.type != "file") {
-                        $(element).clone().hide().appendTo(minicartForm);
-                    }
-                    if (element.type == "file") {
-                        // Cloning loses value, move the actual input and replace with the clone
-                        var fileInput = $(element),
-                            clonedFileInput = fileInput.clone();
-                        fileInput.after(clonedFileInput);
-                        fileInput.hide().appendTo(minicartForm);
-                    }
+                action = this.action,
+                fileInputs = $("input[type=file]:enabled", addForm);
+            if (fileInputs.length > 0) {
+                // Flag as ajax request, controller can't detect this when using iframe
+                addFormData.push({ name: "isAjaxRequest", value: true });
+                $.ajax(action, {
+                    type: "POST",
+                    data: addFormData,
+                    files: fileInputs,
+                    iframe: true
+                }).done(function (content) {
+                    cartContainer.html(content);
+                    onCartLoad(content, "success");
                 });
-                addForm.find("select").each(function(index, element) {
-                    var clonedAttribute = $(element).clone();
-                    // Cloning loses selected option, reset it
-                    clonedAttribute.val($(element).val());
-                    clonedAttribute.hide().appendTo(minicartForm);
-
-                });
-                cartContainerLoad(minicartForm);
             } else {
-                cartContainerLoad(addForm);
+                cartContainer.load(action, addFormData, onCartLoad);
             }
             $(this).trigger("nwazet.addedtocart");
         });
