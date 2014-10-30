@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Nwazet.Commerce.Models {
     public class ShoppingCartQuantityProduct {
-        public ShoppingCartQuantityProduct(int quantity, ProductPart product, IDictionary<int, string> attributeIdsToValues = null) {
+        public ShoppingCartQuantityProduct(int quantity, ProductPart product, IDictionary<int, ProductAttributeValueExtended> attributeIdsToValues = null) {
             Quantity = quantity;
             Product = product;
             Price = product.Price;
@@ -18,7 +18,7 @@ namespace Nwazet.Commerce.Models {
         public double LinePriceAdjustment { get; set; }
         public IContent Promotion { get; set; }
         public string Comment { get; set; }
-        public IDictionary<int, string> AttributeIdsToValues { get; set; }
+        public IDictionary<int, ProductAttributeValueExtended> AttributeIdsToValues { get; set; }
 
         public string AttributeDescription {
             get {

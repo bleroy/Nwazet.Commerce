@@ -45,6 +45,8 @@ namespace Nwazet.Commerce.Models {
         private const string InstructionsName = "instructions";
         private const string ItemName = "item";
         private const string ItemsName = "items";
+        private const string AttributesName = "attributes";
+        private const string AttributeName = "attribute";
         private const string PhoneName = "phone";
         private const string ShippingAddressName = "shippingAddress";
         private const string ShippingName = "shipping";
@@ -86,7 +88,15 @@ namespace Nwazet.Commerce.Models {
                         .ToAttr(i => i.Price)
                         .ToAttr(i => i.LinePriceAdjustment)
                         .ToAttr(i => i.PromotionId)
-                        .Element)))
+                        .Element
+                    .AddEl(new XElement(AttributesName, it.Attributes != null ? it.Attributes.Select(at => {
+                            var attrEl = new XElement(AttributeName);
+                            attrEl.SetAttributeValue("Key", at.Key);
+                            attrEl.SetAttributeValue("Value", at.Value.Value);
+                            attrEl.SetAttributeValue("Extra", at.Value.ExtendedValue);
+                            attrEl.SetAttributeValue("ExtensionProvider", at.Value.ExtensionProvider);
+                            return attrEl;
+                            }) : null)))))
                 .AddEl(new XElement(TaxesName).With(taxes)
                     .ToAttr(t => t.Name)
                     .ToAttr(t => t.Amount)
@@ -141,14 +151,29 @@ namespace Nwazet.Commerce.Models {
                 if (itemsElement == null) return new CheckoutItem[0];
                 return itemsElement
                     .Elements(ItemName)
-                    .Select(el => el.With(new CheckoutItem())
+                    .Select(el => {
+                        var checkoutItem = el.With(new CheckoutItem())
                         .FromAttr(i => i.ProductId)
                         .FromAttr(i => i.Quantity)
                         .FromAttr(i => i.Title)
                         .FromAttr(i => i.Price)
                         .FromAttr(i => i.LinePriceAdjustment)
                         .FromAttr(i => i.PromotionId)
-                        .Context);
+                        .Context;
+                        if (el.Element(AttributesName) != null) {
+                            checkoutItem.Attributes =
+                                el.Elements(AttributesName).Elements(AttributeName).Select(a =>
+                                    new {
+                                        Key = int.Parse(a.Attr("Key")),
+                                        Value = new ProductAttributeValueExtended {
+                                            Value = a.Attr("Value"),
+                                            ExtendedValue = a.Attr("Extra"),
+                                            ExtensionProvider = a.Attr("ExtensionProvider")
+                                        }
+                                    }).ToDictionary(k => k.Key, k => k.Value);
+                        }
+                        return checkoutItem;
+                    });
             }
         }
 

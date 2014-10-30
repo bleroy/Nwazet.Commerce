@@ -17,13 +17,13 @@ namespace Nwazet.Commerce.Models {
             }
         }
 
-        [DisplayName("Price Adjustment")]
+        [DisplayName("Sort Order")]
         public int SortOrder {
             get { return Retrieve(r => r.SortOrder); }
             set { Store(r => r.SortOrder, value); }
         }
 
-        [DisplayName("Price Adjustment")]
+        [DisplayName("Display Name")]
         public string DisplayName {
             get { return Retrieve(r => r.DisplayName); }
             set { Store(r => r.DisplayName, value); }

@@ -1,6 +1,7 @@
 ﻿@{
     if (Layout.IsCartPage != true) {
         Script.Require("jQuery");
+        Script.Include("jquery.iframe-transport.js");
         Script.Include("shoppingcart.js", "shoppingcart.min.js");
         <div class="shopping-cart-container minicart"
              data-load="@Url.Action("NakedCart", "ShoppingCart", new {area="Nwazet.Commerce"})"

@@ -10,7 +10,8 @@
     FormMethod.Post,
     new Dictionary<string, object> {
         {"class", "addtocart"},
-        {"data-productid", productId}
+        {"data-productid", productId},
+        {"enctype", "multipart/form-data"}
     })) {
 
     if (Model.ProductAttributes != null) {
@@ -22,6 +23,7 @@
     int quantityValue = Model.MinimumOrderQuantity > 1 ? Model.MinimumOrderQuantity : 1;
     
     <div class="addtocart-quantity-and-button">
+        <input name="id" value="@productId" type="hidden"/>
         <input name="quantity" value="@quantityValue" class="addtocart-quantity" type="number" min="0" />
         <button type="submit" class="addtocart-button">@T("Add to cart")</button>
         @if ((int)Model.MinimumOrderQuantity > 1) {

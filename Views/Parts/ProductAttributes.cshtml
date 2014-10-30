@@ -1,19 +1,31 @@
 ﻿@using Nwazet.Commerce.Models
+﻿@using Nwazet.Commerce.ViewModels
+@using Nwazet.Commerce.Services
 @using System.Linq;
 @{
+    Script.Include("attribute-extensions.js").AtFoot();
     var attributeFieldName = Html.Name("productattributes");
-    var attributes = ((IEnumerable<ProductAttributePart>)Model.ProductAttributes).ToList();
+    var attributes = ((IEnumerable<ProductAttributePartDisplayViewModel>)Model.ProductAttributes).ToList();
 }
 @if (attributes != null && attributes.Any()) {
-    foreach (ProductAttributePart attribute in attributes) {
+    foreach (ProductAttributePartDisplayViewModel attributeModel in attributes) {
+        var attribute = attributeModel.Part;
         if (!string.IsNullOrEmpty(attribute.DisplayName)) {
             <label for="@attribute.Id" class="product-attribute-label">@attribute.DisplayName</label>
         }
         <select name="@(attributeFieldName + ".a" + attribute.Id)" id="@attribute.Id" class="product-attribute">
             @foreach (var val in attribute.AttributeValues) {
                 var priceAdjustment = val.PriceAdjustment != 0 ? "(" + (val.PriceAdjustment < 0 ? "-" : "+") + Math.Abs(val.PriceAdjustment).ToString("C") + ")" : "";
-                <option value="@val.Text">@val.Text @priceAdjustment</option>
+                <option value="@val.Text" @(!string.IsNullOrEmpty(val.ExtensionProvider) 
+                    ? "data-has-extension=true data-extension-name=" + val.ExtensionProvider + attribute.Id : "")>
+                    @val.Text @priceAdjustment
+                </option>
             }
         </select>
+        foreach (var extensionShape in attributeModel.AttributeExtensionShapes) {
+            <div class="@(extensionShape.ExtensionName + attribute.Id) @(attribute.Id) attribute-extension" style="display: none;">
+                @Display(extensionShape)
+            </div>
+        }
     }
 }

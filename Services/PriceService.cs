@@ -33,7 +33,7 @@ namespace Nwazet.Commerce.Services {
             if (discountedProductQuantity.AttributeIdsToValues != null) {
                 foreach (var attr in discountedProductQuantity.AttributeIdsToValues) {
                     var value = _attributeService.GetAttributes(new [] { attr.Key }).Single()
-                        .AttributeValues.FirstOrDefault(v => v.Text.Trim() == attr.Value.Trim());
+                        .AttributeValues.FirstOrDefault(v => v.Text.Trim() == attr.Value.Value.Trim());
                     if (value == null) {
                         // If the attribute doesn't exist, remove the product
                         return new ShoppingCartQuantityProduct(0, productQuantity.Product, productQuantity.AttributeIdsToValues);

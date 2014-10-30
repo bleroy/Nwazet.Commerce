@@ -1,22 +1,26 @@
 ﻿using System;
-using JetBrains.Annotations;
 using Nwazet.Commerce.Models;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Environment.Extensions;
-using System.Collections;
 using System.Collections.Generic;
+using Nwazet.Commerce.Services;
+using Nwazet.Commerce.ViewModels;
 
 namespace Nwazet.Commerce.Drivers {
     [OrchardFeature("Nwazet.Attributes")]
     public class ProductAttributePartDriver : ContentPartDriver<ProductAttributePart> {
 
+        private readonly IEnumerable<IProductAttributeExtensionProvider> _attributeExtensionProviders;
+
         public ProductAttributePartDriver(
-            IOrchardServices services) {
+           IOrchardServices services,
+           IEnumerable<IProductAttributeExtensionProvider> attributeExtensionProviders) {
 
             Services = services;
+            _attributeExtensionProviders = attributeExtensionProviders;
         }
 
         public IOrchardServices Services { get; set; }
@@ -36,7 +40,12 @@ namespace Nwazet.Commerce.Drivers {
                 () => shapeHelper.EditorTemplate(
                     TemplateName: "Parts/ProductAttribute",
                     Prefix: Prefix,
-                    Model: part));
+                    Model: new ProductAttributePartEditViewModel {
+                        DisplayName = part.DisplayName,
+                        SortOrder = part.SortOrder,
+                        AttributeValues = part.AttributeValues,
+                        AttributeExtensionProviders = _attributeExtensionProviders
+                    }));
         }
 
         //POST

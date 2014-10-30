@@ -78,7 +78,10 @@ namespace Nwazet.Commerce.Services {
                     Title = p.Title
                             + (p.ProductAttributes == null
                                 ? ""
-                                : " (" + string.Join(", ", p.ProductAttributes.Values) + ")")
+                                : " (" + string.Join(", ", ((Dictionary<int, ProductAttributeValueExtended>)p.ProductAttributes)
+                                    .Select(v => v.Value.Value + (v.Value.ExtensionProviderInstance != null 
+                                        ? v.Value.ExtensionProviderInstance.DisplayString(v.Value.ExtendedValue) : ""))) + ")"),
+                    Attributes = p.ProductAttributes
                 }).ToArray(),
                 shippingOption == null ? 0 : shippingOption.Price,
                 shippingOption == null ? null : shippingOption.Description,

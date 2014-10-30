@@ -157,43 +157,22 @@
             e.preventDefault();
             var addForm = $(this),
                 addFormData = addForm.serializeArray(),
-                minicartForm = cartContainer.find("form"),
-                productId = addForm.data("productid"),
-                quantity = addForm.find("input[name=\"quantity\"]").val(),
-                inputTag = "<input type=\"hidden\"/>",
-                maxIndex = findNextIndex(minicartForm),
-                attrIndex = 0,
-                prefix = "items[" + maxIndex + "].";
-            if (minicartForm.length !== 0) {
-                minicartForm
-                    .append($(inputTag).attr({
-                        name: prefix + "ProductId",
-                        value: productId
-                    }))
-                    .append($(inputTag).attr({
-                        name: prefix + "Quantity",
-                        value: quantity
-                    }));
-                $.each(addFormData, function() {
-                    var name = this.name;
-                    if (name.substr(0, 19) === "productattributes.a") {
-                        var key = name.substr(19),
-                            value = this.value,
-                            attributePrefix = prefix + "AttributeIdsToValues[" + attrIndex++ + "].";
-                        minicartForm
-                            .append($(inputTag).attr({
-                                name: attributePrefix + "Key",
-                                value: key
-                            }))
-                            .append($(inputTag).attr({
-                                name: attributePrefix + "Value",
-                                value: value
-                            }));
-                    }
+                action = this.action,
+                fileInputs = $("input[type=file]:enabled", addForm);
+            if (fileInputs.length > 0) {
+                // Flag as ajax request, controller can't detect this when using iframe
+                addFormData.push({ name: "isAjaxRequest", value: true });
+                $.ajax(action, {
+                    type: "POST",
+                    data: addFormData,
+                    files: fileInputs,
+                    iframe: true
+                }).done(function (content) {
+                    cartContainer.html(content);
+                    onCartLoad(content, "success");
                 });
-                cartContainerLoad(minicartForm);
             } else {
-                cartContainerLoad(addForm);
+                cartContainer.load(action, addFormData, onCartLoad);
             }
             $(this).trigger("nwazet.addedtocart");
         });

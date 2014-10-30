@@ -1,4 +1,4 @@
-﻿@model Nwazet.Commerce.Models.ProductAttributePart
+﻿@model Nwazet.Commerce.ViewModels.ProductAttributePartEditViewModel
 @{
     Style.Include("attribute.nwazet-commerce-admin.css");
     
@@ -25,6 +25,9 @@
             <div class="option-name">@T("Name")</div>
             <div class="price-adj">@T("Price Adjustment")</div>
             <div class="apply-line">@T("Apply To Line")</div>
+            @if (Model.AttributeExtensionProviders != null) { 
+            <div class="extension">@T("Extension")</div>
+            }
         </li>
         @{int i = 0;}
         @foreach (var value in Model.AttributeValues) {
@@ -40,6 +43,16 @@
                 <div class="apply-line">
                     <input type="checkbox" name="NwazetCommerceAttribute.AttributeValues[@i].IsLineAdjustment" @(value.IsLineAdjustment ? "checked='checked'" : "") value="True" />
                 </div>
+                @if (Model.AttributeExtensionProviders.Count() > 0) {
+                <div class="extension">
+                    <select name="NwazetCommerceAttribute.AttributeValues[@i].ExtensionProvider">
+                        <option value="">None</option>
+                        @foreach (var provider in Model.AttributeExtensionProviders) {
+                            <option value="@provider.Name" @(value.ExtensionProvider == provider.Name ? "selected" : "")>@provider.DisplayName</option>
+                        }
+                    </select>
+                </div>
+                }
                 <div><a href="#" class="nwazet-remove-attribute-value">@T("Delete")</a></div>
             </li>
             i++;
@@ -61,6 +74,16 @@
         <div class="apply-line">
             <input type="checkbox" name="NwazetCommerceAttribute.AttributeValues[{{ index }}].IsLineAdjustment" value="True" />
         </div>
+        @if (Model.AttributeExtensionProviders.Count() > 0) {
+        <div class="extension">
+            <select name="NwazetCommerceAttribute.AttributeValues[{{ index }}].ExtensionProvider">
+                <option value="">None</option>
+                @foreach (var provider in Model.AttributeExtensionProviders) {
+                    <option value="@provider.Name">@provider.DisplayName</option>
+                }
+            </select>
+        </div>
+        }
         <div><a href="#" class="nwazet-remove-attribute-value">@T("Delete")</a></div>
     </li>
 </script>

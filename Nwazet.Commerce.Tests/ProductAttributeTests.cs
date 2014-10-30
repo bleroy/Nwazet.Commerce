@@ -35,7 +35,7 @@ namespace Nwazet.Commerce.Tests {
         public void FindCartItemDoesntFindItemWithNoAttributesWhenSpecifyingAttributes() {
             var cart = PrepareCart();
 
-            Assert.That(cart.FindCartItem(2, new Dictionary<int, string> {{10, "Green"}}), Is.Null);
+            Assert.That(cart.FindCartItem(2, new Dictionary<int, ProductAttributeValueExtended> { { 10, GetExtendedValue("Green") } }), Is.Null);
         }
 
         [Test]
@@ -43,28 +43,28 @@ namespace Nwazet.Commerce.Tests {
             var cart = PrepareCart();
 
             Assert.That(cart.FindCartItem(1), Is.Null);
-            Assert.That(cart.FindCartItem(1, new Dictionary<int, string>()), Is.Null);
+            Assert.That(cart.FindCartItem(1, new Dictionary<int, ProductAttributeValueExtended>()), Is.Null);
         }
 
         [Test]
         public void FindCartItemDoesntFindItemWithAttributesWhenSpecifyingWrongAttributes() {
             var cart = PrepareCart();
 
-            Assert.That(cart.FindCartItem(1, new Dictionary<int, string> { { 10, "Red" }, { 11, "M" } }), Is.Null);
-            Assert.That(cart.FindCartItem(1, new Dictionary<int, string> { { 10, "Green" }, { 11, "S" } }), Is.Null);
+            Assert.That(cart.FindCartItem(1, new Dictionary<int, ProductAttributeValueExtended> { { 10, GetExtendedValue("Red") }, { 11, GetExtendedValue("M") } }), Is.Null);
+            Assert.That(cart.FindCartItem(1, new Dictionary<int, ProductAttributeValueExtended> { { 10, GetExtendedValue("Green") }, { 11, GetExtendedValue("S") } }), Is.Null);
         }
 
         [Test]
         public void FindCartItemFindsItemWithAttributes() {
             var cart = PrepareCart();
 
-            var item = cart.FindCartItem(1, new Dictionary<int, string> { { 10, "Green" }, { 11, "L" } });
+            var item = cart.FindCartItem(1, new Dictionary<int, ProductAttributeValueExtended> { { 10, GetExtendedValue("Green") }, { 11, GetExtendedValue("L") } });
             Assert.That(item.ToString(), Is.EqualTo("{3 x 1 (Green, L)}"));
-            item = cart.FindCartItem(1, new Dictionary<int, string> { { 10, "Green" }, { 11, "M" } });
+            item = cart.FindCartItem(1, new Dictionary<int, ProductAttributeValueExtended> { { 10, GetExtendedValue("Green") }, { 11, GetExtendedValue("M") } });
             Assert.That(item.ToString(), Is.EqualTo("{1 x 1 (Green, M)}"));
-            item = cart.FindCartItem(1, new Dictionary<int, string> { { 10, "Blue" }, { 11, "XS" } });
+            item = cart.FindCartItem(1, new Dictionary<int, ProductAttributeValueExtended> { { 10, GetExtendedValue("Blue") }, { 11, GetExtendedValue("XS") } });
             Assert.That(item.ToString(), Is.EqualTo("{7 x 1 (Blue, XS)}"));
-            item = cart.FindCartItem(3, new Dictionary<int, string> { { 11, "S" } });
+            item = cart.FindCartItem(3, new Dictionary<int, ProductAttributeValueExtended> { { 11, GetExtendedValue("S") } });
             Assert.That(item.ToString(), Is.EqualTo("{5 x 3 (S)}"));
         }
 
@@ -82,11 +82,11 @@ namespace Nwazet.Commerce.Tests {
             cart.Add(2, 3);
 
             CheckCart(cart, new[] {
-                new ShoppingCartQuantityProduct(3, Products[0], new Dictionary<int, string> {{10, "Green" }, { 11, "L" }}), 
-                new ShoppingCartQuantityProduct(1, Products[0], new Dictionary<int, string> {{10, "Green" }, { 11, "M" }}), 
-                new ShoppingCartQuantityProduct(7, Products[0], new Dictionary<int, string> {{10, "Blue" }, { 11, "XS" }}), 
+                new ShoppingCartQuantityProduct(3, Products[0], new Dictionary<int, ProductAttributeValueExtended> {{10, GetExtendedValue("Green") }, { 11, GetExtendedValue("L") }}), 
+                new ShoppingCartQuantityProduct(1, Products[0], new Dictionary<int, ProductAttributeValueExtended> {{10, GetExtendedValue("Green") }, { 11, GetExtendedValue("M") }}), 
+                new ShoppingCartQuantityProduct(7, Products[0], new Dictionary<int, ProductAttributeValueExtended> {{10, GetExtendedValue("Blue") }, { 11, GetExtendedValue("XS") }}), 
                 new ShoppingCartQuantityProduct(9, Products[1]), 
-                new ShoppingCartQuantityProduct(5, Products[2], new Dictionary<int, string> {{11, "S"}})
+                new ShoppingCartQuantityProduct(5, Products[2], new Dictionary<int, ProductAttributeValueExtended> {{11, GetExtendedValue("S") }})
             });
         }
 
@@ -94,14 +94,14 @@ namespace Nwazet.Commerce.Tests {
         public void AddProductWithAttributesAddsToExistingQuantity() {
             var cart = PrepareCart();
 
-            cart.Add(1, 1, new Dictionary<int, string> { { 10, "Green" }, { 11, "M" } });
+            cart.Add(1, 1, new Dictionary<int, ProductAttributeValueExtended> { { 10, GetExtendedValue("Green") }, { 11, GetExtendedValue("M") } });
 
             CheckCart(cart, new[] {
-                new ShoppingCartQuantityProduct(3, Products[0], new Dictionary<int, string> {{10, "Green" }, { 11, "L" }}), 
-                new ShoppingCartQuantityProduct(2, Products[0], new Dictionary<int, string> {{10, "Green" }, { 11, "M" }}), 
-                new ShoppingCartQuantityProduct(7, Products[0], new Dictionary<int, string> {{10, "Blue" }, { 11, "XS" }}), 
+                new ShoppingCartQuantityProduct(3, Products[0], new Dictionary<int, ProductAttributeValueExtended> {{10, GetExtendedValue("Green") }, { 11, GetExtendedValue("L") }}), 
+                new ShoppingCartQuantityProduct(2, Products[0], new Dictionary<int, ProductAttributeValueExtended> {{10, GetExtendedValue("Green") }, { 11, GetExtendedValue("M") }}), 
+                new ShoppingCartQuantityProduct(7, Products[0], new Dictionary<int, ProductAttributeValueExtended> {{10, GetExtendedValue("Blue") }, { 11, GetExtendedValue("XS") }}), 
                 new ShoppingCartQuantityProduct(6, Products[1]), 
-                new ShoppingCartQuantityProduct(5, Products[2], new Dictionary<int, string> {{11, "S"}})
+                new ShoppingCartQuantityProduct(5, Products[2], new Dictionary<int, ProductAttributeValueExtended> {{11, GetExtendedValue("S") }})
             });
         }
 
@@ -109,15 +109,15 @@ namespace Nwazet.Commerce.Tests {
         public void AddProductWithDifferentAttributesAddsToExistingQuantityCreatesLine() {
             var cart = PrepareCart();
 
-            cart.Add(1, 2, new Dictionary<int, string> { { 10, "Red" }, { 11, "M" } });
+            cart.Add(1, 2, new Dictionary<int, ProductAttributeValueExtended> { { 10, GetExtendedValue("Red") }, { 11, GetExtendedValue("M") } });
 
             CheckCart(cart, new[] {
-                new ShoppingCartQuantityProduct(3, Products[0], new Dictionary<int, string> {{10, "Green" }, { 11, "L" }}), 
-                new ShoppingCartQuantityProduct(1, Products[0], new Dictionary<int, string> {{10, "Green" }, { 11, "M" }}), 
-                new ShoppingCartQuantityProduct(7, Products[0], new Dictionary<int, string> {{10, "Blue" }, { 11, "XS" }}), 
-                new ShoppingCartQuantityProduct(2, Products[0], new Dictionary<int, string> {{10, "Red" }, { 11, "M" }}), 
+                new ShoppingCartQuantityProduct(3, Products[0], new Dictionary<int, ProductAttributeValueExtended> {{10, GetExtendedValue("Green") }, { 11, GetExtendedValue("L") }}), 
+                new ShoppingCartQuantityProduct(1, Products[0], new Dictionary<int, ProductAttributeValueExtended> {{10, GetExtendedValue("Green") }, { 11, GetExtendedValue("M") }}), 
+                new ShoppingCartQuantityProduct(7, Products[0], new Dictionary<int, ProductAttributeValueExtended> {{10, GetExtendedValue("Blue") }, { 11, GetExtendedValue("XS") }}), 
+                new ShoppingCartQuantityProduct(2, Products[0], new Dictionary<int, ProductAttributeValueExtended> {{10, GetExtendedValue("Red") }, { 11, GetExtendedValue("M") }}), 
                 new ShoppingCartQuantityProduct(6, Products[1]), 
-                new ShoppingCartQuantityProduct(5, Products[2], new Dictionary<int, string> {{11, "S"}})
+                new ShoppingCartQuantityProduct(5, Products[2], new Dictionary<int, ProductAttributeValueExtended> {{11, GetExtendedValue("S") }})
             });
         }
 
@@ -128,11 +128,11 @@ namespace Nwazet.Commerce.Tests {
             cart.Add(4, 8);
 
             CheckCart(cart, new[] {
-                new ShoppingCartQuantityProduct(3, Products[0], new Dictionary<int, string> {{10, "Green" }, { 11, "L" }}), 
-                new ShoppingCartQuantityProduct(1, Products[0], new Dictionary<int, string> {{10, "Green" }, { 11, "M" }}), 
-                new ShoppingCartQuantityProduct(7, Products[0], new Dictionary<int, string> {{10, "Blue" }, { 11, "XS" }}), 
+                new ShoppingCartQuantityProduct(3, Products[0], new Dictionary<int, ProductAttributeValueExtended> {{10, GetExtendedValue("Green") }, { 11, GetExtendedValue("L") }}), 
+                new ShoppingCartQuantityProduct(1, Products[0], new Dictionary<int, ProductAttributeValueExtended> {{10, GetExtendedValue("Green") }, { 11, GetExtendedValue("M") }}), 
+                new ShoppingCartQuantityProduct(7, Products[0], new Dictionary<int, ProductAttributeValueExtended> {{10, GetExtendedValue("Blue") }, { 11, GetExtendedValue("XS") }}), 
                 new ShoppingCartQuantityProduct(6, Products[1]), 
-                new ShoppingCartQuantityProduct(5, Products[2], new Dictionary<int, string> {{11, "S"}}),
+                new ShoppingCartQuantityProduct(5, Products[2], new Dictionary<int, ProductAttributeValueExtended> {{11, GetExtendedValue("S") }}),
                 new ShoppingCartQuantityProduct(8, Products[3])
             });
         }
@@ -141,15 +141,15 @@ namespace Nwazet.Commerce.Tests {
         public void AddProductWithAttributesThatsNotAlreadyThereCreatesLine() {
             var cart = PrepareCart();
 
-            cart.Add(5, 8, new Dictionary<int, string> {{10, "Red"}, {11, "M"}});
+            cart.Add(5, 8, new Dictionary<int, ProductAttributeValueExtended> { { 10, GetExtendedValue("Red") }, { 11, GetExtendedValue("M") }});
 
             CheckCart(cart, new[] {
-                new ShoppingCartQuantityProduct(3, Products[0], new Dictionary<int, string> {{10, "Green" }, { 11, "L" }}), 
-                new ShoppingCartQuantityProduct(1, Products[0], new Dictionary<int, string> {{10, "Green" }, { 11, "M" }}), 
-                new ShoppingCartQuantityProduct(7, Products[0], new Dictionary<int, string> {{10, "Blue" }, { 11, "XS" }}), 
+                new ShoppingCartQuantityProduct(3, Products[0], new Dictionary<int, ProductAttributeValueExtended> {{10, GetExtendedValue("Green") }, { 11, GetExtendedValue("L") }}), 
+                new ShoppingCartQuantityProduct(1, Products[0], new Dictionary<int, ProductAttributeValueExtended> {{10, GetExtendedValue("Green") }, { 11, GetExtendedValue("M") }}), 
+                new ShoppingCartQuantityProduct(7, Products[0], new Dictionary<int, ProductAttributeValueExtended> {{10, GetExtendedValue("Blue") }, { 11, GetExtendedValue("XS") }}), 
                 new ShoppingCartQuantityProduct(6, Products[1]), 
-                new ShoppingCartQuantityProduct(5, Products[2], new Dictionary<int, string> {{11, "S"}}),
-                new ShoppingCartQuantityProduct(8, Products[4], new Dictionary<int, string> {{10, "Red"}, {11, "M"}})
+                new ShoppingCartQuantityProduct(5, Products[2], new Dictionary<int, ProductAttributeValueExtended> {{11, GetExtendedValue("S") }}),
+                new ShoppingCartQuantityProduct(8, Products[4], new Dictionary<int, ProductAttributeValueExtended> {{10, GetExtendedValue("Red") }, {11, GetExtendedValue("M") }})
             });
         }
 
@@ -157,13 +157,13 @@ namespace Nwazet.Commerce.Tests {
         public void RemoveProductWithAttributesRemovesLine() {
             var cart = PrepareCart();
 
-            cart.Remove(1, new Dictionary<int, string> { { 10, "Green" }, { 11, "M" } });
+            cart.Remove(1, new Dictionary<int, ProductAttributeValueExtended> { { 10, GetExtendedValue("Green") }, { 11, GetExtendedValue("M") } });
 
             CheckCart(cart, new[] {
-                new ShoppingCartQuantityProduct(3, Products[0], new Dictionary<int, string> {{10, "Green" }, { 11, "L" }}), 
-                new ShoppingCartQuantityProduct(7, Products[0], new Dictionary<int, string> {{10, "Blue" }, { 11, "XS" }}), 
+                new ShoppingCartQuantityProduct(3, Products[0], new Dictionary<int, ProductAttributeValueExtended> {{10, GetExtendedValue("Green") }, { 11, GetExtendedValue("L") }}), 
+                new ShoppingCartQuantityProduct(7, Products[0], new Dictionary<int, ProductAttributeValueExtended> {{10, GetExtendedValue("Blue") }, { 11, GetExtendedValue("XS") }}), 
                 new ShoppingCartQuantityProduct(6, Products[1]), 
-                new ShoppingCartQuantityProduct(5, Products[2], new Dictionary<int, string> {{11, "S"}})
+                new ShoppingCartQuantityProduct(5, Products[2], new Dictionary<int, ProductAttributeValueExtended> {{11, GetExtendedValue("S") }})
             });
         }
 
@@ -174,10 +174,10 @@ namespace Nwazet.Commerce.Tests {
             cart.Remove(2);
 
             CheckCart(cart, new[] {
-                new ShoppingCartQuantityProduct(3, Products[0], new Dictionary<int, string> {{10, "Green" }, { 11, "L" }}), 
-                new ShoppingCartQuantityProduct(1, Products[0], new Dictionary<int, string> {{10, "Green" }, { 11, "M" }}), 
-                new ShoppingCartQuantityProduct(7, Products[0], new Dictionary<int, string> {{10, "Blue" }, { 11, "XS" }}), 
-                new ShoppingCartQuantityProduct(5, Products[2], new Dictionary<int, string> {{11, "S"}})
+                new ShoppingCartQuantityProduct(3, Products[0], new Dictionary<int, ProductAttributeValueExtended> {{10, GetExtendedValue("Green") }, { 11, GetExtendedValue("L") }}), 
+                new ShoppingCartQuantityProduct(1, Products[0], new Dictionary<int, ProductAttributeValueExtended> {{10, GetExtendedValue("Green") }, { 11, GetExtendedValue("M") }}), 
+                new ShoppingCartQuantityProduct(7, Products[0], new Dictionary<int, ProductAttributeValueExtended> {{10, GetExtendedValue("Blue") }, { 11, GetExtendedValue("XS") }}), 
+                new ShoppingCartQuantityProduct(5, Products[2], new Dictionary<int, ProductAttributeValueExtended> {{11, GetExtendedValue("S") }})
             });
         }
 
@@ -185,7 +185,7 @@ namespace Nwazet.Commerce.Tests {
         public void RemoveProductWithNonExistingAttributeValuesDoesNothing() {
             var cart = PrepareCart();
 
-            cart.Remove(1, new Dictionary<int, string> { { 10, "Red" }, { 11, "M" } });
+            cart.Remove(1, new Dictionary<int, ProductAttributeValueExtended> { { 10, GetExtendedValue("Red") }, { 11, GetExtendedValue("M") } });
 
             CheckCart(cart, OriginalQuantities);
         }
@@ -194,7 +194,7 @@ namespace Nwazet.Commerce.Tests {
         public void AddProductWithBadAttributeValueDoesntAddTheProduct() {
             var cart = PrepareCart();
 
-            cart.Add(1, 8, new Dictionary<int, string> {{10, "NotAValidColor"}, {11, "M"}});
+            cart.Add(1, 8, new Dictionary<int, ProductAttributeValueExtended> { { 10, GetExtendedValue("NotAValidColor") }, { 11, GetExtendedValue("M") } });
 
             CheckCart(cart, OriginalQuantities);
         }
@@ -203,7 +203,7 @@ namespace Nwazet.Commerce.Tests {
         public void AddProductWithTooFewAttributeValueDoesntAddTheProduct() {
             var cart = PrepareCart();
 
-            cart.Add(1, 8, new Dictionary<int, string> { { 11, "M" } });
+            cart.Add(1, 8, new Dictionary<int, ProductAttributeValueExtended> { { 11, GetExtendedValue("M") } });
 
             CheckCart(cart, OriginalQuantities);
         }
@@ -212,7 +212,7 @@ namespace Nwazet.Commerce.Tests {
         public void AddProductWithTooManyAttributeValueDoesntAddTheProduct() {
             var cart = PrepareCart();
 
-            cart.Add(2, 8, new Dictionary<int, string> { { 10, "Green" }, { 11, "M" } });
+            cart.Add(2, 8, new Dictionary<int, ProductAttributeValueExtended> { { 10, GetExtendedValue("Green") }, { 11, GetExtendedValue("M") } });
 
             CheckCart(cart, OriginalQuantities);
         }
@@ -221,7 +221,7 @@ namespace Nwazet.Commerce.Tests {
         public void AddProductWithAttributeValuesWhereProductHasNoneDoesntAddTheProduct() {
             var cart = PrepareCart();
 
-            cart.Add(2, 8, new Dictionary<int, string> { { 11, "M" } });
+            cart.Add(2, 8, new Dictionary<int, ProductAttributeValueExtended> { { 11, GetExtendedValue("M") } });
 
             CheckCart(cart, OriginalQuantities);
         }
@@ -230,7 +230,7 @@ namespace Nwazet.Commerce.Tests {
         public void AddProductWithDifferentAttributesDoesntAddTheProduct() {
             var cart = PrepareCart();
 
-            cart.Add(2, 8, new Dictionary<int, string> { { 10, "Green" } });
+            cart.Add(2, 8, new Dictionary<int, ProductAttributeValueExtended> { { 10, GetExtendedValue("Green") } });
 
             CheckCart(cart, OriginalQuantities);
         }
@@ -260,11 +260,11 @@ namespace Nwazet.Commerce.Tests {
         };
 
         private static readonly ShoppingCartQuantityProduct[] OriginalQuantities = {
-            new ShoppingCartQuantityProduct(3, Products[0], new Dictionary<int, string> {{10, "Green"}, {11, "L"}}), 
-            new ShoppingCartQuantityProduct(1, Products[0], new Dictionary<int, string> {{10, "Green"}, {11, "M"}}), 
-            new ShoppingCartQuantityProduct(7, Products[0], new Dictionary<int, string> {{10, "Blue"}, {11, "XS"}}), 
+            new ShoppingCartQuantityProduct(3, Products[0], new Dictionary<int, ProductAttributeValueExtended> {{10, GetExtendedValue("Green")}, {11, GetExtendedValue("L") }}), 
+            new ShoppingCartQuantityProduct(1, Products[0], new Dictionary<int, ProductAttributeValueExtended> {{10, GetExtendedValue("Green")}, {11, GetExtendedValue("M") }}), 
+            new ShoppingCartQuantityProduct(7, Products[0], new Dictionary<int, ProductAttributeValueExtended> {{10, GetExtendedValue("Blue")}, {11, GetExtendedValue("XS") }}), 
             new ShoppingCartQuantityProduct(6, Products[1]), 
-            new ShoppingCartQuantityProduct(5, Products[2], new Dictionary<int, string> {{11, "S"}})
+            new ShoppingCartQuantityProduct(5, Products[2], new Dictionary<int, ProductAttributeValueExtended> {{11, GetExtendedValue("S")}})
         };
 
         private static void FillCart(IShoppingCart cart) {
@@ -276,8 +276,9 @@ namespace Nwazet.Commerce.Tests {
             var contentManager = new ContentManagerStub(Products.Cast<IContent>().Union(ProductAttributes));
             var cartStorage = new FakeCartStorage();
             var attributeService = new ProductAttributeService(contentManager);
+            var attributeExtensionProviders = new List<IProductAttributeExtensionProvider> { new TextProductAttributeExtensionProvider(new ShapeFactoryStub()) };
             var priceService = new PriceService(new IPriceProvider[0], attributeService);
-            var attributeDriver = new ProductAttributesPartDriver(attributeService);
+            var attributeDriver = new ProductAttributesPartDriver(attributeService, attributeExtensionProviders);
             var cart = new ShoppingCart(contentManager, cartStorage, priceService, new[] { attributeDriver }, null, new Notifier());
             FillCart(cart);
 
@@ -296,6 +297,10 @@ namespace Nwazet.Commerce.Tests {
                     shoppingCartQuantityProduct.Product.Id, shoppingCartQuantityProduct.AttributeIdsToValues);
                 Assert.That(product.Quantity, Is.EqualTo(shoppingCartQuantityProduct.Quantity));
             }
+        }
+
+        private static ProductAttributeValueExtended GetExtendedValue(string value, string extra = null, string provider = null) {
+            return new ProductAttributeValueExtended { Value = value, ExtendedValue = extra, ExtensionProvider = provider };
         }
     }
 }

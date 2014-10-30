@@ -25,6 +25,7 @@ namespace Nwazet.Commerce.Drivers {
         private readonly IOrchardServices _orchardServices;
         private readonly IWorkflowManager _workflowManager;
         private readonly IMembershipService _membershipService;
+        private readonly IEnumerable<IProductAttributeExtensionProvider> _extensionProviders;
 
         public OrderPartDriver(
             IOrderService orderService,
@@ -33,7 +34,8 @@ namespace Nwazet.Commerce.Drivers {
             IWorkContextAccessor wca,
             IOrchardServices orchardServices,
             IWorkflowManager workflowManager,
-            IMembershipService membershipService) {
+            IMembershipService membershipService,
+            IEnumerable<IProductAttributeExtensionProvider> extensionProviders) {
 
             _orderService = orderService;
             _addressFormatter = addressFormatter;
@@ -42,6 +44,7 @@ namespace Nwazet.Commerce.Drivers {
             _orchardServices = orchardServices;
             _workflowManager = workflowManager;
             _membershipService = membershipService;
+            _extensionProviders = extensionProviders;
             T = NullLocalizer.Instance;
         }
 
@@ -52,6 +55,8 @@ namespace Nwazet.Commerce.Drivers {
         private const string EventName = "Event";
         private const string ItemName = "Item";
         private const string ItemsName = "Items";
+        private const string AttributesName = "Attributes";
+        private const string AttributeName = "Attribute";
         private const string ShippingAddressName = "ShippingAddress";
         private const string ShippingName = "Shipping";
         private const string TaxesName = "Taxes";
@@ -110,8 +115,18 @@ namespace Nwazet.Commerce.Drivers {
             var linkToTransaction = _checkoutServices
                 .Select(s => s.GetChargeAdminUrl(part.Charge.TransactionId))
                 .FirstOrDefault(u => u != null);
+            var orderItems = part.Items.ToList();
+            // Add attribute extension provider instances to order item attributes
+            foreach (var item in orderItems) {
+                if (item.Attributes != null) {
+                    foreach (var attr in item.Attributes) {
+                        attr.Value.ExtensionProviderInstance = _extensionProviders.SingleOrDefault(e => e.Name == attr.Value.ExtensionProvider);
+                    }
+                }
+            }
             var model = new OrderEditorViewModel {
                 Order = part,
+                OrderItems = orderItems,
                 Products = products,
                 BillingAddressText = _addressFormatter.Format(part.BillingAddress),
                 ShippingAddressText = _addressFormatter.Format(part.ShippingAddress),
@@ -246,18 +261,30 @@ namespace Nwazet.Commerce.Drivers {
 
             var el = xel.With(part);
             part.Build(
-                card,
+                (ICharge)charge ?? (ICharge)card,
                 itemsEl == null
                     ? null
                     : itemsEl.Elements(ItemName)
-                        .Select(i => i.With(new CheckoutItem())
+                        .Select(i => {
+                            var checkoutItem = i.With(new CheckoutItem())
                             .FromAttr(coi => coi.ProductId)
                             .FromAttr(coi => coi.Title)
                             .FromAttr(coi => coi.Quantity)
                             .FromAttr(coi => coi.Price)
                             .FromAttr(coi => coi.LinePriceAdjustment)
                             .FromAttr(coi => coi.PromotionId)
-                            .Context),
+                            .Context;
+                            if (i.Element(AttributesName) != null) {
+                                checkoutItem.Attributes = 
+                                    i.Elements(AttributesName).Elements(AttributeName).Select(a =>
+                                        new { Key = Convert.ToInt32(a.Attr("Key")), Value = new ProductAttributeValueExtended {
+                                            Value = a.Attr("Value"),
+                                            ExtendedValue = a.Attr("Extra"),
+                                            ExtensionProvider = a.Attr("ExtensionProvider")
+                                        }}).ToDictionary(k => k.Key, k => k.Value);
+                            }
+                            return checkoutItem;
+                        }),
                 el.Attr(p => p.SubTotal),
                 el.Attr(p => p.Total),
                 tax,
@@ -318,12 +345,24 @@ namespace Nwazet.Commerce.Drivers {
                             .ToAttr(i => i.Price)
                             .ToAttr(i => i.LinePriceAdjustment)
                             .ToAttr(i => i.PromotionId)
-                            .Element)))
+                            .Element
+                            .AddEl(new XElement(AttributesName, it.Attributes != null ? it.Attributes.Select(at => {
+                                var attrEl = new XElement(AttributeName);
+                                attrEl.SetAttributeValue("Key", at.Key);
+                                attrEl.SetAttributeValue("Value", at.Value.Value);
+                                attrEl.SetAttributeValue("Extra", at.Value.ExtendedValue);
+                                attrEl.SetAttributeValue("ExtensionProvider", at.Value.ExtensionProvider);
+                                return attrEl;
+                            }) : null)))))
 
                 .AddEl(new XElement(ShippingName).With(part.ShippingOption)
                     .ToAttr(s => s.Description)
                     .ToAttr(s => s.ShippingCompany)
                     .ToAttr(s => s.Price).Element)
+
+                .AddEl(new XElement(ChargeName).With(part.Charge)
+                    .ToAttr(c => c.TransactionId)
+                    .ToAttr(c => c.ChargeText).Element)
 
                 .AddEl(new XElement(TaxesName).With(part.Taxes)
                     .ToAttr(t => t.Name)

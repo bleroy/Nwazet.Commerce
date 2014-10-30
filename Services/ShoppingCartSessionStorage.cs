@@ -3,13 +3,18 @@ using System.Collections.Generic;
 using System.Web;
 using Nwazet.Commerce.Models;
 using Orchard;
+using System.Linq;
 
 namespace Nwazet.Commerce.Services {
     public class ShoppingCartSessionStorage : IShoppingCartStorage {
         private readonly IWorkContextAccessor _wca;
+        private readonly IEnumerable<IProductAttributeExtensionProvider> _extensionProviders;
 
-        public ShoppingCartSessionStorage(IWorkContextAccessor wca) {
+        public ShoppingCartSessionStorage(
+            IWorkContextAccessor wca,
+            IEnumerable<IProductAttributeExtensionProvider> extensionProviders) {
             _wca = wca;
+            _extensionProviders = extensionProviders;
         }
 
         public List<ShoppingCartItem> Retrieve() {
@@ -19,6 +24,13 @@ namespace Nwazet.Commerce.Services {
             if (items == null) {
                 items = new List<ShoppingCartItem>();
                 context.Session["ShoppingCart"] = items;
+            } else {
+                // Add attribute extension providers to each attribute option
+                foreach (var item in items) {
+                    foreach (var option in item.AttributeIdsToValues) {
+                        option.Value.ExtensionProviderInstance = _extensionProviders.SingleOrDefault(e => e.Name == option.Value.ExtensionProvider);
+                    }
+                }
             }
             return items;
         }

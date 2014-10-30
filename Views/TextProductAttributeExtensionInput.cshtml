@@ -1,0 +1,12 @@
+﻿@*
+    Name fields on the input form starting with the namePrefix variable below.
+    There are two special field names:
+     - [@namePrefix] will be passed as the value parameter into the Serialize method on your extension provider
+     - [@namePrefix].provider is used to route values to the correct extension provider and should match the name property of your provider
+     - All other form fields that start with @namePrefix will be passed to your extension provider as a form collection
+*@
+@{
+    var namePrefix = "ext.productattributes.a" + Model.Part.Id;
+}
+<input type="text" name="@namePrefix" required placeholder="Enter text" />
+<input type="hidden" name="@(namePrefix).provider" value="@Model.ExtensionName" />
