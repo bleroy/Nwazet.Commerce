@@ -29,12 +29,12 @@
             if (!loading && form && form.length > 0) {
                 setLoading(true);
                 // If we need to handle file inputs use an iframe
-                var $files = $("input[type=file]:enabled", form);
-                if ($files.length) {
+                var fileInputs = $("input[type=file]:enabled", form);
+                if (fileInputs.length) {
                     $.ajax(form[0].action || updateUrl, {
                         type: "POST",
                         data: form.serializeArray(),
-                        files: $files,
+                        files: fileInputs,
                         iframe: true
                     }).done(function(content) {
                         cartContainer.html(content);
@@ -188,17 +188,17 @@
                     }
                     if (element.type == "file") {
                         // Cloning loses value, move the actual input and replace with the clone
-                        var $element = $(element),
-                            $clone = $element.clone();
-                        $element.after($clone);
-                        $element.hide().appendTo(minicartForm);                        
+                        var fileInput = $(element),
+                            clonedFileInput = fileInput.clone();
+                        fileInput.after(clonedFileInput);
+                        fileInput.hide().appendTo(minicartForm);
                     }
                 });
                 addForm.find("select").each(function(index, element) {
-                    var $clone = $(element).clone();
+                    var clonedAttribute = $(element).clone();
                     // Cloning loses selected option, reset it
-                    $clone.val($(element).val());
-                    $clone.hide().appendTo(minicartForm);
+                    clonedAttribute.val($(element).val());
+                    clonedAttribute.hide().appendTo(minicartForm);
 
                 });
                 cartContainerLoad(minicartForm);

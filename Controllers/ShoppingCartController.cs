@@ -382,11 +382,16 @@ namespace Nwazet.Commerce.Controllers {
                                 .ToDictionary(
                                     k => k.Substring((ExtensionPrefix + key + ".").Length),
                                     k => form[k]);
+                            return new ProductAttributeValueExtended {
+                                Value = form[key],
+                                ExtendedValue = extensionProvider.Serialize(form[ExtensionPrefix + key], extensionFormValues, files),
+                                ExtensionProvider = extensionProvider.Name
+                            };
                         }
                         return new ProductAttributeValueExtended {
                             Value = form[key],
-                            ExtendedValue = extensionProvider != null ? extensionProvider.Serialize(form[ExtensionPrefix + key], extensionFormValues, files) : null,
-                            ExtensionProvider = extensionProvider != null ? extensionProvider.Name : null
+                            ExtendedValue = null,
+                            ExtensionProvider = null
                         };
                     });
             return productattributes;

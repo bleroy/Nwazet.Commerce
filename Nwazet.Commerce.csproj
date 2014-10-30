@@ -91,9 +91,6 @@
       <DependentUpon>referral.js</DependentUpon>
     </Content>
     <Content Include="Scripts\attribute-extensions.js" />
-    <Content Include="Scripts\report - Copy.min.js">
-      <DependentUpon>attribute-extensions.js</DependentUpon>
-    </Content>
     <Content Include="Scripts\report.js" />
     <Content Include="Scripts\report.min.js">
       <DependentUpon>report.js</DependentUpon>
@@ -469,11 +466,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\TextProductAttributeExtensionAdmin.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\report - Copy.min.js.map">
-      <DependentUpon>attribute-extensions.js</DependentUpon>
-    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

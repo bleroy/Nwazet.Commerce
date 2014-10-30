@@ -164,7 +164,7 @@ namespace Nwazet.Commerce.Models {
                             checkoutItem.Attributes =
                                 el.Elements(AttributesName).Elements(AttributeName).Select(a =>
                                     new {
-                                        Key = Convert.ToInt32(a.Attr("Key")),
+                                        Key = int.Parse(a.Attr("Key")),
                                         Value = new ProductAttributeValueExtended {
                                             Value = a.Attr("Value"),
                                             ExtendedValue = a.Attr("Extra"),

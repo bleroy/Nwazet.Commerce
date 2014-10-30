@@ -7,11 +7,11 @@
     Script.Include("attribute-admin.js").AtFoot();
 }
 <fieldset>
-    <label class="sub" for="@Html.IdFor(m => m.Part.DisplayName)">@T("Display Name")</label><br />
-    @Html.TextBoxFor(m => m.Part.DisplayName, new { @class = "text medium" })
+    <label class="sub" for="@Html.IdFor(m => m.DisplayName)">@T("Display Name")</label><br />
+    @Html.TextBoxFor(m => m.DisplayName, new { @class = "text medium" })
     <span class="hint">@T("Label for attribute drop-down list. Leave empty to hide label.")</span><br />
-    <label class="sub" for="@Html.IdFor(m => m.Part.SortOrder)">@T("Sort Order")</label><br />
-    @Html.TextBoxFor(m => m.Part.SortOrder, new { @class = "text small" })<br />
+    <label class="sub" for="@Html.IdFor(m => m.SortOrder)">@T("Sort Order")</label><br />
+    @Html.TextBoxFor(m => m.SortOrder, new { @class = "text small" })<br />
     <span class="hint">@T("Order in which attributes are displayed.")</span><br />
 </fieldset>
 <fieldset>
@@ -30,7 +30,7 @@
             }
         </li>
         @{int i = 0;}
-        @foreach (var value in Model.Part.AttributeValues) {
+        @foreach (var value in Model.AttributeValues) {
             <li class="option">
                 <div class="option-name">
                     <input type="hidden" name="NwazetCommerceAttribute.AttributeValues.Index" value="@i" />
