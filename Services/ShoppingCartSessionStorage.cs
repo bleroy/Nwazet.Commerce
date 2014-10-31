@@ -27,8 +27,10 @@ namespace Nwazet.Commerce.Services {
             } else {
                 // Add attribute extension providers to each attribute option
                 foreach (var item in items) {
-                    foreach (var option in item.AttributeIdsToValues) {
-                        option.Value.ExtensionProviderInstance = _extensionProviders.SingleOrDefault(e => e.Name == option.Value.ExtensionProvider);
+                    if (item.AttributeIdsToValues != null) {
+                        foreach (var option in item.AttributeIdsToValues) {
+                            option.Value.ExtensionProviderInstance = _extensionProviders.SingleOrDefault(e => e.Name == option.Value.ExtensionProvider);
+                        }
                     }
                 }
             }
