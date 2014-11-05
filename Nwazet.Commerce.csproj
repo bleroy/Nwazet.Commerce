@@ -296,9 +296,6 @@
     <Compile Include="Services\AddressFormatter.cs" />
     <Compile Include="Services\BundleService.cs" />
     <Compile Include="Services\Country.cs" />
-    <Compile Include="Services\ImageProductAttributeExtensionProvider.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Services\IProductAttributeExtensionProvider.cs" />
     <Compile Include="Services\IOrderService.cs" />
     <Compile Include="Services\IProductAttributeService.cs" />
@@ -457,12 +454,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\TextProductAttributeExtensionInput.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\ImageProductAttributeExtensionAdmin.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\ImageProductAttributeExtensionInput.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\TextProductAttributeExtensionAdmin.cshtml" />
