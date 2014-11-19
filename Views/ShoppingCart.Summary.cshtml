@@ -21,14 +21,14 @@
                                         + (item.ProductAttributes == null || item.ProductAttributes.Count == 0
                                                ? "" : " (" + string.Join(", ", ((Dictionary<int, ProductAttributeValueExtended>)item.ProductAttributes).Values
                                                .Select(v => v.Value + (v.ExtensionProviderInstance != null ? v.ExtensionProviderInstance.DisplayString(v.ExtendedValue) : ""))) + ")");
-                    string imageUrl = (item.ProductImage != null ? item.ProductImage.Url : null);
+                    string imageUrl = (item.ProductImage != null ? item.ProductImage.MediaUrl : null);
                     var quantity = (int) item.Quantity;
                     var unitPrice = (double) item.DiscountedPrice;
                     var totalPrice = quantity*unitPrice;
                     var minimumOrderQuantity = item.MinimumOrderQuantity;
                     <li>
                         @if (imageUrl != null) {
-                            <a href="@Url.ItemDisplayUrl(contentItem)" class="product-image-link"><img src="@(root + Href(imageUrl))" alt="@title" class="product-image"/></a>
+                            <a href="@Url.ItemDisplayUrl(contentItem)" class="product-image-link"><img src="@Href(imageUrl)" alt="@title" class="product-image"/></a>
                             <a href="@Url.ItemDisplayUrl(contentItem)" class="product-name">@title</a>
                         }
                         else {
