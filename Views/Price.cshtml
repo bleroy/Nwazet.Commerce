@@ -1,7 +1,7 @@
 ﻿@if (Model.DiscountedPrice != Model.Price)
 {
-    <b class="inactive-price" style="text-decoration:line-through" title="@T("Was {0}", Model.Price.ToString("c"))">@Model.Price.ToString("c")</b>
-    <b class="discounted-price" title="@T("Now {0}", Model.DiscountedPrice.ToString("c"))">@Model.DiscountedPrice.ToString("c")</b>
+    <b class="inactive-price" style="text-decoration:line-through" title="@T("Was {0:c}", Model.Price)">@Model.Price.ToString("c")</b>
+    <b class="discounted-price" title="@T("Now {0:c}", Model.DiscountedPrice)">@Model.DiscountedPrice.ToString("c")</b>
     <span class="discount-comment">@Model.DiscountComment</span>
 }
 else
