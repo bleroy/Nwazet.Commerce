@@ -45,7 +45,7 @@
                                         + (item.ProductAttributes == null || item.ProductAttributes.Count == 0
                                                ? "" : " (" + string.Join(", ", ((Dictionary<int, ProductAttributeValueExtended>)item.ProductAttributes).Values
                                                     .Select(v => v.Value + (v.ExtensionProviderInstance != null ? v.ExtensionProviderInstance.DisplayString(v.ExtendedValue) : ""))) + ")");
-                            string imageUrl = (item.ProductImage != null ? item.ProductImage.MediaUrl : null);
+                            string imageUrl = (item.ProductImage != null && item.ProductImage.MediaParts.Count > 0) ? item.ProductImage.MediaParts[0].MediaUrl : null;
                             var quantity = (int)item.Quantity;
                             var unitPrice = (double)item.DiscountedPrice;
                             var linePriceAdjustment = (double)item.LinePriceAdjustment;

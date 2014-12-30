@@ -229,7 +229,7 @@ namespace Nwazet.Commerce.Controllers {
                     Title: _contentManager.GetItemMetadata(productQuantity.Product).DisplayText,
                     ProductAttributes: productQuantity.AttributeIdsToValues,
                     ContentItem: (productQuantity.Product).ContentItem,
-                    ProductImage: ((dynamic)productQuantity.Product.ContentItem).Product.ProductImage.MediaParts.Count > 0 ? ((dynamic)productQuantity.Product.ContentItem).Product.ProductImage.MediaParts[0] : null,            
+                    ProductImage: ((MediaLibraryPickerField)productQuantity.Product.ContentItem.Parts.SelectMany(part => part.Fields).FirstOrDefault(field => field.Name == "ProductImage")),
                     IsDigital: productQuantity.Product.IsDigital,
                     Price: productQuantity.Product.Price,
                     DiscountedPrice: productQuantity.Price,
