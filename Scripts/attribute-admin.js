@@ -5,8 +5,11 @@
     $("#NwazetCommerceAttribute_AddAttributeValue").click(function (event) {
         event.preventDefault();
         var valueTemplate = $("#valueTemplate").html();
-        $("#NwazetCommerceAttribute_AttributeValues").append(
-            Mustache.render(valueTemplate, { index: i, sort: i + 1 }));
+        $("#NwazetCommerceAttribute_AttributeValues")
+            .append(Mustache.render(valueTemplate, { index: i, sort: i + 1 }))
+            .last()
+            .find(".option-name input[type=text]")
+            .focus();
         i++;
     });
 
@@ -16,7 +19,7 @@
     });
 
     $("#NwazetCommerceAttribute_AttributeValues").sortable({
-        update: function (event, ui) {
+        update: function () {
             $.each($(this).children("li"), function () {
                 var $row = $(this);
                 $row.find("input[name$=SortOrder]").val($row.index());

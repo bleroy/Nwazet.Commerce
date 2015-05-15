@@ -27,6 +27,10 @@ namespace Nwazet.Commerce.Tests.Stubs {
             throw new System.NotImplementedException();
         }
 
+        public ContentItem Restore(ContentItem contentItem, VersionOptions options) {
+            throw new System.NotImplementedException();
+        }
+
         public ContentItem Get(int id) {
             var item = _contentItems
                 .FirstOrDefault(i => i.Id == id);
@@ -89,6 +93,10 @@ namespace Nwazet.Commerce.Tests.Stubs {
         }
 
         public void Remove(ContentItem contentItem) {
+            throw new System.NotImplementedException();
+        }
+
+        public void Destroy(ContentItem contentItem) {
             throw new System.NotImplementedException();
         }
 

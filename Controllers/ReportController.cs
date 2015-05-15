@@ -24,13 +24,13 @@ namespace Nwazet.Commerce.Controllers {
     public class ReportController : Controller {
         private readonly IEnumerable<ICommerceReport> _reports;
         private readonly IOrchardServices _orchardServices;
-        private readonly IDateServices _dateServices;
+        private readonly IDateLocalizationServices _dateServices;
         private readonly IContentManager _contentManager;
 
         public ReportController(
             IEnumerable<ICommerceReport> reports,
             IOrchardServices orchardServices,
-            IDateServices dateServices,
+            IDateLocalizationServices dateServices,
             IContentManager contentManager
             ) {
             _reports = reports;
@@ -91,12 +91,12 @@ namespace Nwazet.Commerce.Controllers {
                 DataPoints = data.DataPoints,
                 Series = series,
                 StartDateEditor = new DateTimeEditor {
-                    Date = _dateServices.ConvertToLocalDateString(startDate.ToUniversalTime()),
+                    Date = _dateServices.ConvertToLocalizedDateString(startDate.ToUniversalTime()),
                     ShowDate = true,
                     ShowTime = false
                 },
                 EndDateEditor = new DateTimeEditor {
-                    Date = _dateServices.ConvertToLocalDateString(endDate.ToUniversalTime()),
+                    Date = _dateServices.ConvertToLocalizedDateString(endDate.ToUniversalTime()),
                     ShowDate = true,
                     ShowTime = false
                 },
