@@ -33,14 +33,15 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
     <OutputPath>bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -293,6 +294,7 @@
     <Compile Include="Routes\StripeRoutes.cs" />
     <Compile Include="Routes\OrderRoutes.cs" />
     <Compile Include="Routes\CommerceRoutes.cs" />
+    <Compile Include="Services\ProductResolverSelector.cs" />
     <Compile Include="Services\AddressFormatter.cs" />
     <Compile Include="Services\BundleService.cs" />
     <Compile Include="Services\Country.cs" />
