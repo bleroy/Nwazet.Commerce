@@ -25,6 +25,7 @@ namespace Nwazet.Commerce.Tests.Stubs {
         public int MaxPagedCount { get; set; }
         public string BaseUrl { get; set; }
         public string HomePage { get; set; }
+        public bool UseCdn { get; set; }
         public int PageSize { get; set; }
         public string PageTitleSeparator { get { return ""; } }
         public string SiteCalendar { get; set; }
