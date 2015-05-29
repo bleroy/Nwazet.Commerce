@@ -9,11 +9,6 @@
     Style.Require("jQueryDateTimeEditor");
     Style.Include("reports-admin.css");
 
-    Script.Require("jQueryCalendars_All").AtFoot();
-    Script.Require("jQueryCalendars_Picker_Ext").AtFoot();
-    Script.Require("jQueryDateTimeEditor").AtFoot();
-    Script.Include("chartjs.js", "chartjs.min.js").AtFoot();
-    Script.Include("report.js", "report.min.js").AtFoot();
     Layout.Title = Model.Name;
 
     <fieldset class="bulk-actions report-filters">
@@ -110,4 +105,11 @@
             </tr>
         }
     </table>
+}
+@using (Script.Foot()) {
+    @Display.CalendarsPickerLocalization()
+    @Display.TimeEntryLocalization()
+    Script.Require("jQueryCalendars_Picker_Ext").AtFoot();
+    Script.Include("chartjs.js", "chartjs.min.js").AtFoot();
+    Script.Include("report.js", "report.min.js").AtFoot();
 }

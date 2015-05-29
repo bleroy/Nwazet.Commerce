@@ -108,11 +108,6 @@
             month: "<div class='ui-datepicker-group'><div class='ui-datepicker-month ui-helper-clearfix'>{monthHeader:MM yyyy}</div><table class='ui-datepicker-calendar'><thead>{weekHeader}</thead><tbody>{weeks}</tbody></table></div>"
         });
 
-        $("#Editor_Date").calendarsPicker({
-            showAnim: "",
-            renderer: dateRenderer
-        });
-
         $('#@Html.IdFor(m => m.StartDate)').calendarsPicker({
             showAnim: "",
             renderer: dateRenderer
