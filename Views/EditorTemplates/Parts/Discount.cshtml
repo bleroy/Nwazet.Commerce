@@ -3,6 +3,10 @@
     var roles = Model.Roles.ToList();
     var discountRoles = Model.DiscountRoles;
     Style.Include("discount.nwazet-commerce-admin.css");
+    Style.Require("jQueryCalendars_Picker");
+    Style.Require("jQueryUI_Calendars_Picker");
+    Style.Require("jQueryTimeEntry");
+    Style.Require("jQueryDateTimeEditor");
 }
 <fieldset class="nwazet-discount">
     <label class="sub" for="@Html.IdFor(m => m.Name)">@T("Discount Name")</label><br />
@@ -16,17 +20,17 @@
     <fieldset class="nwazet-discount-datetime">
         <legend>@T("Starts")</legend>
         <label class="forpicker" for="@Html.IdFor(m => m.StartDate)">@T("Date")</label>
-        @Html.EditorFor(m => m.StartDate)
+        @Html.EditorFor(m => m.StartDate, new {@class="date"})
         <label class="forpicker" for="@Html.IdFor(m => m.StartTime)">@T("Time")</label>
-        @Html.EditorFor(m => m.StartTime)
+        @Html.EditorFor(m => m.StartTime, new { @class = "time" })
     </fieldset>
     
     <fieldset class="nwazet-discount-datetime nwazet-discount-datetime-second">
         <legend>@T("Ends")</legend>
         <label class="forpicker" for="@Html.IdFor(m => m.EndDate)">@T("Date")</label>
-        @Html.EditorFor(m => m.EndDate)
+        @Html.EditorFor(m => m.EndDate, new { @class = "date" })
         <label class="forpicker" for="@Html.IdFor(m => m.EndTime)">@T("Time")</label>
-        @Html.EditorFor(m => m.EndTime)
+        @Html.EditorFor(m => m.EndTime, new { @class = "time" })
     </fieldset>
     
     <fieldset>
@@ -61,10 +65,10 @@
 </fieldset>
 
 @using (Script.Foot()) {
-
     @* generates the localization script *@
-    @Display.DatePickerLocalization()
-    @Display.TimePickerLocalization()
+    @Display.CalendarsPickerLocalization()
+    @Display.TimeEntryLocalization()
+    Script.Require("jQueryCalendars_Picker_Ext").AtFoot();
 
 <script type="text/javascript">
 //<![CDATA[
@@ -99,15 +103,29 @@
             }
         });
 
-        $('#@Html.IdFor(m => m.StartDate)')
-            .datepicker({ showAnim: "" });
-        $('#@Html.IdFor(m => m.StartTime)')
-            .timepicker({ stepMinute: 5 });
+        var dateRenderer = $.extend({}, $.calendarsPicker.themeRollerRenderer, {
+            picker: "<div {popup:start} id='ui-datepicker-div'{popup:end} class='ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all{inline:start} ui-datepicker-inline{inline:end}'><div class='ui-datepicker-header ui-widget-header ui-helper-clearfix ui-corner-all'>{link:prev}{link:today}{link:next}</div>{months}{popup:start}{popup:end}<div class='ui-helper-clearfix'></div></div>",
+            month: "<div class='ui-datepicker-group'><div class='ui-datepicker-month ui-helper-clearfix'>{monthHeader:MM yyyy}</div><table class='ui-datepicker-calendar'><thead>{weekHeader}</thead><tbody>{weeks}</tbody></table></div>"
+        });
 
-        $('#@Html.IdFor(m => m.EndDate)')
-            .datepicker({ showAnim: "" });
+        $("#Editor_Date").calendarsPicker({
+            showAnim: "",
+            renderer: dateRenderer
+        });
+
+        $('#@Html.IdFor(m => m.StartDate)').calendarsPicker({
+            showAnim: "",
+            renderer: dateRenderer
+        });
+        $('#@Html.IdFor(m => m.StartTime)')
+            .timeEntry();
+
+        $('#@Html.IdFor(m => m.EndDate)').calendarsPicker({
+            showAnim: "",
+            renderer: dateRenderer
+        });
         $('#@Html.IdFor(m => m.EndTime)')
-            .timepicker({ stepMinute: 5 });
+            .timeEntry();
     })
 //]]>
 </script>
