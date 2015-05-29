@@ -24,8 +24,8 @@ namespace Nwazet.Commerce.Menus {
                     .LinkToFirstChild(false)
 
                     .Add(subItem => subItem
-                        .Caption(T("Pricing"))
-                        .Position("2.9")
+                        .Caption(T("Tiered Pricing"))
+                        .Position("2.4.5")
                         .Action("Index", "ProductSettingsAdmin", new { area = "Nwazet.Commerce" })
                     )
                 );

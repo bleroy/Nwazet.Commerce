@@ -15,11 +15,11 @@
                 <td>@priceTiers[i].Quantity</td>
                 <td>
                     @if (priceTiers[i].Price != discountedPriceTiers[i].Price) {
-                        <span class="inactive-price" style="text-decoration:line-through" title="@T("Was {0:c}", priceTiers[i].Price)">@priceTiers[i].Price.ToString("c")</span>
-                        <span class="discounted-price" title="@T("Now {0:c}", discountedPriceTiers[i].Price)">@discountedPriceTiers[i].Price.ToString("c")</span>
+                        <span class="inactive-price" style="text-decoration:line-through" title="@T("Was {0:c}", priceTiers[i].Price)">@T("{0:c}", priceTiers[i].Price)</span>
+                        <span class="discounted-price" title="@T("Now {0:c}", discountedPriceTiers[i].Price)">@T("{0:c}", discountedPriceTiers[i].Price)"</span>
                     }
                     else {
-                        <span class="regular-price">@priceTiers[i].Price.ToString("c")</span>
+                        <span class="regular-price">@T("{0:c}", priceTiers[i].Price)</span>
                     }
 
                 </td>
