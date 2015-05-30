@@ -166,7 +166,7 @@ namespace Nwazet.Commerce.Services {
                     }
                 };
             }
-            var card = chargeResult["card"];
+            var card = chargeResult["source"];
             return new CreditCardCharge {
                 TransactionId = Name + ":" + chargeResult.Value<string>("id"),
                 Last4 = card.Value<string>("last4"),
