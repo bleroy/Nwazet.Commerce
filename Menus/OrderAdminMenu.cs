@@ -1,5 +1,4 @@
-﻿using Nwazet.Commerce;
-using Nwazet.Commerce.Permissions;
+﻿using Nwazet.Commerce.Permissions;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.UI.Navigation;
@@ -29,7 +28,7 @@ namespace Nwazet.Commerce.Menus {
                         .Caption(T("Orders"))
                         .Position("2.1")
                         .Action("List", "OrderAdmin", new { area = "Nwazet.Commerce" })
-                        .Permission(OrderPermissions.ViewOwnOrders)
+                        .Permission(OrderPermissions.ManageOrders)
                     )
                 );
         }
