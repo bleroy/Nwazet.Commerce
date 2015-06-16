@@ -1,5 +1,6 @@
 ﻿using Orchard.Environment.Extensions;
 using Orchard.Localization;
+using Orchard.Security;
 using Orchard.UI.Navigation;
 
 namespace Nwazet.Commerce.Menus {
@@ -27,6 +28,7 @@ namespace Nwazet.Commerce.Menus {
                         .Caption(T("Tiered Pricing"))
                         .Position("2.4.5")
                         .Action("Index", "ProductSettingsAdmin", new { area = "Nwazet.Commerce" })
+                        .Permission(StandardPermissions.SiteOwner)
                     )
                 );
         }

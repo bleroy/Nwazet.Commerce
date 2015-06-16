@@ -1,5 +1,6 @@
 ﻿using Orchard.Environment.Extensions;
 using Orchard.Localization;
+using Orchard.Security;
 using Orchard.UI.Navigation;
 
 namespace Nwazet.Commerce.Menus {
@@ -27,6 +28,7 @@ namespace Nwazet.Commerce.Menus {
                         .Caption(T("Taxes"))
                         .Position("2.6")
                         .Action("Index", "TaxAdmin", new {area = "Nwazet.Commerce"})
+                        .Permission(StandardPermissions.SiteOwner)
                     )
                 );
         }

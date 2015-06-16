@@ -3,8 +3,11 @@ using System.Linq;
 using System.Web.Mvc;
 using Nwazet.Commerce.Services;
 using Nwazet.Commerce.ViewModels;
+using Orchard;
 using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions;
+using Orchard.Localization;
+using Orchard.Security;
 using Orchard.Settings;
 using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
@@ -16,18 +19,27 @@ namespace Nwazet.Commerce.Controllers {
         private dynamic Shape { get; set; }
         private readonly ISiteService _siteService;
         private readonly IEnumerable<ITaxProvider> _taxProviders;
+        private readonly IOrchardServices _orchardServices;
 
         public TaxAdminController(
             IEnumerable<ITaxProvider> taxProviders,
             IShapeFactory shapeFactory,
-            ISiteService siteService) {
+            ISiteService siteService,
+            IOrchardServices orchardServices) {
 
             _taxProviders = taxProviders;
             Shape = shapeFactory;
             _siteService = siteService;
+            _orchardServices = orchardServices;
+            T = NullLocalizer.Instance;
         }
+
+        public Localizer T { get; set; }
         
         public ActionResult Index(PagerParameters pagerParameters) {
+            if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner, null, T("Not authorized to manage taxes")))
+                return new HttpUnauthorizedResult();
+
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters.Page, pagerParameters.PageSize);
             var taxes = _taxProviders
                 .SelectMany(tp => tp.GetTaxes())

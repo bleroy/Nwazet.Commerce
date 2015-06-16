@@ -3,9 +3,12 @@ using System.Linq;
 using System.Web.Mvc;
 using Nwazet.Commerce.Services;
 using Nwazet.Commerce.ViewModels;
+using Orchard;
 using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions;
+using Orchard.Localization;
 using Orchard.Settings;
+using Orchard.Security;
 using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
 
@@ -16,18 +19,27 @@ namespace Nwazet.Commerce.Controllers {
         private dynamic Shape { get; set; }
         private readonly ISiteService _siteService;
         private readonly IEnumerable<IPriceProvider> _priceProviders;
+        private readonly IOrchardServices _orchardServices;
 
         public PromotionAdminController(
             IEnumerable<IPriceProvider> priceProviders,
             IShapeFactory shapeFactory,
-            ISiteService siteService) {
+            ISiteService siteService,
+            IOrchardServices orchardServices) {
 
             _priceProviders = priceProviders;
             Shape = shapeFactory;
             _siteService = siteService;
+            _orchardServices = orchardServices;
+            T = NullLocalizer.Instance;
         }
-        
+
+        public Localizer T { get; set; }
+
         public ActionResult Index(PagerParameters pagerParameters) {
+            if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner, null, T("Not authorized to manage promotions")))
+                return new HttpUnauthorizedResult();
+
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters.Page, pagerParameters.PageSize);
             var promotions = _priceProviders
                 .SelectMany(p => p.GetPromotions())

@@ -1,6 +1,7 @@
 ﻿using Nwazet.Commerce.Permissions;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
+using Orchard.Security;
 using Orchard.UI.Navigation;
 
 namespace Nwazet.Commerce.Menus {
@@ -28,7 +29,7 @@ namespace Nwazet.Commerce.Menus {
                         .Caption(T("Reports"))
                         .Position("2.8")
                         .Action("Index", "Report", new { area = "Nwazet.Commerce" })
-                        .Permission(OrderPermissions.ManageOrders)
+                        .Permission(ReportPermissions.GenerateReports)
                     )
                 );
         }

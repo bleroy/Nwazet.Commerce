@@ -11,6 +11,7 @@ using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.UI.Admin;
+using Orchard.Security;
 using Orchard.Settings;
 using Orchard.UI.Navigation;
 
@@ -21,19 +22,22 @@ namespace Nwazet.Commerce.Controllers {
         private readonly IContentManager _contentManager;
         private readonly ISiteService _siteService;
         private readonly IWorkContextAccessor _wca;
+        private readonly IOrchardServices _orchardServices;
 
         public ProductAdminController(
             IOrchardServices services,
             IContentManager contentManager,
             ISiteService siteService,
             IWorkContextAccessor wca,
-            IShapeFactory shapeFactory) {
+            IShapeFactory shapeFactory,
+            IOrchardServices orchardServices) {
             Services = services;
             _contentManager = contentManager;
             _siteService = siteService;
             _wca = wca;
             T = NullLocalizer.Instance;
             Shape = shapeFactory;
+            _orchardServices = orchardServices;
         }
 
         dynamic Shape { get; set; }
@@ -41,6 +45,9 @@ namespace Nwazet.Commerce.Controllers {
         public IOrchardServices Services { get; set; }
 
         public ActionResult List(ListContentsViewModel model, PagerParameters pagerParameters) {
+            if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner, null, T("Not authorized to manage products"))) 
+                return new HttpUnauthorizedResult();
+            
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             var query = _contentManager.Query<ProductPart, ProductPartRecord>(VersionOptions.Latest);
 
@@ -73,6 +80,9 @@ namespace Nwazet.Commerce.Controllers {
 
         [HttpPost]
         public ActionResult RemoveOne(int id) {
+            if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner, null, T("Not authorized to manage products")))
+                return new HttpUnauthorizedResult();            
+
             var product = _contentManager.Get<ProductPart>(id);
             product.Inventory--;
             Dictionary<string, int> newInventory;

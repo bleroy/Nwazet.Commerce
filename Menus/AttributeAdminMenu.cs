@@ -1,5 +1,6 @@
 ﻿using Orchard.Environment.Extensions;
 using Orchard.Localization;
+using Orchard.Security;
 using Orchard.UI.Navigation;
 
 namespace Nwazet.Commerce.Menus {
@@ -27,6 +28,7 @@ namespace Nwazet.Commerce.Menus {
                         .Caption(T("Attributes"))
                         .Position("2.4")
                         .Action("Index", "AttributesAdmin", new { area = "Nwazet.Commerce" })
+                        .Permission(StandardPermissions.SiteOwner)
                     )
                 );
         }
