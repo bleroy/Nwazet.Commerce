@@ -107,5 +107,14 @@ namespace Nwazet.Commerce.Migrations {
                     .NotNull().WithDefault(-1)));
             return 9;
         }
+
+        public int UpdateFrom9()
+        {
+            SchemaBuilder.AlterTable("ProductPartRecord",
+            table => table
+                .CreateIndex("IDX_ProductPart_Sku", "Sku")
+            );
+            return 10;
+        }
     }
 }
