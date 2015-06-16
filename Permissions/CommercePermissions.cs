@@ -6,17 +6,17 @@ using Orchard.Security.Permissions;
 namespace Nwazet.Commerce.Permissions {
     [OrchardFeature("Nwazet.Commerce")]
     public class CommercePermissions : IPermissionProvider {
-        public static readonly Permission CommerceAdministrator = new Permission
+        public static readonly Permission ManageCommerce = new Permission
         {
-            Description = "Commerce Administrator",
-            Name = "CommerceAdministrator"
+            Description = "Manage Commerce",
+            Name = "ManageCommerce"
         };
 
         public virtual Feature Feature { get; set; }
 
         public IEnumerable<Permission> GetPermissions() {
             return new[] {
-                CommerceAdministrator
+                ManageCommerce
             };
         }
 
@@ -24,7 +24,7 @@ namespace Nwazet.Commerce.Permissions {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrator",
-                    Permissions = new[] {CommerceAdministrator}
+                    Permissions = new[] { ManageCommerce }
                 },
                 new PermissionStereotype {
                     Name = "Editor"

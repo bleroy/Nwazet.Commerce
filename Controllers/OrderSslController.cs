@@ -103,9 +103,7 @@ namespace Nwazet.Commerce.Controllers {
             var order = _contentManager.Get<OrderPart>(id);
             if (order == null) {
                 return HttpNotFound();
-            }
-
-            //ViewOwnOrders
+            }            
 
             var currentUser = _wca.GetContext().CurrentUser;
             bool isOwnOrder = currentUser == order.User;

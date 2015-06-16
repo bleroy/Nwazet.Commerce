@@ -92,8 +92,7 @@ namespace Nwazet.Commerce.Controllers {
 
 
           
-            if (!_orchardServices.Authorizer.Authorize(OrderPermissions.ManageOrders))
-            {
+            if (!_orchardServices.Authorizer.Authorize(OrderPermissions.ManageOrders)) {
                 Orchard.Security.IUser currentUser = _orchardServices.WorkContext.CurrentUser;                
                 query = query.Join<CommonPartRecord>().Where(c => c.OwnerId == currentUser.Id).Join<OrderPartRecord>();
             }

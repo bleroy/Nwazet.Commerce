@@ -29,7 +29,7 @@ namespace Nwazet.Commerce.Menus {
                         .Caption(T("Taxes"))
                         .Position("2.6")
                         .Action("Index", "TaxAdmin", new {area = "Nwazet.Commerce"})
-                        .Permission(CommercePermissions.CommerceAdministrator)
+                        .Permission(CommercePermissions.ManageCommerce)
                     )
                 );
         }

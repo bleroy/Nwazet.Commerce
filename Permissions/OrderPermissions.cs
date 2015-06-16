@@ -31,7 +31,7 @@ namespace Nwazet.Commerce.Permissions {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrator",
-                    Permissions = new[] {ManageOrders, ViewOwnOrders}
+                    Permissions = new[] { ManageOrders, ViewOwnOrders }
                 },
                 new PermissionStereotype {
                     Name = "Editor"

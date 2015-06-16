@@ -29,7 +29,7 @@ namespace Nwazet.Commerce.Menus {
                         .Caption(T("Tiered Pricing"))
                         .Position("2.4.5")
                         .Action("Index", "ProductSettingsAdmin", new { area = "Nwazet.Commerce" })
-                        .Permission(CommercePermissions.CommerceAdministrator)
+                        .Permission(CommercePermissions.ManageCommerce)
                     )
                 );
         }

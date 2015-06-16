@@ -7,20 +7,20 @@
     var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
 
 
-    var hasAdminPermission = Authorizer.Authorize(Orchard.Security.StandardPermissions.SiteOwner);
+    var hasManageOrderPermission = Authorizer.Authorize(Nwazet.Commerce.Permissions.OrderPermissions.ManageOrders);
     var contentManager = WorkContext.Resolve<IContentManager>();
 }
 <div class="summary" itemscope="itemscope" itemid="@contentItem.Id" itemtype="http://orchardproject.net/data/ContentItem">
     <div class="properties">
         <input type="checkbox" value="@contentItem.Id" name="itemIds"/>
         
-        @if (hasAdminPermission) { 
+        @if (hasManageOrderPermission) { 
             <h3>@Html.ItemAdminLink(contentItem)</h3>
         }
         else
         {
-            var title = contentManager.GetItemMetadata(contentItem).DisplayText;
-            <h3><a href="/nwazet.commerce/OrderSsl/Show/@contentItem.Id">@title</a></h3>
+            string title = contentManager.GetItemMetadata(contentItem).DisplayText;
+            <h3>@Html.Link(title, Url.Action("Show", "OrderSsl", new { area = "Nwazet.Commerce", id = contentItem.Id }), new { itemprop = "UnsafeUrl" })</h3>            
         }
         
         
@@ -33,7 +33,7 @@
     </div>
     <div class="related">
 
-        @if (hasAdminPermission) {
+        @if (hasManageOrderPermission) {
             @Display(Model.Actions)
             @Html.ItemEditLink(T("Edit").Text, contentItem)@T(" | ")
             if (order.Status == OrderPart.Archived) {
@@ -45,8 +45,8 @@
             }
         }
         else
-        {
-             <a href="/nwazet.commerce/OrderSsl/Show/@contentItem.Id">@T("View order")</a>                        
+        {             
+                @Html.Link(T("View order").Text, Url.Action("Show", "OrderSsl", new {area = "Nwazet.Commerce", id = contentItem.Id}), new {itemprop = "UnsafeUrl"})                
         }
     </div>
     @if (Model.Content != null) {

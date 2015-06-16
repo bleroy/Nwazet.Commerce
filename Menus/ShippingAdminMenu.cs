@@ -29,7 +29,7 @@ namespace Nwazet.Commerce.Menus {
                         .Caption(T("Shipping"))
                         .Position("2.7")
                         .Action("Index", "ShippingAdmin", new { area = "Nwazet.Commerce" })
-                        .Permission(CommercePermissions.CommerceAdministrator)
+                        .Permission(CommercePermissions.ManageCommerce)
                     )
                 );
         }
