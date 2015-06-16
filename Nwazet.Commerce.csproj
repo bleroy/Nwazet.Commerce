@@ -281,6 +281,7 @@
     <Compile Include="Models\ShoppingCartItem.cs" />
     <Compile Include="Models\ShoppingCartQuantityProduct.cs" />
     <Compile Include="Models\ShoppingCartWidgetPart.cs" />
+    <Compile Include="Permissions\CommercePermissions.cs" />
     <Compile Include="Permissions\ReportPermissions.cs" />
     <Compile Include="Permissions\OrderPermissions.cs" />
     <Compile Include="Reports\AverageSaleAmountReport.cs" />

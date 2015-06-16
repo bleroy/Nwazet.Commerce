@@ -41,7 +41,7 @@ namespace Nwazet.Commerce.Controllers {
         public Localizer T { get; set; }
         
         public ActionResult Index(PagerParameters pagerParameters) {
-            if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner, null, T("Not authorized to manage product attributes"))) 
+            if (!_orchardServices.Authorizer.Authorize(CommercePermissions.CommerceAdministrator, null, T("Not authorized to manage product attributes"))) 
                 return new HttpUnauthorizedResult();
 
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters.Page, pagerParameters.PageSize);

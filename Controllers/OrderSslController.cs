@@ -108,9 +108,9 @@ namespace Nwazet.Commerce.Controllers {
             //ViewOwnOrders
 
             var currentUser = _wca.GetContext().CurrentUser;
-            bool bOrderOfCurrentUser = currentUser == order.User;
+            bool isOwnOrder = currentUser == order.User;
 
-            if (bOrderOfCurrentUser)
+            if (isOwnOrder)
             {                
                 if (!_orchardServices.Authorizer.Authorize(OrderPermissions.ViewOwnOrders, order,
                     T("User does not have ViewOwnOrders permission"))) {

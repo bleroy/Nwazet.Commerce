@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using Nwazet.Commerce.Permissions;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
@@ -31,7 +32,7 @@ namespace Nwazet.Commerce.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Index() {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage price settings")))
+            if (!Services.Authorizer.Authorize(CommercePermissions.CommerceAdministrator, T("Not authorized to manage price settings")))
                 return new HttpUnauthorizedResult();
 
             var site = _siteService.GetSiteSettings();
@@ -45,7 +46,7 @@ namespace Nwazet.Commerce.Controllers {
 
         [HttpPost, ActionName("Index")]
         public ActionResult IndexPOST() {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage price settings")))
+            if (!Services.Authorizer.Authorize(CommercePermissions.CommerceAdministrator, T("Not authorized to manage price settings")))
                 return new HttpUnauthorizedResult();
 
             var site = _siteService.GetSiteSettings();

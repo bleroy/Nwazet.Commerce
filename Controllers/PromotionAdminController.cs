@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Nwazet.Commerce.Services;
+using Nwazet.Commerce.Permissions;
 using Nwazet.Commerce.ViewModels;
 using Orchard;
 using Orchard.DisplayManagement;
@@ -37,7 +38,7 @@ namespace Nwazet.Commerce.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Index(PagerParameters pagerParameters) {
-            if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner, null, T("Not authorized to manage promotions")))
+            if (!_orchardServices.Authorizer.Authorize(CommercePermissions.CommerceAdministrator, null, T("Not authorized to manage promotions")))
                 return new HttpUnauthorizedResult();
 
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters.Page, pagerParameters.PageSize);
