@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Nwazet.Commerce.Models;
+using Nwazet.Commerce.Permissions;
 using Nwazet.Commerce.Services;
 using Orchard;
 using Orchard.ContentManagement;
@@ -23,6 +24,7 @@ namespace Nwazet.Commerce.Controllers {
         private readonly IAddressFormatter _addressFormatter;
         private readonly INotifier _notifier;
         private readonly IShoppingCart _shoppingCart;
+        private readonly IOrchardServices _orchardServices;
 
         public OrderSslController(
             IOrderService orderService,
@@ -31,7 +33,8 @@ namespace Nwazet.Commerce.Controllers {
             IShapeFactory shapeFactory,
             IAddressFormatter addressFormatter,
             INotifier notifier,
-            IShoppingCart shoppingCart) {
+            IShoppingCart shoppingCart,
+            IOrchardServices orchardServices) {
 
             _orderService = orderService;
             _contentManager = contentManager;
@@ -40,7 +43,9 @@ namespace Nwazet.Commerce.Controllers {
             _addressFormatter = addressFormatter;
             _notifier = notifier;
             _shoppingCart = shoppingCart;
+            _orderService = orderService;
             T = NullLocalizer.Instance;
+            _orchardServices = orchardServices;
         }
 
         public Localizer T { get; set; }
@@ -89,15 +94,36 @@ namespace Nwazet.Commerce.Controllers {
             if (id <= 0) {
                 return HttpNotFound();
             }
+            
+
             if (TempData.ContainsKey("OrderId")) {
                 return Confirmation();
             }
 
-            if (!String.IsNullOrWhiteSpace(password)) {
-                var order = _contentManager.Get<OrderPart>(id);
-                if (order == null) {
-                    return HttpNotFound();
+            var order = _contentManager.Get<OrderPart>(id);
+            if (order == null) {
+                return HttpNotFound();
+            }
+
+            //ViewOwnOrders
+
+            var currentUser = _wca.GetContext().CurrentUser;
+            bool bOrderOfCurrentUser = currentUser == order.User;
+
+            if (bOrderOfCurrentUser)
+            {                
+                if (!_orchardServices.Authorizer.Authorize(OrderPermissions.ViewOwnOrders, order,
+                    T("User does not have ViewOwnOrders permission"))) {
+                    return new HttpUnauthorizedResult();
                 }
+
+                TempData["OrderId"] = id;
+                return Confirmation();
+            }
+
+
+            if (!String.IsNullOrWhiteSpace(password)) {
+                
                 if (!password.EndsWith("=")) {
                     password += "=";
                 }
@@ -108,9 +134,11 @@ namespace Nwazet.Commerce.Controllers {
                     TempData["OrderId"] = id;
                     return Confirmation();
                 }
+                
             }
             return new ShapeResult(this, _shapeFactory.Order_CheckPassword(
                 OrderId: id));
+            
         }
     }
 }
