@@ -51,7 +51,7 @@ namespace Nwazet.Commerce.Controllers {
         }
 
         public ActionResult List(ListOrdersViewModel model, PagerParameters pagerParameters) {
-            if (!_orchardServices.Authorizer.Authorize(OrderPermissions.ManageOrders, null, T("Cannot manage orders")))
+            if (!_orchardServices.Authorizer.Authorize(OrderPermissions.ViewOwnOrders, null, T("Cannot view own orders")))
                 return new HttpUnauthorizedResult();
 
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
@@ -89,6 +89,17 @@ namespace Nwazet.Commerce.Controllers {
             }
             model.Options.FilterOptions =
                 _orderService.StatusLabels.Select(kvp => new KeyValuePair<string, string>(kvp.Key, kvp.Value.Text));
+
+
+          
+            if (!_orchardServices.Authorizer.Authorize(OrderPermissions.ManageOrders))
+            {
+                Orchard.Security.IUser currentUser = _orchardServices.WorkContext.CurrentUser;                
+                query = query.Join<CommonPartRecord>().Where(c => c.OwnerId == currentUser.Id).Join<OrderPartRecord>();
+            }
+
+
+
 
             var pagerShape = Shape.Pager(pager).TotalItemCount(query.Count());
             var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
