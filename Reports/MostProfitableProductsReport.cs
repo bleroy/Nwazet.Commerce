@@ -75,7 +75,7 @@ namespace Nwazet.Commerce.Reports {
             return new ReportData {
                 DataPoints = totalRevenues
                     .Select(q => new ReportDataPoint {
-                        Description = products[q.Key],
+                        Description = products.ContainsKey(q.Key) ? products[q.Key] : q.Key.ToString(),
                         Value = q.Value
                     })
                     .OrderByDescending(q => q.Value)

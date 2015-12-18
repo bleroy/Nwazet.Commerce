@@ -75,7 +75,7 @@ namespace Nwazet.Commerce.Reports {
             return new ReportData {
                 DataPoints = totalQuantities
                     .Select(q => new ReportDataPoint {
-                        Description = products[q.Key],
+                        Description = products.ContainsKey(q.Key) ? products[q.Key] : q.Key.ToString(),
                         Value = q.Value,
                         ValueString = T("{0:p} ({1})", (double) q.Value/totalProductsSold, q.Value).Text
                     })
