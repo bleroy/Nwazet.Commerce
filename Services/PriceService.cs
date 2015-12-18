@@ -59,7 +59,7 @@ namespace Nwazet.Commerce.Services {
             return priceTiers;
         }
 
-        private ShoppingCartQuantityProduct GetDiscount(ShoppingCartQuantityProduct productQuantity,
+        public ShoppingCartQuantityProduct GetDiscount(ShoppingCartQuantityProduct productQuantity,
             IEnumerable<ShoppingCartQuantityProduct> shoppingCartQuantities = null) {
             var modifiedPrices = _priceProviders
                     .SelectMany(pp => pp.GetModifiedPrices(productQuantity, shoppingCartQuantities))
@@ -73,6 +73,7 @@ namespace Nwazet.Commerce.Services {
                 result.Comment = lowestPrice.Comment;
                 result.Promotion = lowestPrice.Promotion;
             }
+            result.OriginalPrice = productQuantity.Price;
             return result;
         }
     }

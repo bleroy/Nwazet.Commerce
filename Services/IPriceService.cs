@@ -8,5 +8,9 @@ namespace Nwazet.Commerce.Services {
             ShoppingCartQuantityProduct productQuantity,
             IEnumerable<ShoppingCartQuantityProduct> shoppingCartQuantities = null);
         IEnumerable<PriceTier> GetDiscountedPriceTiers(ProductPart product);
+
+        ShoppingCartQuantityProduct GetDiscount(ShoppingCartQuantityProduct productQuantity,
+            IEnumerable<ShoppingCartQuantityProduct> shoppingCartQuantities = null);
+
     }
 }

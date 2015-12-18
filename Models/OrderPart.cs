@@ -86,6 +86,7 @@ namespace Nwazet.Commerce.Models {
                         .ToAttr(i => i.Quantity)
                         .ToAttr(i => i.Title)
                         .ToAttr(i => i.Price)
+                        .ToAttr(i => i.OriginalPrice)                        
                         .ToAttr(i => i.LinePriceAdjustment)
                         .ToAttr(i => i.PromotionId)
                         .Element
@@ -104,7 +105,7 @@ namespace Nwazet.Commerce.Models {
                 .AddEl(new XElement(ShippingName).With(shippingOption)
                     .ToAttr(s => s.Description)
                     .ToAttr(s => s.ShippingCompany)
-                    .ToAttr(s => s.Price)
+                    .ToAttr(s => s.Price)                    
                     .Element);
 
             var shippingAddressElement = Address.Set(new XElement(ShippingAddressName), shippingAddress);
@@ -157,6 +158,7 @@ namespace Nwazet.Commerce.Models {
                         .FromAttr(i => i.Quantity)
                         .FromAttr(i => i.Title)
                         .FromAttr(i => i.Price)
+                        .FromAttr(i => i.OriginalPrice)
                         .FromAttr(i => i.LinePriceAdjustment)
                         .FromAttr(i => i.PromotionId)
                         .Context;

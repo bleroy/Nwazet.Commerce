@@ -232,6 +232,7 @@ namespace Nwazet.Commerce.Controllers {
                     ProductImage: ((MediaLibraryPickerField)productQuantity.Product.ContentItem.Parts.SelectMany(part => part.Fields).FirstOrDefault(field => field.Name == "ProductImage")),
                     IsDigital: productQuantity.Product.IsDigital,
                     Price: productQuantity.Product.Price,
+                    OriginalPrice: productQuantity.Product.Price,
                     DiscountedPrice: productQuantity.Price,
                     LinePriceAdjustment: productQuantity.LinePriceAdjustment,
                     Promotion: productQuantity.Promotion,

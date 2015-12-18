@@ -25,8 +25,9 @@
             <div class="shopping-cart-container">
                 <table>
                     <thead>
-                        <tr>
+                        <tr>                            
                             <td colspan="2">@T("Article")</td>
+                            <td class="numeric">@T("Original Unit Price")</td>
                             <td class="numeric">@T("Unit Price")</td>
                             <td class="numeric">@T("Quantity")</td>
                             <td class="numeric">@T("Total Price")</td>
@@ -48,9 +49,16 @@
                             string imageUrl = (item.ProductImage != null && item.ProductImage.MediaParts.Count > 0) ? item.ProductImage.MediaParts[0].MediaUrl : null;
                             var quantity = (int)item.Quantity;
                             var unitPrice = (double)item.DiscountedPrice;
+                            var unitPriceOriginal = (double)item.OriginalPrice;
                             var linePriceAdjustment = (double)item.LinePriceAdjustment;
                             var totalPrice = quantity * unitPrice + linePriceAdjustment;
                             var minimumOrderQuantity = item.MinimumOrderQuantity;
+
+                            string originalUnitPrice = "";
+                            if (unitPrice != unitPriceOriginal && unitPriceOriginal != 0.0) {
+                                originalUnitPrice = String.Format("<strike>{0}</strike>", item.OriginalPrice.ToString("c"));
+                            }
+
                             <tr>
                                 @if (imageUrl != null) {
                                     <td>
@@ -62,6 +70,7 @@
                                 } else {
                                     <td colspan="2"><a href="@Url.ItemDisplayUrl(contentItem)">@title</a></td>
                                 }
+                                <td class="numeric">@Html.Raw(originalUnitPrice)</td>
                                 <td class="numeric">@unitPrice.ToString("c")</td>
                                 <td class="numeric">
                                     @if (readOnly) {
@@ -96,7 +105,7 @@
 
                     <tfoot>
                         <tr class="total">
-                            <td class="numeric label" colspan="4">@T("Subtotal:")</td>
+                            <td class="numeric label" colspan="5">@T("Subtotal:")</td>
                             <td class="numeric amount">@subtotal.ToString("c")</td>
                             @if (!readOnly) {
                                 <td class="action"><button name="command" value="Update" type="submit" class="update-button">@T("Update All")</button></td>
@@ -104,18 +113,18 @@
                         </tr>
                         @if (Model.Taxes != null && Model.Taxes.Name != null) {
                             <tr class="total">
-                                <td class="numeric label" colspan="4">@T("Taxes {0}", Model.Taxes.Name):</td>
+                                <td class="numeric label" colspan="5">@T("Taxes {0}", Model.Taxes.Name):</td>
                                 <td class="numeric amount">@Model.Taxes.Amount.ToString("c")</td>
                             </tr>
                         }
                         @if (!Model.ShopItemsAllDigital && Model.ShippingOption != null) {
                             var shippingOption = (ShippingOption)Model.ShippingOption;
                             <tr class="total">
-                                <td class="numeric label" colspan="4">@T("{1} {0}", Html.Raw(shippingOption.Description), shippingOption.ShippingCompany):</td>
+                                <td class="numeric label" colspan="5">@T("{1} {0}", Html.Raw(shippingOption.Description), shippingOption.ShippingCompany):</td>
                                 <td class="numeric amount">@shippingOption.Price.ToString("c")</td>
                             </tr>
                             <tr class="total final">
-                                <td class="numeric label" colspan="4">@T("Total:")</td>
+                                <td class="numeric label" colspan="5">@T("Total:")</td>
                                 <td class="numeric amount">@((Model.Total).ToString("c"))</td>
                             </tr>
                         }
