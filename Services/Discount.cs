@@ -72,6 +72,9 @@ namespace Nwazet.Commerce.Services {
                     if (!roles.Any(r => DiscountPart.Roles.Contains(r))) return false;
                 }
             }
+            else
+                return false;
+           
             return true;
         }
 
