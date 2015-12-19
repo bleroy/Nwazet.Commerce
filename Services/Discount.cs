@@ -67,14 +67,11 @@ namespace Nwazet.Commerce.Services {
             }
             if (DiscountPart.Roles.Any()) {
                 var user = _wca.GetContext().CurrentUser;
-                if (user.Has<IUserRoles>()) {
-                    var roles = user.As<IUserRoles>().Roles;
-                    if (!roles.Any(r => DiscountPart.Roles.Contains(r))) return false;
-                }
+                if (!user.Has<IUserRoles>()) return false;
+                var roles = user.As<IUserRoles>().Roles;
+                if (!roles.Any(r => DiscountPart.Roles.Contains(r))) return false;
             }
-            else
-                return false;
-           
+
             return true;
         }
 
