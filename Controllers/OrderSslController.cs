@@ -83,7 +83,6 @@ namespace Nwazet.Commerce.Controllers {
                 ChargeText: order.Charge.ChargeText,
                 SpecialInstructions: order.SpecialInstructions,
                 PurchaseOrder: order.PurchaseOrder,
-                BaseUrl: _wca.GetContext().CurrentSite.BaseUrl,
                 Password: order.Password);
             _shoppingCart.Clear();
             return new ShapeResult(this, shape);
