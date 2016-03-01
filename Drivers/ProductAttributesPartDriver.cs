@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
 using Nwazet.Commerce.ViewModels;
@@ -94,7 +93,7 @@ namespace Nwazet.Commerce.Drivers {
         }
 
         private class ProductAttributesEditViewModel {
-            public int[] AttributeIds { get; [UsedImplicitly] set; }
+            public int[] AttributeIds { get; set; }
         }
 
         protected override void Importing(ProductAttributesPart part, ImportContentContext context) {
