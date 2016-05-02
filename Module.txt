@@ -66,7 +66,7 @@ Features:
         Description: Define different price tiers for products based on quantity ordered
         Category: Commerce
         Dependencies: Nwazet.Commerce
-	Nwazet.AttributeExtensions:
+    Nwazet.AttributeExtensions:
         Name: Nwazet Attribute Extensions
         Description: Collect additional information when specific product attributes are selected
         Category: Commerce
