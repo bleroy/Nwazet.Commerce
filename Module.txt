@@ -3,14 +3,14 @@ AntiForgery: enabled
 Author: Bertrand Le Roy, Sipke Schoorstra
 Website: http://nwazet.com
 Version: 1.9
-OrchardVersion: 1.9
+OrchardVersion: 1.10
 Description: Commerce for small online businesses
 Features:
     Nwazet.Commerce:
         Name: Nwazet Commerce
         Description: Commerce for small online businesses
         Category: Commerce
-        Dependencies: Orchard.Autoroute, Orchard.Fields, Orchard.Tokens, Orchard.Workflows, Orchard.SecureSocketsLayer
+        Dependencies: Orchard.Autoroute, Orchard.Fields, Orchard.Tokens, Orchard.Workflows, Orchard.SecureSocketsLayer, Orchard.Resources
     Nwazet.Bundles:
         Name: Nwazet Bundles
         Description: Product bundles are products made of a set of products
