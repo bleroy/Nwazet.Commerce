@@ -33,7 +33,7 @@ namespace Nwazet.Commerce.Services {
 
         public IEnumerable<ProductAttributePart> GetAttributes(IEnumerable<int> ids) {
             var attributes = AttributesById;
-            return ids.Select(id => attributes[id]).ToList();
+            return ids.Where(id => attributes.ContainsKey(id)).Select(id => attributes[id]).ToList();
         }
     }
 }
