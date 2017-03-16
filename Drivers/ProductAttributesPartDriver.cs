@@ -41,7 +41,7 @@ namespace Nwazet.Commerce.Drivers {
                 : _attributeService.GetAttributes(attributesPart.AttributeIds);
             return shapeHelper.Parts_ProductAttributes(
                 ContentItem: product,
-                ProductAttributes: attributes.OrderBy(a => a.SortOrder)
+                ProductAttributes: attributes?.OrderBy(a => a.SortOrder)
                     .Select(a => new ProductAttributePartDisplayViewModel {
                         Part = a,
                         // Return all possible attribute extensions input shapes
