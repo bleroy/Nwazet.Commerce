@@ -5,7 +5,7 @@
 @{
     Script.Include("attribute-extensions.js").AtFoot();
     var attributeFieldName = Html.Name("productattributes");
-    var attributes = ((IEnumerable<ProductAttributePartDisplayViewModel>)Model.ProductAttributes).ToList();
+    var attributes = Model.ProductAttributes == null ? null : ((IEnumerable<ProductAttributePartDisplayViewModel>)Model.ProductAttributes).ToList();
 }
 @if (attributes != null && attributes.Any()) {
     foreach (ProductAttributePartDisplayViewModel attributeModel in attributes) {
@@ -16,8 +16,7 @@
         <select name="@(attributeFieldName + ".a" + attribute.Id)" id="@attribute.Id" class="product-attribute">
             @foreach (var val in attribute.AttributeValues) {
                 var priceAdjustment = val.PriceAdjustment != 0 ? "(" + (val.PriceAdjustment < 0 ? "-" : "+") + Math.Abs(val.PriceAdjustment).ToString("C") + ")" : "";
-                <option value="@val.Text" @(!string.IsNullOrEmpty(val.ExtensionProvider) 
-                    ? "data-has-extension=true data-extension-name=" + val.ExtensionProvider + attribute.Id : "")>
+                <option value="@val.Text" @(!string.IsNullOrEmpty(val.ExtensionProvider) ? "data-has-extension=true data-extension-name=" + val.ExtensionProvider + attribute.Id : "")>
                     @val.Text @priceAdjustment
                 </option>
             }
