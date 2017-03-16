@@ -9,7 +9,15 @@
     var readOnly = Model.ReadOnly != null && Model.ReadOnly == true;
 }
 <article class="shoppingcart">
-    <div id="shopping-cart-notification" class="message-Information hide"></div>
+    @if (items.Any(it => !string.IsNullOrEmpty(it.Messages))) {
+        string allMessages =string.Join(Environment.NewLine, items.Where(it => !string.IsNullOrEmpty(it.Messages)));
+        <div id="shopping-cart-notification" class="message-Information">
+            @allMessages
+        </div>
+    }
+    else {
+        <div id="shopping-cart-notification" class="message-Information hide"></div>
+    }
     @using (Html.BeginFormAntiForgeryPost(Url.Action("Update", "ShoppingCart", new { area = "Nwazet.Commerce" }))) {
         if (!items.Any()) {
             <p class="shopping-cart-container" data-got-cart="false">
@@ -53,6 +61,7 @@
                             var linePriceAdjustment = (double)item.LinePriceAdjustment;
                             var totalPrice = quantity * unitPrice + linePriceAdjustment;
                             var minimumOrderQuantity = item.MinimumOrderQuantity;
+                            var productInventory = (int)item.Inventory;
 
                             string originalUnitPrice = "";
                             if (unitPrice != unitPriceOriginal && unitPriceOriginal != 0.0) {
@@ -92,6 +101,11 @@
                                         }
                                         <input name="@(propertyNamePrefix + ".ProductId")" type="hidden" value="@product.Id" />
                                         <input name="@(propertyNamePrefix + ".Quantity")" type="number" class="quantity addtocart-quantity" value="@quantity" min="0" />
+                                        if (quantity > productInventory) {
+                                            <span class="issue">
+                                                @T("Only {0} in stock. {1}.", productInventory, (bool)item.AllowBackOrder ? T("Back order is allowed") : T("Back order is not allowed"))
+                                            </span>
+                                        }
                                     }
                                 </td>
                                 <td class="numeric amount">@totalPrice.ToString("c")</td>
