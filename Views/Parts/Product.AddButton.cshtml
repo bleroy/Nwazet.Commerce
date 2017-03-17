@@ -24,7 +24,7 @@
     
     <div class="addtocart-quantity-and-button">
         <input name="id" value="@productId" type="hidden"/>
-        <input name="quantity" value="@quantityValue" class="addtocart-quantity" type="number" min="@Model.MinimumOrderQuantity" />
+        <input name="quantity" value="@quantityValue" class="addtocart-quantity" type="number" min="0" />
         <button type="submit" class="addtocart-button">@T("Add to cart")</button>
         @if ((int)Model.MinimumOrderQuantity > 1) {
             <br /><strong>Minimum order of @Model.MinimumOrderQuantity required.</strong>
