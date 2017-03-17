@@ -6,7 +6,9 @@
     var root = HttpContext.Current.Request.ApplicationPath;
     var cartUrl = Url.Action("Index", "ShoppingCart", new { area = "NWazet.Commerce" });
     if (items.Any(it => !string.IsNullOrEmpty(it.Messages))) {
-        string allMessages = string.Join(Environment.NewLine, items.Where(it => !string.IsNullOrEmpty(it.Messages)).Select(it => it.Messages));
+        string allMessages = string.Join(Environment.NewLine, 
+            items.Where(it => !string.IsNullOrEmpty(it.Messages))
+                .Select(it => it.Messages));
         <div id="product-update-messages" class="message-Information">
             @allMessages
         </div>
@@ -61,8 +63,9 @@
                             <span class="numeric">
                                 <input name="@(propertyNamePrefix + ".Quantity")" type="number" class="quantity addtocart-quantity" value="@quantity" min="0" />
                                 @if (quantity > productInventory) {
+                                    string allowBackOrderMsg = (bool)item.AllowBackOrder ? T("Back order is allowed").Text : T("Back order is not allowed").Text;
                                     <span class="issue">
-                                        @T("Only {0} in stock. {1}.", productInventory, (bool)item.AllowBackOrder ? T("Back order is allowed"):T("Back order is not allowed") )
+                                        @T("Only {0} in stock. {1}.", productInventory, allowBackOrderMsg)
                                     </span>
                                 }
                             </span>
