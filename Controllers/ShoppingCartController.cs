@@ -93,29 +93,27 @@ namespace Nwazet.Commerce.Controllers {
                     });
 
             // Retrieve minimum order quantity
-            Dictionary<int, string> productMessages = new Dictionary<int, string>();
+            Dictionary<int, List<string>> productMessages = new Dictionary<int, List<string>>();
             var productPart = _contentManager.Get<ProductPart>(id);
             string productTitle = _contentManager.GetItemMetadata(productPart.ContentItem).DisplayText;
             if (productPart != null) {
                 if (quantity < productPart.MinimumOrderQuantity) {
                     quantity = productPart.MinimumOrderQuantity;
                     if (productMessages.ContainsKey(id)) {
-                        productMessages[id] = String.Format("{0}{1}{2}", productMessages[id], Environment.NewLine,
-                            T("Quantity increased to match minimum possible for {0}.", productTitle).Text);
+                        productMessages[id].Add(T("Quantity increased to match minimum possible for {0}.", productTitle).Text);
                     }
                     else {
-                        productMessages.Add(id, T("Quantity increased to match minimum possible for {0}.", productTitle).Text);
+                        productMessages.Add(id, new List<string>() { T("Quantity increased to match minimum possible for {0}.", productTitle).Text });
                     }
                 }
                 //only add to cart if there are at least as many available products as the requested quantity
                 if (quantity > productPart.Inventory && !productPart.AllowBackOrder) {
                     quantity = productPart.Inventory;
                     if (productMessages.ContainsKey(id)) {
-                        productMessages[id] = String.Format("{0}{1}{2}", productMessages[id], Environment.NewLine,
-                            T("Quantity decreased to match inventory for {0}.", productTitle).Text);
+                        productMessages[id].Add(T("Quantity decreased to match inventory for {0}.", productTitle).Text);
                     }
                     else {
-                        productMessages.Add(id, T("Quantity decreased to match inventory for {0}.", productTitle).Text);
+                        productMessages.Add(id, new List<string>() { T("Quantity decreased to match inventory for {0}.", productTitle).Text });
                     }
                 }
             }
@@ -139,7 +137,7 @@ namespace Nwazet.Commerce.Controllers {
 
         [Themed]
         [OutputCache(Duration = 0)]
-        public ActionResult Index(Dictionary<int, string> productMessages = null) {
+        public ActionResult Index(Dictionary<int, List<string>> productMessages = null) {
             _wca.GetContext().Layout.IsCartPage = true;
             try {
                 return new ShapeResult(
@@ -165,7 +163,7 @@ namespace Nwazet.Commerce.Controllers {
             string country = null,
             string zipCode = null,
             ShippingOption shippingOption = null,
-            Dictionary<int,string> productMessages = null) {
+            Dictionary<int, List<string>> productMessages = null) {
 
             var shape = _shapeFactory.ShoppingCart();
 
@@ -225,7 +223,8 @@ namespace Nwazet.Commerce.Controllers {
             }
             if (displayCheckoutButtons) {
                 //check whether back-order is allowed for products whose inventory is less than the requested quantity
-                displayCheckoutButtons = !productQuantities.Any(pq => pq.Quantity > pq.Product.Inventory && !pq.Product.AllowBackOrder);
+                displayCheckoutButtons = !productQuantities.Any(pq => 
+                    pq.Quantity > pq.Product.Inventory && !pq.Product.AllowBackOrder);
             }
             if (displayCheckoutButtons) {
                 var checkoutShapes = _checkoutServices.Select(
@@ -240,7 +239,7 @@ namespace Nwazet.Commerce.Controllers {
                 shape.CheckoutButtons = checkoutShapes;
             }
 
-            
+
 
             shape.Subtotal = subtotal;
             shape.Taxes = taxes;
@@ -253,7 +252,7 @@ namespace Nwazet.Commerce.Controllers {
 
         private IEnumerable<dynamic> GetProductShapesFromQuantities(
             IEnumerable<ShoppingCartQuantityProduct> productQuantities,
-            Dictionary<int, string> productMessages = null) {
+            Dictionary<int, List<string>> productMessages = null) {
             var productShapes = productQuantities.Select(
                 productQuantity => _shapeFactory.ShoppingCartItem(
                     Quantity: productQuantity.Quantity,
@@ -272,7 +271,11 @@ namespace Nwazet.Commerce.Controllers {
                     ShippingCost: productQuantity.Product.ShippingCost,
                     Weight: productQuantity.Product.Weight,
                     MinimumOrderQuantity: productQuantity.Product.MinimumOrderQuantity,
-                    Messages: productMessages == null ? (string)null : productMessages.ContainsKey(productQuantity.Product.Id) ? productMessages[productQuantity.Product.Id] : (string)null,
+                    Messages: productMessages == null ? 
+                        (string)null : 
+                        productMessages.ContainsKey(productQuantity.Product.Id) ? 
+                            string.Join(Environment.NewLine, productMessages[productQuantity.Product.Id]) : 
+                            (string)null,
                     Inventory: productQuantity.Product.Inventory,
                     AllowBackOrder: productQuantity.Product.AllowBackOrder
                     )).ToList();
