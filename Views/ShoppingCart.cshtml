@@ -176,8 +176,7 @@
         }
     }
     @if (items.Any() && Model.CheckoutButtons != null && (
-                    Model.ShippingOption != null || (
-                        Model.ShopItemsAllDigital && !String.IsNullOrWhiteSpace(Model.Country) && !String.IsNullOrWhiteSpace(Model.ZipCode)))) {
+                    Model.ShippingOption != null || Model.ShopItemsAllDigital)) { // && !String.IsNullOrWhiteSpace(Model.Country) && !String.IsNullOrWhiteSpace(Model.ZipCode)))) {
         <ul class="checkout">
             @foreach (var checkoutButton in Model.CheckoutButtons) {
                 <li>
