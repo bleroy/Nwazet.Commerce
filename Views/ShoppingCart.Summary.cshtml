@@ -1,13 +1,24 @@
 ﻿@using Nwazet.Commerce.Models
 @using Orchard.ContentManagement
 @{
-    var items = (IList<dynamic>) Model.ShopItems;
-    var subtotal = (decimal) Model.Subtotal;
+    var items = (IList<dynamic>)Model.ShopItems;
+    var subtotal = (decimal)Model.Subtotal;
     var root = HttpContext.Current.Request.ApplicationPath;
-    var cartUrl = Url.Action("Index", "ShoppingCart", new {area = "NWazet.Commerce"});
+    var cartUrl = Url.Action("Index", "ShoppingCart", new { area = "NWazet.Commerce" });
+    if (items.Any(it => !string.IsNullOrEmpty(it.Messages))) {
+        string allMessages = string.Join(Environment.NewLine, 
+            items.Where(it => !string.IsNullOrEmpty(it.Messages))
+                .Select(it => it.Messages));
+        <div id="product-update-messages" class="message-Information">
+            @allMessages
+        </div>
+    }
+    else {
+        <div id="shopping-cart-notification" class="message-Information hide"></div>
+    }
     if (items.Any()) {
-        using (Html.BeginFormAntiForgeryPost(Url.Action("AjaxUpdate", "ShoppingCart", new {area = "Nwazet.Commerce"}), FormMethod.Post,
-            new Dictionary<string, object> {{"enctype", "multipart/form-data"}})) {
+        using (Html.BeginFormAntiForgeryPost(Url.Action("AjaxUpdate", "ShoppingCart", new { area = "Nwazet.Commerce" }), FormMethod.Post,
+            new Dictionary<string, object> { { "enctype", "multipart/form-data" } })) {
             @Html.Hidden("Country", (string) Model.Country)
             @Html.Hidden("ZipCode", (string) Model.ZipCode)
             <h1><a href="@cartUrl">@T("Your Cart")</a></h1>
@@ -26,6 +37,7 @@
                     var unitPrice = (double) item.DiscountedPrice;
                     var totalPrice = quantity*unitPrice;
                     var minimumOrderQuantity = item.MinimumOrderQuantity;
+                    var productInventory = (int)item.Inventory;
                     <li>
                         @if (imageUrl != null) {
                             <a href="@Url.ItemDisplayUrl(contentItem)" class="product-image-link"><img src="@Href(imageUrl)" alt="@title" class="product-image"/></a>
@@ -50,6 +62,12 @@
                             <input name="@(propertyNamePrefix + ".ProductId")" type="hidden" value="@product.Id" />
                             <span class="numeric">
                                 <input name="@(propertyNamePrefix + ".Quantity")" type="number" class="quantity addtocart-quantity" value="@quantity" min="0" />
+                                @if (quantity > productInventory) {
+                                    string allowBackOrderMsg = (bool)item.AllowBackOrder ? T("Back order is allowed").Text : T("Back order is not allowed").Text;
+                                    <span class="issue">
+                                        @T("Only {0} in stock. {1}.", productInventory, allowBackOrderMsg)
+                                    </span>
+                                }
                             </span>
                             <span class="numeric">@totalPrice.ToString("c")</span>
                             @if (minimumOrderQuantity > 1) {
@@ -64,10 +82,12 @@
                 <span class="numeric label">@T("Subtotal:")</span>
                 <span class="numeric subtotal">@subtotal.ToString("c")</span>
             </div>
-            <span class="explanation">@T("Tax and shipping will be calculated at checkout.")</span>
-            <div class="checkout">
-                <a class="button" href="@cartUrl">Checkout</a>
-            </div>
+            if (Model.CheckoutButtons != null) {
+                <span class="explanation">@T("Tax and shipping will be calculated at checkout.")</span>
+                <div class="checkout">
+                    <a class="button" href="@cartUrl">Checkout</a>
+                </div>
+            }
         }
     }
 }

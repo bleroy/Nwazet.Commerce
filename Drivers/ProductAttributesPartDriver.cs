@@ -58,7 +58,11 @@ namespace Nwazet.Commerce.Drivers {
             // If the part isn't there, there must be no attributes
             if (attributesPart == null) return attributeIdsToValues == null || !attributeIdsToValues.Any();
             // If the part is there, it must have as many attributes as were passed in
-            if (attributesPart.AttributeIds.Count() != attributeIdsToValues.Count) return false;
+            if (attributesPart.AttributeIds.Count() != attributeIdsToValues.Count) {
+                //Attributes may have been deleted
+                attributesPart.AttributeIds = _attributeService.GetAttributes(attributeIdsToValues.Keys).Select(pap => pap.Id);
+                if (attributesPart.AttributeIds.Count() != attributeIdsToValues.Count) return false;
+            }
             // The same attributes must be present
             if (!attributesPart.AttributeIds.All(attributeIdsToValues.ContainsKey)) return false;
             // Get the actual attributes in order to verify the values
@@ -87,7 +91,7 @@ namespace Nwazet.Commerce.Drivers {
         protected override DriverResult Editor(ProductAttributesPart part, IUpdateModel updater, dynamic shapeHelper) {
             var editViewModel = new ProductAttributesEditViewModel();
             if (updater.TryUpdateModel(editViewModel, Prefix, null, null)) {
-                part.AttributeIds = editViewModel.AttributeIds;
+                part.AttributeIds = _attributeService.GetAttributes(editViewModel.AttributeIds).Select(pap => pap.Id);
             }
             return Editor(part, shapeHelper);
         }
