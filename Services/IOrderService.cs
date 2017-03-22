@@ -8,8 +8,8 @@ namespace Nwazet.Commerce.Services {
         OrderPart CreateOrder(
             ICharge charge,
             IEnumerable<CheckoutItem> items,
-            double subTotal,
-            double total,
+            decimal subTotal,
+            decimal total,
             TaxAmount taxes,
             ShippingOption shippingOption,
             Address shippingAddress,
@@ -21,7 +21,7 @@ namespace Nwazet.Commerce.Services {
             string trackingUrl = null,            
             bool isTestOrder = false,
             int userId = -1,
-            double amountPaid = 0,
+            decimal amountPaid = 0,
             string purchaseOrder = "");
 
         OrderPart Get(int orderId);

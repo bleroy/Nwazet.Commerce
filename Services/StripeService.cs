@@ -68,7 +68,7 @@ namespace Nwazet.Commerce.Services {
             var shippingOption = shipping[0];
             var productShapeList = productShapes.ToList();
 
-            var data = new Tuple<CheckoutItem[], double, string, string, TaxAmount, string, string>(
+            var data = new Tuple<CheckoutItem[], decimal, string, string, TaxAmount, string, string>(
                 productShapeList.Select(p => new CheckoutItem {
                     ProductId = p.Product.Id,
                     Quantity = p.Quantity,
@@ -112,9 +112,9 @@ namespace Nwazet.Commerce.Services {
             var decryptedData = MachineKey.Unprotect(binaryEncryptedData, CryptoPurpose);
             if (decryptedData == null) return null;
             var formatter = new BinaryFormatter();
-            Tuple<CheckoutItem[], double, string, string, TaxAmount, string, string> data;
+            Tuple<CheckoutItem[], decimal, string, string, TaxAmount, string, string> data;
             using (var stream = new MemoryStream(decryptedData)) {
-                data = (Tuple<CheckoutItem[], double, string, string, TaxAmount, string, string>)
+                data = (Tuple<CheckoutItem[], decimal, string, string, TaxAmount, string, string>)
                     formatter.Deserialize(stream);
             }
             var cartItems = data.Item1;
@@ -142,7 +142,7 @@ namespace Nwazet.Commerce.Services {
             return stripeData;
         }
 
-        public CreditCardCharge Charge(string token, double amount) {
+        public CreditCardCharge Charge(string token, decimal amount) {
             var settings = GetSettings();
             JObject chargeResult;
             try {

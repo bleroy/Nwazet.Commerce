@@ -11,5 +11,15 @@ namespace Nwazet.Commerce.Models {
             };
             return r;
         }
+
+        public static decimal? ToDecimal(this String ds) {
+            decimal o;
+            decimal? r = null;
+
+            if (decimal.TryParse(ds, out o)) {
+                r = o;
+            }
+            return r;
+        }
     }
 }

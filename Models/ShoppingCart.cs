@@ -144,11 +144,11 @@ namespace Nwazet.Commerce.Models {
             _products = null;
         }
 
-        public double Subtotal() {
+        public decimal Subtotal() {
             return Math.Round(GetProducts().Sum(pq => Math.Round(pq.Price * pq.Quantity + pq.LinePriceAdjustment, 2)), 2);
         }
 
-        public TaxAmount Taxes(double subTotal = 0) {
+        public TaxAmount Taxes(decimal subTotal = 0) {
             if (Country == null && ZipCode == null) return null;
             var taxes = _taxProviders
                 .SelectMany(p => p.GetTaxes())
@@ -166,7 +166,7 @@ namespace Nwazet.Commerce.Models {
                 ).FirstOrDefault() ?? new TaxAmount {Amount = 0, Name = null};
         }
 
-        public double Total(double subTotal = 0, TaxAmount taxes = null) {
+        public decimal Total(decimal subTotal = 0, TaxAmount taxes = null) {
             if (taxes == null) {
                 taxes = Taxes();
             }

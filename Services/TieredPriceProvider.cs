@@ -22,7 +22,7 @@ namespace Nwazet.Commerce.Services {
                 .Where(t => t.Quantity <= quantityProduct.Quantity)
                 .OrderByDescending(t => t.Quantity).Take(1).SingleOrDefault() : null;
             if (priceTier != null) {
-                quantityProduct.Price = (double)priceTier.Price;
+                quantityProduct.Price = (decimal)priceTier.Price;
             }
             return quantityProduct;
         }
@@ -47,7 +47,7 @@ namespace Nwazet.Commerce.Services {
                 
                 if (tier.Price == null && tier.PricePercent != null) {
                     // Calculate absolute price from percentage value
-                    adjustedPrice = product.Price * (double)tier.PricePercent / 100;
+                    adjustedPrice = product.Price * (decimal)tier.PricePercent / 100;
                 }
 
                 adjustedPriceTiers.Add(new PriceTier {

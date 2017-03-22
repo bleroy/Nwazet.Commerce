@@ -7,7 +7,7 @@ namespace Nwazet.Commerce.ViewModels {
         public ProductPart Product { get; set; }
         public bool AllowProductOverrides { get; set; }
         public ICollection<PriceTierViewModel> PriceTiers { get; set; }
-        public double? DiscountPrice { get; set; }
+        public decimal? DiscountPrice { get; set; }
     }
 
     public class PriceTierViewModel {

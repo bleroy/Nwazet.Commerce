@@ -7,7 +7,7 @@ using Orchard.ContentManagement;
 
 namespace Nwazet.Commerce.Services {
     public class PriceService : IPriceService {
-        private const double Epsilon = 0.001;
+        private const decimal Epsilon = 0.001M;
         private readonly IEnumerable<IPriceProvider> _priceProviders;
         private readonly ITieredPriceProvider _tieredPriceProvider;
         private readonly IProductAttributeService _attributeService;

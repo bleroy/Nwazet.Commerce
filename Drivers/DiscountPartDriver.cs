@@ -73,16 +73,16 @@ namespace Nwazet.Commerce.Drivers {
             if (updater.TryUpdateModel(model, Prefix, null, null)) {
                 part.Name = model.Name;
                 string discountString = model.Discount;
-                double percent;
-                double discount;
+                decimal percent;
+                decimal discount;
                 if (!String.IsNullOrEmpty(discountString)) {
                     if (discountString.Trim().EndsWith("%")) {
-                        if (double.TryParse(discountString.Substring(0, discountString.Length - 1), out percent)) {
+                        if (decimal.TryParse(discountString.Substring(0, discountString.Length - 1), out percent)) {
                             part.DiscountPercent = percent;
                         }
                     }
                     else {
-                        if (double.TryParse(discountString, out discount)) {
+                        if (decimal.TryParse(discountString, out discount)) {
                             part.Discount = discount;
                         }
                     }

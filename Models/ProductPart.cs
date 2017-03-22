@@ -13,12 +13,12 @@ namespace Nwazet.Commerce.Models {
         }
 
         [Required]
-        public double Price {
+        public decimal Price {
             get { return Retrieve(r => r.Price); }
             set { Store(r => r.Price, value); }
         }
 
-        public double DiscountPrice {
+        public decimal DiscountPrice {
             get {return Retrieve(r => r.DiscountPrice, -1);}
             set { Store(r => r.DiscountPrice, value); }
         }
@@ -28,7 +28,7 @@ namespace Nwazet.Commerce.Models {
             set { Store(r => r.IsDigital, value); }
         }
 
-        public double? ShippingCost {
+        public decimal? ShippingCost {
             get { return Retrieve(r => r.ShippingCost); }
             set { Store(r => r.ShippingCost, value); }
         }

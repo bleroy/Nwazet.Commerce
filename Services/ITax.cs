@@ -7,10 +7,10 @@ namespace Nwazet.Commerce.Services {
         string Name { get; }
         int Priority { get; set; }
 
-        double ComputeTax(
+        decimal ComputeTax(
             IEnumerable<ShoppingCartQuantityProduct> productQuantities,
-            double subtotal,
-            double shippingCost,
+            decimal subtotal,
+            decimal shippingCost,
             string country,
             string zipCode);
     }

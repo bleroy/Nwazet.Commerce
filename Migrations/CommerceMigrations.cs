@@ -1,14 +1,18 @@
 ﻿using System.Data;
+using Nwazet.Commerce.Models;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
+using Orchard.Data;
 using Orchard.Data.Migration;
 using Orchard.Environment.Extensions;
 using Orchard.Indexing;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Nwazet.Commerce.Migrations {
     [OrchardFeature("Nwazet.Commerce")]
     public class CommerceMigrations : DataMigrationImpl {
-
+        
         public int Create() {
             SchemaBuilder.CreateTable("ProductPartRecord", table => table
                 .ContentPartRecord()
@@ -115,6 +119,21 @@ namespace Nwazet.Commerce.Migrations {
                 .CreateIndex("IDX_ProductPart_Sku", "Sku")
             );
             return 10;
+        }
+
+        public int UpdateFrom10() {
+            //Price, ShippingCost and DiscountPrice are now decimal rather than double
+            SchemaBuilder.AlterTable("ProductPartRecord", table =>
+                table.AlterColumn("Price", column =>
+                    column.WithType(DbType.Decimal)
+                )
+            );
+            SchemaBuilder.AlterTable("ProductPartRecord", table =>
+                table.AlterColumn("ShippingCost", column =>
+                    column.WithType(DbType.Decimal)
+                )
+            );
+            return 11;
         }
     }
 }

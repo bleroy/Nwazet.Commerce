@@ -5,16 +5,16 @@ using System.Collections.Generic;
 namespace Nwazet.Commerce.Models {
     public class PriceTier {
         public int Quantity { get; set; }
-        public double? Price { get; set; }
-        public double? PricePercent { get; set; }
+        public decimal? Price { get; set; }
+        public decimal? PricePercent { get; set; }
 
         public static IEnumerable<PriceTier> DeserializePriceTiers(string priceTiers) {
             if (priceTiers != null) {
                 return priceTiers.Split(new[] { ';', ' ' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(t => t.Split('=')).Select(st => new PriceTier {
                         Quantity = Convert.ToInt32(st[0]),
-                        Price = (!st[1].EndsWith("%") ? st[1].ToDouble() : null),
-                        PricePercent = (st[1].EndsWith("%") ? st[1].Substring(0, st[1].Length - 1).ToDouble() : null)
+                        Price = (!st[1].EndsWith("%") ? st[1].ToDecimal() : null),
+                        PricePercent = (st[1].EndsWith("%") ? st[1].Substring(0, st[1].Length - 1).ToDecimal() : null)
                     })
                     .OrderBy(t => t.Quantity)
                     .ToList();

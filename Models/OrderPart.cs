@@ -59,8 +59,8 @@ namespace Nwazet.Commerce.Models {
         public void Build(
             ICharge charge,
             IEnumerable<CheckoutItem> items,
-            double subTotal,
-            double total,
+            decimal subTotal,
+            decimal total,
             TaxAmount taxes,
             ShippingOption shippingOption,
             Address shippingAddress,
@@ -68,13 +68,13 @@ namespace Nwazet.Commerce.Models {
             string customerEmail,
             string customerPhone,
             string specialInstructions, 
-            double amountPaid = default(double),
+            decimal amountPaid = default(decimal),
             string purchaseOrder = "") {
 
             _contentDocument = new XElement(ContentName)
                 .Attr(SubtotalName, subTotal)
                 .Attr(TotalName, total)
-                .Attr(AmountName, amountPaid == default(double) ? total : amountPaid)
+                .Attr(AmountName, amountPaid == default(decimal) ? total : amountPaid)
                 .Attr(PurchaseOrderName, purchaseOrder)
                 .AddEl(new XElement(ChargeName).With(charge)
                     .ToAttr(c => c.TransactionId)
@@ -179,23 +179,23 @@ namespace Nwazet.Commerce.Models {
             }
         }
 
-        public double SubTotal {
+        public decimal SubTotal {
             get {
-                return (double) ContentDocument.Attribute(SubtotalName);
+                return (decimal) ContentDocument.Attribute(SubtotalName);
             }
         }
 
-        public double Total {
+        public decimal Total {
             get {
-                return (double) ContentDocument.Attribute(TotalName);
+                return (decimal) ContentDocument.Attribute(TotalName);
             }
         }
 
-        public double AmountPaid {
+        public decimal AmountPaid {
             get {
                 var attr = ContentDocument.Attribute(AmountName);
                 if (attr == null) return Total;
-                return (double) attr;
+                return (decimal) attr;
             }
             set {
                 ContentDocument.SetAttributeValue(AmountName, value);

@@ -8,7 +8,7 @@ namespace Nwazet.Commerce.Models {
 
         public virtual string Name { get; set; }
         public virtual string ShippingCompany { get; set; }
-        public virtual double Price { get; set; }
+        public virtual decimal Price { get; set; }
         public virtual string Size { get; set; }
         public virtual int Priority { get; set; }
         public virtual string IncludedShippingAreas { get; set; }
