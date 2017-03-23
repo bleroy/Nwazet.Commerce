@@ -8,11 +8,15 @@ using Orchard.Localization;
 using Orchard.UI.Navigation;
 
 namespace Nwazet.Commerce.Menus {
-    class ECommerceSettingsAdminMenu : INavigationProvider {
+    public class ECommerceSettingsAdminMenu : INavigationProvider {
 
         public string MenuName
         {
             get { return "admin"; }
+        }
+
+        public ECommerceSettingsAdminMenu() {
+            T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }

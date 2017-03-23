@@ -182,7 +182,7 @@ namespace Nwazet.Commerce.Services {
             "ZWD Zimbabwe Dollar"
         };
         #endregion
-        public static Lazy<Dictionary<string, string>> CurrencyCodes =
+        private static Lazy<Dictionary<string, string>> _currencyCodes =
             new Lazy<Dictionary<string, string>>(delegate {
                 Dictionary<string, string> currencyCodes = new Dictionary<string, string>();
                 //the array above has code/description pairs, each in a string, like so:
@@ -197,6 +197,9 @@ namespace Nwazet.Commerce.Services {
                 }
                 return currencyCodes;
             });
+
+
+        public static Dictionary<string, string> CurrencyCodes { get { return _currencyCodes.Value; } }
 
         /// <summary>
         /// Given a currency code, returns a string representing the currency.

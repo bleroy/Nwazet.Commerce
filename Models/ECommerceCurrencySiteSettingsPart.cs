@@ -7,11 +7,14 @@ using System.Threading.Tasks;
 using Orchard.ContentManagement;
 
 namespace Nwazet.Commerce.Models {
-    class ECommerceCurrencySiteSettingsPart : ContentPart {
+    public class ECommerceCurrencySiteSettingsPart : ContentPart {
         [Required,MaxLength(3)]
         public string CurrencyCode
         {
-            get { return this.Retrieve(p => p.CurrencyCode); }
+            get {
+                string cc = this.Retrieve(p => p.CurrencyCode);
+                return string.IsNullOrWhiteSpace(cc) ? "USD" : cc; //default is USD
+            }
             set { this.Store(p => p.CurrencyCode, value); }
         }
     }
