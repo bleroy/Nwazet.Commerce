@@ -202,6 +202,7 @@
     <Compile Include="Drivers\ECommerceCurrencySiteSettingsPartDriver.cs" />
     <Compile Include="Drivers\OrderPartDriver.cs" />
     <Compile Include="Drivers\ProductSettingsPartDriver.cs" />
+    <Compile Include="Drivers\SelectedCurrencyProviderSiteSettingsPartDriver.cs" />
     <Compile Include="Drivers\ZipCodeTaxPartDriver.cs" />
     <Compile Include="Drivers\StateOrCountryTaxPartDriver.cs" />
     <Compile Include="Drivers\UspsShippingMethodPartDriver.cs" />
@@ -222,6 +223,7 @@
     <Compile Include="Handlers\ECommerceCurrencySiteSettingsPartHandler.cs" />
     <Compile Include="Handlers\OrderPartHandler.cs" />
     <Compile Include="Handlers\ProductSettingsPartHandler.cs" />
+    <Compile Include="Handlers\SelectedCurrencyProviderSiteSettingsHandler.cs" />
     <Compile Include="Handlers\StateOrCountryTaxPartHandler.cs" />
     <Compile Include="Handlers\UspsShippingMethodPartHandler.cs" />
     <Compile Include="Handlers\UspsSettingsPartHandler.cs" />
@@ -266,6 +268,7 @@
     <Compile Include="Models\Reporting\ReportData.cs" />
     <Compile Include="Models\Reporting\ReportDataPoint.cs" />
     <Compile Include="Models\Reporting\TimePeriod.cs" />
+    <Compile Include="Models\SelectedCurrencyProviderSiteSettingsPart.cs" />
     <Compile Include="Models\ZipCodeTaxPart.cs" />
     <Compile Include="Models\StateOrCountryTaxPart.cs" />
     <Compile Include="Models\StateOrCountryTaxPartRecord.cs" />
@@ -317,6 +320,7 @@
     <Compile Include="Routes\OrderRoutes.cs" />
     <Compile Include="Routes\CommerceRoutes.cs" />
     <Compile Include="Services\Currency.cs" />
+    <Compile Include="Services\ISelectedCurrencyProvider.cs" />
     <Compile Include="Services\ProductResolverSelector.cs" />
     <Compile Include="Services\AddressFormatter.cs" />
     <Compile Include="Services\BundleService.cs" />
@@ -378,6 +382,7 @@
     <Compile Include="ViewModels\PricingSettingsViewModel.cs" />
     <Compile Include="ViewModels\ProductEditorViewModel.cs" />
     <Compile Include="ViewModels\ReportDataViewModel.cs" />
+    <Compile Include="ViewModels\SelectedCurrencyProviderSiteSettingsViewModel.cs" />
     <Compile Include="ViewModels\TaxIndexViewModel.cs" />
     <Compile Include="ViewModels\DiscountEditorViewModel.cs" />
     <Compile Include="ViewModels\ProductAttributesPartEditViewModel.cs" />
@@ -489,6 +494,7 @@
     <None Include="packages.config" />
     <None Include="Views\ECommerceSettingsAdmin\Index.cshtml" />
     <None Include="Views\EditorTemplates\SiteSettings\Currency.cshtml" />
+    <None Include="Views\EditorTemplates\SiteSettings\SelectedCurrencyProvidersList.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

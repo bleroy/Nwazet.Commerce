@@ -1,0 +1,15 @@
+﻿@using Nwazet.Commerce.Services
+@model Nwazet.Commerce.ViewModels.SelectedCurrencyProviderSiteSettingsViewModel
+
+<fieldset>
+    <legend>@T("Available currency providers.")</legend>
+    @{ 
+        int i = 0;
+    }
+    @foreach (ISelectedCurrencyProvider provider in Model.Providers) {
+        @Html.RadioButtonFor(m => m.Providers[i].Active, provider.Active, new { id = @Html.Id(@provider.Name) });
+        <label for="rbCRSafe" class="forcheckbox" style="font-weight: normal;">@provider.Description</label>
+        i++;
+    }
+    <div class="hint">@T("Select the provider that will be used to determine the currency to use for prices across the store.")</div>
+</fieldset>

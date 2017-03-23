@@ -21,9 +21,10 @@ namespace Nwazet.Commerce.Drivers {
         protected override DriverResult Editor(ECommerceCurrencySiteSettingsPart part, dynamic shapeHelper) {
             return ContentShape("SiteSettings_Currency",
                 () => shapeHelper.EditorTemplate(
-                        TemplateName: "SiteSettings/Currency",
-                        Model: new ECommerceCurrencySiteSettingsViewModel() { CurrencyCode = part.CurrencyCode },
-                        Prefix: Prefix)).OnGroup("ECommerceSiteSettings");
+                    TemplateName: "SiteSettings/Currency",
+                    Model: new ECommerceCurrencySiteSettingsViewModel() { CurrencyCode = part.CurrencyCode },
+                    Prefix: Prefix))
+                .OnGroup("ECommerceSiteSettings");
         }
 
         protected override DriverResult Editor(ECommerceCurrencySiteSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
