@@ -15,7 +15,7 @@ namespace Nwazet.Commerce.Services {
         /// Describe the provider. Use localized strings, because this will be used in UI.
         /// </summary>
         string Description { get; }
-        string CurrencyCode { get; set; }
+        string CurrencyCode { get; }
         /// <summary>
         /// 3-character code representing the selected currency
         /// </summary>
