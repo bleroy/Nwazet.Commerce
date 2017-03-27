@@ -33,8 +33,36 @@ namespace Nwazet.Commerce.Services {
         /// <example>If the provider is set to US dollars, the method will return "$"</example>
         string GetCurrencySymbol();
         /// <summary>
-        /// Tells whether the provider is active and should be used.
+        /// Gets a string represenation of the price that includes the selected currency.
         /// </summary>
-        bool Active { get; set; }
+        /// <param name="price">The number representing the amount.</param>
+        /// <returns>A string representing the price.</returns>
+        /// <example>With an inpu of price=42.5, the the selected currency being USD, the method returns
+        /// the string "42.5 $".</example>
+        string GetPriceString(double price);
+        /// <summary>
+        /// Gets a string represenation of the price that includes the selected currency.
+        /// </summary>
+        /// <param name="price">The number representing the amount.</param>
+        /// <returns>A string representing the price.</returns>
+        /// <example>With an inpu of price=42.5, the the selected currency being USD, the method returns
+        /// the string "42.5 $".</example>
+        string GetPriceString(decimal price);
+        /// <summary>
+        /// Gets a string represenation of the price that includes the selected currency.
+        /// </summary>
+        /// <param name="price">The number representing the amount.</param>
+        /// <returns>A string representing the price.</returns>
+        /// <example>With an inpu of price=42.5, the the selected currency being USD, the method returns
+        /// the string "42.5 $".</example>
+        string GetPriceString(double? price);
+        /// <summary>
+        /// Gets a string represenation of the price that includes the selected currency.
+        /// </summary>
+        /// <param name="price">The number representing the amount.</param>
+        /// <returns>A string representing the price.</returns>
+        /// <example>With an inpu of price=42.5, the the selected currency being USD, the method returns
+        /// the string "42.5 $".</example>
+        string GetPriceString(decimal? price);
     }
 }

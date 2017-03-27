@@ -1,10 +1,11 @@
-﻿@if (Model.DiscountedPrice != Model.Price)
-{
-    <b class="inactive-price" style="text-decoration:line-through" title="@T("Was {0:c}", Model.Price)">@Model.Price.ToString("c")</b>
-    <b class="discounted-price" title="@T("Now {0:c}", Model.DiscountedPrice)">@Model.DiscountedPrice.ToString("c")</b>
+﻿@if (Model.DiscountedPrice != Model.Price) {
+    string price = Model.CurrencyProvider.GetPriceString(Model.Price);
+    string dPrice = Model.CurrencyProvider.GetPriceString(Model.DiscountedPrice);
+    <b class="inactive-price" style="text-decoration:line-through" title="@T("Was {0}", price)">@price</b>
+    <b class="discounted-price" title="@T("Now {0}", dPrice)">@dPrice</b>
     <span class="discount-comment">@Model.DiscountComment</span>
 }
-else
-{
-    <b>@Model.Price.ToString("c")</b>
+else {
+    string price = Model.CurrencyProvider.GetPriceString(Model.Price);
+    <b>@price</b>
 }

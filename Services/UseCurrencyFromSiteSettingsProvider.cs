@@ -20,7 +20,6 @@ namespace Nwazet.Commerce.Services {
             T = NullLocalizer.Instance;
         }
         public string Name { get { return "UseCurrencyFromSiteSettingsProvider"; } }
-        public bool Active { get; set; }
         public string Description {
             get
             {
@@ -40,6 +39,25 @@ namespace Nwazet.Commerce.Services {
 
         public string GetCurrencySymbol() {
             return Currency.GetCurrencySymbol(CurrencyCode);
+        }
+
+        public string GetPriceString(double price) {
+            return price.ToString() + " " + GetCurrencySymbol();
+        }
+        public string GetPriceString(decimal price) {
+            return price.ToString() + " " + GetCurrencySymbol();
+        }
+        public string GetPriceString(double? price) {
+            if (price.HasValue) {
+                return GetPriceString(price.Value);
+            }
+            return string.Empty;
+        }
+        public string GetPriceString(decimal? price) {
+            if (price.HasValue) {
+                return GetPriceString(price.Value);
+            }
+            return string.Empty;
         }
     }
 }
