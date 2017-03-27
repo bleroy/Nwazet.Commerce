@@ -65,7 +65,7 @@
 
                             string originalUnitPrice = "";
                             if (unitPrice != unitPriceOriginal && unitPriceOriginal != 0.0) {
-                                originalUnitPrice = String.Format("<strike>{0}</strike>", item.OriginalPrice.ToString("c"));
+                                originalUnitPrice = String.Format("<strike>{0}</strike>", Model.CurrencyProvider.GetPriceString(item.OriginalPrice));
                             }
 
                             <tr>
@@ -80,7 +80,7 @@
                                     <td colspan="2"><a href="@Url.ItemDisplayUrl(contentItem)">@title</a></td>
                                 }
                                 <td class="numeric">@Html.Raw(originalUnitPrice)</td>
-                                <td class="numeric">@unitPrice.ToString("c")</td>
+                                <td class="numeric">@Model.CurrencyProvider.GetPriceString(unitPrice)</td>
                                 <td class="numeric">
                                     @if (readOnly) {
                                         <span class="quantity">@quantity</span>
@@ -109,7 +109,7 @@
                                         }
                                     }
                                 </td>
-                                <td class="numeric amount">@totalPrice.ToString("c")</td>
+                                <td class="numeric amount">@Model.CurrencyProvider.GetPriceString(totalPrice)</td>
                                 @if (!readOnly) {
                                     <td class="action"><a class="delete" href="#">@T("Remove")</a></td>
                                 }
@@ -121,7 +121,7 @@
                     <tfoot>
                         <tr class="total">
                             <td class="numeric label" colspan="5">@T("Subtotal:")</td>
-                            <td class="numeric amount">@subtotal.ToString("c")</td>
+                            <td class="numeric amount">@Model.CurrencyProvider.GetPriceString(subtotal)</td>
                             @if (!readOnly) {
                                 <td class="action"><button name="command" value="Update" type="submit" class="update-button">@T("Update All")</button></td>
                             }
@@ -129,18 +129,18 @@
                         @if (Model.Taxes != null && Model.Taxes.Name != null) {
                             <tr class="total">
                                 <td class="numeric label" colspan="5">@T("Taxes {0}", Model.Taxes.Name):</td>
-                                <td class="numeric amount">@Model.Taxes.Amount.ToString("c")</td>
+                                <td class="numeric amount">@Model.CurrencyProvider.GetPriceString(Model.Taxes.Amount)</td>
                             </tr>
                         }
                         @if (!Model.ShopItemsAllDigital && Model.ShippingOption != null) {
                             var shippingOption = (ShippingOption)Model.ShippingOption;
                             <tr class="total">
                                 <td class="numeric label" colspan="5">@T("{1} {0}", Html.Raw(shippingOption.Description), shippingOption.ShippingCompany):</td>
-                                <td class="numeric amount">@shippingOption.Price.ToString("c")</td>
+                                <td class="numeric amount">@Model.CurrencyProvider.GetPriceString(shippingOption.Price)</td>
                             </tr>
                             <tr class="total final">
                                 <td class="numeric label" colspan="5">@T("Total:")</td>
-                                <td class="numeric amount">@((Model.Total).ToString("c"))</td>
+                                <td class="numeric amount">@Model.CurrencyProvider.GetPriceString(Model.Total)</td>
                             </tr>
                         }
                     </tfoot>
@@ -150,7 +150,7 @@
                     @Display.ShippingInfoForm()
                 }
                 else if (Model.ShippingOptions != null) {
-                    @Display.ShippingOptions(ShippingOptions: Model.ShippingOptions, Country: Model.Country, ZipCode: Model.ZipCode)
+                    @Display.ShippingOptions(ShippingOptions: Model.ShippingOptions, Country: Model.Country, ZipCode: Model.ZipCode, CurrencyProvider: Model.CurrencyProvider)
                 }
                 @if (Model.ShippingOption != null) {
                     <p>

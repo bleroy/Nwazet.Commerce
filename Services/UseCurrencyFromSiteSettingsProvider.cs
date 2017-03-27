@@ -40,12 +40,15 @@ namespace Nwazet.Commerce.Services {
         public string GetCurrencySymbol() {
             return Currency.GetCurrencySymbol(CurrencyCode);
         }
+        public string GetCurrencyFormat() {
+            return Currency.GetCurrencyFormat(CurrencyCode);
+        }
 
         public string GetPriceString(double price) {
-            return price.ToString() + " " + GetCurrencySymbol();
+            return price.ToString(GetCurrencyFormat()) + " " + GetCurrencySymbol();
         }
         public string GetPriceString(decimal price) {
-            return price.ToString() + " " + GetCurrencySymbol();
+            return price.ToString(GetCurrencyFormat()) + " " + GetCurrencySymbol();
         }
         public string GetPriceString(double? price) {
             if (price.HasValue) {

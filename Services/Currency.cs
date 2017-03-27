@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -219,6 +220,18 @@ namespace Nwazet.Commerce.Services {
             else {
                 return code;
             }
+        }
+
+        /// <summary>
+        /// Given a currency code, returns a string representing the format to be used to write currency amounts.
+        /// </summary>
+        /// <param name="code">The currency code</param>
+        /// <returns>A string representing the currency format</returns>
+        /// <example>Given "EUR", this will return "€".</example>
+        public static string GetCurrencyFormat(string code) {
+            //http://www.thefinancials.com/?SubSectionID=curformat has a table including formats
+            //TODO: implement symbols from that table
+            return "0.00";
         }
     }
 }

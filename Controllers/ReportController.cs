@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Models.Reporting;
 using Nwazet.Commerce.Permissions;
+using Nwazet.Commerce.Services;
 using Nwazet.Commerce.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
@@ -26,17 +27,21 @@ namespace Nwazet.Commerce.Controllers {
         private readonly IOrchardServices _orchardServices;
         private readonly IDateLocalizationServices _dateServices;
         private readonly IContentManager _contentManager;
+        private readonly ISelectedCurrencyProvider _selectedCurrencyProvider;
 
         public ReportController(
             IEnumerable<ICommerceReport> reports,
             IOrchardServices orchardServices,
             IDateLocalizationServices dateServices,
-            IContentManager contentManager
+            IContentManager contentManager,
+            ISelectedCurrencyProvider selectedCurrencyProvider
             ) {
             _reports = reports;
             _orchardServices = orchardServices;
             _dateServices = dateServices;
             _contentManager = contentManager;
+            _selectedCurrencyProvider = selectedCurrencyProvider;
+
             T = NullLocalizer.Instance;
         }
 
@@ -100,7 +105,8 @@ namespace Nwazet.Commerce.Controllers {
                     ShowDate = true,
                     ShowTime = false
                 },
-                Granularity = granularity
+                Granularity = granularity,
+                CurrencyProvider = _selectedCurrencyProvider
             };
             return View("Detail", model);
         }

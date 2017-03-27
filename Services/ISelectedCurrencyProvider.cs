@@ -33,6 +33,11 @@ namespace Nwazet.Commerce.Services {
         /// <example>If the provider is set to US dollars, the method will return "$"</example>
         string GetCurrencySymbol();
         /// <summary>
+        /// Gets the format descriptor to be used when writing out currency amounts.
+        /// </summary>
+        /// <returns>The string to be used as format descriptor.</returns>
+        string GetCurrencyFormat();
+        /// <summary>
         /// Gets a string represenation of the price that includes the selected currency.
         /// </summary>
         /// <param name="price">The number representing the amount.</param>
