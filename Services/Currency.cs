@@ -233,5 +233,24 @@ namespace Nwazet.Commerce.Services {
             //TODO: implement symbols from that table
             return "0.00";
         }
+
+        public static string GetPriceAsString(double price, string code) {
+            return price.ToString(GetCurrencyFormat(code)) + " " + GetCurrencySymbol(code);
+        }
+        public static string GetPriceAsString(decimal price, string code) {
+            return price.ToString(GetCurrencyFormat(code)) + " " + GetCurrencySymbol(code);
+        }
+        public static string GetPriceAsString(double? price, string code) {
+            if (price.HasValue) {
+                return GetPriceAsString(price.Value, code);
+            }
+            return string.Empty;
+        }
+        public static string GetPriceAsString(decimal? price, string code) {
+            if (price.HasValue) {
+                return GetPriceAsString(price.Value, code);
+            }
+            return string.Empty;
+        }
     }
 }

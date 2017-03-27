@@ -55,6 +55,7 @@ namespace Nwazet.Commerce.Models {
         private const string TotalName = "total";
         private const string AmountName = "amountPaid";
         private const string PurchaseOrderName = "purchaseOrder";
+        private const string CurrencyCodeName = "currencyCode";
 
         public void Build(
             ICharge charge,
@@ -68,6 +69,7 @@ namespace Nwazet.Commerce.Models {
             string customerEmail,
             string customerPhone,
             string specialInstructions, 
+            string currencyCode,
             double amountPaid = default(double),
             string purchaseOrder = "") {
 
@@ -76,6 +78,7 @@ namespace Nwazet.Commerce.Models {
                 .Attr(TotalName, total)
                 .Attr(AmountName, amountPaid == default(double) ? total : amountPaid)
                 .Attr(PurchaseOrderName, purchaseOrder)
+                .Attr(CurrencyCodeName, currencyCode)
                 .AddEl(new XElement(ChargeName).With(charge)
                     .ToAttr(c => c.TransactionId)
                     .ToAttr(c => c.ChargeText)
@@ -182,6 +185,14 @@ namespace Nwazet.Commerce.Models {
         public double SubTotal {
             get {
                 return (double) ContentDocument.Attribute(SubtotalName);
+            }
+        }
+
+        public string CurrencyCode
+        {
+            get
+            {
+                return (string)ContentDocument.Attribute(CurrencyCodeName);
             }
         }
 

@@ -10,6 +10,7 @@
     var charge = Model.Order.Charge;
 }
 <div class="order-editor">
+    @Html.HiddenFor(m => m.CurrencyCode)
     <fieldset class="order-metadata">
         <legend>@T("Order:")</legend>
         <div class="order-id">@T("ID: {0}", Model.Order.Id)</div>
@@ -94,15 +95,15 @@
                     string originalPrice = "";
                     if (item.Price != item.OriginalPrice && item.OriginalPrice != 0.0)
                     {
-                        originalPrice = String.Format("<strike>{0}</strike>", item.OriginalPrice.ToString("c"));
+                        originalPrice = String.Format("<strike>{0}</strike>", Currency.GetPriceAsString(item.OriginalPrice, Model.CurrencyCode));
                     }
 
                     <tr>
                         <td class="quantity">@item.Quantity &times;</td>
                         <td class="description"><a href="@Url.ItemDisplayUrl(Model.Products[item.ProductId])">@item.Title</a></td>
                         <td class="price">@Html.Raw(originalPrice)</td>
-                        <td class="price">@item.Price.ToString("C")</td>
-                        <td class="price">@item.LinePriceAdjustment.ToString("C")</td>
+                        <td class="price">@Currency.GetPriceAsString(item.Price, Model.CurrencyCode)i</td>
+                        <td class="price">@Currency.GetPriceAsString(item.LinePriceAdjustment, Model.CurrencyCode)i</td>
                     </tr>
                     if (item.Attributes != null && item.Attributes.Any(a => a.Value.ExtensionProviderInstance != null)) {
                         <tr>
@@ -121,19 +122,19 @@
             <tfoot>
                 <tr class="subtotal">
                     <td colspan="3" class="label">@T("Subtotal")</td>
-                    <td class="price">@Model.Order.SubTotal.ToString("C")</td>
+                    <td class="price">@Currency.GetPriceAsString(Model.Order.SubTotal, Model.CurrencyCode)</td>
                 </tr>
                 <tr class="taxes">
                     <td colspan="3" class="label">@T("Taxes {0}", string.IsNullOrWhiteSpace(Model.Order.Taxes.Name) ? T("Taxes").Text : Model.Order.Taxes.Name)</td>
-                    <td class="price">@Model.Order.Taxes.Amount.ToString("C")</td>
+                    <td class="price">@Currency.GetPriceAsString(Model.Order.Taxes.Amount, Model.CurrencyCode)</td>
                 </tr>
                 <tr class="shipping">
                     <td colspan="3" class="label">@T("{0} {1}", Model.Order.ShippingOption.ShippingCompany, Model.Order.ShippingOption.Description)</td>
-                    <td class="price">@Model.Order.ShippingOption.Price.ToString("C")</td>
+                    <td class="price">@Currency.GetPriceAsString(Model.Order.ShippingOption.Price, Model.CurrencyCode)</td>
                 </tr>
                 <tr class="total">
                     <td colspan="3" class="label">@T("Total")</td>
-                    <td class="price">@Model.Order.Total.ToString("C")</td>
+                    <td class="price">@Currency.GetPriceAsString(Model.Order.Total, Model.CurrencyCode)</td>
                 </tr>
                 <tr class="amountPaid">
                     <td colspan="3" class="label">@T("Amount Paid")</td>
