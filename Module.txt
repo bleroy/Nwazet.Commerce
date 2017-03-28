@@ -71,3 +71,8 @@ Features:
         Description: Collect additional information when specific product attributes are selected
         Category: Commerce
         Dependencies: Nwazet.Commerce, Nwazet.Attributes
+	Nwazet.CurrencyProviderBySiteSetting
+		Name: SiteSettings Currency Provider
+        Description: Enables a currency provider for the site based on a site's setting
+        Category: Commerce
+        Dependencies: Nwazet.Commerce

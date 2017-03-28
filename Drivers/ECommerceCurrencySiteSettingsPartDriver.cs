@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using Nwazet.Commerce.Controllers;
+﻿using Nwazet.Commerce.Controllers;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
 using Nwazet.Commerce.ViewModels;
-using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.Environment.Extensions;
 
 namespace Nwazet.Commerce.Drivers {
-   public class ECommerceCurrencySiteSettingsPartDriver : ContentPartDriver<ECommerceCurrencySiteSettingsPart> {
+    [OrchardFeature("Nwazet.CurrencyProviderBySiteSetting")]
+    public class ECommerceCurrencySiteSettingsPartDriver : ContentPartDriver<ECommerceCurrencySiteSettingsPart> {
 
         private readonly ISelectedCurrencyProvider _selectedCurrencyProvider;
 

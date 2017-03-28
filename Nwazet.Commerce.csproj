@@ -336,6 +336,7 @@
     <Compile Include="Services\ProductDiscountPriceProvider.cs" />
     <Compile Include="Services\ShippingService.cs" />
     <Compile Include="Services\TextProductAttributeExtensionProvider.cs" />
+    <Compile Include="Services\UseCurrencyFromSiteCultureProvider.cs" />
     <Compile Include="Services\UseCurrencyFromSiteSettingsProvider.cs" />
     <Compile Include="Services\ZipCodeTaxProvider.cs" />
     <Compile Include="Services\StateOrCountryTaxProvider.cs" />

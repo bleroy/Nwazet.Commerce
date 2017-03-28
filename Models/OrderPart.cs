@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using Nwazet.Commerce.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Environment.Extensions;
@@ -193,6 +194,11 @@ namespace Nwazet.Commerce.Models {
             get
             {
                 return (string)ContentDocument.Attribute(CurrencyCodeName);
+            }
+            set
+            {
+                ContentDocument.SetAttributeValue(CurrencyCodeName, value);
+                PersistContents();
             }
         }
 
@@ -399,7 +405,7 @@ namespace Nwazet.Commerce.Models {
             get { return Id + " - " +
                 Status + " - " +
                 BillingAddress.Honorific + " " + BillingAddress.FirstName + " " + BillingAddress.LastName + " - " +
-                Total.ToString("C") +
+                Currency.GetPriceAsString(Total, CurrencyCode) +
                 (IsTestOrder ? " - TEST" : ""); }
         }
 

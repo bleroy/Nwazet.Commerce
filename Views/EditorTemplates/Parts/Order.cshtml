@@ -102,8 +102,8 @@
                         <td class="quantity">@item.Quantity &times;</td>
                         <td class="description"><a href="@Url.ItemDisplayUrl(Model.Products[item.ProductId])">@item.Title</a></td>
                         <td class="price">@Html.Raw(originalPrice)</td>
-                        <td class="price">@Currency.GetPriceAsString(item.Price, Model.CurrencyCode)i</td>
-                        <td class="price">@Currency.GetPriceAsString(item.LinePriceAdjustment, Model.CurrencyCode)i</td>
+                        <td class="price">@Currency.GetPriceAsString(item.Price, Model.CurrencyCode)</td>
+                        <td class="price">@Currency.GetPriceAsString(item.LinePriceAdjustment, Model.CurrencyCode)</td>
                     </tr>
                     if (item.Attributes != null && item.Attributes.Any(a => a.Value.ExtensionProviderInstance != null)) {
                         <tr>

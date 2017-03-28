@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using Orchard.ContentManagement;
+using Orchard.Environment.Extensions;
 
 namespace Nwazet.Commerce.Models {
+    [OrchardFeature("Nwazet.CurrencyProviderBySiteSetting")]
     public class ECommerceCurrencySiteSettingsPart : ContentPart {
         [Required,MaxLength(3)]
         public string CurrencyCode
