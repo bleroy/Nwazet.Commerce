@@ -38,7 +38,7 @@ namespace Nwazet.Commerce.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Index(PagerParameters pagerParameters) {
-            if (!_orchardServices.Authorizer.Authorize(CommercePermissions.ManageCommerce, null, T("Not authorized to manage shippings")))
+            if (!_orchardServices.Authorizer.Authorize(CommercePermissions.ManageShipping, null, T("Not authorized to manage shippings")))
                 return new HttpUnauthorizedResult();
 
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters.Page, pagerParameters.PageSize);
