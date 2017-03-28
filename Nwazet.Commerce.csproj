@@ -193,6 +193,7 @@
   <ItemGroup> 
     <Compile Include="Activities\CommerceActivity.cs" /> 
     <Compile Include="Activities\OrderActivity.cs" /> 
+    <Compile Include="Controllers\ECommerceSettingsAdminController.cs" /> 
     <Compile Include="Controllers\ProductSettingsAdminController.cs" /> 
     <Compile Include="Controllers\BundleAdminController.cs" /> 
     <Compile Include="Controllers\AttributesAdminController.cs" /> 
@@ -207,6 +208,7 @@
     <Compile Include="Controllers\ShoppingCartController.cs" /> 
     <Compile Include="Controllers\StripeController.cs" /> 
     <Compile Include="Drivers\BundlePartDriver.cs" /> 
+    <Compile Include="Drivers\ECommerceCurrencySiteSettingsPartDriver.cs" /> 
     <Compile Include="Drivers\OrderPartDriver.cs" /> 
     <Compile Include="Drivers\ProductSettingsPartDriver.cs" /> 
     <Compile Include="Drivers\ZipCodeTaxPartDriver.cs" /> 
@@ -226,6 +228,7 @@
     <Compile Include="Handlers\BundlePartHandler.cs" /> 
     <Compile Include="Handlers\AttributePartHandler.cs" /> 
     <Compile Include="Handlers\AttributesPartHandler.cs" /> 
+    <Compile Include="Handlers\ECommerceCurrencySiteSettingsPartHandler.cs" /> 
     <Compile Include="Handlers\OrderPartHandler.cs" /> 
     <Compile Include="Handlers\ProductSettingsPartHandler.cs" /> 
     <Compile Include="Handlers\StateOrCountryTaxPartHandler.cs" /> 
@@ -236,6 +239,7 @@
     <Compile Include="Handlers\SizeBasedShippingMethodPartHandler.cs" /> 
     <Compile Include="Handlers\WeightBasedShippingMethodPartHandler.cs" /> 
     <Compile Include="Handlers\ProductPartHandler.cs" /> 
+    <Compile Include="Menus\ECommerceSettingsAdminMenu.cs" /> 
     <Compile Include="Menus\ReportsAdminMenu.cs" /> 
     <Compile Include="Menus\ProductSettingsAdminMenu.cs" /> 
     <Compile Include="Menus\AttributeAdminMenu.cs" /> 
@@ -257,6 +261,7 @@
     <Compile Include="Models\CheckoutItem.cs" /> 
     <Compile Include="Models\ConversionUtilities.cs" /> 
     <Compile Include="Models\Charge.cs" /> 
+    <Compile Include="Models\ECommerceCurrencySiteSettingsPart.cs" /> 
     <Compile Include="Models\ICharge.cs" /> 
     <Compile Include="Models\OrderEvent.cs" /> 
     <Compile Include="Models\OrderPart.cs" /> 
@@ -320,6 +325,8 @@
     <Compile Include="Routes\StripeRoutes.cs" /> 
     <Compile Include="Routes\OrderRoutes.cs" /> 
     <Compile Include="Routes\CommerceRoutes.cs" /> 
+    <Compile Include="Services\Currency.cs" /> 
+    <Compile Include="Services\ISelectedCurrencyProvider.cs" /> 
     <Compile Include="Services\ProductResolverSelector.cs" /> 
     <Compile Include="Services\AddressFormatter.cs" /> 
     <Compile Include="Services\BundleService.cs" /> 
@@ -338,6 +345,8 @@
     <Compile Include="Services\ProductDiscountPriceProvider.cs" /> 
     <Compile Include="Services\ShippingService.cs" /> 
     <Compile Include="Services\TextProductAttributeExtensionProvider.cs" /> 
+    <Compile Include="Services\UseCurrencyFromSiteCultureProvider.cs" /> 
+    <Compile Include="Services\UseCurrencyFromSiteSettingsProvider.cs" /> 
     <Compile Include="Services\ZipCodeTaxProvider.cs" /> 
     <Compile Include="Services\StateOrCountryTaxProvider.cs" /> 
     <Compile Include="Services\StripeWebService.cs" /> 
@@ -371,6 +380,7 @@
     <Compile Include="Tokens\CartTokens.cs" /> 
     <Compile Include="Tokens\OrderTokens.cs" /> 
     <Compile Include="Tokens\ProductTokens.cs" /> 
+    <Compile Include="ViewModels\ECommerceCurrencySiteSettingsViewModel.cs" /> 
     <Compile Include="ViewModels\ProductAttributePartDisplayViewModel.cs" /> 
     <Compile Include="ViewModels\ProductAttributePartEditViewModel.cs" /> 
     <Compile Include="ViewModels\AttributesIndexViewModel.cs" /> 
@@ -489,6 +499,8 @@
   <ItemGroup> 
     <None Include="app.config" /> 
     <None Include="packages.config" /> 
+    <None Include="Views\ECommerceSettingsAdmin\Index.cshtml" /> 
+    <None Include="Views\EditorTemplates\SiteSettings\Currency.cshtml" /> 
   </ItemGroup> 
   <PropertyGroup> 
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion> 
