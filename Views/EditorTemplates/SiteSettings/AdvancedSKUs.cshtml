@@ -1,0 +1,8 @@
+﻿@using Nwazet.Commerce.Services
+@model Nwazet.Commerce.ViewModels.AdancedSKUsSiteSettingsViewModel
+
+<fieldset>
+    @Html.CheckBoxFor(m => m.RequireUniqueSKU)
+    <label class="forcheckbox" for="@Html.IdFor(m => m.RequireUniqueSKU)">@T("Ensure unique SKUs")</label>
+    <div class="hint">@T("Define whether we should enforce uniqueness checks for product SKUs.")</div>
+</fieldset>
