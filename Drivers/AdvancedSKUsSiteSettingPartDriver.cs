@@ -28,7 +28,10 @@ namespace Nwazet.Commerce.Drivers {
                     () => shapeHelper.EditorTemplate(
                         TemplateName: "SiteSettings/AdvancedSKUs",
                         Model: new AdancedSKUsSiteSettingsViewModel {
-                            RequireUniqueSKU = part.RequireUniqueSKU
+                            RequireUniqueSKU = part.RequireUniqueSKU,
+                            GenerateSKUAutomatically = part.GenerateSKUAutomatically,
+                            SKUPattern = part.SKUPattern,
+                            AllowCustomPattern = part.AllowCustomPattern
                         },
                         Prefix: Prefix
                     )
@@ -40,6 +43,9 @@ namespace Nwazet.Commerce.Drivers {
             if (updater is ECommerceSettingsAdminController && 
                 updater.TryUpdateModel(model, Prefix, null, null)) {
                 part.RequireUniqueSKU = model.RequireUniqueSKU;
+                part.GenerateSKUAutomatically = model.GenerateSKUAutomatically;
+                part.SKUPattern = model.SKUPattern;
+                part.AllowCustomPattern = model.AllowCustomPattern;
             }
             return Editor(part, shapeHelper);
         }

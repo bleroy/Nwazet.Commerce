@@ -18,28 +18,31 @@ namespace Nwazet.Commerce.Models {
             set { this.Store(p => p.RequireUniqueSKU, value); }
         }
         /// <summary>
-        /// When true, SKUs are generated automatically for ProductParts
+        /// When true, SKUs are generated automatically for ProductParts, using a systme that is similar to AutoRoute
         /// </summary>
         public bool GenerateSKUAutomatically
         {
             get { return this.Retrieve(p => p.GenerateSKUAutomatically); }
             set { this.Store(p => p.GenerateSKUAutomatically, value); }
         }
+
+        #region Settings for AutoSKU
         /// <summary>
-        /// When true, if GenerateSKUAutomatically == true, prevents the SKU from being editable in the backend.
+        /// The pattern used in SKU generation
         /// </summary>
-        public bool DisableSKUEditing
+        public string SKUPattern
         {
-            get { return this.Retrieve(p => p.DisableSKUEditing); }
-            set { this.Store(p => p.DisableSKUEditing, value); }
+            get { return this.Retrieve(p => p.SKUPattern); }
+            set { this.Store(p=>p.SKUPattern, value); }
         }
         /// <summary>
-        /// When true, prevents changes to a ProductPart's SKU after publishing
+        /// Allow the user to change the pattern on each item
         /// </summary>
-        public bool DisableSKUUpdate
+        public bool AllowCustomPattern
         {
-            get { return this.Retrieve(p => p.DisableSKUEditing); }
-            set { this.Store(p => p.DisableSKUEditing, value); }
+            get { return this.Retrieve(p => p.AllowCustomPattern); }
+            set { this.Store(p => p.AllowCustomPattern, value); }
         }
+        #endregion
     }
 }

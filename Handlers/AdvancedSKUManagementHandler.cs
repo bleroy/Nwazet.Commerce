@@ -10,6 +10,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
+using Orchard.UI.Notify;
 
 namespace Nwazet.Commerce.Handlers {
     [OrchardFeature("Nwazet.AdvancedSKUManagement")]
@@ -18,18 +19,29 @@ namespace Nwazet.Commerce.Handlers {
         private readonly IOrchardServices _orchardServices;
         private readonly IContentManager _contentManager;
         private readonly IEnumerable<ISKUUniquenessExceptionProvider> _SKUUniquenessExceptionProviders;
+        private readonly Lazy<ISKUGenerationServices> _SKUGenerationServices;
 
         public AdvancedSKUManagementHandler(
             IOrchardServices orchardServices,
             IContentManager contentManager,
-            IEnumerable<ISKUUniquenessExceptionProvider> SKUUniquenessExceptionProviders) {
+            IEnumerable<ISKUUniquenessExceptionProvider> SKUUniquenessExceptionProviders,
+            Lazy<ISKUGenerationServices> SKUGenerationServices) {
 
             _orchardServices = orchardServices;
             _contentManager = contentManager;
 
             _SKUUniquenessExceptionProviders = SKUUniquenessExceptionProviders;
 
+            _SKUGenerationServices = SKUGenerationServices;
+
             T = NullLocalizer.Instance;
+
+            OnUpdated<ProductPart>((ctx, part) => CreateSku(part));
+            OnCreated<ProductPart>((ctx, part) => {
+                if (part.ContentItem.VersionRecord == null) {
+                    CreateSku(part);
+                }
+            });
         }
 
         public Localizer T { get; set; }
@@ -41,19 +53,48 @@ namespace Nwazet.Commerce.Handlers {
                 var productPart = context.ContentItem.As<ProductPart>();
                 var settings = _orchardServices.WorkContext.CurrentSite.As<AdvancedSKUsSiteSettingPart>();
                 if (settings.RequireUniqueSKU) {
-                    var sameSKUProducts = _contentManager.Query<ProductPart, ProductPartRecord>(VersionOptions.Latest)
+                    var sameSKUProductIds = _contentManager.Query<ProductPart, ProductPartRecord>(VersionOptions.Latest)
                         .Where(ppr => ppr.Id != productPart.Id && ppr.Sku == productPart.Sku)
-                        .List().ToList();
+                        .List().Select(pp => pp.Id);
                     //Handle exceptions to uniqueness of SKUs
                     if (_SKUUniquenessExceptionProviders.Any()) {
                         var exceptionIds = _SKUUniquenessExceptionProviders.SelectMany(provider => provider.GetIdsOfValidSKUDuplicates(productPart));
-                        sameSKUProducts = sameSKUProducts.Where(pp => !exceptionIds.Contains(pp.Id)).ToList();
+                        sameSKUProductIds = sameSKUProductIds.Where(ppid => !exceptionIds.Contains(ppid));
                     }
-                    if (sameSKUProducts.Any()) {
+                    if (sameSKUProductIds.Any()) {
                         context.Updater.AddModelError("", T("The SKU must be unique."));
                     }
                 }
             }
         }
+
+        private void CreateSku(ProductPart part) {
+            if (_SKUGenerationServices.Value.GetSettings().GenerateSKUAutomatically) {
+                ProcessSku(part);
+            }
+        }
+
+        private void ProcessSku (ProductPart part) {
+            if (string.IsNullOrWhiteSpace(part.Sku)) {
+                //generate a new sku
+                part.Sku = _SKUGenerationServices.Value.GenerateSku(part);
+            }
+
+            //if the SKU is empty, generate a new one
+            if (string.IsNullOrWhiteSpace(part.Sku)) {
+                _SKUGenerationServices.Value.ProcessSku(part);
+                _orchardServices.Notifier.Warning(T("A new SKU has been generated: \"{0}\"", part.Sku));
+                return;
+            }
+
+            //check for SKU conflicts
+            var previous = part.Sku;
+            if (!_SKUGenerationServices.Value.ProcessSku(part)) {
+                _orchardServices.Notifier.Warning(
+                    T("Conflict between SKUs. \"{0}\" is already set for a previously created {2} so now we set it to \"{1}\"",
+                        previous, part.Sku, part.ContentItem.ContentType));
+            }
+        }
+        
     }
 }

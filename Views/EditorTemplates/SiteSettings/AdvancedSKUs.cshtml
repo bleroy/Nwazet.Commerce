@@ -3,6 +3,17 @@
 
 <fieldset>
     @Html.CheckBoxFor(m => m.RequireUniqueSKU)
-    <label class="forcheckbox" for="@Html.IdFor(m => m.RequireUniqueSKU)">@T("Ensure unique SKUs")</label>
+    <label class="forcheckbox" for="@Html.FieldIdFor(m => m.RequireUniqueSKU)">@T("Ensure unique SKUs")</label>
     <div class="hint">@T("Define whether we should enforce uniqueness checks for product SKUs.")</div>
+    @Html.CheckBoxFor(m => m.GenerateSKUAutomatically)
+    <label class="forcheckbox" for="@Html.FieldIdFor(m => m.GenerateSKUAutomatically)">@T("Enable automatic SKU generation")</label>
+    <div class="hint">@T("The automatic generation of SKUs happens with a process similar to the one used for AutoRoute.")</div>
+    <div data-controllerid="@Html.FieldIdFor(m => m.GenerateSKUAutomatically)">
+        <label for="@Html.FieldIdFor(m => m.SKUPattern)">@T("Pattern")</label>
+        @Html.TextBoxFor(m => m.SKUPattern, new { @class = "tokenized text" })
+        <span class="hint">@T("The definition of the pattern")</span>
+        @Html.CheckBoxFor(m => m.AllowCustomPattern)
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.AllowCustomPattern)">@T("Allow custom patterns")</label>
+        <div class="hint">@T("Allow the user to change the pattern on each item.")</div>
+    </div>
 </fieldset>
