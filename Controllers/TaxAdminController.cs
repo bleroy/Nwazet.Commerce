@@ -38,7 +38,7 @@ namespace Nwazet.Commerce.Controllers {
         public Localizer T { get; set; }
         
         public ActionResult Index(PagerParameters pagerParameters) {
-            if (!_orchardServices.Authorizer.Authorize(CommercePermissions.ManageCommerce, null, T("Not authorized to manage taxes")))
+            if (!_orchardServices.Authorizer.Authorize(CommercePermissions.ManageTaxes, null, T("Not authorized to manage taxes")))
                 return new HttpUnauthorizedResult();
 
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters.Page, pagerParameters.PageSize);
