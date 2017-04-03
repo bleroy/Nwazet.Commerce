@@ -25,5 +25,7 @@ namespace Nwazet.Commerce.Services {
         /// <param name="part"></param>
         /// <returns>False if the SKU of the ProductPart was found not unique and changed. True if the SKU has not changed.</returns>
         bool ProcessSku(ProductPart part);
+
+        string DefaultSkuPattern { get; }
     }
 }

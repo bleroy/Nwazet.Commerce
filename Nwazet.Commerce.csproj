@@ -201,6 +201,7 @@
     <Compile Include="Controllers\ShippingAdminController.cs" />
     <Compile Include="Controllers\ShoppingCartController.cs" />
     <Compile Include="Controllers\StripeController.cs" />
+    <Compile Include="Drivers\AdvancedSKUProductPartDriver.cs" />
     <Compile Include="Drivers\AdvancedSKUsSiteSettingPartDriver.cs" />
     <Compile Include="Drivers\BundlePartDriver.cs" />
     <Compile Include="Drivers\OrderPartDriver.cs" />
@@ -376,6 +377,7 @@
     <Compile Include="Tokens\OrderTokens.cs" />
     <Compile Include="Tokens\ProductTokens.cs" />
     <Compile Include="ViewModels\AdancedSKUsSiteSettingsViewModel.cs" />
+    <Compile Include="ViewModels\AdvancedSKUProductEditorViewModel.cs" />
     <Compile Include="ViewModels\ProductAttributePartDisplayViewModel.cs" />
     <Compile Include="ViewModels\ProductAttributePartEditViewModel.cs" />
     <Compile Include="ViewModels\AttributesIndexViewModel.cs" />
@@ -495,6 +497,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Views\ECommerceSettingsAdmin\Index.cshtml" />
+    <None Include="Views\EditorTemplates\Parts\AdvancedSKUProduct.cshtml" />
     <None Include="Views\EditorTemplates\SiteSettings\AdvancedSKUs.cshtml" />
   </ItemGroup>
   <PropertyGroup>

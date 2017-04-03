@@ -75,7 +75,8 @@ namespace Nwazet.Commerce.Handlers {
         }
 
         private void ProcessSku (ProductPart part) {
-            if (string.IsNullOrWhiteSpace(part.Sku)) {
+            if (string.IsNullOrWhiteSpace(part.Sku) ||
+                _SKUGenerationServices.Value.GetSettings().AllowCustomPattern) { //AllowCustomPattern is handled inside GenerateSku
                 //generate a new sku
                 part.Sku = _SKUGenerationServices.Value.GenerateSku(part);
             }

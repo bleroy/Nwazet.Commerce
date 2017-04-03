@@ -18,6 +18,8 @@ namespace Nwazet.Commerce.Services {
         private readonly IEnumerable<ISKUUniquenessExceptionProvider> _SKUUniquenessExceptionProviders;
         private readonly IContentManager _contentManager;
 
+        public string DefaultSkuPattern { get { return "SKU-{Content.Slug}"; } }
+
         public SKUGenerationServices(IOrchardServices orchardServices,
             ITokenizer tokenizer,
             IEnumerable<ISKUUniquenessExceptionProvider> SKUUniquenessExceptionProviders,
@@ -50,7 +52,7 @@ namespace Nwazet.Commerce.Services {
             }
             if (string.IsNullOrWhiteSpace(pattern)) {
                 //use a default pattern
-                pattern = "SKU-{Content.Id}";
+                pattern = DefaultSkuPattern;
             }
             var sku = _tokenizer.Replace(pattern, 
                 BuildTokenContext(part.ContentItem), 
