@@ -4,32 +4,38 @@
 
 @{
     string skuHtml = "";
-
-    string ToReplace1 = "<label class=\\\"sub\\\" for=\\\"" + Html.IdFor(m => m.Product.Sku) + "\\\">" + T("Sku") + "</label><br>";
-    string ToReplace2 = Html.TextBoxFor(m => m.Product.Sku, new { @class = "text" }) + "<br>";
 }
 @if (Model.Settings.AllowCustomPattern) {
     //allow editing the sku
     skuHtml = "<label class=\\\"sub\\\" for=\\\"" + Html.IdFor(m => m.CurrentSku) + "\\\">" + T("Sku") + "</label><br />" +
-        Html.TextBoxFor(m => m.CurrentSku, new { @class = "text" }) + "<br />" +
+        Html.TextBoxFor(m => m.CurrentSku, new { @class = "text" }).ToString().Replace("\"", "\\\"") + "<br />" +
         "<span class=\\\"hint\\\">" + T("Save the current item and leave the input empty to have the sku automatically generated using the pattern {0}", Model.SkuPattern) + "</span>";
 }
 else {
-    //don't allow editing the sku
-    if (string.IsNullOrWhiteSpace(Model.Product.Sku)) {
-        skuHtml = "<span class=\\\"\\\">" + T("Save the current item to have the sku automatically generated using the pattern {0}", Model.SkuPattern) + "</span>";
+    if (Model.Settings.GenerateSKUAutomatically) { //don't allow editing the sku
+        if (string.IsNullOrWhiteSpace(Model.Product.Sku)) {
+            skuHtml = "<span class=\\\"\\\">" + T("Save the current item to have the sku automatically generated using the pattern {0}", Model.SkuPattern) + "</span>";
+        }
+        else {
+            skuHtml = "<span><b>Sku:</b> " + Model.Product.Sku + "</span>";
+        }
     }
     else {
-        skuHtml = "<span><b>Sku:</b> " + Model.Product.Sku + "</span>";
+        //allow editing the sku
+        skuHtml = "<label class=\\\"sub\\\" for=\\\"" + Html.IdFor(m => m.CurrentSku) + "\\\">" + T("Sku") + "</label><br />" +
+            Html.TextBoxFor(m => m.CurrentSku, new { @class = "text" }).ToString().Replace("\"", "\\\"") + "<br />";
     }
 }
 
 @using (Script.Foot()) {
     <script type="text/javascript">
         //replace the sku portion of the usual view with what we have here
-        (function () {
-            document.body.innerHTML.replace("@Html.Raw(ToReplace1)", "");
-            document.body.innerHTML.replace("@Html.Raw(ToReplace2.Replace("\"","\\\""))", "@Html.Raw(skuHtml)");
+        $(function () {
+            var tb = $("#@Html.IdFor(m => m.Product.Sku)"); //input where in the normal view we write the sku
+            var lbl = $("[for='@Html.IdFor(m => m.Product.Sku)'"); //corresponding label
+            tb.after("@Html.Raw(skuHtml)");
+            tb.remove();
+            lbl.remove();
         })
     </script>
 }

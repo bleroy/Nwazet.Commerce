@@ -54,9 +54,9 @@ namespace Nwazet.Commerce.Drivers {
         protected override DriverResult Editor(ProductPart part, IUpdateModel updater, dynamic shapeHelper) {
             //The part has already been updated by the default driver here
             var model = new AdvancedSKUProductEditorViewModel();
-            //if (updater.TryUpdateModel(model, Prefix, null, null)) {
-            //    part.Sku = model.CurrentSku;
-            //}
+            if (updater.TryUpdateModel(model, Prefix, null, null)) {
+                part.Sku = model.CurrentSku;
+            }
             return Editor(part, shapeHelper);
         }
     }

@@ -40,7 +40,7 @@ namespace Nwazet.Commerce.Models {
         /// </summary>
         public bool AllowCustomPattern
         {
-            get { return this.Retrieve(p => p.AllowCustomPattern); }
+            get { return this.Retrieve(p => p.AllowCustomPattern) && GenerateSKUAutomatically; }
             set { this.Store(p => p.AllowCustomPattern, value); }
         }
         #endregion
