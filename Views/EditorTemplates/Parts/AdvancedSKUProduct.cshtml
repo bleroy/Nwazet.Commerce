@@ -13,15 +13,15 @@
 }
 else {
     if (Model.Settings.GenerateSKUAutomatically) { //don't allow editing the sku
-        if (string.IsNullOrWhiteSpace(Model.Product.Sku)) {
+        if (string.IsNullOrWhiteSpace(Model.CurrentSku)) {
             skuHtml = "<span class=\\\"\\\">" + T("Save the current item to have the sku automatically generated using the pattern {0}", Model.SkuPattern) + "</span>";
         }
         else {
-            skuHtml = "<span><b>Sku:</b> " + Model.Product.Sku + "</span>";
+            skuHtml = "<span><b>Sku:</b> " + Model.CurrentSku + "</span>";
         }
     }
     else {
-        //allow editing the sku
+        //allow editing the sku (we are not generating the sku automatically)
         skuHtml = "<label class=\\\"sub\\\" for=\\\"" + Html.IdFor(m => m.CurrentSku) + "\\\">" + T("Sku") + "</label><br />" +
             Html.TextBoxFor(m => m.CurrentSku, new { @class = "text" }).ToString().Replace("\"", "\\\"") + "<br />";
     }

@@ -97,7 +97,7 @@ namespace Nwazet.Commerce.Services {
         public bool ProcessSku(ProductPart part) {
             var similarSkuParts = GetSimilarSkus(part.Sku);
             //dont include the part we are processing
-            similarSkuParts = similarSkuParts.Where(pp => pp.Id != part.Id);
+            similarSkuParts = similarSkuParts.Where(pp => pp.ContentItem.Id != part.ContentItem.Id);
             //consider exceptions to uniqueness
             if (_SKUUniquenessExceptionProviders.Any()) {
                 var exceptionIds = _SKUUniquenessExceptionProviders.SelectMany(p => p.GetIdsOfValidSKUDuplicates(part));

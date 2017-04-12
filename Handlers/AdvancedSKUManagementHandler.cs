@@ -54,7 +54,7 @@ namespace Nwazet.Commerce.Handlers {
                 var settings = _orchardServices.WorkContext.CurrentSite.As<AdvancedSKUsSiteSettingPart>();
                 if (settings.RequireUniqueSKU) {
                     var sameSKUProductIds = _contentManager.Query<ProductPart, ProductPartRecord>(VersionOptions.Latest)
-                        .Where(ppr => ppr.Id != productPart.Id && ppr.Sku == productPart.Sku)
+                        .Where(ppr => ppr.Id != productPart.Record.Id && ppr.Sku == productPart.Sku)
                         .List().Select(pp => pp.Id);
                     //Handle exceptions to uniqueness of SKUs
                     if (_SKUUniquenessExceptionProviders.Any()) {

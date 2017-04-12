@@ -40,7 +40,7 @@ namespace Nwazet.Commerce.Drivers {
                 Settings = settings,
                 SkuPattern = string.IsNullOrWhiteSpace(settings.SKUPattern) ? _SKUGenerationServices.DefaultSkuPattern : settings.SKUPattern
             };
-            if (string.IsNullOrWhiteSpace(part.Sku)) {
+            if (string.IsNullOrWhiteSpace(part.Sku) && settings.GenerateSKUAutomatically) {
                 part.Sku = _SKUGenerationServices.DefaultSkuPattern;
             }
 
@@ -53,11 +53,21 @@ namespace Nwazet.Commerce.Drivers {
 
         protected override DriverResult Editor(ProductPart part, IUpdateModel updater, dynamic shapeHelper) {
             //The part has already been updated by the default driver here
-            var model = new AdvancedSKUProductEditorViewModel();
+            var settings = _SKUGenerationServices.GetSettings();
+            var model = new AdvancedSKUProductEditorViewModel() {
+                Product = part,
+                Settings = settings,
+                SkuPattern = string.IsNullOrWhiteSpace(settings.SKUPattern) ? _SKUGenerationServices.DefaultSkuPattern : settings.SKUPattern
+            };
             if (updater.TryUpdateModel(model, Prefix, null, null)) {
                 part.Sku = model.CurrentSku;
             }
-            return Editor(part, shapeHelper);
+
+            return ContentShape("Part_Product_SKUEdit",
+                () => shapeHelper.EditorTemplate(
+                TemplateName: "Parts/AdvancedSKUProduct",
+                Model: model,
+                Prefix: Prefix));
         }
     }
 }
