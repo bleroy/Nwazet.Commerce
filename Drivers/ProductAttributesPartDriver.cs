@@ -4,6 +4,7 @@ using System.Linq;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
 using Nwazet.Commerce.ViewModels;
+using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -15,14 +16,16 @@ namespace Nwazet.Commerce.Drivers {
     public class ProductAttributesPartDriver : ContentPartDriver<ProductAttributesPart>, IProductAttributesDriver {
         private readonly IProductAttributeService _attributeService;
         private readonly IEnumerable<IProductAttributeExtensionProvider> _attributeExtensions;
+        private readonly IOrchardServices _orchardServices;
 
         public ProductAttributesPartDriver(
             IProductAttributeService attributeService,
-            IEnumerable<IProductAttributeExtensionProvider> attributeExtensions) {
+            IEnumerable<IProductAttributeExtensionProvider> attributeExtensions,
+            IOrchardServices orchardServices) {
 
             _attributeService = attributeService;
             _attributeExtensions = attributeExtensions;
-
+            _orchardServices = orchardServices;
         }
 
         protected override string Prefix { get { return "NwazetCommerceAttribute"; } }
@@ -101,13 +104,36 @@ namespace Nwazet.Commerce.Drivers {
         }
 
         protected override void Importing(ProductAttributesPart part, ImportContentContext context) {
-            var values = context.Attribute(part.PartDefinition.Name, "Ids");
-            if (!String.IsNullOrWhiteSpace(values)) {
-                part.Record.Attributes = values;
+            var attributeIdentities = context.Attribute(part.PartDefinition.Name, "Attributes");
+            if (string.IsNullOrWhiteSpace(attributeIdentities)) {
+                //retrocompatibility
+                var values = context.Attribute(part.PartDefinition.Name, "Ids");
+                if (!String.IsNullOrWhiteSpace(values)) {
+                    part.Record.Attributes = values;
+                }
+            }
+            else {
+                var attributes = attributeIdentities
+                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(context.GetItemFromSession)
+                    .Where(contentItem => contentItem != null)
+                    .ToList();
+                var allAttributes = part.AttributeIds.ToList();
+                allAttributes.AddRange(attributes.Select(ci => ci.Id));
+                part.AttributeIds = allAttributes;
             }
         }
 
         protected override void Exporting(ProductAttributesPart part, ExportContentContext context) {
+            //validate attribute Ids
+            part.AttributeIds = _attributeService.GetAttributes(part.AttributeIds).Select(pap => pap.Id);
+            var attributeIdentities = part.AttributeIds
+                .Select(id => 
+                    _orchardServices.ContentManager.GetItemMetadata(
+                        _orchardServices.ContentManager.Get(id)
+                    ).Identity.ToString());
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Attributes", string.Join(",", attributeIdentities));
+            //Keep Ids for retrocompatibility
             context.Element(part.PartDefinition.Name).SetAttributeValue("Ids", part.Record.Attributes);
         }
     }
