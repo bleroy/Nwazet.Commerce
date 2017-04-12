@@ -79,9 +79,17 @@ namespace Nwazet.Commerce.Drivers {
             if (!String.IsNullOrWhiteSpace(values)) {
                 part.Record.AttributeValues = values;
             }
+            part.DisplayName = context.Attribute(part.PartDefinition.Name, "DisplayName");
+            part.TechnicalName = context.Attribute(part.PartDefinition.Name, "TechnicalName");
+            int so = 0;
+            int.TryParse(context.Attribute(part.PartDefinition.Name, "SortOrder"), out so);
+            part.SortOrder = so;
         }
 
         protected override void Exporting(ProductAttributePart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("SortOrder", part.SortOrder);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("DisplayName", part.DisplayName);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("TechnicalName", part.TechnicalName);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Values", part.Record.AttributeValues);
         }
     }
