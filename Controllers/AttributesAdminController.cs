@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
+using Nwazet.Commerce.Extensions;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Permissions;
 using Nwazet.Commerce.ViewModels;
@@ -13,6 +15,7 @@ using Orchard.Security;
 using Orchard.Settings;
 using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
+using Orchard.Utility.Extensions;
 
 namespace Nwazet.Commerce.Controllers {
     [Admin]
@@ -62,5 +65,26 @@ namespace Nwazet.Commerce.Controllers {
 
             return View(vm);
         }
+
+        public ActionResult AttributeName(string displayName, int version) {
+            return Json(new {
+                result = GenerateAttributeName(displayName),
+                version = version
+            });
+        }
+
+        private string GenerateAttributeName(string displayName) {
+            displayName = displayName.ToSafeName();
+            var attributes = _contentManager
+                .Query<ProductAttributePart>()
+                .List();
+            while (attributes.Any(at => 
+                string.Equals(at.TechnicalName.Trim(), displayName.Trim(), StringComparison.OrdinalIgnoreCase))) {
+                displayName = AttributeNameUtilities.VersionName(displayName);
+            }
+            return displayName;
+        }
+
+        
     }
 }

@@ -9,6 +9,9 @@
 <fieldset>
     <label class="sub" for="@Html.IdFor(m => m.DisplayName)">@T("Display Name")</label><br />
     @Html.TextBoxFor(m => m.DisplayName, new { @class = "text medium" })
+    <label for="TechnicalName" class="required">@T("Technical Name")</label>
+    @Html.TextBoxFor(m => m.TechnicalName, new { @class = "text" })
+    <span class="hint">@T("Technical name of the attribute.")</span>
     <span class="hint">@T("Label for attribute drop-down list. Leave empty to hide label.")</span><br />
     <label class="sub" for="@Html.IdFor(m => m.SortOrder)">@T("Sort Order")</label><br />
     @Html.TextBoxFor(m => m.SortOrder, new { @class = "text small" })<br />
@@ -87,3 +90,46 @@
         <div><a href="#" class="nwazet-remove-attribute-value">@T("Delete")</a></div>
     </li>
 </script>
+
+@using (Script.Foot()) {
+    <script type="text/javascript">
+    $(function(){
+        var $technicalName = $("#@Html.FieldIdFor(m=>m.TechnicalName)");
+        var $displayName = $("#@Html.FieldIdFor(m=>m.DisplayName)");
+
+        var jsonUrl = "@Url.Action("AttributeName", "Admin", new RouteValueDictionary { {"Area","Nwazet.Commerce"} } )";
+        var version = 0;
+
+        var nameAltered;
+        $technicalName.keypress(function () {
+            nameAltered = true;
+        });
+
+        var compute = function() {
+            // stop processing automatically if altered by the user
+            if(nameAltered) {
+                return true;
+            }
+
+            $.post(jsonUrl, {
+                    displayName: $displayName.val(),
+                    version: ++version, //this is used to handle multiple "almost-concurrent" calls
+                    __RequestVerificationToken: $("input[name=__RequestVerificationToken]").val()
+                },
+                function(data) {
+                    if(version == data.version) {
+                        $name.val(data.result);
+                    }
+                },
+                "json"
+            );
+        };
+
+        //pull technical name input from tab order
+        $technicalName.attr("tabindex", -1);
+
+        $displayName.keyup(compute);
+        $displayName.blur(compute);
+    })
+    </script>
+}

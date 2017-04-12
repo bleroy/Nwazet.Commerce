@@ -42,6 +42,7 @@ namespace Nwazet.Commerce.Drivers {
                     Prefix: Prefix,
                     Model: new ProductAttributePartEditViewModel {
                         DisplayName = part.DisplayName,
+                        TechnicalName = part.TechnicalName,
                         SortOrder = part.SortOrder,
                         AttributeValues = part.AttributeValues,
                         AttributeExtensionProviders = _attributeExtensionProviders
