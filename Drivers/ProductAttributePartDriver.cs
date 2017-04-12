@@ -8,23 +8,30 @@ using Orchard.Environment.Extensions;
 using System.Collections.Generic;
 using Nwazet.Commerce.Services;
 using Nwazet.Commerce.ViewModels;
+using Orchard.Localization;
+using Orchard.UI.Notify;
+using Orchard.Utility.Extensions;
 
 namespace Nwazet.Commerce.Drivers {
     [OrchardFeature("Nwazet.Attributes")]
     public class ProductAttributePartDriver : ContentPartDriver<ProductAttributePart> {
 
         private readonly IEnumerable<IProductAttributeExtensionProvider> _attributeExtensionProviders;
+        private readonly IProductAttributeNameService _productAttributeNameService;
 
         public ProductAttributePartDriver(
            IOrchardServices services,
-           IEnumerable<IProductAttributeExtensionProvider> attributeExtensionProviders) {
+           IEnumerable<IProductAttributeExtensionProvider> attributeExtensionProviders,
+            IProductAttributeNameService productAttributeNameService) {
 
             Services = services;
             _attributeExtensionProviders = attributeExtensionProviders;
+            _productAttributeNameService = productAttributeNameService;
+            T = NullLocalizer.Instance;
         }
 
         public IOrchardServices Services { get; set; }
-
+        public Localizer T { get; set; }
         protected override string Prefix { get { return "NwazetCommerceAttribute"; } }
 
         protected override DriverResult Display(
@@ -51,7 +58,19 @@ namespace Nwazet.Commerce.Drivers {
 
         //POST
         protected override DriverResult Editor(ProductAttributePart part, IUpdateModel updater, dynamic shapeHelper) {
-            updater.TryUpdateModel(part, Prefix, null, null);
+            if (updater.TryUpdateModel(part, Prefix, null, null)) {
+                //check TechnicalName for invalid characters
+                if (!String.Equals(part.TechnicalName, part.TechnicalName.ToSafeName(), StringComparison.OrdinalIgnoreCase)) {
+                    updater.AddModelError("Name", T("The technical name contains invalid characters."));
+                }
+                //ensure uniqueness of TechnicalName
+                var tName = part.TechnicalName;
+                if (!_productAttributeNameService.ProcessTechnicalName(part)) {
+                    Services.Notifier.Warning(
+                        T("Attribute technical names in conflict. \"{0}\" is already set for a previously created attribute so now it has been changed to \"{1}\"",
+                        tName, part.TechnicalName));
+                }
+            }
             return Editor(part, shapeHelper);
         }
 

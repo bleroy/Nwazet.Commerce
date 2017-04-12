@@ -4,6 +4,7 @@ using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.Attributes")]
@@ -34,6 +35,7 @@ namespace Nwazet.Commerce.Models {
             set { Store(r => r.DisplayName, value); }
         }
 
+        [Required]
         [DisplayName("Technical Name")]
         public string TechnicalName
         {

@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Nwazet.Commerce.Extensions;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Permissions;
+using Nwazet.Commerce.Services;
 using Nwazet.Commerce.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
@@ -25,16 +26,19 @@ namespace Nwazet.Commerce.Controllers {
         private readonly ISiteService _siteService;
         private readonly IContentManager _contentManager;
         private readonly IOrchardServices _orchardServices;
+        private readonly IProductAttributeNameService _productAttributeNameService;
 
         public AttributesAdminController(
             IContentManager contentManager,
             ISiteService siteService,
             IShapeFactory shapeFactory,
-            IOrchardServices orchardServices) {
+            IOrchardServices orchardServices, 
+            IProductAttributeNameService productAttributeNameService) {
 
             _contentManager = contentManager;
             _siteService = siteService;
             _orchardServices = orchardServices;
+            _productAttributeNameService = productAttributeNameService;
 
             Shape = shapeFactory;
             T = NullLocalizer.Instance;
@@ -68,23 +72,9 @@ namespace Nwazet.Commerce.Controllers {
 
         public ActionResult AttributeName(string displayName, int version) {
             return Json(new {
-                result = GenerateAttributeName(displayName),
+                result = _productAttributeNameService.GenerateAttributeTechnicalName(displayName),
                 version = version
             });
-        }
-
-        private string GenerateAttributeName(string displayName) {
-            displayName = displayName.ToSafeName();
-            var attributes = _contentManager
-                .Query<ProductAttributePart>()
-                .List();
-            while (attributes.Any(at => 
-                string.Equals(at.TechnicalName.Trim(), displayName.Trim(), StringComparison.OrdinalIgnoreCase))) {
-                displayName = AttributeNameUtilities.VersionName(displayName);
-            }
-            return displayName;
-        }
-
-        
+        }        
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Nwazet.Commerce.Models;
+using Orchard.Utility.Extensions;
 
 namespace Nwazet.Commerce.Extensions {
     public static class AttributeNameUtilities {
@@ -25,6 +27,19 @@ namespace Nwazet.Commerce.Extensions {
             }
 
             return displayName + version;
+        }
+
+        public static string GenerateAttributeTechnicalName(ProductAttributePart part, IEnumerable<ProductAttributePart> partsToCheck) {
+            return GenerateAttributeTechnicalName(part.DisplayName.ToSafeName(), partsToCheck);
+        }
+
+        public static string GenerateAttributeTechnicalName(string tName, IEnumerable<ProductAttributePart> partsToCheck) {
+            tName = tName.ToSafeName();
+            while (partsToCheck.Any(eap =>
+                    string.Equals(eap.TechnicalName.Trim(), tName.Trim(), StringComparison.OrdinalIgnoreCase))) {
+                tName = AttributeNameUtilities.VersionName(tName);
+            }
+            return tName;
         }
     }
 }

@@ -71,19 +71,12 @@ namespace Nwazet.Commerce.Migrations {
             //generate technical names for existing attributes
             var existingAttributeParts = _contentManager.Query<ProductAttributePart>("ProductAttribute").List().ToArray();
             for (int i = 0; i < existingAttributeParts.Length; i++) {
-                existingAttributeParts[i].TechnicalName = GenerateTechnicalName(existingAttributeParts[i], existingAttributeParts.Take(i));
+                existingAttributeParts[i].TechnicalName = 
+                    AttributeNameUtilities.GenerateAttributeTechnicalName(existingAttributeParts[i], existingAttributeParts.Take(i));
             }
 
             return 4;
         }
-
-        private static string GenerateTechnicalName(ProductAttributePart part, IEnumerable<ProductAttributePart> partsToCheck) {
-            string tName = part.DisplayName.ToSafeName();
-            while (partsToCheck.Any(eap =>
-                    string.Equals(eap.TechnicalName.Trim(), tName.Trim(), StringComparison.OrdinalIgnoreCase))) {
-                tName = AttributeNameUtilities.VersionName(tName);
-            }
-            return tName;
-        }
+        
     }
 }

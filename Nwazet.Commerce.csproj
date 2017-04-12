@@ -312,6 +312,8 @@
     <Compile Include="Routes\StripeRoutes.cs" />
     <Compile Include="Routes\OrderRoutes.cs" />
     <Compile Include="Routes\CommerceRoutes.cs" />
+    <Compile Include="Services\IProductAttributeNameService.cs" />
+    <Compile Include="Services\ProductAttributeNameService.cs" />
     <Compile Include="Services\ProductResolverSelector.cs" />
     <Compile Include="Services\AddressFormatter.cs" />
     <Compile Include="Services\BundleService.cs" />
