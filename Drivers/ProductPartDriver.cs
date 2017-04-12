@@ -10,7 +10,6 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Environment.Extensions;
 using Nwazet.Commerce.ViewModels;
-using Orchard.Localization;
 
 namespace Nwazet.Commerce.Drivers {
     [OrchardFeature("Nwazet.Commerce")]
@@ -30,11 +29,8 @@ namespace Nwazet.Commerce.Drivers {
             _priceService = priceService;
             _attributeProviders = attributeProviders;
             _tieredPriceProvider = tieredPriceProvider;
-
-            T = NullLocalizer.Instance;
         }
-
-        public Localizer T { get; set; }
+        
         protected override string Prefix {
             get { return "NwazetCommerceProduct"; }
         }
