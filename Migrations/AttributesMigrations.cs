@@ -5,6 +5,9 @@ using Orchard.Data.Migration;
 using Orchard.Environment.Extensions;
 using System;
 using System.Linq;
+using Orchard.Utility.Extensions;
+using Nwazet.Commerce.Extensions;
+using System.Collections.Generic;
 
 namespace Nwazet.Commerce.Migrations {
     [OrchardFeature("Nwazet.Attributes")]
@@ -60,5 +63,20 @@ namespace Nwazet.Commerce.Migrations {
             return string.Join(";", newValues);
         }
 
+
+        public int UpdateFrom3() {
+            SchemaBuilder.AlterTable("ProductAttributePartRecord", table => table
+                .AddColumn<string>("TechnicalName"));
+
+            //generate technical names for existing attributes
+            var existingAttributeParts = _contentManager.Query<ProductAttributePart>("ProductAttribute").List().ToArray();
+            for (int i = 0; i < existingAttributeParts.Length; i++) {
+                existingAttributeParts[i].TechnicalName = 
+                    AttributeNameUtilities.GenerateAttributeTechnicalName(existingAttributeParts[i], existingAttributeParts.Take(i));
+            }
+
+            return 4;
+        }
+        
     }
 }

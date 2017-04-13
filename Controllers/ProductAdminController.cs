@@ -46,7 +46,7 @@ namespace Nwazet.Commerce.Controllers {
         public IOrchardServices Services { get; set; }
 
         public ActionResult List(ListContentsViewModel model, PagerParameters pagerParameters) {
-            if (!_orchardServices.Authorizer.Authorize(CommercePermissions.ManageCommerce, null, T("Not authorized to manage products"))) 
+            if (!_orchardServices.Authorizer.Authorize(CommercePermissions.ManageProducts, null, T("Not authorized to manage products"))) 
                 return new HttpUnauthorizedResult();
             
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
@@ -81,7 +81,7 @@ namespace Nwazet.Commerce.Controllers {
 
         [HttpPost]
         public ActionResult RemoveOne(int id) {
-            if (!_orchardServices.Authorizer.Authorize(CommercePermissions.ManageCommerce, null, T("Not authorized to manage products")))
+            if (!_orchardServices.Authorizer.Authorize(CommercePermissions.ManageProducts, null, T("Not authorized to manage products")))
                 return new HttpUnauthorizedResult();            
 
             var product = _contentManager.Get<ProductPart>(id);

@@ -32,7 +32,7 @@ namespace Nwazet.Commerce.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Index() {
-            if (!Services.Authorizer.Authorize(CommercePermissions.ManageCommerce, T("Not authorized to manage price settings")))
+            if (!Services.Authorizer.Authorize(CommercePermissions.ManagePricing, T("Not authorized to manage price settings")))
                 return new HttpUnauthorizedResult();
 
             var site = _siteService.GetSiteSettings();
@@ -46,7 +46,7 @@ namespace Nwazet.Commerce.Controllers {
 
         [HttpPost, ActionName("Index")]
         public ActionResult IndexPOST() {
-            if (!Services.Authorizer.Authorize(CommercePermissions.ManageCommerce, T("Not authorized to manage price settings")))
+            if (!Services.Authorizer.Authorize(CommercePermissions.ManagePricing, T("Not authorized to manage price settings")))
                 return new HttpUnauthorizedResult();
 
             var site = _siteService.GetSiteSettings();
