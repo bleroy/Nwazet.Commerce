@@ -1,11 +1,13 @@
 ﻿@using Orchard.Utility.Extensions
+@using Orchard.ContentManagement
+@using Orchard.DisplayManagement
 @model Nwazet.Commerce.ViewModels.AttributesIndexViewModel
 @{
-	var pageSizes = new List<int?> { 10, 50, 100 };
-	var defaultPageSize = WorkContext.CurrentSite.PageSize;
-	if(!pageSizes.Contains(defaultPageSize)) { 
-		pageSizes.Add(defaultPageSize);
-	}
+    var pageSizes = new List<int?> { 10, 50, 100 };
+    var defaultPageSize = WorkContext.CurrentSite.PageSize;
+    if (!pageSizes.Contains(defaultPageSize)) {
+        pageSizes.Add(defaultPageSize);
+    }
     var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
 }
 
@@ -17,14 +19,14 @@
             T("Add a new product attribute").Text,
             "Create", "Admin",
             new {
-                    Area = "Contents",
-                    Id = "ProductAttribute",
-                    ReturnUrl = returnUrl
+                Area = "Contents",
+                Id = "ProductAttribute",
+                ReturnUrl = returnUrl
             },
             new { @class = "button primaryAction" })
     </div>
 
-    <fieldset>		
+    <fieldset>
         <table class="items">
             <thead>
                 <tr>
@@ -32,17 +34,28 @@
                     <th scope="col" class="actions">&nbsp;</th>
                 </tr>
             </thead>
-            @foreach (var attribute in Model.Attributes) { 
+            @foreach (var attribute in Model.Attributes) {
                 <tr>
                     <td>
-                        @Html.ItemEditLinkWithReturnUrl(Html.ItemDisplayText(attribute.ContentItem).ToHtmlString(), attribute.ContentItem) 
+                        @Html.ItemEditLinkWithReturnUrl(Html.ItemDisplayText(attribute.ContentItem).ToHtmlString(), attribute.ContentItem)
+                        @if (!attribute.ContentItem.VersionRecord.Published) {
+                            @T("(draft)")
+                        }
+                        @if (((dynamic)attribute.ContentItem).LocalizationPart != null) {
+                            if (((dynamic)attribute.ContentItem).LocalizationPart.Culture!= null && ((dynamic)attribute.ContentItem).LocalizationPart.Culture.Culture != null) {
+                                <div class="content-culture">@T("Culture: {0}", ((dynamic)attribute.ContentItem).LocalizationPart.Culture.Culture)</div>
+                            }
+                            else {
+                                <div class="content-culture">@T("Culture: {0}", T("Undefined"))</div>
+                            }
+                        }
                     </td>
                     <td>
-                        @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(attribute.ContentItem, new {returnUrl}), new {itemprop = "RemoveUrl UnsafeUrl"})
+                        @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(attribute.ContentItem, new { returnUrl }), new { itemprop = "RemoveUrl UnsafeUrl" })
                     </td>
                 </tr>
             }
         </table>
-	@Display(Model.Pager)
+        @Display(Model.Pager)
     </fieldset>
 }

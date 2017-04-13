@@ -53,7 +53,7 @@ namespace Nwazet.Commerce.Controllers {
 
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters.Page, pagerParameters.PageSize);
             var attributes = _contentManager
-                .Query<ProductAttributePart>()
+                .Query<ProductAttributePart>(VersionOptions.Latest)
                 .Join<TitlePartRecord>()
                 .OrderBy(p => p.Title)
                 .List().ToList();
