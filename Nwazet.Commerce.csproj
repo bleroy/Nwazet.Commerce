@@ -219,6 +219,7 @@
     <Compile Include="Drivers\ShoppingCartWidgetDriver.cs" />
     <Compile Include="Drivers\WeightBasedShippingMethodPartDriver.cs" />
     <Compile Include="Exceptions\StripeException.cs" />
+    <Compile Include="Extensions\AttributeNameUtilities.cs" />
     <Compile Include="Filters\ReferrerFilter.cs" />
     <Compile Include="Handlers\AdvancedSKUManagementHandler.cs" />
     <Compile Include="Handlers\AdvancedSKUsSiteSettingPartHandler.cs" />
@@ -322,8 +323,10 @@
     <Compile Include="Routes\OrderRoutes.cs" />
     <Compile Include="Routes\CommerceRoutes.cs" />
     <Compile Include="Services\ISKUGenerationServices.cs" />
-    <Compile Include="Services\ISKUUniquenessExceptionProvider.cs" />
-    <Compile Include="Services\LocalizationSKUUniquenessExceptionProvider.cs" />
+    <Compile Include="Services\ISKUUniquenessHelper.cs" />
+    <Compile Include="Services\LocalizationSKUUniquenessHelper.cs" />
+    <Compile Include="Services\IProductAttributeNameService.cs" />
+    <Compile Include="Services\ProductAttributeNameService.cs" />
     <Compile Include="Services\ProductResolverSelector.cs" />
     <Compile Include="Services\AddressFormatter.cs" />
     <Compile Include="Services\BundleService.cs" />

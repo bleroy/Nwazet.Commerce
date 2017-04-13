@@ -4,36 +4,46 @@
 
 @{
     string skuHtml = "";
+    var divId = Html.IdForModel().ToString() + Guid.NewGuid().ToString();
 }
-@if (Model.Settings.AllowCustomPattern) {
-    //allow editing the sku
-    skuHtml = "<label class=\\\"sub\\\" for=\\\"" + Html.IdFor(m => m.CurrentSku) + "\\\">" + T("Sku") + "</label><br />" +
-        Html.TextBoxFor(m => m.CurrentSku, new { @class = "text" }).ToString().Replace("\"", "\\\"") + "<br />" +
-        "<span class=\\\"hint\\\">" + T("Save the current item and leave the input empty to have the sku automatically generated using the pattern {0}", Model.SkuPattern) + "</span>";
-}
-else {
-    if (Model.Settings.GenerateSKUAutomatically) { //don't allow editing the sku
-        if (string.IsNullOrWhiteSpace(Model.CurrentSku)) {
-            skuHtml = "<span class=\\\"\\\">" + T("Save the current item to have the sku automatically generated using the pattern {0}", Model.SkuPattern) + "</span>";
-        }
-        else {
-            skuHtml = "<span><b>Sku:</b> " + Model.CurrentSku + "</span>";
-        }
+<div id="@divId">
+    @if (Model.Settings.AllowCustomPattern) {
+        //allow editing the sku
+        @Html.LabelFor(m => m.CurrentSku, T("Sku").Text, new { @class = "sub" }) <br />
+        @Html.TextBoxFor(m => m.CurrentSku, new { @class = "text" })
+        <span class="hint">
+            @T("Save the current item and leave the input empty to have the sku automatically generated using the pattern {0}", Model.SkuPattern)
+        </span>
     }
     else {
-        //allow editing the sku (we are not generating the sku automatically)
-        skuHtml = "<label class=\\\"sub\\\" for=\\\"" + Html.IdFor(m => m.CurrentSku) + "\\\">" + T("Sku") + "</label><br />" +
-            Html.TextBoxFor(m => m.CurrentSku, new { @class = "text" }).ToString().Replace("\"", "\\\"") + "<br />";
+        if (Model.Settings.GenerateSKUAutomatically) { //don't allow editing the sku
+            if (string.IsNullOrWhiteSpace(Model.CurrentSku)) {
+                <span class="hint">
+                    @T("Save the current item and leave the input empty to have the sku automatically generated using the pattern {0}", Model.SkuPattern)
+                </span>
+            }
+            else {
+                <span><b>Sku:</b> @Model.CurrentSku</span>
+            }
+        }
+        else {
+            //allow editing the sku (we are not generating the sku automatically)
+            @Html.LabelFor(m => m.CurrentSku, T("Sku").Text, new { @class = "sub" }) <br />
+            @Html.TextBoxFor(m => m.CurrentSku, new { @class = "text" })
+        }
     }
-}
+</div>
+
 
 @using (Script.Foot()) {
     <script type="text/javascript">
         //replace the sku portion of the usual view with what we have here
         $(function () {
+            var myDiv = $("#@divId");
+            myDiv.remove();
             var tb = $("#@Html.IdFor(m => m.Product.Sku)"); //input where in the normal view we write the sku
             var lbl = $("[for='@Html.IdFor(m => m.Product.Sku)'"); //corresponding label
-            tb.after("@Html.Raw(skuHtml)");
+            tb.after(myDiv);
             tb.remove();
             lbl.remove();
         })

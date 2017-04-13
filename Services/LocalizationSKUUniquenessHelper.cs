@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Nwazet.Commerce.Models;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
@@ -11,10 +8,10 @@ using Orchard.Localization.Services;
 
 namespace Nwazet.Commerce.Services {
     [OrchardFeature("Nwazet.AdvancedSKUManagement")]
-    public class LocalizationSKUUniquenessExceptionProvider : ISKUUniquenessExceptionProvider {
+    public class LocalizationSKUUniquenessHelper : ISKUUniquenessHelper {
 
         private readonly ILocalizationService _localizationService;
-        public LocalizationSKUUniquenessExceptionProvider(ILocalizationService localizationService) {
+        public LocalizationSKUUniquenessHelper(ILocalizationService localizationService) {
             _localizationService = localizationService;
         }
 
