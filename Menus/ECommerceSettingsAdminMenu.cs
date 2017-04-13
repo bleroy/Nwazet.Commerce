@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Nwazet.Commerce.Permissions;
+﻿using Nwazet.Commerce.Permissions;
 using Orchard.Localization;
 using Orchard.UI.Navigation;
 

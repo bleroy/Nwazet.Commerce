@@ -333,8 +333,8 @@
     <Compile Include="Routes\OrderRoutes.cs" /> 
     <Compile Include="Routes\CommerceRoutes.cs" /> 
     <Compile Include="Services\ISKUGenerationServices.cs" /> 
-    <Compile Include="Services\ISKUUniquenessExceptionProvider.cs" /> 
-    <Compile Include="Services\LocalizationSKUUniquenessExceptionProvider.cs" /> 
+    <Compile Include="Services\ISKUUniquenessHelper.cs" /> 
+    <Compile Include="Services\LocalizationSKUUniquenessHelper.cs" /> 
     <Compile Include="Services\IProductAttributeNameService.cs" /> 
     <Compile Include="Services\ProductAttributeNameService.cs" /> 
     <Compile Include="Services\ProductResolverSelector.cs" /> 

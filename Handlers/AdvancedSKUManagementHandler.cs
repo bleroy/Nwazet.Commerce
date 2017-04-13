@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
 using Orchard;
@@ -18,19 +16,19 @@ namespace Nwazet.Commerce.Handlers {
 
         private readonly IOrchardServices _orchardServices;
         private readonly IContentManager _contentManager;
-        private readonly IEnumerable<ISKUUniquenessExceptionProvider> _SKUUniquenessExceptionProviders;
+        private readonly IEnumerable<ISKUUniquenessHelper> _SKUUniquenessHelpers;
         private readonly Lazy<ISKUGenerationServices> _SKUGenerationServices;
 
         public AdvancedSKUManagementHandler(
             IOrchardServices orchardServices,
             IContentManager contentManager,
-            IEnumerable<ISKUUniquenessExceptionProvider> SKUUniquenessExceptionProviders,
+            IEnumerable<ISKUUniquenessHelper> SKUUniquenessHelpers,
             Lazy<ISKUGenerationServices> SKUGenerationServices) {
 
             _orchardServices = orchardServices;
             _contentManager = contentManager;
 
-            _SKUUniquenessExceptionProviders = SKUUniquenessExceptionProviders;
+            _SKUUniquenessHelpers = SKUUniquenessHelpers;
 
             _SKUGenerationServices = SKUGenerationServices;
 
@@ -57,8 +55,8 @@ namespace Nwazet.Commerce.Handlers {
                         .Where(ppr => ppr.Id != productPart.Record.Id && ppr.Sku == productPart.Sku)
                         .List().Select(pp => pp.Id);
                     //Handle exceptions to uniqueness of SKUs
-                    if (_SKUUniquenessExceptionProviders.Any()) {
-                        var exceptionIds = _SKUUniquenessExceptionProviders.SelectMany(provider => provider.GetIdsOfValidSKUDuplicates(productPart));
+                    if (_SKUUniquenessHelpers.Any()) {
+                        var exceptionIds = _SKUUniquenessHelpers.SelectMany(provider => provider.GetIdsOfValidSKUDuplicates(productPart));
                         sameSKUProductIds = sameSKUProductIds.Where(ppid => !exceptionIds.Contains(ppid));
                     }
                     if (sameSKUProductIds.Any()) {
@@ -84,7 +82,7 @@ namespace Nwazet.Commerce.Handlers {
             //if the SKU is empty, generate a new one
             if (string.IsNullOrWhiteSpace(part.Sku)) {
                 _SKUGenerationServices.Value.ProcessSku(part);
-                _orchardServices.Notifier.Warning(T("A new SKU has been generated: \"{0}\"", part.Sku));
+                _orchardServices.Notifier.Information(T("A new SKU has been generated: \"{0}\"", part.Sku));
                 return;
             }
 

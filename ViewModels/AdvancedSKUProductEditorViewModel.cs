@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Nwazet.Commerce.Models;
+﻿using Nwazet.Commerce.Models;
 
 namespace Nwazet.Commerce.ViewModels {
     public class AdvancedSKUProductEditorViewModel {

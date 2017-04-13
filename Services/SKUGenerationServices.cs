@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Nwazet.Commerce.Models;
 using Orchard;
 using Orchard.ContentManagement;
@@ -15,19 +13,19 @@ namespace Nwazet.Commerce.Services {
 
         private readonly IOrchardServices _orchardServices;
         private readonly ITokenizer _tokenizer;
-        private readonly IEnumerable<ISKUUniquenessExceptionProvider> _SKUUniquenessExceptionProviders;
+        private readonly IEnumerable<ISKUUniquenessHelper> _SKUUniquenessHelpers;
         private readonly IContentManager _contentManager;
 
         public string DefaultSkuPattern { get { return "SKU-{Content.Slug}"; } }
 
         public SKUGenerationServices(IOrchardServices orchardServices,
             ITokenizer tokenizer,
-            IEnumerable<ISKUUniquenessExceptionProvider> SKUUniquenessExceptionProviders,
+            IEnumerable<ISKUUniquenessHelper> SKUUniquenessHelpers,
             IContentManager contentManager) {
 
             _orchardServices = orchardServices;
             _tokenizer = tokenizer;
-            _SKUUniquenessExceptionProviders = SKUUniquenessExceptionProviders;
+            _SKUUniquenessHelpers = SKUUniquenessHelpers;
             _contentManager = contentManager;
         }
         private AdvancedSKUsSiteSettingPart Settings { get; set; }
@@ -99,8 +97,8 @@ namespace Nwazet.Commerce.Services {
             //dont include the part we are processing
             similarSkuParts = similarSkuParts.Where(pp => pp.ContentItem.Id != part.ContentItem.Id);
             //consider exceptions to uniqueness
-            if (_SKUUniquenessExceptionProviders.Any()) {
-                var exceptionIds = _SKUUniquenessExceptionProviders.SelectMany(p => p.GetIdsOfValidSKUDuplicates(part));
+            if (_SKUUniquenessHelpers.Any()) {
+                var exceptionIds = _SKUUniquenessHelpers.SelectMany(p => p.GetIdsOfValidSKUDuplicates(part));
                 similarSkuParts = similarSkuParts.Where(pp => !exceptionIds.Contains(pp.Id));
             }
 
