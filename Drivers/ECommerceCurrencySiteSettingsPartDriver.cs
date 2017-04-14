@@ -10,11 +10,11 @@ namespace Nwazet.Commerce.Drivers {
     [OrchardFeature("Nwazet.CurrencyProviderBySiteSetting")]
     public class ECommerceCurrencySiteSettingsPartDriver : ContentPartDriver<ECommerceCurrencySiteSettingsPart> {
 
-        private readonly ISelectedCurrencyProvider _selectedCurrencyProvider;
+        private readonly ICurrencyProvider _currencyProvider;
 
 
-        public ECommerceCurrencySiteSettingsPartDriver(ISelectedCurrencyProvider selectedCurrencyProvider) {
-            _selectedCurrencyProvider = selectedCurrencyProvider;
+        public ECommerceCurrencySiteSettingsPartDriver(ICurrencyProvider currencyProvider) {
+            _currencyProvider = currencyProvider;
         }
 
         protected override string Prefix
@@ -23,7 +23,7 @@ namespace Nwazet.Commerce.Drivers {
         }
         
         protected override DriverResult Editor(ECommerceCurrencySiteSettingsPart part, dynamic shapeHelper) {
-            if (_selectedCurrencyProvider is UseCurrencyFromSiteSettingsProvider) {
+            if (_currencyProvider is UseCurrencyFromSiteSettingsProvider) {
                 return ContentShape("SiteSettings_Currency",
                     () => shapeHelper.EditorTemplate(
                         TemplateName: "SiteSettings/Currency",
@@ -35,7 +35,7 @@ namespace Nwazet.Commerce.Drivers {
         }
 
         protected override DriverResult Editor(ECommerceCurrencySiteSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
-            if (_selectedCurrencyProvider is UseCurrencyFromSiteSettingsProvider) {
+            if (_currencyProvider is UseCurrencyFromSiteSettingsProvider) {
                 var model = new ECommerceCurrencySiteSettingsViewModel();
                 if (updater is ECommerceSettingsAdminController &&
                     updater.TryUpdateModel(model, Prefix, null, null)) {

@@ -17,6 +17,6 @@ namespace Nwazet.Commerce.ViewModels {
         public DateTimeEditor EndDateEditor { get; set; }
         public TimePeriod Granularity { get; set; }
         public IEnumerable<string> Series { get; set; } 
-        public ISelectedCurrencyProvider CurrencyProvider { get; set; }
+        public ICurrencyProvider CurrencyProvider { get; set; }
     }
 }

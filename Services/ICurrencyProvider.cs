@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Orchard;
 
 namespace Nwazet.Commerce.Services {
-    public interface ISelectedCurrencyProvider : IDependency {
+    public interface ICurrencyProvider : IDependency {
         /// <summary>
         /// The name of the provider is used to identify uniquely the provider.
         /// </summary>

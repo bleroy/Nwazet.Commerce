@@ -26,7 +26,7 @@ namespace Nwazet.Commerce.Drivers {
         private readonly IWorkflowManager _workflowManager;
         private readonly IMembershipService _membershipService;
         private readonly IEnumerable<IProductAttributeExtensionProvider> _extensionProviders;
-        private readonly ISelectedCurrencyProvider _selectedCurrencyProvider;
+        private readonly ICurrencyProvider _currencyProvider;
 
         public OrderPartDriver(
             IOrderService orderService,
@@ -37,7 +37,7 @@ namespace Nwazet.Commerce.Drivers {
             IWorkflowManager workflowManager,
             IMembershipService membershipService,
             IEnumerable<IProductAttributeExtensionProvider> extensionProviders,
-            ISelectedCurrencyProvider selectedCurrencyProvider) {
+            ICurrencyProvider currencyProvider) {
 
             _orderService = orderService;
             _addressFormatter = addressFormatter;
@@ -47,7 +47,7 @@ namespace Nwazet.Commerce.Drivers {
             _workflowManager = workflowManager;
             _membershipService = membershipService;
             _extensionProviders = extensionProviders;
-            _selectedCurrencyProvider = selectedCurrencyProvider;
+            _currencyProvider = currencyProvider;
 
             T = NullLocalizer.Instance;
         }
@@ -98,7 +98,7 @@ namespace Nwazet.Commerce.Drivers {
                     TrackingUrl: part.TrackingUrl,
                     Charge: part.Charge,
                     Activity: part.Activity,
-                    CurrencyCode: string.IsNullOrWhiteSpace(part.CurrencyCode) ? _selectedCurrencyProvider.CurrencyCode : part.CurrencyCode,
+                    CurrencyCode: string.IsNullOrWhiteSpace(part.CurrencyCode) ? _currencyProvider.CurrencyCode : part.CurrencyCode,
                     ContentPart: part
                     )
                 );
@@ -142,7 +142,7 @@ namespace Nwazet.Commerce.Drivers {
                 LinkToTransaction = linkToTransaction,
                 UserName = part.User == null ? "" : part.User.UserName,
                 UserNameNeeded = productContents.Any(p => p.As<ProductPart>() == null ? false : p.As<ProductPart>().AuthenticationRequired),
-                CurrencyCode = string.IsNullOrWhiteSpace(part.CurrencyCode) ? _selectedCurrencyProvider.CurrencyCode : part.CurrencyCode
+                CurrencyCode = string.IsNullOrWhiteSpace(part.CurrencyCode) ? _currencyProvider.CurrencyCode : part.CurrencyCode
             };
             return ContentShape("Parts_Order_Edit",
                 () => shapeHelper.EditorTemplate(

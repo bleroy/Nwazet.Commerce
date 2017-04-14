@@ -8,7 +8,7 @@ using Orchard;
 using Orchard.Localization;
 
 namespace Nwazet.Commerce.Services {
-    public class UseCurrencyFromSiteCultureProvider : ISelectedCurrencyProvider {
+    public class UseCurrencyFromSiteCultureProvider : ICurrencyProvider {
 
         private readonly IOrchardServices _orchardServices;
         public Localizer T { get; set; }
