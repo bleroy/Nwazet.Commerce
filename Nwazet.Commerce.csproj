@@ -215,6 +215,7 @@
     <Compile Include="Drivers\ShoppingCartWidgetDriver.cs" />
     <Compile Include="Drivers\WeightBasedShippingMethodPartDriver.cs" />
     <Compile Include="Exceptions\StripeException.cs" />
+    <Compile Include="Extensions\AttributeNameUtilities.cs" /> 
     <Compile Include="Filters\ReferrerFilter.cs" />
     <Compile Include="Handlers\BundlePartHandler.cs" />
     <Compile Include="Handlers\AttributePartHandler.cs" />
@@ -316,6 +317,8 @@
     <Compile Include="Routes\StripeRoutes.cs" />
     <Compile Include="Routes\OrderRoutes.cs" />
     <Compile Include="Routes\CommerceRoutes.cs" />
+    <Compile Include="Services\IProductAttributeNameService.cs" /> 
+    <Compile Include="Services\ProductAttributeNameService.cs" /> 
     <Compile Include="Services\Currency.cs" />
     <Compile Include="Services\ISelectedCurrencyProvider.cs" />
     <Compile Include="Services\ProductResolverSelector.cs" />
