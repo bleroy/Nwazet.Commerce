@@ -6,7 +6,7 @@
     string skuHtml = "";
     var divId = Html.IdForModel().ToString() + Guid.NewGuid().ToString();
 }
-<div id="@divId">
+<div id="@divId" display:none>
     @if (Model.Settings.AllowCustomPattern) {
         //allow editing the sku
         @Html.LabelFor(m => m.CurrentSku, T("Sku").Text, new { @class = "sub" }) <br />
@@ -40,10 +40,10 @@
         //replace the sku portion of the usual view with what we have here
         $(function () {
             var myDiv = $("#@divId");
-            myDiv.remove();
             var tb = $("#@Html.IdFor(m => m.Product.Sku)"); //input where in the normal view we write the sku
             var lbl = $("[for='@Html.IdFor(m => m.Product.Sku)'"); //corresponding label
             tb.after(myDiv);
+            myDiv.show();
             tb.remove();
             lbl.remove();
         })

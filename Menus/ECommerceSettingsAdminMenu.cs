@@ -18,14 +18,10 @@ namespace Nwazet.Commerce.Menus {
 
         public void GetNavigation(NavigationBuilder builder) {
             builder
-                .AddImageSet("nwazet-commerce")
                 .Add(item => item
-                    .Caption(T("Commerce"))
-                    .Position("2")
-                    .LinkToFirstChild(false)
-
+                    .Caption(T("Settings"))
                     .Add(subItem => subItem
-                        .Caption(T("Settings"))
+                        .Caption(T("E-Commerce"))
                         .Position("2.1")
                         .Action("Index", "ECommerceSettingsAdmin", new { area = "Nwazet.Commerce" })
                         .Permission(CommercePermissions.ManageCommerce)
