@@ -2,6 +2,7 @@
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
 using Nwazet.Commerce.ViewModels;
+using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Environment.Extensions;
@@ -13,7 +14,9 @@ namespace Nwazet.Commerce.Drivers {
         private readonly ICurrencyProvider _currencyProvider;
 
 
-        public ECommerceCurrencySiteSettingsPartDriver(ICurrencyProvider currencyProvider) {
+        public ECommerceCurrencySiteSettingsPartDriver(
+            ICurrencyProvider currencyProvider) {
+
             _currencyProvider = currencyProvider;
         }
 

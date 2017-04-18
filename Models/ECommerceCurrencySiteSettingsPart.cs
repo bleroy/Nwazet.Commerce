@@ -9,8 +9,7 @@ namespace Nwazet.Commerce.Models {
         public string CurrencyCode
         {
             get {
-                string cc = this.Retrieve(p => p.CurrencyCode);
-                return string.IsNullOrWhiteSpace(cc) ? "USD" : cc; //default is USD
+                return this.Retrieve(p => p.CurrencyCode);
             }
             set { this.Store(p => p.CurrencyCode, value); }
         }
