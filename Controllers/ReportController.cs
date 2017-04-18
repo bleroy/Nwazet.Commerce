@@ -27,20 +27,20 @@ namespace Nwazet.Commerce.Controllers {
         private readonly IOrchardServices _orchardServices;
         private readonly IDateLocalizationServices _dateServices;
         private readonly IContentManager _contentManager;
-        private readonly ISelectedCurrencyProvider _selectedCurrencyProvider;
+        private readonly ICurrencyProvider _currencyProvider;
 
         public ReportController(
             IEnumerable<ICommerceReport> reports,
             IOrchardServices orchardServices,
             IDateLocalizationServices dateServices,
             IContentManager contentManager,
-            ISelectedCurrencyProvider selectedCurrencyProvider
+            ICurrencyProvider currencyProvider
             ) {
             _reports = reports;
             _orchardServices = orchardServices;
             _dateServices = dateServices;
             _contentManager = contentManager;
-            _selectedCurrencyProvider = selectedCurrencyProvider;
+            _currencyProvider = currencyProvider;
 
             T = NullLocalizer.Instance;
         }
@@ -106,7 +106,7 @@ namespace Nwazet.Commerce.Controllers {
                     ShowTime = false
                 },
                 Granularity = granularity,
-                CurrencyProvider = _selectedCurrencyProvider
+                CurrencyProvider = _currencyProvider
             };
             return View("Detail", model);
         }

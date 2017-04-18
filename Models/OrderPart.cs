@@ -405,7 +405,7 @@ namespace Nwazet.Commerce.Models {
             get { return Id + " - " +
                 Status + " - " +
                 BillingAddress.Honorific + " " + BillingAddress.FirstName + " " + BillingAddress.LastName + " - " +
-                Currency.GetPriceAsString(Total, CurrencyCode) +
+                CurrencyCode + " " + Total.ToString() +
                 (IsTestOrder ? " - TEST" : ""); }
         }
 

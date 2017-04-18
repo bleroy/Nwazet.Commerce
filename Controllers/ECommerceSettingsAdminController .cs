@@ -5,8 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Nwazet.Commerce.Permissions;
-using Nwazet.Commerce.Services;
-using Nwazet.Commerce.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Localization;
@@ -20,17 +18,12 @@ namespace Nwazet.Commerce.Controllers {
 
         private readonly IOrchardServices _orchardServices;
         private readonly ISiteService _siteService;
-        private readonly ICurrencyProvider _currencyProvider;
 
         private const string groupInfoId = "ECommerceSiteSettings";
 
-        public ECommerceSettingsAdminController(IOrchardServices orchardServices,
-            ISiteService siteService,
-            ICurrencyProvider currencyProvider) {
-
+        public ECommerceSettingsAdminController(IOrchardServices orchardServices, ISiteService siteService) {
             _orchardServices = orchardServices;
             _siteService = siteService;
-            _currencyProvider = currencyProvider;
 
             T = NullLocalizer.Instance;
         }
@@ -40,18 +33,14 @@ namespace Nwazet.Commerce.Controllers {
         public ActionResult Index() {
             if (!_orchardServices.Authorizer.Authorize(CommercePermissions.ManageCommerce, null, T("Not authorized to manage e-commerce settings")))
                 return new HttpUnauthorizedResult();
-            
+
             var site = _siteService.GetSiteSettings();
             dynamic model = _orchardServices.ContentManager.BuildEditor(site, groupInfoId);
 
             if (model == null)
                 return HttpNotFound();
 
-
-            return View(new ECommerceSettingsViewModel() {
-                Model = model,
-                CurrencyProvider = _currencyProvider
-            });
+            return View(model);
         }
 
         [HttpPost, ActionName("Index")]
