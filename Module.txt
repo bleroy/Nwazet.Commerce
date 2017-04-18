@@ -71,6 +71,11 @@ Features:
         Description: Collect additional information when specific product attributes are selected
         Category: Commerce
         Dependencies: Nwazet.Commerce, Nwazet.Attributes
+	Nwazet.AdvancedSKUManagement:
+		Name: Nwazet Advanced SKU Management
+        Description: Makes the use of SKUs more advanced, by providing options related to their uniqueness and automatic generation
+        Category: Commerce
+        Dependencies: Nwazet.Commerce
 	Nwazet.CurrencyProviderBySiteSetting
 		Name: SiteSettings Currency Provider
         Description: Enables a currency provider for the site based on a site's setting
