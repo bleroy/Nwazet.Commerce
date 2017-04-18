@@ -38,6 +38,8 @@
                     var totalPrice = quantity*unitPrice;
                     var minimumOrderQuantity = item.MinimumOrderQuantity;
                     var productInventory = (int)item.Inventory;
+                    bool prodIsDigital = (bool)item.IsDigital;
+                    bool prodConsiderInventory = (bool)item.ConsiderInventory;
                     <li>
                         @if (imageUrl != null) {
                             <a href="@Url.ItemDisplayUrl(contentItem)" class="product-image-link"><img src="@Href(imageUrl)" alt="@title" class="product-image"/></a>
@@ -62,7 +64,7 @@
                             <input name="@(propertyNamePrefix + ".ProductId")" type="hidden" value="@product.Id" />
                             <span class="numeric">
                                 <input name="@(propertyNamePrefix + ".Quantity")" type="number" class="quantity addtocart-quantity" value="@quantity" min="0" />
-                                @if (quantity > productInventory) {
+                                @if (quantity > productInventory && (!prodIsDigital || (prodIsDigital && prodConsiderInventory))) {
                                     string allowBackOrderMsg = (bool)item.AllowBackOrder ? T("Back order is allowed").Text : T("Back order is not allowed").Text;
                                     <span class="issue">
                                         @T("Only {0} in stock. {1}.", productInventory, allowBackOrderMsg)

@@ -229,7 +229,7 @@
     <Compile Include="Drivers\ShoppingCartWidgetDriver.cs" /> 
     <Compile Include="Drivers\WeightBasedShippingMethodPartDriver.cs" /> 
     <Compile Include="Exceptions\StripeException.cs" /> 
-    <Compile Include="Extensions\AttributeNameUtilities.cs" /> 
+    <Compile Include="Extensions\AttributeNameUtilities.cs" />  
     <Compile Include="Filters\ReferrerFilter.cs" /> 
     <Compile Include="Handlers\AdvancedSKUManagementHandler.cs" /> 
     <Compile Include="Handlers\AdvancedSKUsSiteSettingPartHandler.cs" /> 
@@ -335,8 +335,8 @@
     <Compile Include="Services\ISKUGenerationServices.cs" /> 
     <Compile Include="Services\ISKUUniquenessHelper.cs" /> 
     <Compile Include="Services\LocalizationSKUUniquenessHelper.cs" /> 
-    <Compile Include="Services\IProductAttributeNameService.cs" /> 
-    <Compile Include="Services\ProductAttributeNameService.cs" /> 
+    <Compile Include="Services\IProductAttributeNameService.cs" />  
+    <Compile Include="Services\ProductAttributeNameService.cs" />  
     <Compile Include="Services\ProductResolverSelector.cs" /> 
     <Compile Include="Services\AddressFormatter.cs" /> 
     <Compile Include="Services\BundleService.cs" /> 
@@ -518,9 +518,9 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath> 
   </PropertyGroup> 
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" /> 
-  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' = ''" /> 
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" /> 
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" /> 
-  <-- To modify your build process, add your task inside one of the targets below and uncomment it.  
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.  
        Other similar extension points exist, see Microsoft.Common.targets. 
   <Target Name="BeforeBuild"> 
   </Target> --> 
@@ -528,10 +528,10 @@
     <PropertyGroup> 
       <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir> 
     </PropertyGroup> 
-    < 
+    <!-- If this is an area child project, uncomment the following line: 
     <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" /> 
     --> 
-    < 
+    <!-- If this is an area parent project, uncomment the following lines: 
     <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" /> 
     <CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" /> 
     --> 
