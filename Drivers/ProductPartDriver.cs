@@ -30,7 +30,7 @@ namespace Nwazet.Commerce.Drivers {
             _attributeProviders = attributeProviders;
             _tieredPriceProvider = tieredPriceProvider;
         }
-
+        
         protected override string Prefix {
             get { return "NwazetCommerceProduct"; }
         }
