@@ -17,15 +17,18 @@ namespace Nwazet.Commerce.Drivers {
         private readonly IProductAttributeService _attributeService;
         private readonly IEnumerable<IProductAttributeExtensionProvider> _attributeExtensions;
         private readonly IOrchardServices _orchardServices;
+        private readonly ICurrencyProvider _currencyProvider;
 
         public ProductAttributesPartDriver(
             IProductAttributeService attributeService,
             IEnumerable<IProductAttributeExtensionProvider> attributeExtensions,
-            IOrchardServices orchardServices) {
+            IOrchardServices orchardServices,
+            ICurrencyProvider currencyProvider) {
 
             _attributeService = attributeService;
             _attributeExtensions = attributeExtensions;
             _orchardServices = orchardServices;
+            _currencyProvider = currencyProvider;
         }
 
         protected override string Prefix { get { return "NwazetCommerceAttribute"; } }
@@ -50,7 +53,8 @@ namespace Nwazet.Commerce.Drivers {
                         // Return all possible attribute extensions input shapes
                         AttributeExtensionShapes = _attributeExtensions.Where(e => a.AttributeValues.Any(av => av.ExtensionProvider == e.Name))
                             .Select(e => e.BuildInputShape(a))
-                    })
+                    }),
+                CurrencyProvider: _currencyProvider
                 );
         }
 
