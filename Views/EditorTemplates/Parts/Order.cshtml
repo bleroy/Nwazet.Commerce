@@ -8,6 +8,8 @@
     Script.Include("order-admin.js", "order-admin.min.js");
 
     var charge = Model.Order.Charge;
+    Currency currencyInUse = Currency.Currencies[Model.CurrencyCode];
+    CultureInfo cultureInUse = CultureInfo.GetCultureInfo(WorkContext.CurrentCulture);
 }
 <div class="order-editor">
     @Html.HiddenFor(m => m.CurrencyCode)
@@ -95,15 +97,15 @@
                     string originalPrice = "";
                     if (item.Price != item.OriginalPrice && item.OriginalPrice != 0.0)
                     {
-                        originalPrice = String.Format("<strike>{0}</strike>", Currency.GetPriceAsString(item.OriginalPrice, Model.CurrencyCode));
+                        originalPrice = String.Format("<strike>{0}</strike>", currencyInUse.PriceAsString(item.OriginalPrice, cultureInUse));
                     }
 
                     <tr>
                         <td class="quantity">@item.Quantity &times;</td>
                         <td class="description"><a href="@Url.ItemDisplayUrl(Model.Products[item.ProductId])">@item.Title</a></td>
                         <td class="price">@Html.Raw(originalPrice)</td>
-                        <td class="price">@Currency.GetPriceAsString(item.Price, Model.CurrencyCode)</td>
-                        <td class="price">@Currency.GetPriceAsString(item.LinePriceAdjustment, Model.CurrencyCode)</td>
+                        <td class="price">@currencyInUse.PriceAsString(item.Price, cultureInUse)</td>
+                        <td class="price">@currencyInUse.PriceAsString(item.LinePriceAdjustment, cultureInUse)</td>
                     </tr>
                     if (item.Attributes != null && item.Attributes.Any(a => a.Value.ExtensionProviderInstance != null)) {
                         <tr>
@@ -122,19 +124,19 @@
             <tfoot>
                 <tr class="subtotal">
                     <td colspan="3" class="label">@T("Subtotal")</td>
-                    <td class="price">@Currency.GetPriceAsString(Model.Order.SubTotal, Model.CurrencyCode)</td>
+                    <td class="price">@currencyInUse.PriceAsString(Model.Order.SubTotal, cultureInUse)</td>
                 </tr>
                 <tr class="taxes">
                     <td colspan="3" class="label">@T("Taxes {0}", string.IsNullOrWhiteSpace(Model.Order.Taxes.Name) ? T("Taxes").Text : Model.Order.Taxes.Name)</td>
-                    <td class="price">@Currency.GetPriceAsString(Model.Order.Taxes.Amount, Model.CurrencyCode)</td>
+                    <td class="price">@currencyInUse.PriceAsString(Model.Order.Taxes.Amount, cultureInUse)</td>
                 </tr>
                 <tr class="shipping">
                     <td colspan="3" class="label">@T("{0} {1}", Model.Order.ShippingOption.ShippingCompany, Model.Order.ShippingOption.Description)</td>
-                    <td class="price">@Currency.GetPriceAsString(Model.Order.ShippingOption.Price, Model.CurrencyCode)</td>
+                    <td class="price">@currencyInUse.PriceAsString(Model.Order.ShippingOption.Price, cultureInUse)</td>
                 </tr>
                 <tr class="total">
                     <td colspan="3" class="label">@T("Total")</td>
-                    <td class="price">@Currency.GetPriceAsString(Model.Order.Total, Model.CurrencyCode)</td>
+                    <td class="price">@currencyInUse.PriceAsString(Model.Order.Total, cultureInUse)</td>
                 </tr>
                 <tr class="amountPaid">
                     <td colspan="3" class="label">@T("Amount Paid")</td>

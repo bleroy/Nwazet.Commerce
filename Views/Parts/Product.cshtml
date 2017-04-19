@@ -6,7 +6,9 @@
 @Display.Price(Price: Model.Price, DiscountedPrice: Model.DiscountedPrice, DiscountComment: Model.DiscountComment, CurrencyProvider: Model.CurrencyProvider)
 <br />
 @Model.Sku<br/>
-@if (Model.Inventory != null && (int)Model.Inventory <= 0) {
+@if (Model.Inventory != null && (int)Model.Inventory <= 0 && 
+    (!(bool)Model.IsDigital || ((bool)Model.IsDigital && (bool)Model.ConsiderInventory))
+    ) {
     <div class="out-of-stock">
     @if (String.IsNullOrWhiteSpace(outOfStockMessage)) {
         @T("This product is currently out of stock.")

@@ -84,7 +84,7 @@ namespace Nwazet.Commerce.Migrations {
                 .AddColumn<string>("Size"));
             return 6;
         }
-        
+
         public int UpdateFrom6() {
             SchemaBuilder.AlterTable("ProductPartRecord", table => table
                 .AddColumn<int>("MinimumOrderQuantity"));
@@ -108,13 +108,18 @@ namespace Nwazet.Commerce.Migrations {
             return 9;
         }
 
-        public int UpdateFrom9()
-        {
+        public int UpdateFrom9() {
             SchemaBuilder.AlterTable("ProductPartRecord",
             table => table
                 .CreateIndex("IDX_ProductPart_Sku", "Sku")
             );
             return 10;
+        }
+
+        public int UpdateFrom10() {
+            SchemaBuilder.AlterTable("ProductPartRecord", table =>
+                table.AddColumn<bool>("ConsiderInventory"));
+            return 11;
         }
     }
 }

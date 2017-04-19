@@ -110,7 +110,9 @@ namespace Nwazet.Commerce.Controllers {
                     }
                 }
                 //only add to cart if there are at least as many available products as the requested quantity
-                if (quantity > productPart.Inventory && !productPart.AllowBackOrder) {
+                if (quantity > productPart.Inventory && !productPart.AllowBackOrder &&
+                    (!productPart.IsDigital || (productPart.IsDigital && productPart.ConsiderInventory))
+                    ) {
                     quantity = productPart.Inventory;
                     if (productMessages.ContainsKey(id)) {
                         productMessages[id].Add(T("Quantity decreased to match inventory for {0}.", productTitle).Text);
@@ -227,7 +229,8 @@ namespace Nwazet.Commerce.Controllers {
             if (displayCheckoutButtons) {
                 //check whether back-order is allowed for products whose inventory is less than the requested quantity
                 displayCheckoutButtons = !productQuantities.Any(pq => 
-                    pq.Quantity > pq.Product.Inventory && !pq.Product.AllowBackOrder);
+                    pq.Quantity > pq.Product.Inventory && !pq.Product.AllowBackOrder &&
+                    (!pq.Product.IsDigital || (pq.Product.IsDigital && pq.Product.ConsiderInventory)));
             }
             if (displayCheckoutButtons) {
                 var checkoutShapes = _checkoutServices.Select(
@@ -267,6 +270,7 @@ namespace Nwazet.Commerce.Controllers {
                     ContentItem: (productQuantity.Product).ContentItem,
                     ProductImage: ((MediaLibraryPickerField)productQuantity.Product.ContentItem.Parts.SelectMany(part => part.Fields).FirstOrDefault(field => field.Name == "ProductImage")),
                     IsDigital: productQuantity.Product.IsDigital,
+                    ConsiderInventory: productQuantity.Product.ConsiderInventory,
                     Price: productQuantity.Product.Price,
                     OriginalPrice: productQuantity.Product.Price,
                     DiscountedPrice: productQuantity.Price,
