@@ -57,11 +57,12 @@ namespace Nwazet.Commerce.Drivers {
                     Size: part.Size,
                     ShippingCost: part.ShippingCost,
                     IsDigital: part.IsDigital,
+                    ConsiderInventory: part.ConsiderInventory,
                     MinimumOrderQuantity: part.MinimumOrderQuantity,
                     ContentPart: part
                     )
                 ));
-            if (part.Inventory > 0 || part.AllowBackOrder) {
+            if (part.Inventory > 0 || part.AllowBackOrder || (part.IsDigital && !part.ConsiderInventory)) {
                 shapes.Add(ContentShape(
                         "Parts_Product_AddButton",
                         () => {
@@ -164,6 +165,7 @@ namespace Nwazet.Commerce.Drivers {
                 .FromAttr(p => p.OutOfStockMessage)
                 .FromAttr(p => p.AllowBackOrder)
                 .FromAttr(p => p.IsDigital)
+                .FromAttr(p => p.ConsiderInventory)
                 .FromAttr(p => p.Weight)
                 .FromAttr(p => p.OverrideTieredPricing)
                 .FromAttr(p => p.MinimumOrderQuantity)
@@ -196,6 +198,7 @@ namespace Nwazet.Commerce.Drivers {
                 .ToAttr(p => p.OutOfStockMessage)
                 .ToAttr(p => p.AllowBackOrder)
                 .ToAttr(p => p.IsDigital)
+                .ToAttr(p => p.ConsiderInventory)
                 .ToAttr(p => p.Weight)
                 .ToAttr(p => p.OverrideTieredPricing)
                 .ToAttr(p => p.MinimumOrderQuantity)
