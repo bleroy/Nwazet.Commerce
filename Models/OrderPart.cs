@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
 using Nwazet.Commerce.Services;
+using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Environment.Extensions;
@@ -405,7 +407,7 @@ namespace Nwazet.Commerce.Models {
             get { return Id + " - " +
                 Status + " - " +
                 BillingAddress.Honorific + " " + BillingAddress.FirstName + " " + BillingAddress.LastName + " - " +
-                CurrencyCode + " " + Total.ToString() +
+                Currency.Currencies[CurrencyCode].PriceAsString(Total, CultureInfo.CurrentCulture) +
                 (IsTestOrder ? " - TEST" : ""); }
         }
 

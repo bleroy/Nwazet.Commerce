@@ -62,6 +62,8 @@
                             var totalPrice = quantity * unitPrice + linePriceAdjustment;
                             var minimumOrderQuantity = item.MinimumOrderQuantity;
                             var productInventory = (int)item.Inventory;
+                            bool prodIsDigital = (bool)item.IsDigital;
+                            bool prodConsiderInventory = (bool)item.ConsiderInventory;
 
                             string originalUnitPrice = "";
                             if (unitPrice != unitPriceOriginal && unitPriceOriginal != 0.0) {
@@ -103,7 +105,7 @@
                                         }
                                         <input name="@(propertyNamePrefix + ".ProductId")" type="hidden" value="@product.Id" />
                                         <input name="@(propertyNamePrefix + ".Quantity")" type="number" class="quantity addtocart-quantity" value="@quantity" min="0" />
-                                        if (quantity > productInventory) {
+                                        if (quantity > productInventory && (!prodIsDigital || (prodIsDigital && prodConsiderInventory))) {
                                             string allowBackOrderMsg = (bool)item.AllowBackOrder ? T("Back order is allowed").Text : T("Back order is not allowed").Text;
                                             <span class="issue">
                                                 @T("Only {0} in stock. {1}.", productInventory, allowBackOrderMsg)
