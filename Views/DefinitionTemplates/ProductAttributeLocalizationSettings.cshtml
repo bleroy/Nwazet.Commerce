@@ -1,0 +1,12 @@
+﻿@model Nwazet.Commerce.Settings.ProductAttributeLocalizationSettings
+
+<fieldset>
+    @Html.CheckBoxFor(m => m.OnlyAllowSameCultureAttributes)
+    <label for="@Html.FieldIdFor(m => m.OnlyAllowSameCultureAttributes)" class="forcheckbox">@T("Do not allow or show product attributes in a culture different than the product.")</label>
+    <span class="hint">@T("Check to hide attributes with a different culture than the content item. Selected attributes with a different culture will be unselected.")</span>
+    <div data-controllerid="@Html.FieldIdFor(m => m.OnlyAllowSameCultureAttributes)">
+        @Html.CheckBoxFor(m => m.AttemptToReplaceAttributes)
+        <label for="@Html.FieldIdFor(m => m.AttemptToReplaceAttributes)" class="forcheckbox">@T("Attempt to select attributes with the correct culture.")</label>
+        <span class="hint">@T("Check to try to replace attributes from a culture different than the content item with their localization in the product's culture.")</span>
+    </div>
+</fieldset>

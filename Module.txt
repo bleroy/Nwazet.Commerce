@@ -76,3 +76,8 @@ Features:
         Description: Makes the use of SKUs more advanced, by providing options related to their uniqueness and automatic generation
         Category: Commerce
         Dependencies: Nwazet.Commerce
+	Nwazet.AttributesLocalizationExtension:
+		Name: Nwazet Attribute Localization Extensions
+		Description: Provides advanced handling of product attributes in multi-language stores
+		Category: Commerce
+		Dependencies: Nwazet.Commerce, Nwazet.Attributes, Orchard.Localization
