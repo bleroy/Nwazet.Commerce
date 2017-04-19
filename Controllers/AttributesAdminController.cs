@@ -58,12 +58,14 @@ namespace Nwazet.Commerce.Controllers {
                 .OrderBy(p => p.Title)
                 .List().ToList();
             var paginatedAttributes = attributes
-                .Skip(pager.GetStartIndex())
-                .Take(pager.PageSize)
-                .ToList();
+                .Skip(pager.GetStartIndex());
+            if (pager.PageSize > 0) {
+                paginatedAttributes = paginatedAttributes.Take(pager.PageSize);
+            }
+            var pageOfAttributes = paginatedAttributes.ToList();
             var pagerShape = Shape.Pager(pager).TotalItemCount(attributes.Count());
             var vm = new AttributesIndexViewModel {
-                Attributes = paginatedAttributes,
+                Attributes = pageOfAttributes,
                 Pager = pagerShape
             };
 

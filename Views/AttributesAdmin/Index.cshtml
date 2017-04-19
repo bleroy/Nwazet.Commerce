@@ -1,6 +1,4 @@
 ﻿@using Orchard.Utility.Extensions
-@using Orchard.ContentManagement
-@using Orchard.DisplayManagement
 @model Nwazet.Commerce.ViewModels.AttributesIndexViewModel
 @{
     var pageSizes = new List<int?> { 10, 50, 100 };
@@ -38,17 +36,6 @@
                 <tr>
                     <td>
                         @Html.ItemEditLinkWithReturnUrl(Html.ItemDisplayText(attribute.ContentItem).ToHtmlString(), attribute.ContentItem)
-                        @if (!attribute.ContentItem.VersionRecord.Published) {
-                            @T("(draft)")
-                        }
-                        @if (((dynamic)attribute.ContentItem).LocalizationPart != null) {
-                            if (((dynamic)attribute.ContentItem).LocalizationPart.Culture!= null && ((dynamic)attribute.ContentItem).LocalizationPart.Culture.Culture != null) {
-                                <div class="content-culture">@T("Culture: {0}", ((dynamic)attribute.ContentItem).LocalizationPart.Culture.Culture)</div>
-                            }
-                            else {
-                                <div class="content-culture">@T("Culture: {0}", T("Undefined"))</div>
-                            }
-                        }
                     </td>
                     <td>
                         @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(attribute.ContentItem, new { returnUrl }), new { itemprop = "RemoveUrl UnsafeUrl" })
