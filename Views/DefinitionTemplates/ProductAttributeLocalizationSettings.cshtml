@@ -1,12 +1,17 @@
 ﻿@model Nwazet.Commerce.Settings.ProductAttributeLocalizationSettings
 
 <fieldset>
-    @Html.CheckBoxFor(m => m.OnlyAllowSameCultureAttributes)
-    <label for="@Html.FieldIdFor(m => m.OnlyAllowSameCultureAttributes)" class="forcheckbox">@T("Do not allow or show product attributes in a culture different than the product.")</label>
-    <span class="hint">@T("Check to hide attributes with a different culture than the content item. Selected attributes with a different culture will be unselected.")</span>
-    <div data-controllerid="@Html.FieldIdFor(m => m.OnlyAllowSameCultureAttributes)">
-        @Html.CheckBoxFor(m => m.AttemptToReplaceAttributes)
-        <label for="@Html.FieldIdFor(m => m.AttemptToReplaceAttributes)" class="forcheckbox">@T("Attempt to select attributes with the correct culture.")</label>
-        <span class="hint">@T("Check to try to replace attributes from a culture different than the content item with their localization in the product's culture.")</span>
+    @Html.CheckBoxFor(m => m.TryToLocalizeAttributes)
+    <label for="@Html.FieldIdFor(m => m.TryToLocalizeAttributes)" class="forcheckbox">@T("Try to replace selected attributes with their correct localization.")</label>
+    <span class="hint">@T("Check to attempt to replace selected attributes with their translation in the product's culture. This only applies if the product has a LocalizationPart.")</span>
+    <div data-controllerid="@Html.FieldIdFor(m => m.TryToLocalizeAttributes)">
+        @Html.CheckBoxFor(m => m.RemoveAttributesWithoutLocalization)
+        <label for="@Html.FieldIdFor(m => m.RemoveAttributesWithoutLocalization)" class="forcheckbox">@T("Remove attributes that do not have the correct translation.")</label>
+        <span class="hint">@T("Check to unselect attributes from the product when the attributes selected do not have a version in the correct culture (they have a LocalizationPart, but not a translation in the product's culture').")</span>
     </div>
+
+    @Html.CheckBoxFor(m => m.AssertAttributesHaveSameCulture)
+    <label for="@Html.FieldIdFor(m => m.AssertAttributesHaveSameCulture)" class="forcheckbox">@T("Verify culture of selected attributes.")</label>
+    <span class="hint">@T("Check to prevent publication of products when the attributes selected have a different culture. This only applies if the product has a LocalizationPart.")</span>
+
 </fieldset>

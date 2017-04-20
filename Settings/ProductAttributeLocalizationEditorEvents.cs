@@ -43,11 +43,14 @@ namespace Nwazet.Commerce.Settings {
                 var settings = new ProductAttributeLocalizationSettings();
                 if (updateModel.TryUpdateModel(settings, "ProductAttributeLocalizationSettings", null, null)) {
                     builder
-                        .WithSetting("ProductAttributeLocalizationSettings.OnlyAllowSameCultureAttributes",
-                            settings.OnlyAllowSameCultureAttributes.ToString(CultureInfo.InvariantCulture));
+                        .WithSetting("ProductAttributeLocalizationSettings.TryToLocalizeAttributes",
+                            settings.TryToLocalizeAttributes.ToString(CultureInfo.InvariantCulture));
                     builder
-                        .WithSetting("ProductAttributeLocalizationSettings.AttemptToReplaceAttributes",
-                            settings.AttemptToReplaceAttributes.ToString(CultureInfo.InvariantCulture));
+                        .WithSetting("ProductAttributeLocalizationSettings.RemoveAttributesWithoutLocalization",
+                            settings.RemoveAttributesWithoutLocalization.ToString(CultureInfo.InvariantCulture));
+                    builder
+                        .WithSetting("ProductAttributeLocalizationSettings.AssertAttributesHaveSameCulture",
+                            settings.AssertAttributesHaveSameCulture.ToString(CultureInfo.InvariantCulture));
                 }
                 yield return DefinitionTemplate(settings);
             }

@@ -11,7 +11,11 @@ namespace Nwazet.Commerce.Settings {
         //this settings will be attached to a ProductAttributesPart
         //if the ContentItem has a LocalizationPart
 
-        public bool OnlyAllowSameCultureAttributes { get; set; }
-        public bool AttemptToReplaceAttributes { get; set; }
+        public ProductAttributeLocalizationSettings() {
+            TryToLocalizeAttributes = true;
+        }
+        public bool TryToLocalizeAttributes { get; set; }
+        public bool RemoveAttributesWithoutLocalization { get; set; }
+        public bool AssertAttributesHaveSameCulture { get; set; }
     }
 }
