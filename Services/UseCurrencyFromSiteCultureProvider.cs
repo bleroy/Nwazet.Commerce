@@ -4,13 +4,12 @@ using Orchard.Localization;
 
 namespace Nwazet.Commerce.Services {
     public class UseCurrencyFromSiteCultureProvider : CurrencyProviderBase {
-
-        private readonly IOrchardServices _orchardServices;
+        private readonly IWorkContextAccessor _workContextAccessor;
         public Localizer T { get; set; }
 
-        public UseCurrencyFromSiteCultureProvider(IOrchardServices orchardServices)
-            : base(orchardServices) {
-            _orchardServices = orchardServices;
+        public UseCurrencyFromSiteCultureProvider(IWorkContextAccessor workContextAccessor)
+            : base(workContextAccessor) {
+            _workContextAccessor = workContextAccessor;
 
             T = NullLocalizer.Instance;
         }
@@ -26,7 +25,7 @@ namespace Nwazet.Commerce.Services {
 
         private string CultureCode
         {
-            get { return _orchardServices.WorkContext.CurrentSite.SiteCulture; }
+            get { return _workContextAccessor.GetContext().CurrentSite.SiteCulture; }
         }
         protected override Currency SelectedCurrency
         {

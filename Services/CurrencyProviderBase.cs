@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Orchard;
+﻿using Orchard;
 
 namespace Nwazet.Commerce.Services {
     public abstract class CurrencyProviderBase : ICurrencyProvider {
-        private readonly IOrchardServices _orchardServices;
+        private readonly IWorkContextAccessor _workContextAccessor;
 
         public CurrencyProviderBase(
-            IOrchardServices orchardServices) {
+            IWorkContextAccessor workContextAccessor) {
 
-            _orchardServices = orchardServices;
+            _workContextAccessor = workContextAccessor;
         }
 
         public virtual string Name { get { return ""; } }
@@ -33,7 +28,7 @@ namespace Nwazet.Commerce.Services {
         public string GetPriceString(double? price) {
             if (price.HasValue) {
                 return SelectedCurrency.PriceAsString(price.Value,
-                        _orchardServices.WorkContext.CurrentCulture
+                        _workContextAccessor.GetContext().CurrentCulture
                     );
             }
             return string.Empty;
@@ -41,7 +36,7 @@ namespace Nwazet.Commerce.Services {
         public string GetPriceString(decimal? price) {
             if (price.HasValue) {
                 return SelectedCurrency.PriceAsString(price.Value,
-                        _orchardServices.WorkContext.CurrentCulture
+                        _workContextAccessor.GetContext().CurrentCulture
                     );
             }
             return string.Empty;

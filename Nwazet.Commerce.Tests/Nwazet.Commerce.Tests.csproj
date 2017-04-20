@@ -1,106 +1,123 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F33D9F18-B69D-4512-A6A9-3D4E585ACE01}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nwazet.Commerce.Tests</RootNamespace>
-    <AssemblyName>Nwazet.Commerce.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="nunit.framework">
-      <HintPath>..\..\..\..\..\lib\nunit\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.XML" />
-    <Reference Include="System.Xml.Linq" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Helpers\ContentHelpers.cs" />
-    <Compile Include="Helpers\ShippingHelpers.cs" />
-    <Compile Include="Helpers\ShoppingCartHelpers.cs" />
-    <Compile Include="PriceServiceTieredPricingTests.cs" />
-    <Compile Include="ProductAttributePricingTests.cs" />
-    <Compile Include="ShippingServiceTest.cs" />
-    <Compile Include="Stubs\ShapeFactoryStub.cs" />
-    <Compile Include="Stubs\SiteStub.cs" />
-    <Compile Include="TaxByZipTests.cs" />
-    <Compile Include="TaxTests.cs" />
-    <Compile Include="TimePeriodTests.cs" />
-    <Compile Include="UspsServiceInternationalTests.cs" />
-    <Compile Include="Stubs\UspsServiceStub.cs" />
-    <Compile Include="Stubs\UspsWebServiceStub.cs" />
-    <Compile Include="UspsServiceDomesticTests.cs" />
-    <Compile Include="UspsShippingMethodTest.cs" />
-    <Compile Include="ProductAttributeTests.cs" />
-    <Compile Include="Stubs\ContentManagerStub.cs" />
-    <Compile Include="Stubs\ProductAttributeStub.cs" />
-    <Compile Include="Stubs\DiscountStub.cs" />
-    <Compile Include="Stubs\FakeCartStorage.cs" />
-    <Compile Include="Stubs\FakeClock.cs" />
-    <Compile Include="Stubs\FakeQuery.cs" />
-    <Compile Include="PriceProviderTests.cs" />
-    <Compile Include="SizeBasedShippingMethodTest.cs" />
-    <Compile Include="Stubs\ProductStub.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ShippingMethodSelectionTest.cs" />
-    <Compile Include="Stubs\UserStub.cs" />
-    <Compile Include="UspsShippingMethodPartDriverTests.cs" />
-    <Compile Include="WeightBasedShippingMethodTest.cs" />
-    <Compile Include="Stubs\WorkContextAccessorStub.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Orchard\Orchard.Framework.csproj">
-      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
-      <Name>Orchard.Framework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Orchard.Roles\Orchard.Roles.csproj">
-      <Project>{d10ad48f-407d-4db5-a328-173ec7cb010f}</Project>
-      <Name>Orchard.Roles</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Nwazet.Commerce.csproj">
-      <Project>{909acc2c-d672-4752-b75b-6822e05fe0e3}</Project>
-      <Name>Nwazet.Commerce</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
-</Project>
+﻿<?xml version="1.0" encoding="utf-8"?> 
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003"> 
+  <PropertyGroup> 
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration> 
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform> 
+    <ProductVersion>8.0.30703</ProductVersion> 
+    <SchemaVersion>2.0</SchemaVersion> 
+    <ProjectGuid>{F33D9F18-B69D-4512-A6A9-3D4E585ACE01}</ProjectGuid> 
+    <OutputType>Library</OutputType> 
+    <AppDesignerFolder>Properties</AppDesignerFolder> 
+    <RootNamespace>Nwazet.Commerce.Tests</RootNamespace> 
+    <AssemblyName>Nwazet.Commerce.Tests</AssemblyName> 
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion> 
+    <FileAlignment>512</FileAlignment> 
+    <TargetFrameworkProfile /> 
+  </PropertyGroup> 
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' "> 
+    <DebugSymbols>true</DebugSymbols> 
+    <DebugType>full</DebugType> 
+    <Optimize>false</Optimize> 
+    <OutputPath>bin</OutputPath> 
+    <DefineConstants>DEBUG;TRACE</DefineConstants> 
+    <ErrorReport>prompt</ErrorReport> 
+    <WarningLevel>4</WarningLevel> 
+    <Prefer32Bit>false</Prefer32Bit> 
+  </PropertyGroup> 
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' "> 
+    <DebugType>pdbonly</DebugType> 
+    <Optimize>true</Optimize> 
+    <OutputPath>bin</OutputPath> 
+    <DefineConstants>TRACE</DefineConstants> 
+    <ErrorReport>prompt</ErrorReport> 
+    <WarningLevel>4</WarningLevel> 
+    <Prefer32Bit>false</Prefer32Bit> 
+  </PropertyGroup> 
+  <ItemGroup> 
+    <Reference Include="nunit.framework, Version=2.5.10.11092, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL"> 
+      <HintPath>..\..\..\..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath> 
+      <Private>True</Private> 
+    </Reference> 
+    <Reference Include="nunit.mocks, Version=2.5.10.11092, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL"> 
+      <HintPath>..\..\..\..\packages\NUnit.2.5.10.11092\lib\nunit.mocks.dll</HintPath> 
+      <Private>True</Private> 
+    </Reference> 
+    <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj"> 
+      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project> 
+      <Name>Orchard.Framework</Name> 
+    </ProjectReference> 
+      <HintPath>..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath> 
+    </Reference> 
+    <ProjectReference Include="..\..\..\Orchard.Web\Modules\Orchard.Roles\Orchard.Roles.csproj"> 
+      <Project>{d10ad48f-407d-4db5-a328-173ec7cb010f}</Project> 
+      <Name>Orchard.Roles</Name> 
+    </ProjectReference> 
+      <HintPath>..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Roles\bin\Orchard.Roles.dll</HintPath> 
+    </Reference> 
+    <Reference Include="pnunit.framework, Version=1.0.4109.34242, Culture=neutral, processorArchitecture=MSIL"> 
+      <HintPath>..\..\..\..\packages\NUnit.2.5.10.11092\lib\pnunit.framework.dll</HintPath> 
+      <Private>True</Private> 
+    </Reference> 
+    <Reference Include="System" /> 
+    <Reference Include="System.Core" /> 
+    <Reference Include="Microsoft.CSharp" /> 
+    <Reference Include="System.Web" /> 
+    <Reference Include="System.XML" /> 
+    <Reference Include="System.Xml.Linq" /> 
+  </ItemGroup> 
+  <ItemGroup> 
+    <Compile Include="CurrencyTests.cs" /> 
+    <Compile Include="Helpers\ContentHelpers.cs" /> 
+    <Compile Include="Helpers\ShippingHelpers.cs" /> 
+    <Compile Include="Helpers\ShoppingCartHelpers.cs" /> 
+    <Compile Include="PriceServiceTieredPricingTests.cs" /> 
+    <Compile Include="ProductAttributePricingTests.cs" /> 
+    <Compile Include="ShippingServiceTest.cs" /> 
+    <Compile Include="Stubs\ShapeFactoryStub.cs" /> 
+    <Compile Include="Stubs\SiteStub.cs" /> 
+    <Compile Include="TaxByZipTests.cs" /> 
+    <Compile Include="TaxTests.cs" /> 
+    <Compile Include="TimePeriodTests.cs" /> 
+    <Compile Include="UspsServiceInternationalTests.cs" /> 
+    <Compile Include="Stubs\UspsServiceStub.cs" /> 
+    <Compile Include="Stubs\UspsWebServiceStub.cs" /> 
+    <Compile Include="UspsServiceDomesticTests.cs" /> 
+    <Compile Include="UspsShippingMethodTest.cs" /> 
+    <Compile Include="ProductAttributeTests.cs" /> 
+    <Compile Include="Stubs\ContentManagerStub.cs" /> 
+    <Compile Include="Stubs\ProductAttributeStub.cs" /> 
+    <Compile Include="Stubs\DiscountStub.cs" /> 
+    <Compile Include="Stubs\FakeCartStorage.cs" /> 
+    <Compile Include="Stubs\FakeClock.cs" /> 
+    <Compile Include="Stubs\FakeQuery.cs" /> 
+    <Compile Include="PriceProviderTests.cs" /> 
+    <Compile Include="SizeBasedShippingMethodTest.cs" /> 
+    <Compile Include="Stubs\ProductStub.cs" /> 
+    <Compile Include="Properties\AssemblyInfo.cs" /> 
+    <Compile Include="ShippingMethodSelectionTest.cs" /> 
+    <Compile Include="Stubs\UserStub.cs" /> 
+    <Compile Include="UspsShippingMethodPartDriverTests.cs" /> 
+    <Compile Include="WeightBasedShippingMethodTest.cs" /> 
+    <Compile Include="Stubs\WorkContextAccessorStub.cs" /> 
+  </ItemGroup> 
+  <ItemGroup> 
+    <ProjectReference Include="..\Nwazet.Commerce.csproj"> 
+      <Project>{909acc2c-d672-4752-b75b-6822e05fe0e3}</Project> 
+      <Name>Nwazet.Commerce</Name> 
+    </ProjectReference> 
+  </ItemGroup> 
+  <ItemGroup> 
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" /> 
+  </ItemGroup> 
+  <ItemGroup> 
+    <None Include="packages.config" /> 
+  </ItemGroup> 
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" /> 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.  
+       Other similar extension points exist, see Microsoft.Common.targets. 
+  <Target Name="BeforeBuild"> 
+  </Target> 
+  <Target Name="AfterBuild"> 
+  </Target> 
+  --> 
+</Project> 
