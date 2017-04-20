@@ -16,19 +16,19 @@ namespace Nwazet.Commerce.Drivers {
     public class ProductAttributesPartDriver : ContentPartDriver<ProductAttributesPart>, IProductAttributesDriver {
         private readonly IProductAttributeService _attributeService;
         private readonly IEnumerable<IProductAttributeExtensionProvider> _attributeExtensions;
-        private readonly IOrchardServices _orchardServices;
         private readonly ICurrencyProvider _currencyProvider;
+        private readonly IContentManager _contentManager;
 
         public ProductAttributesPartDriver(
             IProductAttributeService attributeService,
             IEnumerable<IProductAttributeExtensionProvider> attributeExtensions,
-            IOrchardServices orchardServices,
+            IContentManager contentManager,
             ICurrencyProvider currencyProvider) {
 
             _attributeService = attributeService;
             _attributeExtensions = attributeExtensions;
-            _orchardServices = orchardServices;
             _currencyProvider = currencyProvider;
+            _contentManager = contentManager;
         }
 
         protected override string Prefix { get { return "NwazetCommerceAttribute"; } }
@@ -67,7 +67,7 @@ namespace Nwazet.Commerce.Drivers {
             // If the part is there, it must have as many attributes as were passed in
             if (attributesPart.AttributeIds.Count() != attributeIdsToValues.Count) {
                 //Attributes may have been deleted
-                attributesPart.AttributeIds = _attributeService.GetAttributes(attributeIdsToValues.Keys).Select(pap => pap.Id);
+                attributesPart.AttributeIds = _attributeService.GetAttributes(attributesPart.AttributeIds).Select(pap => pap.Id);
                 if (attributesPart.AttributeIds.Count() != attributeIdsToValues.Count) return false;
             }
             // The same attributes must be present
@@ -133,8 +133,8 @@ namespace Nwazet.Commerce.Drivers {
             part.AttributeIds = _attributeService.GetAttributes(part.AttributeIds).Select(pap => pap.Id);
             var attributeIdentities = part.AttributeIds
                 .Select(id => 
-                    _orchardServices.ContentManager.GetItemMetadata(
-                        _orchardServices.ContentManager.Get(id)
+                    _contentManager.GetItemMetadata(
+                        _contentManager.Get(id)
                     ).Identity.ToString());
             context.Element(part.PartDefinition.Name).SetAttributeValue("Attributes", string.Join(",", attributeIdentities));
             //Keep Ids for retrocompatibility

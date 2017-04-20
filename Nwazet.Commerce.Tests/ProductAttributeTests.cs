@@ -278,7 +278,9 @@ namespace Nwazet.Commerce.Tests {
             var attributeService = new ProductAttributeService(contentManager);
             var attributeExtensionProviders = new List<IProductAttributeExtensionProvider> { new TextProductAttributeExtensionProvider(new ShapeFactoryStub()) };
             var priceService = new PriceService(new IPriceProvider[0], attributeService);
-            var attributeDriver = new ProductAttributesPartDriver(attributeService, attributeExtensionProviders);
+            var workContextAccessor = new WorkContextAccessorStub(null);
+            var currencyProvider = new UseCurrencyFromSiteCultureProvider(workContextAccessor);
+            var attributeDriver = new ProductAttributesPartDriver(attributeService, attributeExtensionProviders, contentManager, currencyProvider);
             var cart = new ShoppingCart(contentManager, cartStorage, priceService, new[] { attributeDriver }, null, new Notifier());
             FillCart(cart);
 
