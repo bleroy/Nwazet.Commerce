@@ -56,6 +56,7 @@
       <HintPath>..\Laser.Sources\Laser.Orchard\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4" />
     <Reference Include="Orchard.Autoroute">
       <HintPath>..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Autoroute\bin\Orchard.Autoroute.dll</HintPath>
     </Reference>
@@ -67,6 +68,9 @@
     </Reference>
     <Reference Include="Orchard.Framework">
       <HintPath>..\Orchard.Sources\src\Orchard\bin\Debug\Orchard.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.Localization">
+      <HintPath>..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Localization\bin\Orchard.Localization.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.MediaLibrary">
       <HintPath>..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.MediaLibrary\bin\Orchard.MediaLibrary.dll</HintPath>
@@ -184,6 +188,7 @@
   <ItemGroup>
     <Compile Include="Activities\CommerceActivity.cs" />
     <Compile Include="Activities\OrderActivity.cs" />
+    <Compile Include="Controllers\ECommerceSettingsAdminController .cs" />
     <Compile Include="Controllers\ProductSettingsAdminController.cs" />
     <Compile Include="Controllers\BundleAdminController.cs" />
     <Compile Include="Controllers\AttributesAdminController.cs" />
@@ -197,6 +202,8 @@
     <Compile Include="Controllers\ShippingAdminController.cs" />
     <Compile Include="Controllers\ShoppingCartController.cs" />
     <Compile Include="Controllers\StripeController.cs" />
+    <Compile Include="Drivers\AdvancedSKUProductPartDriver.cs" />
+    <Compile Include="Drivers\AdvancedSKUsSiteSettingPartDriver.cs" />
     <Compile Include="Drivers\BundlePartDriver.cs" />
     <Compile Include="Drivers\OrderPartDriver.cs" />
     <Compile Include="Drivers\ProductSettingsPartDriver.cs" />
@@ -213,7 +220,10 @@
     <Compile Include="Drivers\ShoppingCartWidgetDriver.cs" />
     <Compile Include="Drivers\WeightBasedShippingMethodPartDriver.cs" />
     <Compile Include="Exceptions\StripeException.cs" />
+    <Compile Include="Extensions\AttributeNameUtilities.cs" />
     <Compile Include="Filters\ReferrerFilter.cs" />
+    <Compile Include="Handlers\AdvancedSKUManagementHandler.cs" />
+    <Compile Include="Handlers\AdvancedSKUsSiteSettingPartHandler.cs" />
     <Compile Include="Handlers\BundlePartHandler.cs" />
     <Compile Include="Handlers\AttributePartHandler.cs" />
     <Compile Include="Handlers\AttributesPartHandler.cs" />
@@ -227,6 +237,7 @@
     <Compile Include="Handlers\SizeBasedShippingMethodPartHandler.cs" />
     <Compile Include="Handlers\WeightBasedShippingMethodPartHandler.cs" />
     <Compile Include="Handlers\ProductPartHandler.cs" />
+    <Compile Include="Menus\ECommerceSettingsAdminMenu.cs" />
     <Compile Include="Menus\ReportsAdminMenu.cs" />
     <Compile Include="Menus\ProductSettingsAdminMenu.cs" />
     <Compile Include="Menus\AttributeAdminMenu.cs" />
@@ -244,6 +255,7 @@
     <Compile Include="Migrations\DiscountMigrations.cs" />
     <Compile Include="Migrations\ShippingMigrations.cs" />
     <Compile Include="Models\Address.cs" />
+    <Compile Include="Models\AdvancedSKUsSiteSettingPart.cs" />
     <Compile Include="Models\CheckoutError.cs" />
     <Compile Include="Models\CheckoutItem.cs" />
     <Compile Include="Models\ConversionUtilities.cs" />
@@ -311,6 +323,11 @@
     <Compile Include="Routes\StripeRoutes.cs" />
     <Compile Include="Routes\OrderRoutes.cs" />
     <Compile Include="Routes\CommerceRoutes.cs" />
+    <Compile Include="Services\ISKUGenerationServices.cs" />
+    <Compile Include="Services\ISKUUniquenessHelper.cs" />
+    <Compile Include="Services\LocalizationSKUUniquenessHelper.cs" />
+    <Compile Include="Services\IProductAttributeNameService.cs" />
+    <Compile Include="Services\ProductAttributeNameService.cs" />
     <Compile Include="Services\ProductResolverSelector.cs" />
     <Compile Include="Services\AddressFormatter.cs" />
     <Compile Include="Services\BundleService.cs" />
@@ -328,6 +345,7 @@
     <Compile Include="Services\ProductAttributeService.cs" />
     <Compile Include="Services\ProductDiscountPriceProvider.cs" />
     <Compile Include="Services\ShippingService.cs" />
+    <Compile Include="Services\SKUGenerationServices.cs" />
     <Compile Include="Services\TextProductAttributeExtensionProvider.cs" />
     <Compile Include="Services\ZipCodeTaxProvider.cs" />
     <Compile Include="Services\StateOrCountryTaxProvider.cs" />
@@ -362,6 +380,8 @@
     <Compile Include="Tokens\CartTokens.cs" />
     <Compile Include="Tokens\OrderTokens.cs" />
     <Compile Include="Tokens\ProductTokens.cs" />
+    <Compile Include="ViewModels\AdancedSKUsSiteSettingsViewModel.cs" />
+    <Compile Include="ViewModels\AdvancedSKUProductEditorViewModel.cs" />
     <Compile Include="ViewModels\ProductAttributePartDisplayViewModel.cs" />
     <Compile Include="ViewModels\ProductAttributePartEditViewModel.cs" />
     <Compile Include="ViewModels\AttributesIndexViewModel.cs" />
@@ -480,6 +500,9 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Views\ECommerceSettingsAdmin\Index.cshtml" />
+    <None Include="Views\EditorTemplates\Parts\AdvancedSKUProduct.cshtml" />
+    <None Include="Views\EditorTemplates\SiteSettings\AdvancedSKUs.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

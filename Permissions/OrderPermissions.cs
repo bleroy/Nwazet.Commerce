@@ -11,11 +11,16 @@ namespace Nwazet.Commerce.Permissions {
             Name = "ManageOrders"
         };
 
-        public static readonly Permission ViewOwnOrders = new Permission
-        {
+        public static readonly Permission ViewAllOrders = new Permission {
+            Description = "View all orders",
+            Name = "ViewAllOrders",
+            ImpliedBy = new[] { ManageOrders }
+        };
+
+        public static readonly Permission ViewOwnOrders = new Permission {
             Description = "View own orders",
             Name = "ViewOwnOrders",
-            ImpliedBy = new[] { ManageOrders }
+            ImpliedBy = new[] { ManageOrders, ViewAllOrders }
         };
 
         public virtual Feature Feature { get; set; }
@@ -23,7 +28,8 @@ namespace Nwazet.Commerce.Permissions {
         public IEnumerable<Permission> GetPermissions() {
             return new[] {
                 ManageOrders,
-                ViewOwnOrders
+                ViewOwnOrders,
+                ViewAllOrders
             };
         }
 
@@ -31,7 +37,7 @@ namespace Nwazet.Commerce.Permissions {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrator",
-                    Permissions = new[] { ManageOrders, ViewOwnOrders }
+                    Permissions = new[] { ManageOrders, ViewOwnOrders, ViewAllOrders }
                 },
                 new PermissionStereotype {
                     Name = "Editor"
