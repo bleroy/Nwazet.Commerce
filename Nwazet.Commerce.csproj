@@ -389,6 +389,7 @@
     <Compile Include="Tokens\ProductTokens.cs" />
     <Compile Include="ViewModels\AdancedSKUsSiteSettingsViewModel.cs" />
     <Compile Include="ViewModels\AdvancedSKUProductEditorViewModel.cs" />
+    <Compile Include="ViewModels\AttributeLocalizationProductAttributesPartEditViewModel.cs" />
     <Compile Include="ViewModels\ProductAttributePartDisplayViewModel.cs" />
     <Compile Include="ViewModels\ProductAttributePartEditViewModel.cs" />
     <Compile Include="ViewModels\AttributesIndexViewModel.cs" />

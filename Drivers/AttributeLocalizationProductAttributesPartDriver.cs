@@ -36,31 +36,49 @@ namespace Nwazet.Commerce.Drivers {
 
         protected override DriverResult Editor(ProductAttributesPart part, dynamic shapeHelper) {
             //check the settings
-            List<ProductAttributePart> badAttributes = new List<ProductAttributePart>();
-            if (part.TypePartDefinition.Settings.GetModel<ProductAttributeLocalizationSettings>().HideAttributesFromEditor) {
-                LocalizationPart locPart = part.ContentItem.As<LocalizationPart>();
-                if (locPart != null && locPart.Culture != null && !string.IsNullOrWhiteSpace(locPart.Culture.Culture)) {
-                    //We need to have selected a product's culture
+            List<ProductAttributePart> toHide = new List<ProductAttributePart>(); //hide these attributes
+            List<ProductAttributePart> toMark = new List<ProductAttributePart>(); //write the culture for these attributes
+            LocalizationPart locPart = part.ContentItem.As<LocalizationPart>();
+            if (locPart != null && locPart.Culture != null && !string.IsNullOrWhiteSpace(locPart.Culture.Culture)) {
+                Func<ProductAttributePart, bool> HasDifferentCulture = pap => {
+                    var lP = pap.ContentItem.As<LocalizationPart>();
+                    return lP != null && //has a LocalizationPart AND
+                        (lP.Culture == null || //culture undefined OR
+                            (string.IsNullOrWhiteSpace(lP.Culture.Culture) || //culture undefined OR
+                                (lP.Culture != locPart.Culture))); //culture different than the product's 
+                    };
+
+                //We need to have selected a product's culture
+                var settings = part.TypePartDefinition.Settings.GetModel<ProductAttributeLocalizationSettings>();
+                if (settings.HideAttributesFromEditor) {
                     //check the attributes and tell to the view which ones to hide away
-                    badAttributes.AddRange(_attributeService.Attributes.Where(pap => {
-                        var lP = pap.ContentItem.As<LocalizationPart>();
-                        return lP != null && //has a LocalizationPart AND
-                            (lP.Culture == null || //culture undefined OR
-                                (string.IsNullOrWhiteSpace(lP.Culture.Culture) || //culture undefined OR
-                                    (lP.Culture != locPart.Culture))); //culture different than the product's 
-                    }));
+                    toHide.AddRange(_attributeService.Attributes
+                        .Where(pap => !part.AttributeIds.Contains(pap.Id)) //we don't hide the attributes that are selected
+                        .Where(HasDifferentCulture));
+                    toMark.AddRange(_attributeService.GetAttributes(part.AttributeIds)
+                        .Where(HasDifferentCulture));
+                }
+                else {
+                    toMark.AddRange(_attributeService.Attributes
+                        .Where(HasDifferentCulture));
                 }
             }
+            
             return ContentShape(
                 "Parts_ProductAttributes_Edit",
                 () => shapeHelper.EditorTemplate(
                     TemplateName: "Parts/AttributeLocalizationProductAttributes",
                     Prefix: Prefix,
-                    Model: new ProductAttributesPartEditViewModel {
+                    Model: new AttributeLocalizationProductAttributesPartEditViewModel {
                         Prefix = Prefix,
                         Part = part,
-                        Attributes = badAttributes
+                        AttributesToHide = toHide,
+                        AttributesToMark = toMark
                     }));
+        }
+
+        protected override DriverResult Editor(ProductAttributesPart part, IUpdateModel updater, dynamic shapeHelper) {
+            return Editor(part, shapeHelper);
         }
     }
 }
