@@ -17,5 +17,6 @@ namespace Nwazet.Commerce.Settings {
         public bool TryToLocalizeAttributes { get; set; }
         public bool RemoveAttributesWithoutLocalization { get; set; }
         public bool AssertAttributesHaveSameCulture { get; set; }
+        public bool HideAttributesFromEditor { get; set; }
     }
 }

@@ -1,0 +1,35 @@
+﻿@model Nwazet.Commerce.ViewModels.ProductAttributesPartEditViewModel
+@using Nwazet.Commerce.Settings
+
+
+@{ 
+    Script.Require("jQuery").AtFoot();
+
+    string dataPartName = HttpUtility.JavaScriptStringEncode(Model.Part.PartDefinition.Name);
+
+    string additionalHint = "";
+    List<string> addHints = new List<string>();
+    var settings = Model.Part.TypePartDefinition.Settings.GetModel<ProductAttributeLocalizationSettings>();
+    if (settings.TryToLocalizeAttributes) {
+        addHints.Add(T("Attributes with a culture different than the product will be locelized.").Text);
+    }
+    if (settings.RemoveAttributesWithoutLocalization) {
+        addHints.Add(T("If localization is not possible, attributes will be removed.").Text);
+    }
+    if (settings.AssertAttributesHaveSameCulture) {
+        addHints.Add(T("Publication will fail if attributes have a different culture than that of the product.").Text);
+    }
+    additionalHint = string.Join(" ", addHints);
+}
+
+@using (Script.Foot()) {
+    //this script will add to the hints of the ProductAttributesPart
+    <script type="text/javascript">
+        $(function () {
+            var hint = $("#attributes-fieldset-@Html.IdFor(m => m.Part)").find("div.hint")[0];
+            if (hint) {
+                hint.innerText += " " + "@additionalHint";
+            }
+        });
+    </script>
+}

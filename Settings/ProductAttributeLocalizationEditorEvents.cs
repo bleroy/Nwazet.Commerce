@@ -51,6 +51,9 @@ namespace Nwazet.Commerce.Settings {
                     builder
                         .WithSetting("ProductAttributeLocalizationSettings.AssertAttributesHaveSameCulture",
                             settings.AssertAttributesHaveSameCulture.ToString(CultureInfo.InvariantCulture));
+                    builder
+                        .WithSetting("ProductAttributeLocalizationSettings.HideAttributesFromEditor",
+                            settings.HideAttributesFromEditor.ToString(CultureInfo.InvariantCulture));
                 }
                 yield return DefinitionTemplate(settings);
             }

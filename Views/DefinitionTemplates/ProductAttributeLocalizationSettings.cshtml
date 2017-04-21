@@ -14,4 +14,8 @@
     <label for="@Html.FieldIdFor(m => m.AssertAttributesHaveSameCulture)" class="forcheckbox">@T("Verify culture of selected attributes.")</label>
     <span class="hint">@T("Check to prevent publication of products when the attributes selected have a different culture. This only applies if the product has a LocalizationPart.")</span>
 
+    @Html.CheckBoxFor(m => m.HideAttributesFromEditor)
+    <label for="@Html.FieldIdFor(m => m.HideAttributesFromEditor)" class="forcheckbox">@T("Don't show attributes.")</label>
+    <span class="hint">@T("Check to prevent showing attributes that have a different culture than the product in its editor view. This only applies if the product has a LocalizationPart.")</span>
+
 </fieldset>

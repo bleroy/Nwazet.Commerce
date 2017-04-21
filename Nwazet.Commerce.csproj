@@ -203,6 +203,7 @@
     <Compile Include="Controllers\StripeController.cs" />
     <Compile Include="Drivers\AdvancedSKUProductPartDriver.cs" />
     <Compile Include="Drivers\AdvancedSKUsSiteSettingPartDriver.cs" />
+    <Compile Include="Drivers\AttributeLocalizationProductAttributesPartDriver.cs" />
     <Compile Include="Drivers\BundlePartDriver.cs" />
     <Compile Include="Drivers\OrderPartDriver.cs" />
     <Compile Include="Drivers\ProductSettingsPartDriver.cs" />
@@ -509,6 +510,7 @@
     <None Include="Views\DefinitionTemplates\ProductAttributeLocalizationSettings.cshtml" />
     <None Include="Views\ECommerceSettingsAdmin\Index.cshtml" />
     <None Include="Views\EditorTemplates\Parts\AdvancedSKUProduct.cshtml" />
+    <None Include="Views\EditorTemplates\Parts\AttributeLocalizationProductAttributes.cshtml" />
     <None Include="Views\EditorTemplates\SiteSettings\AdvancedSKUs.cshtml" />
   </ItemGroup>
   <PropertyGroup>
