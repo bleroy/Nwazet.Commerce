@@ -3,7 +3,7 @@
 }
 <br/>
 @T("Price"):
-@Display.Price(Price: Model.Price, DiscountedPrice: Model.DiscountedPrice, DiscountComment: Model.DiscountComment)
+@Display.Price(Price: Model.Price, DiscountedPrice: Model.DiscountedPrice, DiscountComment: Model.DiscountComment, CurrencyProvider: Model.CurrencyProvider)
 <br />
 @Model.Sku<br/>
 @if (Model.Inventory != null && (int)Model.Inventory <= 0 && 

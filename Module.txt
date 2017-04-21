@@ -76,3 +76,8 @@ Features:
         Description: Makes the use of SKUs more advanced, by providing options related to their uniqueness and automatic generation
         Category: Commerce
         Dependencies: Nwazet.Commerce
+	Nwazet.CurrencyProviderBySiteSetting
+		Name: SiteSettings Currency Provider
+        Description: Enables a currency provider for the site based on a site's setting
+        Category: Commerce
+        Dependencies: Nwazet.Commerce

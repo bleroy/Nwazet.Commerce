@@ -9,6 +9,7 @@
   <Place Parts_Stripe_Settings="Content:5"/>
   <Place Parts_Product_Settings="Content:5"/>
   <Place SiteSettings_AdvancedSKUs="Content:5"/>
+  <Place SiteSettings_Currency="Content:5"/>
   <Place Parts_UspsShippingMethod_Edit="Content:2"/>
   <Place UspsShippingTestForm="Content:6"/>
   <Place Parts_WeightBasedShippingMethod_Edit="Content:2"/>

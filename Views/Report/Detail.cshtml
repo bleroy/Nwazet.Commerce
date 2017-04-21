@@ -63,7 +63,7 @@
                 String.IsNullOrWhiteSpace(dataPoint.ValueString)
                     ? String.IsNullOrWhiteSpace(Model.ValueFormat)
                         ? dataPoint.Value.ToString(CultureInfo.CurrentUICulture)
-                        : dataPoint.Value.ToString(Model.ValueFormat)
+                        : Model.CurrencyProvider.GetPriceString(dataPoint.Value)//.ToString(Model.ValueFormat)
                     : dataPoint.ValueString;
             <tr>
                 <td class="description">@dataPoint.Description</td>
@@ -88,7 +88,7 @@
                                 String.IsNullOrWhiteSpace(seriesDataPoint.ValueString)
                                     ? String.IsNullOrWhiteSpace(Model.ValueFormat)
                                         ? seriesDataPoint.Value.ToString(CultureInfo.CurrentUICulture)
-                                        : seriesDataPoint.Value.ToString(Model.ValueFormat)
+                                        : Model.CurrencyProvider.GetPriceString(seriesDataPoint.Value)//.ToString(Model.ValueFormat)
                                     : seriesDataPoint.ValueString;
                             <td class="series-value" data-value="@seriesDataPoint.Value" data-value-string="@seriesValueString">
                                 @if (!String.IsNullOrWhiteSpace(seriesDataPoint.Url)) {

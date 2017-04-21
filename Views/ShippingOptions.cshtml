@@ -12,7 +12,7 @@
     <div class="shipping-option">
         <label for="@Html.Id("ShippingOption")_@(i)">
             @T("{1} {0}", Html.Raw(shippingOption.Description), shippingOption.ShippingCompany):
-            <span class="shipping-price">@shippingOption.Price.ToString("c")</span>
+            <span class="shipping-price">@Model.CurrencyProvider.GetPriceString(shippingOption.Price)</span>
         </label>
         @Html.RadioButton("ShippingOption", shippingOption.FormValue, new {id = Html.Id("ShippingOption") + "_" + i})
     </div>

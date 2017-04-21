@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
@@ -162,6 +163,10 @@ namespace Nwazet.Commerce.Tests.Stubs {
 
         public void Import(XElement element, ImportContentSession importContentSession) {
             throw new System.NotImplementedException();
+        }
+
+        public void CompleteImport(XElement element, ImportContentSession importContentSession) {
+            throw new NotImplementedException();
         }
     }
 }

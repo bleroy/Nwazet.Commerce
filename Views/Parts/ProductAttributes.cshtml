@@ -15,7 +15,7 @@
         }
         <select name="@(attributeFieldName + ".a" + attribute.Id)" id="@attribute.Id" class="product-attribute">
             @foreach (var val in attribute.AttributeValues) {
-                var priceAdjustment = val.PriceAdjustment != 0 ? "(" + (val.PriceAdjustment < 0 ? "-" : "+") + Math.Abs(val.PriceAdjustment).ToString("C") + ")" : "";
+                var priceAdjustment = val.PriceAdjustment != 0 ? "(" + Model.CurrencyProvider.GetPriceString(val.PriceAdjustment) + ")" : "";
                 <option value="@val.Text" @(!string.IsNullOrEmpty(val.ExtensionProvider) ? "data-has-extension=true data-extension-name=" + val.ExtensionProvider + attribute.Id : "")>
                     @val.Text @priceAdjustment
                 </option>
