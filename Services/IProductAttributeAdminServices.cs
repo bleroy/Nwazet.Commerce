@@ -5,6 +5,6 @@ using Orchard;
 namespace Nwazet.Commerce.Services {
     public interface IProductAttributeAdminServices : IDependency {
 
-        IEnumerable<ProductAttributePart> GetAllParts();
+        IEnumerable<ProductAttributePart> GetAllProductAttributeParts();
     }
 }

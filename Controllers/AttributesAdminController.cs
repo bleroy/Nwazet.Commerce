@@ -45,7 +45,7 @@ namespace Nwazet.Commerce.Controllers {
                 return new HttpUnauthorizedResult();
 
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters.Page, pagerParameters.PageSize);
-            var attributes = _productAttributeAdminServices.GetAllParts();
+            var attributes = _productAttributeAdminServices.GetAllProductAttributeParts();
             var paginatedAttributes = attributes
                 .Skip(pager.GetStartIndex());
             if (pager.PageSize > 0) {

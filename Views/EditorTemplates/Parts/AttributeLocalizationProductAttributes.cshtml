@@ -33,7 +33,7 @@
         $(function () {
             var hint = $("#attributes-fieldset-@Html.IdFor(m => m.Part)").find("div.hint")[0];
             if (hint) {
-                hint.innerText += " " + "@additionalHint";
+                hint.innerText += " @additionalHint";
             }
         });
     </script>

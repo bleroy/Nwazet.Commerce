@@ -15,7 +15,7 @@ namespace Nwazet.Commerce.Services {
             _contentManager = contentManager;
         }
 
-        public IEnumerable<ProductAttributePart> GetAllParts() {
+        public IEnumerable<ProductAttributePart> GetAllProductAttributeParts() {
             return _contentManager
                 .Query<ProductAttributePart>()
                 .Join<TitlePartRecord>()
