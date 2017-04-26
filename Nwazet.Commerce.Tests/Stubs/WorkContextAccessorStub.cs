@@ -55,5 +55,13 @@ namespace Nwazet.Commerce.Tests.Stubs {
         public override void SetState<T>(string name, T value) {
             throw new System.NotImplementedException();
         }
+
+        public override object Resolve(Type serviceType) {
+            throw new NotImplementedException();
+        }
+
+        public override bool TryResolve(Type serviceType, out object service) {
+            throw new NotImplementedException();
+        }
     }
 }

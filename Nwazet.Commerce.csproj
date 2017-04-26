@@ -205,6 +205,7 @@
     <Compile Include="Drivers\AdvancedSKUsSiteSettingPartDriver.cs" />
     <Compile Include="Drivers\AttributeLocalizationProductAttributesPartDriver.cs" />
     <Compile Include="Drivers\BundlePartDriver.cs" />
+    <Compile Include="Drivers\ECommerceCurrencySiteSettingsPartDriver.cs" /> 
     <Compile Include="Drivers\OrderPartDriver.cs" />
     <Compile Include="Drivers\ProductSettingsPartDriver.cs" />
     <Compile Include="Drivers\ZipCodeTaxPartDriver.cs" />
@@ -221,12 +222,14 @@
     <Compile Include="Drivers\WeightBasedShippingMethodPartDriver.cs" />
     <Compile Include="Exceptions\StripeException.cs" />
     <Compile Include="Extensions\AttributeNameUtilities.cs" />
+    <Compile Include="Features\CurrencyProviderBySiteSettingFeature.cs" /> 
     <Compile Include="Filters\ReferrerFilter.cs" />
     <Compile Include="Handlers\AdvancedSKUManagementHandler.cs" />
     <Compile Include="Handlers\AdvancedSKUsSiteSettingPartHandler.cs" />
     <Compile Include="Handlers\BundlePartHandler.cs" />
     <Compile Include="Handlers\AttributePartHandler.cs" />
     <Compile Include="Handlers\AttributesPartHandler.cs" />
+    <Compile Include="Handlers\ECommerceCurrencySiteSettingsPartHandler.cs" /> 
     <Compile Include="Handlers\LocalizationAttributePartHandler.cs" />
     <Compile Include="Handlers\OrderPartHandler.cs" />
     <Compile Include="Handlers\ProductSettingsPartHandler.cs" />
@@ -262,6 +265,7 @@
     <Compile Include="Models\CheckoutItem.cs" />
     <Compile Include="Models\ConversionUtilities.cs" />
     <Compile Include="Models\Charge.cs" />
+    <Compile Include="Models\ECommerceCurrencySiteSettingsPart.cs" /> 
     <Compile Include="Models\ICharge.cs" />
     <Compile Include="Models\OrderEvent.cs" />
     <Compile Include="Models\OrderPart.cs" />
@@ -325,6 +329,7 @@
     <Compile Include="Routes\StripeRoutes.cs" />
     <Compile Include="Routes\OrderRoutes.cs" />
     <Compile Include="Routes\CommerceRoutes.cs" />
+    <Compile Include="Services\CurrencyProviderBase.cs" /> 
     <Compile Include="Services\IProductAttributeAdminServices.cs" />
     <Compile Include="Services\ISKUGenerationServices.cs" />
     <Compile Include="Services\ISKUUniquenessHelper.cs" />
@@ -333,6 +338,8 @@
     <Compile Include="Services\IProductAttributeNameService.cs" />
     <Compile Include="Services\ProductAttributeAdminServices.cs" />
     <Compile Include="Services\ProductAttributeNameService.cs" />
+    <Compile Include="Services\Currency.cs" /> 
+    <Compile Include="Services\ICurrencyProvider.cs" /> 
     <Compile Include="Services\ProductResolverSelector.cs" />
     <Compile Include="Services\AddressFormatter.cs" />
     <Compile Include="Services\BundleService.cs" />
@@ -352,6 +359,8 @@
     <Compile Include="Services\ShippingService.cs" />
     <Compile Include="Services\SKUGenerationServices.cs" />
     <Compile Include="Services\TextProductAttributeExtensionProvider.cs" />
+    <Compile Include="Services\UseCurrencyFromSiteCultureProvider.cs" /> 
+    <Compile Include="Services\UseCurrencyFromSiteSettingsProvider.cs" /> 
     <Compile Include="Services\ZipCodeTaxProvider.cs" />
     <Compile Include="Services\StateOrCountryTaxProvider.cs" />
     <Compile Include="Services\StripeWebService.cs" />
@@ -389,6 +398,8 @@
     <Compile Include="Tokens\ProductTokens.cs" />
     <Compile Include="ViewModels\AdancedSKUsSiteSettingsViewModel.cs" />
     <Compile Include="ViewModels\AdvancedSKUProductEditorViewModel.cs" />
+    <Compile Include="ViewModels\ECommerceCurrencySiteSettingsViewModel.cs" /> 
+    <Compile Include="ViewModels\ECommerceSettingsViewModel.cs" /> 
     <Compile Include="ViewModels\AttributeLocalizationProductAttributesPartEditViewModel.cs" />
     <Compile Include="ViewModels\ProductAttributePartDisplayViewModel.cs" />
     <Compile Include="ViewModels\ProductAttributePartEditViewModel.cs" />
@@ -513,6 +524,7 @@
     <None Include="Views\EditorTemplates\Parts\AdvancedSKUProduct.cshtml" />
     <None Include="Views\EditorTemplates\Parts\AttributeLocalizationProductAttributes.cshtml" />
     <None Include="Views\EditorTemplates\SiteSettings\AdvancedSKUs.cshtml" />
+    <None Include="Views\EditorTemplates\SiteSettings\Currency.cshtml" /> 
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -545,4 +557,4 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
-</Project>
+</Project> 
