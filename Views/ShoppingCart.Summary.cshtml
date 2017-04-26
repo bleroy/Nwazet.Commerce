@@ -71,7 +71,7 @@
                                     </span>
                                 }
                             </span>
-                            <span class="numeric">@totalPrice.ToString("c")</span>
+                            <span class="numeric">@Model.CurrencyProvider.GetPriceString(totalPrice)</span>
                             @if (minimumOrderQuantity > 1) {
                                 <br /><strong>Minimum order of @minimumOrderQuantity required.</strong>
                             }
@@ -82,7 +82,7 @@
             <div class="total">
                 <button name="command" value="Update" type="submit" class="update-button">@T("Update All")</button>
                 <span class="numeric label">@T("Subtotal:")</span>
-                <span class="numeric subtotal">@subtotal.ToString("c")</span>
+                <span class="numeric subtotal">@Model.CurrencyProvider.GetPriceString(subtotal)</span>
             </div>
             if (Model.CheckoutButtons != null) {
                 <span class="explanation">@T("Tax and shipping will be calculated at checkout.")</span>

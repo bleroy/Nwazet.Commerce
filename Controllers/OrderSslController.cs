@@ -25,6 +25,7 @@ namespace Nwazet.Commerce.Controllers {
         private readonly INotifier _notifier;
         private readonly IShoppingCart _shoppingCart;
         private readonly IOrchardServices _orchardServices;
+        private readonly ICurrencyProvider _currencyProvider;
 
         public OrderSslController(
             IOrderService orderService,
@@ -34,7 +35,8 @@ namespace Nwazet.Commerce.Controllers {
             IAddressFormatter addressFormatter,
             INotifier notifier,
             IShoppingCart shoppingCart,
-            IOrchardServices orchardServices) {
+            IOrchardServices orchardServices,
+            ICurrencyProvider currencyProvider) {
 
             _orderService = orderService;
             _contentManager = contentManager;
@@ -46,6 +48,7 @@ namespace Nwazet.Commerce.Controllers {
             _orderService = orderService;
             T = NullLocalizer.Instance;
             _orchardServices = orchardServices;
+            _currencyProvider = currencyProvider;
         }
 
         public Localizer T { get; set; }
@@ -83,7 +86,8 @@ namespace Nwazet.Commerce.Controllers {
                 ChargeText: order.Charge.ChargeText,
                 SpecialInstructions: order.SpecialInstructions,
                 PurchaseOrder: order.PurchaseOrder,
-                Password: order.Password);
+                Password: order.Password,
+                CurrencyCode: string.IsNullOrWhiteSpace(order.CurrencyCode) ? _currencyProvider.CurrencyCode : order.CurrencyCode);
             _shoppingCart.Clear();
             return new ShapeResult(this, shape);
         }

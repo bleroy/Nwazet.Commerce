@@ -29,6 +29,7 @@ namespace Nwazet.Commerce.Controllers {
         private readonly IWorkflowManager _workflowManager;
         private readonly INotifier _notifier;
         private readonly IEnumerable<IProductAttributeExtensionProvider> _attributeExtensionProviders;
+        private readonly ICurrencyProvider _currencyProvider;
 
         public Localizer T { get; set; }
 
@@ -45,7 +46,8 @@ namespace Nwazet.Commerce.Controllers {
             IEnumerable<IExtraCartInfoProvider> extraCartInfoProviders,
             IWorkflowManager workflowManager,
             INotifier notifier,
-            IEnumerable<IProductAttributeExtensionProvider> attributeExtensionProviders) {
+            IEnumerable<IProductAttributeExtensionProvider> attributeExtensionProviders,
+            ICurrencyProvider currencyProvider) {
 
             _shippingMethodProviders = shippingMethodProviders;
             _shoppingCart = shoppingCart;
@@ -57,6 +59,7 @@ namespace Nwazet.Commerce.Controllers {
             _workflowManager = workflowManager;
             _notifier = notifier;
             _attributeExtensionProviders = attributeExtensionProviders;
+            _currencyProvider = currencyProvider;
 
             T = NullLocalizer.Instance;
         }
@@ -247,6 +250,7 @@ namespace Nwazet.Commerce.Controllers {
             shape.Subtotal = subtotal;
             shape.Taxes = taxes;
             shape.Total = _shoppingCart.Total(subtotal, taxes);
+            shape.CurrencyProvider = _currencyProvider;
             if (isSummary) {
                 shape.Metadata.Alternates.Add("ShoppingCart_Summary");
             }

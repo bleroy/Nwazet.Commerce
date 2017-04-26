@@ -22,7 +22,8 @@ namespace Nwazet.Commerce.Services {
             bool isTestOrder = false,
             int userId = -1,
             double amountPaid = 0,
-            string purchaseOrder = "");
+            string purchaseOrder = "",
+            string currencyCode = "");
 
         OrderPart Get(int orderId);
         string GetDisplayUrl(OrderPart order);

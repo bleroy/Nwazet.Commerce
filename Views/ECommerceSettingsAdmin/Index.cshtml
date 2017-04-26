@@ -1,11 +1,16 @@
 ﻿﻿@using Orchard.ContentManagement
+@model Nwazet.Commerce.ViewModels.ECommerceSettingsViewModel
 @{
     Layout.Title = T("Settings").ToString();
 }
 
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
-    @Display(Model.Content)
+    <fieldset>
+        <legend>@T("Selected currency provider: ")</legend>
+        <span class="description">@Model.CurrencyProvider.Description</span>
+    </fieldset>
+    @Display(Model.Model.Content)
     <fieldset>
         <button class="primaryAction" type="submit">@T("Save")</button>
     </fieldset>

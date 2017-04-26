@@ -1,9 +1,13 @@
 ﻿@using Nwazet.Commerce.Models
+@using Nwazet.Commerce.Services
 @using Orchard.ContentManagement
 @using Orchard.Mvc.Html
+@using System.Globalization
 @{
     var title = Layout.Title = T("Order #{0}", Model.OrderId);
     var items = (Model.CheckoutItems as IEnumerable<CheckoutItem> ?? new CheckoutItem[] {}).ToList();
+    Currency currencyInUse = Currency.Currencies[Model.CurrencyCode];
+    CultureInfo cultureInUse = CultureInfo.GetCultureInfo(WorkContext.CurrentCulture);
 }
 <h1>@title</h1>
 <p class="order-status">@T("Status: {0}", Model.Status)</p>
@@ -27,27 +31,27 @@
                     <tr>
                         <td class="quantity">@item.Quantity &times;</td>
                         <td class="description"><a href="@Url.ItemDisplayUrl((IContent) Model.Products[item.ProductId])">@item.Title</a></td>
-                        <td class="price">@item.Price.ToString("C")</td>
-                        <td class="price">@item.LinePriceAdjustment.ToString("C")</td>
+                        <td class="price">@currencyInUse.PriceAsString(item.Price, cultureInUse)</td>
+                        <td class="price">@currencyInUse.PriceAsString(item.LinePriceAdjustment, cultureInUse)</td>
                     </tr>
                 }
             </tbody>
             <tfoot>
                 <tr class="subtotal">
                     <td colspan="2" class="label">@T("Subtotal")</td>
-                    <td class="price">@Model.SubTotal.ToString("C")</td>
+                    <td class="price">@currencyInUse.PriceAsString(Model.SubTotal, cultureInUse)</td>
                 </tr>
                 <tr class="taxes">
                     <td colspan="2" class="label">@T("Taxes {0}", string.IsNullOrWhiteSpace(Model.Taxes.Name) ? "" : Model.Taxes.Name)</td>
-                    <td class="price">@Model.Taxes.Amount.ToString("C")</td>
+                    <td class="price"@currencyInUse.PriceAsString(Model.Taxes.Amount, cultureInUse)></td>
                 </tr>
                 <tr class="shipping">
                     <td colspan="2" class="label">@T("{0} {1}", Model.ShippingOption.ShippingCompany, Model.ShippingOption.Description)</td>
-                    <td class="price">@Model.ShippingOption.Price.ToString("C")</td>
+                    <td class="price">@currencyInUse.PriceAsString(Model.ShippingOption.Price, cultureInUse)</td>
                 </tr>
                 <tr class="total">
                     <td colspan="2" class="label">@T("Total")</td>
-                    <td class="price">@Model.Total.ToString("C")</td>
+                    <td class="price">@currencyInUse.PriceAsString(Model.Total, cultureInUse)</td>
                 </tr>
             </tfoot>
         </table>
@@ -77,7 +81,7 @@
     }
 }
 else {
-    <p class="total">@T("Total: {0:C}", Model.Total)</p>
+    <p class="total">@T("Total: {0}", currencyInUse.PriceAsString(Model.Total, cultureInUse)) </p>
     Script.Require("jQuery");
     using (Script.Foot()) {
         <script>

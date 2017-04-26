@@ -17,5 +17,6 @@ namespace Nwazet.Commerce.ViewModels {
         public string LinkToTransaction { get; set; }
         public string UserName { get; set; }
         public bool UserNameNeeded { get; set; }
+        public string CurrencyCode { get; set; }
     }
 }
