@@ -20,5 +20,13 @@ namespace Nwazet.Commerce.Services {
         /// </summary>
         /// <param name="part">The ProductPart whose inventory will be copied over.</param>
         void SynchronizeInventories(ProductPart part);
+        /// <summary>
+        /// Updates the value of the ProductPart's inventory by adding the input value.
+        /// This method calls SynchronizeInventories after updating the part's inventory.
+        /// </summary>
+        /// <param name="part">The ProductPart whose inventory we are changing.</param>
+        /// <param name="inventoryChange">The change to the inventory. This may be negative to decrease the inventory.</param>
+        /// <returns>The new value of the ProductPart's inventory.</returns>
+        int UpdateInventory(ProductPart part, int inventoryChange);
     }
 }

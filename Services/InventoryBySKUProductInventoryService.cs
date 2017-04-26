@@ -9,21 +9,21 @@ using Orchard.Environment.Extensions;
 
 namespace Nwazet.Commerce.Services {
     [OrchardFeature("Nwazet.InventoryBySKU")]
-    public class InventoryBySKUProductInventoryService : IProductInventoryService {
+    public class InventoryBySKUProductInventoryService : ProductInventoryServiceBase {
         private readonly IContentManager _contentManager;
         public InventoryBySKUProductInventoryService(
             IContentManager contentManager) {
 
             _contentManager = contentManager;
         }
-        public IEnumerable<ProductPart> GetProductsWithSameInventory(ProductPart part) {
+        public override IEnumerable<ProductPart> GetProductsWithSameInventory(ProductPart part) {
             return _contentManager
                 .Query<ProductPart, ProductPartRecord>(VersionOptions.Latest)
                 .Where(pa => pa.Sku == part.Sku && pa.ContentItemRecord.Id != part.ContentItem.Id)
                 .List();
         }
 
-        public void SynchronizeInventories(ProductPart part) {
+        public override void SynchronizeInventories(ProductPart part) {
             foreach (var pp in GetProductsWithSameInventory(part)) {
                 pp.Inventory = part.Inventory;
             }
