@@ -46,14 +46,10 @@
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project> 
       <Name>Orchard.Framework</Name> 
     </ProjectReference> 
-      <HintPath>..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath> 
-    </Reference> 
     <ProjectReference Include="..\..\..\Orchard.Web\Modules\Orchard.Roles\Orchard.Roles.csproj"> 
       <Project>{d10ad48f-407d-4db5-a328-173ec7cb010f}</Project> 
       <Name>Orchard.Roles</Name> 
     </ProjectReference> 
-      <HintPath>..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Roles\bin\Orchard.Roles.dll</HintPath> 
-    </Reference> 
     <Reference Include="pnunit.framework, Version=1.0.4109.34242, Culture=neutral, processorArchitecture=MSIL"> 
       <HintPath>..\..\..\..\packages\NUnit.2.5.10.11092\lib\pnunit.framework.dll</HintPath> 
       <Private>True</Private> 
