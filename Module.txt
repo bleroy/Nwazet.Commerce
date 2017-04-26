@@ -81,3 +81,8 @@ Features:
         Description: Enables a currency provider for the site based on a site's setting
         Category: Commerce
         Dependencies: Nwazet.Commerce
+	Nwazet.InventoryBySKU:
+		Name: Nwazet Relate Inventory to SKU
+		Description: Estabilish 1-to-1 relationship between SKU and inventory.
+		Category: Commerce
+		Dependencies: Nwazet.AdvancedSKUManagement

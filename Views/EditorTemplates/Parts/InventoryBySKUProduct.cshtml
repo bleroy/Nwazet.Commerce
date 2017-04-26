@@ -1,0 +1,27 @@
+﻿@model Nwazet.Commerce.ViewModels.InventoryBySKUProductEditorViewModel
+
+@if (Model.SameInventoryItems != null && Model.SameInventoryItems.Any()) {
+    var divId = Html.IdForModel().ToString() + Guid.NewGuid().ToString();
+
+    <div id="@divId">
+        @T("This product shares an inventory with the following:")
+        <ul>
+            @foreach (var productPart in Model.SameInventoryItems) {
+                <li>
+                    @Html.ItemEditLink(Html.ItemDisplayText(productPart.ContentItem).ToHtmlString(), productPart.ContentItem)
+                </li>
+            }
+        </ul>
+        @T("Changes to this product's inventory will be applied to the other products as well.")
+    </div>
+
+    using (Script.Foot()) {
+        <script type="text/javascript">
+            $(function () {
+                var myDiv = $("#@divId");
+                var inventoryText = $("#@Html.IdFor(m => m.Product.Inventory)");
+                inventoryText.after(myDiv);
+            })
+        </script>
+    }
+}

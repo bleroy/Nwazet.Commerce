@@ -3,7 +3,6 @@
 @Html.HiddenFor(m => m.Product.Sku)
 
 @{
-    string skuHtml = "";
     var divId = Html.IdForModel().ToString() + Guid.NewGuid().ToString();
 }
 <div id="@divId" display:none>
