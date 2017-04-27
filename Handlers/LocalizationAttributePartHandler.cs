@@ -37,20 +37,6 @@ namespace Nwazet.Commerce.Handlers {
         }
 
         public Localizer T;
-        protected override void GetItemMetadata(GetContentItemMetadataContext context) {
-            var part = context.ContentItem.As<ProductAttributePart>();
-            if (part != null) {
-                var locPart = context.ContentItem.As<LocalizationPart>();
-                if (locPart != null) {
-                    if (locPart.Culture != null && !string.IsNullOrWhiteSpace(locPart.Culture.Culture)) {
-                        context.Metadata.DisplayText += T(" ({0})", locPart.Culture.Culture).Text;
-                    }
-                    else {
-                        context.Metadata.DisplayText += T(" (culture undefined)").Text;
-                    }
-                }
-            }
-        }
 
         private string DisplayTextFromId(int id) {
             return _contentManager.GetItemMetadata(_contentManager.GetLatest(id)).DisplayText;
@@ -68,35 +54,35 @@ namespace Nwazet.Commerce.Handlers {
 
                     if (settings.TryToLocalizeAttributes) {
                         //try to replace attributes with their correct localization
-                        //newAttributesIds is IEnumerable<Tuple<int, int>>.
-                        //newAttributesIds.Item1 is the attribute id in the initial ProductAttributesPart
-                        //newAttributesIds.Item2 is the attribute id after localization (<0 if no localization is found)
+                        //newAttributesIds is IEnumerable<AttributeIdPair>.
+                        //newAttributesIds.OriginalId is the attribute id in the initial ProductAttributesPart
+                        //newAttributesIds.NewId is the attribute id after localization (<0 if no localization is found)
                         var newAttributeIds = _productAttributeLocalizationServices.GetLocalizationIdPairs(attributesPart, locPart);
 
-                        if (newAttributeIds.Any(ni => ni.Item2 < 0)) {
+                        if (newAttributeIds.Any(ni => ni.NewId < 0)) {
                             if (settings.RemoveAttributesWithoutLocalization) {
                                 //remove the items for which we could not find a localization
                                 _orchardServices.Notifier.Warning(T(
                                     "We could not find a correct localization for the following attributes, so they were removed from this product: {0}",
-                                    string.Join(", ", newAttributeIds.Where(ni => ni.Item2 < 0)
-                                        .Select(tup => DisplayTextFromId(tup.Item1)
+                                    string.Join(", ", newAttributeIds.Where(ni => ni.NewId < 0)
+                                        .Select(ni => DisplayTextFromId(ni.OriginalId)
                                         )
                                     )
                                 ));
-                                newAttributeIds = newAttributeIds.Where(tup => tup.Item2 > 0);
+                                newAttributeIds = newAttributeIds.Where(tup => tup.NewId > 0);
                             }
                             else {
                                 //negative Ids are made positive again
-                                newAttributeIds = newAttributeIds.Select(tup => tup = new Tuple<int, int>(tup.Item1, Math.Abs(tup.Item2)));
+                                newAttributeIds = newAttributeIds.Select(ni => ni = new AttributeIdPair(ni.OriginalId, Math.Abs(ni.NewId)));
                             }
                         }
                         //replace the ids
-                        attributesPart.AttributeIds = newAttributeIds.Select(tup => tup.Item2).Distinct();
-                        if (newAttributeIds.Where(tup => tup.Item1 != tup.Item2).Any()) {
+                        attributesPart.AttributeIds = newAttributeIds.Select(ni => ni.NewId).Distinct();
+                        if (newAttributeIds.Where(ni => ni.OriginalId != ni.NewId).Any()) {
                             _orchardServices.Notifier.Warning(T(
                                    "The following attributes where replaced by their correct localization: {0}",
-                                   string.Join(", ", newAttributeIds.Where(tup => tup.Item1 != tup.Item2)
-                                       .Select(tup => DisplayTextFromId(tup.Item1)
+                                   string.Join(", ", newAttributeIds.Where(ni => ni.OriginalId != ni.NewId)
+                                       .Select(ni => DisplayTextFromId(ni.OriginalId)
                                        )
                                    )
                                ));

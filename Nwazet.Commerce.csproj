@@ -233,6 +233,7 @@
     <Compile Include="Exceptions\StripeException.cs" /> 
     <Compile Include="Extensions\AttributeNameUtilities.cs" /> 
     <Compile Include="Features\CurrencyProviderBySiteSettingFeature.cs" />
+    <Compile Include="Filters\LocalizationAttributeFilter.cs" />
     <Compile Include="Filters\ReferrerFilter.cs" /> 
     <Compile Include="Handlers\AdvancedSKUManagementHandler.cs" /> 
     <Compile Include="Handlers\AdvancedSKUsSiteSettingPartHandler.cs" /> 
@@ -537,6 +538,7 @@
     <None Include="Views\EditorTemplates\Parts\AttributeLocalizationProductAttributes.cshtml" /> 
     <None Include="Views\EditorTemplates\SiteSettings\AdvancedSKUs.cshtml" /> 
     <None Include="Views\EditorTemplates\SiteSettings\Currency.cshtml" />
+    <None Include="Views\LocalizationAttributeIndexFilterScript.cshtml" />
   </ItemGroup> 
   <PropertyGroup> 
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion> 
