@@ -21,22 +21,22 @@ namespace Nwazet.Commerce.Services {
             _attributeService = attributeService;
         }
 
-        private Func<ProductAttributePart, Tuple<int, int>> NewAttributeIdSelector(LocalizationPart locPart) {
+        private Func<ProductAttributePart, AttributeIdPair> NewAttributeIdSelector(LocalizationPart locPart) {
             return pap => {
                 var ci = pap.ContentItem;
                 if (_localizationService.GetContentCulture(ci) == locPart.Culture.Culture) {
                     //this attribute is fine
-                    return new Tuple<int, int>(ci.Id, ci.Id);
+                    return new AttributeIdPair(ci.Id, ci.Id);
                 }
                 var localized = _localizationService.GetLocalizations(ci)
                     .FirstOrDefault(lp => lp.Culture == locPart.Culture);
                 return localized == null ?
-                    new Tuple<int, int>(ci.Id, -ci.Id) : //negative id where we found no localization
-                    new Tuple<int, int>(ci.Id, localized.Id);
+                    new AttributeIdPair(ci.Id, -ci.Id) : //negative id where we found no localization
+                    new AttributeIdPair(ci.Id, localized.Id);
             };
         }
 
-        public IEnumerable<Tuple<int, int>> GetLocalizationIdPairs(ProductAttributesPart attributesPart, LocalizationPart locPart) {
+        public IEnumerable<AttributeIdPair> GetLocalizationIdPairs(ProductAttributesPart attributesPart, LocalizationPart locPart) {
             return _attributeService.GetAttributes(attributesPart.AttributeIds)
                 .Select(NewAttributeIdSelector(locPart));
         }

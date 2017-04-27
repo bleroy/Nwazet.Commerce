@@ -6,6 +6,7 @@ using Orchard.Localization.Models;
 
 namespace Nwazet.Commerce.Services {
     public interface IProductAttributeLocalizationServices : IDependency {
+        
         /// <summary>
         /// Returns an enumerable of pairs of Ids. Each tuple
         /// from the enumerable has the form:
@@ -15,7 +16,7 @@ namespace Nwazet.Commerce.Services {
         /// </summary>
         /// <param name="locPart">A LocalizationPart for the desired target culture.</param>
         /// <returns>A IEnumerable as described.</returns>
-        IEnumerable<Tuple<int, int>> GetLocalizationIdPairs(ProductAttributesPart attributesPart, LocalizationPart locPart);
+        IEnumerable<AttributeIdPair> GetLocalizationIdPairs(ProductAttributesPart attributesPart, LocalizationPart locPart);
         /// <summary>
         /// Returns an IEnumerable containing the ProductAttributeParts that are selected in the given ProductAttributesPart
         /// and whose culture does not match the culture from the give LocalizationPart
@@ -24,5 +25,14 @@ namespace Nwazet.Commerce.Services {
         /// <param name="locPart">The LocalizationPart with the base culture we are looking for.</param>
         /// <returns>A IEnumerable as described</returns>
         IEnumerable<ProductAttributePart> GetAttributesInTheWrongCulture(ProductAttributesPart attributesPart, LocalizationPart locPart);
+    }
+    public struct AttributeIdPair {
+        public int OriginalId;
+        public int NewId;
+
+        public AttributeIdPair(int oId, int nId) {
+            OriginalId = oId;
+            NewId = nId;
+        }
     }
 }
