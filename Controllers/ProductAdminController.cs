@@ -24,6 +24,7 @@ namespace Nwazet.Commerce.Controllers {
         private readonly ISiteService _siteService;
         private readonly IWorkContextAccessor _wca;
         private readonly IOrchardServices _orchardServices;
+        private readonly IProductInventoryService _productInventoryService;
 
         public ProductAdminController(
             IOrchardServices services,
@@ -31,7 +32,9 @@ namespace Nwazet.Commerce.Controllers {
             ISiteService siteService,
             IWorkContextAccessor wca,
             IShapeFactory shapeFactory,
-            IOrchardServices orchardServices) {
+            IOrchardServices orchardServices,
+            IProductInventoryService productInventoryService) {
+
             Services = services;
             _contentManager = contentManager;
             _siteService = siteService;
@@ -39,6 +42,7 @@ namespace Nwazet.Commerce.Controllers {
             T = NullLocalizer.Instance;
             Shape = shapeFactory;
             _orchardServices = orchardServices;
+            _productInventoryService = productInventoryService;
         }
 
         dynamic Shape { get; set; }
@@ -85,7 +89,7 @@ namespace Nwazet.Commerce.Controllers {
                 return new HttpUnauthorizedResult();            
 
             var product = _contentManager.Get<ProductPart>(id);
-            product.Inventory--;
+            _productInventoryService.UpdateInventory(product, -1);
             Dictionary<string, int> newInventory;
             IBundleService bundleService;
             if (_wca.GetContext().TryResolve(out bundleService)) {
@@ -95,11 +99,38 @@ namespace Nwazet.Commerce.Controllers {
                     .List();
                 newInventory = affectedBundles.ToDictionary(
                     b => b.As<ProductPart>().Sku,
-                    b => bundleService.GetProductQuantitiesFor(b).Min(p => p.Product.Inventory / p.Quantity));
+                    b => bundleService.GetProductQuantitiesFor(b).Min(p => _productInventoryService.GetInventory(p.Product) / p.Quantity));
             } else {
                 newInventory = new Dictionary<string, int>(1);
             }
-            newInventory.Add(product.Sku, product.Inventory);
+            newInventory.Add(product.Sku, _productInventoryService.GetInventory(product));
+            return new JsonResult {
+                Data = newInventory
+            };
+        }
+
+        [HttpPost]
+        public ActionResult AddOne(int id) {
+            if (!_orchardServices.Authorizer.Authorize(CommercePermissions.ManageProducts, null, T("Not authorized to manage products")))
+                return new HttpUnauthorizedResult();
+
+            var product = _contentManager.Get<ProductPart>(id);
+            _productInventoryService.UpdateInventory(product, 1);
+            Dictionary<string, int> newInventory;
+            IBundleService bundleService;
+            if (_wca.GetContext().TryResolve(out bundleService)) {
+                var affectedBundles = _contentManager.Query<BundlePart, BundlePartRecord>()
+                    .Where(b => b.Products.Any(p => p.ContentItemRecord.Id == product.Id))
+                    .WithQueryHints(new QueryHints().ExpandParts<ProductPart>())
+                    .List();
+                newInventory = affectedBundles.ToDictionary(
+                    b => b.As<ProductPart>().Sku,
+                    b => bundleService.GetProductQuantitiesFor(b).Min(p => _productInventoryService.GetInventory(p.Product) / p.Quantity));
+            }
+            else {
+                newInventory = new Dictionary<string, int>(1);
+            }
+            newInventory.Add(product.Sku, _productInventoryService.GetInventory(product));
             return new JsonResult {
                 Data = newInventory
             };

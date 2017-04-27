@@ -8,5 +8,8 @@
         <a class="remove" href="#"
             data-id="@Model.ContentPart.ContentItem.Id"
             data-url="@Url.Action("RemoveOne", "ProductAdmin", new {area = "Nwazet.Commerce"})">@T("Remove one")</a>
+        <a class="addone" href="#"
+           data-id="@Model.ContentPart.ContentItem.Id"
+           data-url="@Url.Action("AddOne", "ProductAdmin", new {area = "Nwazet.Commerce"})">@T("Add one")</a>
     </div>
 }

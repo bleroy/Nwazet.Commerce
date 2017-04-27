@@ -12,10 +12,15 @@ namespace Nwazet.Commerce.Controllers {
     public class BundleAdminController : Controller {
         private readonly IBundleService _bundleService;
         private readonly IContentManager _contentManager;
+        private readonly IProductInventoryService _productInventoryService;
 
-        public BundleAdminController(IBundleService bundleService, IContentManager contentManager) {
+        public BundleAdminController(IBundleService bundleService, 
+            IContentManager contentManager,
+            IProductInventoryService productInventoryService) {
+
             _bundleService = bundleService;
             _contentManager = contentManager;
+            _productInventoryService = productInventoryService;
         }
 
         [HttpPost]
@@ -23,10 +28,11 @@ namespace Nwazet.Commerce.Controllers {
             var bundle = _contentManager.Get<BundlePart>(id);
             var products = _bundleService.GetProductQuantitiesFor(bundle).ToList();
             foreach (var productPartQuantity in products) {
-                productPartQuantity.Product.Inventory -= productPartQuantity.Quantity;
+                //These calls will also update the inventory for the bundle
+                _productInventoryService.UpdateInventory(productPartQuantity.Product, -productPartQuantity.Quantity);
             }
-            var newInventory = products.ToDictionary(p => p.Product.Sku, p => p.Product.Inventory);
-            newInventory.Add(bundle.As<ProductPart>().Sku, products.Min(p => p.Product.Inventory / p.Quantity));
+            var newInventory = products.ToDictionary(p => p.Product.Sku, p => _productInventoryService.GetInventory(p.Product));
+            newInventory.Add(bundle.As<ProductPart>().Sku, products.Min(p => _productInventoryService.GetInventory(p.Product) / p.Quantity));
             return new JsonResult {
                 Data = newInventory
             };

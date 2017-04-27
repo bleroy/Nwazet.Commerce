@@ -340,6 +340,7 @@
     <Compile Include="Services\ProductAttributeNameService.cs" />
     <Compile Include="Services\Currency.cs" />
     <Compile Include="Services\ICurrencyProvider.cs" />
+    <Compile Include="Services\ProductInventoryService.cs" />
     <Compile Include="Services\ProductInventoryServiceBase.cs" />
     <Compile Include="Services\ProductResolverSelector.cs" />
     <Compile Include="Services\AddressFormatter.cs" />

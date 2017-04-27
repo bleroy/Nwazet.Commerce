@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Nwazet.Commerce.Models;
 using Orchard;
 
@@ -15,7 +11,7 @@ namespace Nwazet.Commerce.Services {
         /// <returns>A IEnumerable of the ProductParts sharing the same inventory as the one we passed.</returns>
         IEnumerable<ProductPart> GetProductsWithSameInventory(ProductPart part);
         /// <summary>
-        /// Copies the inventory of the ProductPart parameter to all the ProductParts whose inventory
+        /// Uses the inventory of the ProductPart parameter to update the ProductParts whose inventory
         /// has to be kept in synch with the parameter's.
         /// </summary>
         /// <param name="part">The ProductPart whose inventory will be copied over.</param>
@@ -28,5 +24,11 @@ namespace Nwazet.Commerce.Services {
         /// <param name="inventoryChange">The change to the inventory. This may be negative to decrease the inventory.</param>
         /// <returns>The new value of the ProductPart's inventory.</returns>
         int UpdateInventory(ProductPart part, int inventoryChange);
+        /// <summary>
+        /// Get the inventory of the ProductPart specified.
+        /// </summary>
+        /// <param name="part">The ProductPart whose inventory we are looking for.</param>
+        /// <returns>The quantity in inventory.</returns>
+        int GetInventory(ProductPart part);
     }
 }

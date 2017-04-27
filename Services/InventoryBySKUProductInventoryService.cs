@@ -1,21 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Nwazet.Commerce.Models;
+using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 
 namespace Nwazet.Commerce.Services {
     [OrchardFeature("Nwazet.InventoryBySKU")]
     public class InventoryBySKUProductInventoryService : ProductInventoryServiceBase {
-        private readonly IContentManager _contentManager;
-        public InventoryBySKUProductInventoryService(
-            IContentManager contentManager) {
 
-            _contentManager = contentManager;
-        }
+        public InventoryBySKUProductInventoryService(
+            IWorkContextAccessor workContextAccessor,
+            IContentManager contentManager)
+            : base(workContextAccessor, contentManager) { }
+
         public override IEnumerable<ProductPart> GetProductsWithSameInventory(ProductPart part) {
             return _contentManager
                 .Query<ProductPart, ProductPartRecord>(VersionOptions.Latest)
@@ -24,8 +22,12 @@ namespace Nwazet.Commerce.Services {
         }
 
         public override void SynchronizeInventories(ProductPart part) {
-            foreach (var pp in GetProductsWithSameInventory(part)) {
-                pp.Inventory = part.Inventory;
+            base.SynchronizeInventories(part); //call this to synchronize bundles
+            int inv = GetInventory(part);
+            foreach (var pp in
+                GetProductsWithSameInventory(part)
+                    .Where(pa => GetInventory(pa) != inv)) { //condition to avoid infinite recursion
+                SetInventory(pp, GetInventory(part)); //call methods from base class
             }
         }
     }
