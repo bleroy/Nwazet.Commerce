@@ -27,7 +27,6 @@ namespace Nwazet.Commerce.Filters {
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
             if (!(filterContext.Result is ViewResult) || 
-                !(filterContext.Controller is AttributesAdminController) || 
                 !(((dynamic)filterContext.Result).Model is AttributesIndexViewModel)) {
                 return;
             }
