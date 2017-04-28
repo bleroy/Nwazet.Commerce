@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Nwazet.Commerce.Models;
+using Nwazet.Commerce.Services;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Environment;
@@ -12,17 +13,20 @@ using Orchard.Environment.Extensions.Models;
 namespace Nwazet.Commerce.Features {
     public class InventoryBySKUFeature : IFeatureEventHandler {
         private readonly IOrchardServices _orchardServices;
+        private readonly IProductInventoryService _productInventoryService;
         public InventoryBySKUFeature(
-            IOrchardServices orchardServices) {
+            IOrchardServices orchardServices,
+            IProductInventoryService productInventoryService) {
 
             _orchardServices = orchardServices;
+            _productInventoryService = productInventoryService;
         }
 
         public void Enabled(Feature feature) {
             if (feature.Descriptor.Id == "Nwazet.InventoryBySKU") {
                 //the feature has just been enabled, so maybe the inventories are not in synch
-                _orchardServices.WorkContext.CurrentSite.As<InventoryBySKUSiteSettingsPart>().InventoriesAreAllInSynch = false;
-                //check whether inventories are already synchronized
+                _orchardServices.WorkContext.CurrentSite.As<InventoryBySKUSiteSettingsPart>().InventoriesAreAllInSynch =
+                    !_productInventoryService.GetProductsWithInventoryIssues().Any();
             }
         }
 

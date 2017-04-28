@@ -30,5 +30,32 @@ namespace Nwazet.Commerce.Services {
                 SetInventory(pp, GetInventory(part)); //call methods from base class
             }
         }
+
+        public override IEnumerable<ProductPart> GetProductsWithInventoryIssues() {
+            var badProducts = _contentManager
+                .Query<ProductPart, ProductPartRecord>(VersionOptions.Latest)
+                .List() //Get all ProductParts
+                .GroupBy(pp => pp.Sku) //group them based on their SKU
+                .Where(group => group.Count() > 1) //single products are not groups
+                .Where(group => group
+                    .Select(pp => GetInventory(pp))
+                    .Distinct()
+                    .Count() > 1) //groups where the inventories are not all the same
+                .Select(group => group.First()); //get the first ProductPart as representative of the group
+
+            var first = _contentManager
+                .Query<ProductPart, ProductPartRecord>(VersionOptions.Latest)
+                .List();
+            var second = first.GroupBy(pp => pp.Sku);
+            var third = second.Where(group => group.Count() > 1);
+            var fourth = third.Where(group => group
+                    .Select(pp => GetInventory(pp))
+                    .Distinct()
+                    .Count() > 1);
+            var fifth = fourth.Select(group => group.First());
+
+
+            return badProducts;
+        }
     }
 }

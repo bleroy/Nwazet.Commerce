@@ -67,5 +67,9 @@ namespace Nwazet.Commerce.Services {
             }
             return inventory;
         }
+
+        public virtual IEnumerable<ProductPart> GetProductsWithInventoryIssues() {
+            return new List<ProductPart>(); //There is no criteria here to find issues
+        }
     }
 }
