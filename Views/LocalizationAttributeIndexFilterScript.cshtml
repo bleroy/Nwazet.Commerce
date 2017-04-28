@@ -16,7 +16,7 @@
                     locString = T(" (culture undefined)").Text;
                 }
                     <text>
-            $('table.items tbody tr td a[href*="Edit/@attribute.ContentItem.Id.ToString()"]')[0].after('@locString');
+            $('table.items tbody tr td a[href*="Edit/@attribute.ContentItem.Id.ToString()?"]')[0].after('@locString');
             </text>
                 }
         }
