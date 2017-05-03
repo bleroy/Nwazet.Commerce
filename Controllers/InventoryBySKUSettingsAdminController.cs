@@ -35,7 +35,7 @@ namespace Nwazet.Commerce.Controllers {
                     !badProducts.Any();
             return Json(new {
                 Result = badProducts.Any().ToString().ToUpperInvariant(),
-                BadProductsIds = badProducts.Select(bp => bp.ContentItem.Id).ToArray(),
+                BadProductsLinks = badProducts.Select(bp => _contentManager.GetItemMetadata(bp.ContentItem).EditorRouteValues).ToArray(),
                 badProductsText = badProducts.Select(bp => _contentManager.GetItemMetadata(bp.ContentItem).DisplayText).ToArray()
             });
         }
