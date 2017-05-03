@@ -64,7 +64,7 @@ namespace Nwazet.Commerce.Models {
             if (weight.CompareTo(0) == 0) {
                 yield return GetOption(fixedCost);
             }
-            else if (weight >= MinimumWeight && weight <= MaximumWeight) {
+            else if (weight >= MinimumWeight && (!MaximumWeight.HasValue || weight <= MaximumWeight)) {
                 yield return GetOption(fixedCost + Price);
             }
         }

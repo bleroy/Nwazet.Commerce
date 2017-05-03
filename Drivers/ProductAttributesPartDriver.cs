@@ -4,6 +4,7 @@ using System.Linq;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
 using Nwazet.Commerce.ViewModels;
+using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -15,14 +16,19 @@ namespace Nwazet.Commerce.Drivers {
     public class ProductAttributesPartDriver : ContentPartDriver<ProductAttributesPart>, IProductAttributesDriver {
         private readonly IProductAttributeService _attributeService;
         private readonly IEnumerable<IProductAttributeExtensionProvider> _attributeExtensions;
+        private readonly ICurrencyProvider _currencyProvider;
+        private readonly IContentManager _contentManager;
 
         public ProductAttributesPartDriver(
             IProductAttributeService attributeService,
-            IEnumerable<IProductAttributeExtensionProvider> attributeExtensions) {
+            IEnumerable<IProductAttributeExtensionProvider> attributeExtensions,
+            IContentManager contentManager,
+            ICurrencyProvider currencyProvider) {
 
             _attributeService = attributeService;
             _attributeExtensions = attributeExtensions;
-
+            _currencyProvider = currencyProvider;
+            _contentManager = contentManager;
         }
 
         protected override string Prefix { get { return "NwazetCommerceAttribute"; } }
@@ -41,13 +47,14 @@ namespace Nwazet.Commerce.Drivers {
                 : _attributeService.GetAttributes(attributesPart.AttributeIds);
             return shapeHelper.Parts_ProductAttributes(
                 ContentItem: product,
-                ProductAttributes: attributes.OrderBy(a => a.SortOrder)
+                ProductAttributes: attributes?.OrderBy(a => a.SortOrder)
                     .Select(a => new ProductAttributePartDisplayViewModel {
                         Part = a,
                         // Return all possible attribute extensions input shapes
                         AttributeExtensionShapes = _attributeExtensions.Where(e => a.AttributeValues.Any(av => av.ExtensionProvider == e.Name))
                             .Select(e => e.BuildInputShape(a))
-                    })
+                    }),
+                CurrencyProvider: _currencyProvider
                 );
         }
 
@@ -58,7 +65,11 @@ namespace Nwazet.Commerce.Drivers {
             // If the part isn't there, there must be no attributes
             if (attributesPart == null) return attributeIdsToValues == null || !attributeIdsToValues.Any();
             // If the part is there, it must have as many attributes as were passed in
-            if (attributesPart.AttributeIds.Count() != attributeIdsToValues.Count) return false;
+            if (attributesPart.AttributeIds.Count() != attributeIdsToValues.Count) {
+                //Attributes may have been deleted
+                attributesPart.AttributeIds = _attributeService.GetAttributes(attributesPart.AttributeIds).Select(pap => pap.Id);
+                if (attributesPart.AttributeIds.Count() != attributeIdsToValues.Count) return false;
+            }
             // The same attributes must be present
             if (!attributesPart.AttributeIds.All(attributeIdsToValues.ContainsKey)) return false;
             // Get the actual attributes in order to verify the values
@@ -87,7 +98,7 @@ namespace Nwazet.Commerce.Drivers {
         protected override DriverResult Editor(ProductAttributesPart part, IUpdateModel updater, dynamic shapeHelper) {
             var editViewModel = new ProductAttributesEditViewModel();
             if (updater.TryUpdateModel(editViewModel, Prefix, null, null)) {
-                part.AttributeIds = editViewModel.AttributeIds;
+                part.AttributeIds = _attributeService.GetAttributes(editViewModel.AttributeIds).Select(pap => pap.Id);
             }
             return Editor(part, shapeHelper);
         }
@@ -97,13 +108,36 @@ namespace Nwazet.Commerce.Drivers {
         }
 
         protected override void Importing(ProductAttributesPart part, ImportContentContext context) {
-            var values = context.Attribute(part.PartDefinition.Name, "Ids");
-            if (!String.IsNullOrWhiteSpace(values)) {
-                part.Record.Attributes = values;
+            var attributeIdentities = context.Attribute(part.PartDefinition.Name, "Attributes");
+            if (string.IsNullOrWhiteSpace(attributeIdentities)) {
+                //retrocompatibility
+                var values = context.Attribute(part.PartDefinition.Name, "Ids");
+                if (!String.IsNullOrWhiteSpace(values)) {
+                    part.Record.Attributes = values;
+                }
+            }
+            else {
+                var attributes = attributeIdentities
+                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(context.GetItemFromSession)
+                    .Where(contentItem => contentItem != null)
+                    .ToList();
+                var allAttributes = part.AttributeIds.ToList();
+                allAttributes.AddRange(attributes.Select(ci => ci.Id));
+                part.AttributeIds = allAttributes;
             }
         }
 
         protected override void Exporting(ProductAttributesPart part, ExportContentContext context) {
+            //validate attribute Ids
+            part.AttributeIds = _attributeService.GetAttributes(part.AttributeIds).Select(pap => pap.Id);
+            var attributeIdentities = part.AttributeIds
+                .Select(id => 
+                    _contentManager.GetItemMetadata(
+                        _contentManager.Get(id)
+                    ).Identity.ToString());
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Attributes", string.Join(",", attributeIdentities));
+            //Keep Ids for retrocompatibility
             context.Element(part.PartDefinition.Name).SetAttributeValue("Ids", part.Record.Attributes);
         }
     }

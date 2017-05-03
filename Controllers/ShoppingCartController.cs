@@ -29,6 +29,9 @@ namespace Nwazet.Commerce.Controllers {
         private readonly IWorkflowManager _workflowManager;
         private readonly INotifier _notifier;
         private readonly IEnumerable<IProductAttributeExtensionProvider> _attributeExtensionProviders;
+        private readonly ICurrencyProvider _currencyProvider;
+
+        public Localizer T { get; set; }
 
         private const string AttributePrefix = "productattributes.a";
         private const string ExtensionPrefix = "ext.";
@@ -43,7 +46,8 @@ namespace Nwazet.Commerce.Controllers {
             IEnumerable<IExtraCartInfoProvider> extraCartInfoProviders,
             IWorkflowManager workflowManager,
             INotifier notifier,
-            IEnumerable<IProductAttributeExtensionProvider> attributeExtensionProviders) {
+            IEnumerable<IProductAttributeExtensionProvider> attributeExtensionProviders,
+            ICurrencyProvider currencyProvider) {
 
             _shippingMethodProviders = shippingMethodProviders;
             _shoppingCart = shoppingCart;
@@ -55,6 +59,9 @@ namespace Nwazet.Commerce.Controllers {
             _workflowManager = workflowManager;
             _notifier = notifier;
             _attributeExtensionProviders = attributeExtensionProviders;
+            _currencyProvider = currencyProvider;
+
+            T = NullLocalizer.Instance;
         }
 
         [HttpPost]
@@ -89,10 +96,31 @@ namespace Nwazet.Commerce.Controllers {
                     });
 
             // Retrieve minimum order quantity
+            Dictionary<int, List<string>> productMessages = new Dictionary<int, List<string>>();
             var productPart = _contentManager.Get<ProductPart>(id);
+            string productTitle = _contentManager.GetItemMetadata(productPart.ContentItem).DisplayText;
             if (productPart != null) {
-                if (quantity < productPart.MinimumOrderQuantity)
+                if (quantity < productPart.MinimumOrderQuantity) {
                     quantity = productPart.MinimumOrderQuantity;
+                    if (productMessages.ContainsKey(id)) {
+                        productMessages[id].Add(T("Quantity increased to match minimum possible for {0}.", productTitle).Text);
+                    }
+                    else {
+                        productMessages.Add(id, new List<string>() { T("Quantity increased to match minimum possible for {0}.", productTitle).Text });
+                    }
+                }
+                //only add to cart if there are at least as many available products as the requested quantity
+                if (quantity > productPart.Inventory && !productPart.AllowBackOrder &&
+                    (!productPart.IsDigital || (productPart.IsDigital && productPart.ConsiderInventory))
+                    ) {
+                    quantity = productPart.Inventory;
+                    if (productMessages.ContainsKey(id)) {
+                        productMessages[id].Add(T("Quantity decreased to match inventory for {0}.", productTitle).Text);
+                    }
+                    else {
+                        productMessages.Add(id, new List<string>() { T("Quantity decreased to match inventory for {0}.", productTitle).Text });
+                    }
+                }
             }
 
             _shoppingCart.Add(id, quantity, productattributes);
@@ -107,14 +135,14 @@ namespace Nwazet.Commerce.Controllers {
             if (Request.IsAjaxRequest() || isAjaxRequest) {
                 return new ShapePartialResult(
                     this,
-                    BuildCartShape(true, _shoppingCart.Country, _shoppingCart.ZipCode));
+                    BuildCartShape(true, _shoppingCart.Country, _shoppingCart.ZipCode, null, productMessages));
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", productMessages);
         }
 
         [Themed]
         [OutputCache(Duration = 0)]
-        public ActionResult Index() {
+        public ActionResult Index(Dictionary<int, List<string>> productMessages = null) {
             _wca.GetContext().Layout.IsCartPage = true;
             try {
                 return new ShapeResult(
@@ -123,8 +151,9 @@ namespace Nwazet.Commerce.Controllers {
                         false,
                         _shoppingCart.Country,
                         _shoppingCart.ZipCode,
-                        _shoppingCart.ShippingOption));
-            } 
+                        _shoppingCart.ShippingOption,
+                        productMessages));
+            }
             catch (ShippingException ex) {
                 _shoppingCart.Country = null;
                 _shoppingCart.ZipCode = null;
@@ -138,7 +167,8 @@ namespace Nwazet.Commerce.Controllers {
             bool isSummary = false,
             string country = null,
             string zipCode = null,
-            ShippingOption shippingOption = null) {
+            ShippingOption shippingOption = null,
+            Dictionary<int, List<string>> productMessages = null) {
 
             var shape = _shapeFactory.ShoppingCart();
 
@@ -151,7 +181,7 @@ namespace Nwazet.Commerce.Controllers {
                 .GetProducts()
                 .Where(p => p.Quantity > 0)
                 .ToList();
-            var productShapes = GetProductShapesFromQuantities(productQuantities);
+            var productShapes = GetProductShapesFromQuantities(productQuantities, productMessages);
             shape.ShopItems = productShapes;
 
             var shopItemsAllDigital = !(productQuantities.Any(pq => !(pq.Product.IsDigital)));
@@ -196,7 +226,12 @@ namespace Nwazet.Commerce.Controllers {
                     displayCheckoutButtons = false;
                 }
             }
-
+            if (displayCheckoutButtons) {
+                //check whether back-order is allowed for products whose inventory is less than the requested quantity
+                displayCheckoutButtons = !productQuantities.Any(pq => 
+                    pq.Quantity > pq.Product.Inventory && !pq.Product.AllowBackOrder &&
+                    (!pq.Product.IsDigital || (pq.Product.IsDigital && pq.Product.ConsiderInventory)));
+            }
             if (displayCheckoutButtons) {
                 var checkoutShapes = _checkoutServices.Select(
                     service => service.BuildCheckoutButtonShape(
@@ -210,9 +245,12 @@ namespace Nwazet.Commerce.Controllers {
                 shape.CheckoutButtons = checkoutShapes;
             }
 
+
+
             shape.Subtotal = subtotal;
             shape.Taxes = taxes;
             shape.Total = _shoppingCart.Total(subtotal, taxes);
+            shape.CurrencyProvider = _currencyProvider;
             if (isSummary) {
                 shape.Metadata.Alternates.Add("ShoppingCart_Summary");
             }
@@ -220,7 +258,8 @@ namespace Nwazet.Commerce.Controllers {
         }
 
         private IEnumerable<dynamic> GetProductShapesFromQuantities(
-            IEnumerable<ShoppingCartQuantityProduct> productQuantities) {
+            IEnumerable<ShoppingCartQuantityProduct> productQuantities,
+            Dictionary<int, List<string>> productMessages = null) {
             var productShapes = productQuantities.Select(
                 productQuantity => _shapeFactory.ShoppingCartItem(
                     Quantity: productQuantity.Quantity,
@@ -231,6 +270,7 @@ namespace Nwazet.Commerce.Controllers {
                     ContentItem: (productQuantity.Product).ContentItem,
                     ProductImage: ((MediaLibraryPickerField)productQuantity.Product.ContentItem.Parts.SelectMany(part => part.Fields).FirstOrDefault(field => field.Name == "ProductImage")),
                     IsDigital: productQuantity.Product.IsDigital,
+                    ConsiderInventory: productQuantity.Product.ConsiderInventory,
                     Price: productQuantity.Product.Price,
                     OriginalPrice: productQuantity.Product.Price,
                     DiscountedPrice: productQuantity.Price,
@@ -238,7 +278,15 @@ namespace Nwazet.Commerce.Controllers {
                     Promotion: productQuantity.Promotion,
                     ShippingCost: productQuantity.Product.ShippingCost,
                     Weight: productQuantity.Product.Weight,
-                    MinimumOrderQuantity: productQuantity.Product.MinimumOrderQuantity)).ToList();
+                    MinimumOrderQuantity: productQuantity.Product.MinimumOrderQuantity,
+                    Messages: productMessages == null ? 
+                        (string)null : 
+                        productMessages.ContainsKey(productQuantity.Product.Id) ? 
+                            string.Join(Environment.NewLine, productMessages[productQuantity.Product.Id]) : 
+                            (string)null,
+                    Inventory: productQuantity.Product.Inventory,
+                    AllowBackOrder: productQuantity.Product.AllowBackOrder
+                    )).ToList();
             return productShapes;
         }
 
@@ -250,7 +298,7 @@ namespace Nwazet.Commerce.Controllers {
                         true,
                         _shoppingCart.Country,
                         _shoppingCart.ZipCode));
-            } 
+            }
             catch (ShippingException ex) {
                 _shoppingCart.Country = null;
                 _shoppingCart.ZipCode = null;
@@ -294,7 +342,7 @@ namespace Nwazet.Commerce.Controllers {
                         true,
                         _shoppingCart.Country,
                         _shoppingCart.ZipCode));
-            } 
+            }
             catch (ShippingException ex) {
                 _shoppingCart.Country = null;
                 _shoppingCart.ZipCode = null;
@@ -365,7 +413,7 @@ namespace Nwazet.Commerce.Controllers {
                         var product = products.Where(p => p.Id == item.ProductId).FirstOrDefault();
                         if (product != null) {
                             minimumOrderQuantites.Add(product.Id, product.MinimumOrderQuantity);
-                        } 
+                        }
                         else {
                             // This ensures the dictionary will have all the keys needed for the items
                             minimumOrderQuantites.Add(item.ProductId, defaultMinimumQuantity);

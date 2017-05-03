@@ -1,0 +1,20 @@
+﻿@using Nwazet.Commerce.Services
+@model Nwazet.Commerce.ViewModels.ECommerceCurrencySiteSettingsViewModel
+
+<fieldset>
+    <label class="sub" for="@Html.IdFor(m => m.CurrencyCode)">@T("Define currency to be used for prices across the site.")</label>
+    @{ 
+        List<SelectListItem> currencyCodeItems = new List<SelectListItem>();
+        foreach (var code in Currency.Currencies) {
+            currencyCodeItems.Add(
+                new SelectListItem {
+                    Selected = code.Key == Model.CurrencyCode,
+                    Text = code.Key + " - " + code.Value.CurrencyName,
+                    Value = code.Key
+                }
+            );
+        }
+        @Html.DropDownListFor(m => m.CurrencyCode, currencyCodeItems)
+    }
+    <div class="hint">@T("Set site-wide default currency.")</div>
+</fieldset>

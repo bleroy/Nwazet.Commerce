@@ -18,20 +18,24 @@ namespace Nwazet.Commerce.Drivers {
         private readonly IPriceService _priceService;
         private readonly IEnumerable<IProductAttributesDriver> _attributeProviders;
         private readonly ITieredPriceProvider _tieredPriceProvider;
+        private readonly ICurrencyProvider _currencyProvider;
 
         public ProductPartDriver(
             IWorkContextAccessor wca,
             IPriceService priceService,
             IEnumerable<IProductAttributesDriver> attributeProviders,
+            ICurrencyProvider currencyProvider,
             ITieredPriceProvider tieredPriceProvider = null) {
 
             _wca = wca;
             _priceService = priceService;
             _attributeProviders = attributeProviders;
             _tieredPriceProvider = tieredPriceProvider;
+            _currencyProvider = currencyProvider;
         }
 
-        protected override string Prefix {
+        protected override string Prefix
+        {
             get { return "NwazetCommerceProduct"; }
         }
 
@@ -57,11 +61,13 @@ namespace Nwazet.Commerce.Drivers {
                     Size: part.Size,
                     ShippingCost: part.ShippingCost,
                     IsDigital: part.IsDigital,
+                    ConsiderInventory: part.ConsiderInventory,
                     MinimumOrderQuantity: part.MinimumOrderQuantity,
-                    ContentPart: part
+                    ContentPart: part,
+                    CurrencyProvider: _currencyProvider
                     )
                 ));
-            if (part.Inventory > 0 || part.AllowBackOrder) {
+            if (part.Inventory > 0 || part.AllowBackOrder || (part.IsDigital && !part.ConsiderInventory)) {
                 shapes.Add(ContentShape(
                         "Parts_Product_AddButton",
                         () => {
@@ -82,7 +88,8 @@ namespace Nwazet.Commerce.Drivers {
                         () => {
                             return shapeHelper.Parts_Product_PriceTiers(
                                 PriceTiers: priceTiers,
-                                DiscountedPriceTiers: discountedPriceTiers
+                                DiscountedPriceTiers: discountedPriceTiers,
+                                CurrencyProvider: _currencyProvider
                                 );
                         })
                     );
@@ -100,7 +107,7 @@ namespace Nwazet.Commerce.Drivers {
                 inventory =
                     bundleService
                         .GetProductQuantitiesFor(bundlePart)
-                        .Min(p => p.Product.Inventory/p.Quantity);
+                        .Min(p => p.Product.Inventory / p.Quantity);
             }
             return inventory;
         }
@@ -149,14 +156,14 @@ namespace Nwazet.Commerce.Drivers {
                 else {
                     part.PriceTiers = new List<PriceTier>();
                 }
-                part.DiscountPrice = model.DiscountPrice == null 
+                part.DiscountPrice = model.DiscountPrice == null
                     ? -1 : (double)model.DiscountPrice;
             }
             return Editor(part, shapeHelper);
         }
 
         protected override void Importing(ProductPart part, ImportContentContext context) {
-            var el = context.Data.Element(typeof (ProductPart).Name);
+            var el = context.Data.Element(typeof(ProductPart).Name);
             if (el == null) return;
             el.With(part)
                 .FromAttr(p => p.Sku)
@@ -164,6 +171,7 @@ namespace Nwazet.Commerce.Drivers {
                 .FromAttr(p => p.OutOfStockMessage)
                 .FromAttr(p => p.AllowBackOrder)
                 .FromAttr(p => p.IsDigital)
+                .FromAttr(p => p.ConsiderInventory)
                 .FromAttr(p => p.Weight)
                 .FromAttr(p => p.OverrideTieredPricing)
                 .FromAttr(p => p.MinimumOrderQuantity)
@@ -188,7 +196,7 @@ namespace Nwazet.Commerce.Drivers {
         }
 
         protected override void Exporting(ProductPart part, ExportContentContext context) {
-            var el = context.Element(typeof (ProductPart).Name);
+            var el = context.Element(typeof(ProductPart).Name);
             el
                 .With(part)
                 .ToAttr(p => p.Sku)
@@ -196,6 +204,7 @@ namespace Nwazet.Commerce.Drivers {
                 .ToAttr(p => p.OutOfStockMessage)
                 .ToAttr(p => p.AllowBackOrder)
                 .ToAttr(p => p.IsDigital)
+                .ToAttr(p => p.ConsiderInventory)
                 .ToAttr(p => p.Weight)
                 .ToAttr(p => p.OverrideTieredPricing)
                 .ToAttr(p => p.MinimumOrderQuantity)
@@ -204,7 +213,7 @@ namespace Nwazet.Commerce.Drivers {
             el.SetAttributeValue("PriceTiers", PriceTier.SerializePriceTiers(part.PriceTiers));
             if (part.ShippingCost != null) {
                 el.SetAttributeValue(
-                    "ShippingCost", ((double) part.ShippingCost).ToString("C", CultureInfo.InvariantCulture));
+                    "ShippingCost", ((double)part.ShippingCost).ToString("C", CultureInfo.InvariantCulture));
             }
         }
     }
