@@ -72,7 +72,7 @@
       <HintPath>..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Fields\bin\Orchard.Fields.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Framework">
-      <HintPath>..\Orchard.Sources\src\Orchard\bin\Debug\Orchard.Framework.dll</HintPath>
+      <HintPath>..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.MediaLibrary">
       <HintPath>..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.MediaLibrary\bin\Orchard.MediaLibrary.dll</HintPath>
