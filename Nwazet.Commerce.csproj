@@ -188,6 +188,7 @@
     <Compile Include="Activities\CommerceActivity.cs" />
     <Compile Include="Activities\OrderActivity.cs" />
     <Compile Include="Controllers\ECommerceSettingsAdminController .cs" />
+    <Compile Include="Controllers\LocalizationAttributesAdminController.cs" />
     <Compile Include="Controllers\ProductSettingsAdminController.cs" />
     <Compile Include="Controllers\BundleAdminController.cs" />
     <Compile Include="Controllers\AttributesAdminController.cs" />
@@ -223,7 +224,6 @@
     <Compile Include="Exceptions\StripeException.cs" />
     <Compile Include="Extensions\AttributeNameUtilities.cs" />
     <Compile Include="Features\CurrencyProviderBySiteSettingFeature.cs" />
-    <Compile Include="Filters\LocalizationAttributeFilter.cs" />
     <Compile Include="Filters\ReferrerFilter.cs" />
     <Compile Include="Handlers\AdvancedSKUManagementHandler.cs" />
     <Compile Include="Handlers\AdvancedSKUsSiteSettingPartHandler.cs" />
@@ -326,6 +326,7 @@
     <Compile Include="Reports\BestSellingProductsReport.cs" />
     <Compile Include="Reports\TotalSalesReport.cs" />
     <Compile Include="Reports\NumberOfSalesReport.cs" />
+    <Compile Include="Routes\LocalizationAttributesRoutes.cs" />
     <Compile Include="Routes\UspsRoutes.cs" />
     <Compile Include="Routes\StripeRoutes.cs" />
     <Compile Include="Routes\OrderRoutes.cs" />
@@ -522,13 +523,13 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Views\LocalizationAttributesAdmin\Index.cshtml" />
     <None Include="Views\DefinitionTemplates\ProductAttributeLocalizationSettings.cshtml" />
     <None Include="Views\ECommerceSettingsAdmin\Index.cshtml" />
     <None Include="Views\EditorTemplates\Parts\AdvancedSKUProduct.cshtml" />
     <None Include="Views\EditorTemplates\Parts\AttributeLocalizationProductAttributes.cshtml" />
     <None Include="Views\EditorTemplates\SiteSettings\AdvancedSKUs.cshtml" />
     <None Include="Views\EditorTemplates\SiteSettings\Currency.cshtml" />
-    <None Include="Views\LocalizationAttributeIndexFilterScript.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
