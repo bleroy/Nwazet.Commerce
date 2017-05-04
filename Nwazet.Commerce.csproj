@@ -187,7 +187,7 @@
   <ItemGroup>
     <Compile Include="Activities\CommerceActivity.cs" />
     <Compile Include="Activities\OrderActivity.cs" />
-    <Compile Include="Controllers\ECommerceSettingsAdminController .cs" />
+    <Compile Include="Controllers\ECommerceSettingsAdminController.cs" />
     <Compile Include="Controllers\ProductSettingsAdminController.cs" />
     <Compile Include="Controllers\BundleAdminController.cs" />
     <Compile Include="Controllers\AttributesAdminController.cs" />
