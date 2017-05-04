@@ -1,0 +1,21 @@
+﻿@model Nwazet.Commerce.Settings.ProductAttributeLocalizationSettings
+
+<fieldset>
+    @Html.CheckBoxFor(m => m.TryToLocalizeAttributes)
+    <label for="@Html.FieldIdFor(m => m.TryToLocalizeAttributes)" class="forcheckbox">@T("Try to replace selected attributes with their correct localization.")</label>
+    <span class="hint">@T("Check to attempt to replace selected attributes with their translation in the product's culture. This only applies if the product has a LocalizationPart.")</span>
+    <div data-controllerid="@Html.FieldIdFor(m => m.TryToLocalizeAttributes)">
+        @Html.CheckBoxFor(m => m.RemoveAttributesWithoutLocalization)
+        <label for="@Html.FieldIdFor(m => m.RemoveAttributesWithoutLocalization)" class="forcheckbox">@T("Remove attributes that do not have the correct translation.")</label>
+        <span class="hint">@T("Check to unselect attributes from the product when the attributes selected do not have a version in the correct culture (they have a LocalizationPart, but not a translation in the product's culture').")</span>
+    </div>
+
+    @Html.CheckBoxFor(m => m.AssertAttributesHaveSameCulture)
+    <label for="@Html.FieldIdFor(m => m.AssertAttributesHaveSameCulture)" class="forcheckbox">@T("Verify culture of selected attributes.")</label>
+    <span class="hint">@T("Check to prevent publication of products when the attributes selected have a different culture. This only applies if the product has a LocalizationPart.")</span>
+
+    @Html.CheckBoxFor(m => m.HideAttributesFromEditor)
+    <label for="@Html.FieldIdFor(m => m.HideAttributesFromEditor)" class="forcheckbox">@T("Don't show attributes.")</label>
+    <span class="hint">@T("Check to prevent showing attributes that have a different culture than the product in its editor view. This only applies if the product has a LocalizationPart.")</span>
+
+</fieldset>
