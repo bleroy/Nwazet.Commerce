@@ -1,0 +1,3 @@
+﻿@using Orchard.ContentManagement
+
+@Html.ItemEditLinkWithReturnUrl(Html.ItemDisplayText((IContent)(Model.ContentItem)).ToHtmlString(), (IContent)(Model.ContentItem))

@@ -25,24 +25,7 @@
     </div>
 
     <fieldset>
-        <table class="items">
-            <thead>
-                <tr>
-                    <th scope="col">@T("Name")</th>
-                    <th scope="col" class="actions">&nbsp;</th>
-                </tr>
-            </thead>
-            @foreach (var attribute in Model.Attributes) {
-                <tr>
-                    <td>
-                        @Html.ItemEditLinkWithReturnUrl(Html.ItemDisplayText(attribute.ContentItem).ToHtmlString(), attribute.ContentItem)
-                    </td>
-                    <td>
-                        @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(attribute.ContentItem, new { returnUrl }), new { itemprop = "RemoveUrl UnsafeUrl" })
-                    </td>
-                </tr>
-            }
-        </table>
+        @Display.ProductAttributesAdminList(ProductAttributes: Model.Attributes)
         @Display(Model.Pager)
     </fieldset>
 }
