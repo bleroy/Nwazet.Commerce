@@ -5,7 +5,7 @@
 @{
     var divId = Html.IdForModel().ToString() + Guid.NewGuid().ToString();
 }
-<div id="@divId" display:none>
+<div id="@divId" style="display: none;">
     @if (Model.Settings.AllowCustomPattern) {
         //allow editing the sku
         @Html.LabelFor(m => m.CurrentSku, T("Sku").Text, new { @class = "sub" }) <br />
