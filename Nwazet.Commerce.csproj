@@ -404,6 +404,7 @@
     <Compile Include="ViewModels\ECommerceCurrencySiteSettingsViewModel.cs" />
     <Compile Include="ViewModels\ECommerceSettingsViewModel.cs" />
     <Compile Include="ViewModels\InventoryBySKUProductEditorViewModel.cs" />
+    <Compile Include="ViewModels\InventoryBySKUSiteSettingsPartViewModel.cs" />
     <Compile Include="ViewModels\ProductAttributePartDisplayViewModel.cs" />
     <Compile Include="ViewModels\ProductAttributePartEditViewModel.cs" />
     <Compile Include="ViewModels\AttributesIndexViewModel.cs" />

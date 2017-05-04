@@ -1,35 +1,27 @@
-﻿@{ 
+﻿@model Nwazet.Commerce.ViewModels.InventoryBySKUSiteSettingsPartViewModel
+@{ 
     string aId = "VerifyInventories_" + Guid.NewGuid().ToString();
     string divId = "BadProducts_" + Guid.NewGuid().ToString();
 }
 
 <fieldset>
     <span class="description">@T("The inventory of products with the same SKU is synchronized. To disable this, disable the \"InventoryBySKU\" feature")</span>
-    <a id="@aId" href="#"
-       data-url="@Url.Action("VerifyInventories", "InventoryBySKUSettingsAdmin", new {area = "Nwazet.Commerce"})">@T("Verify Inventories")</a>
-    <div id="@divId" style="display: none;" class="description"></div>
+    @if (Model.InventoriesNeedSynch) {
+        <div>
+            @T("Issues in inventory synchronization were found. Please, verify the following items then run the analysis again.")
+            <ul>
+                @foreach (var prod in Model.BadProducts) {
+                    <li>
+                        @Html.ItemEditLinkWithReturnUrl(Html.ItemDisplayText(prod.ContentItem).ToHtmlString(), prod.ContentItem)
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+    else {
+        <div>@T("No issue has been detected in inventory synchronization.")</div>
+    }
+    @Html.ActionLink(T("Verify inventories.").Text, "VerifyInventories", new { controller = "InventoryBySKUSettingsAdmin", area = "Nwazet.Commerce"})
+    
 
 </fieldset>
-
-@using (Script.Foot()) {
-    <script type="text/javascript">
-        jQuery(function ($) {
-            $("#@aId").click(function () {
-                $.post($(this).data("url"), {
-                    __RequestVerificationToken: $("input[name=__RequestVerificationToken]").val()
-                }, function (data) {
-                    var myDiv = $("#@divId");
-                    var notifyString = "";
-                    if (data.Result == "TRUE") {
-                        notifyString = "@T("There were synchronization issues for the inventories of the following items:")";
-                    } else {
-                        notifyString = "@T("All Inventories are Synchronized.")";
-                    }
-                    myDiv[0].innerText += notifyString;
-                    myDiv.show();
-                });
-                return false;
-            });
-        });
-    </script>
-}

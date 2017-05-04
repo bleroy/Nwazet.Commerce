@@ -28,16 +28,10 @@ namespace Nwazet.Commerce.Controllers {
             _contentManager = contentManager;
         }
 
-        [HttpPost]
+        [HttpGet]
         public ActionResult VerifyInventories() {
-            List<ProductPart> badProducts = _productInventoryService.GetProductsWithInventoryIssues().ToList();
-            _workContextAccessor.GetContext().CurrentSite.As<InventoryBySKUSiteSettingsPart>().InventoriesAreAllInSynch =
-                    !badProducts.Any();
-            return Json(new {
-                Result = badProducts.Any().ToString().ToUpperInvariant(),
-                BadProductsLinks = badProducts.Select(bp => _contentManager.GetItemMetadata(bp.ContentItem).EditorRouteValues).ToArray(),
-                badProductsText = badProducts.Select(bp => _contentManager.GetItemMetadata(bp.ContentItem).DisplayText).ToArray()
-            });
+            _workContextAccessor.GetContext().CurrentSite.As<InventoryBySKUSiteSettingsPart>().InventoriesAreAllInSynch = false;
+            return RedirectToAction("Index", "ECommerceSettingsAdmin");
         }
     }
 }
