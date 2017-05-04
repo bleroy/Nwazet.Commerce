@@ -188,7 +188,6 @@
     <Compile Include="Activities\CommerceActivity.cs" />
     <Compile Include="Activities\OrderActivity.cs" />
     <Compile Include="Controllers\ECommerceSettingsAdminController .cs" />
-    <Compile Include="Controllers\LocalizationAttributesAdminController.cs" />
     <Compile Include="Controllers\ProductSettingsAdminController.cs" />
     <Compile Include="Controllers\BundleAdminController.cs" />
     <Compile Include="Controllers\AttributesAdminController.cs" />
@@ -326,7 +325,6 @@
     <Compile Include="Reports\BestSellingProductsReport.cs" />
     <Compile Include="Reports\TotalSalesReport.cs" />
     <Compile Include="Reports\NumberOfSalesReport.cs" />
-    <Compile Include="Routes\LocalizationAttributesRoutes.cs" />
     <Compile Include="Routes\UspsRoutes.cs" />
     <Compile Include="Routes\StripeRoutes.cs" />
     <Compile Include="Routes\OrderRoutes.cs" />
@@ -397,6 +395,7 @@
     <Compile Include="Services\UnitedStates.cs" />
     <Compile Include="Settings\ProductAttributeLocalizationEditorEvents.cs" />
     <Compile Include="Settings\ProductAttributeLocalizationSettings.cs" />
+    <Compile Include="Shapes\ProductAttributesLocalizationAdminShapeProvider.cs" />
     <Compile Include="Tokens\CartTokens.cs" />
     <Compile Include="Tokens\OrderTokens.cs" />
     <Compile Include="Tokens\ProductTokens.cs" />
@@ -523,14 +522,17 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="Views\LocalizationAttributesAdmin\Index.cshtml" />
+    <None Include="Views\ProductAttributesAdminList.cshtml" />
+    <None Include="Views\ProductAttributesAdminListItem.cshtml" />
     <None Include="Views\DefinitionTemplates\ProductAttributeLocalizationSettings.cshtml" />
     <None Include="Views\ECommerceSettingsAdmin\Index.cshtml" />
     <None Include="Views\EditorTemplates\Parts\AdvancedSKUProduct.cshtml" />
     <None Include="Views\EditorTemplates\Parts\AttributeLocalizationProductAttributes.cshtml" />
     <None Include="Views\EditorTemplates\SiteSettings\AdvancedSKUs.cshtml" />
     <None Include="Views\EditorTemplates\SiteSettings\Currency.cshtml" />
+    <None Include="Views\ProductAttributesLocalizationAdminListItem.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
