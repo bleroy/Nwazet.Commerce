@@ -86,3 +86,9 @@ Features:
 		Description: Provides advanced handling of product attributes in multi-language stores
 		Category: Commerce
 		Dependencies: Nwazet.Commerce, Nwazet.Attributes, Orchard.Localization
+	Nwazet.BundlesLocalizationExtension:
+  		Name: Nwazet Bundles Localization Extensions
+  		Description: Provides advanced handling of product Bundles in multi-language stores
+  		Category: Commerce
+  		Dependencies: Nwazet.Commerce, Nwazet.Bundles, Orchard.Localization
+

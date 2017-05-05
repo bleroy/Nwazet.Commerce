@@ -10,14 +10,6 @@ using Orchard.Environment.Extensions;
 using Orchard.MediaLibrary.Models;
 
 namespace Nwazet.Commerce.Services {
-    public interface IBundleService : IDependency {
-        void UpdateBundleProducts(ContentItem item, IEnumerable<ProductEntry> products);
-        IEnumerable<IContent> GetProducts();
-        IEnumerable<ProductPartQuantity> GetProductQuantitiesFor(BundlePart bundle);
-        BundleViewModel BuildEditorViewModel(BundlePart part);
-        void AddProduct(int quantity, int product, BundlePartRecord record);
-    }
-
     [OrchardFeature("Nwazet.Bundles")]
     public class BundleService : IBundleService {
         private readonly IContentManager _contentManager;
