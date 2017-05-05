@@ -53,10 +53,10 @@ namespace Nwazet.Commerce.Settings {
                         .WithSetting("BundleProductLocalizationSettings.RemoveProductsWithoutLocalization",
                             settings.RemoveProductsWithoutLocalization.ToString(CultureInfo.InvariantCulture));
                     builder
-                        .WithSetting("BundleProductLocalizationSettings.HideProductsFromEditor",
+                        .WithSetting("BundleProductLocalizationSettings.AssertProductsHaveSameCulture",
                             settings.AssertProductsHaveSameCulture.ToString(CultureInfo.InvariantCulture));
                     builder
-                        .WithSetting("BundleProductLocalizationSettings.HideAttributesFromEditor",
+                        .WithSetting("BundleProductLocalizationSettings.HideProductsFromEditor",
                             settings.HideProductsFromEditor.ToString(CultureInfo.InvariantCulture));
                 }
             }
