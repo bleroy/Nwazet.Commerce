@@ -1,22 +1,15 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
-using Nwazet.Commerce.Extensions;
-using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Permissions;
 using Nwazet.Commerce.Services;
 using Nwazet.Commerce.ViewModels;
 using Orchard;
-using Orchard.ContentManagement;
-using Orchard.Core.Title.Models;
 using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
-using Orchard.Security;
 using Orchard.Settings;
 using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
-using Orchard.Utility.Extensions;
 
 namespace Nwazet.Commerce.Controllers {
     [Admin]
@@ -24,21 +17,21 @@ namespace Nwazet.Commerce.Controllers {
     public class AttributesAdminController : Controller {
         private dynamic Shape { get; set; }
         private readonly ISiteService _siteService;
-        private readonly IContentManager _contentManager;
         private readonly IOrchardServices _orchardServices;
         private readonly IProductAttributeNameService _productAttributeNameService;
+        private readonly IProductAttributeAdminServices _productAttributeAdminServices;
 
         public AttributesAdminController(
-            IContentManager contentManager,
             ISiteService siteService,
             IShapeFactory shapeFactory,
             IOrchardServices orchardServices, 
-            IProductAttributeNameService productAttributeNameService) {
-
-            _contentManager = contentManager;
+            IProductAttributeNameService productAttributeNameService,
+            IProductAttributeAdminServices productAttributeAdminServices) {
+            
             _siteService = siteService;
             _orchardServices = orchardServices;
             _productAttributeNameService = productAttributeNameService;
+            _productAttributeAdminServices = productAttributeAdminServices;
 
             Shape = shapeFactory;
             T = NullLocalizer.Instance;
@@ -52,18 +45,16 @@ namespace Nwazet.Commerce.Controllers {
                 return new HttpUnauthorizedResult();
 
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters.Page, pagerParameters.PageSize);
-            var attributes = _contentManager
-                .Query<ProductAttributePart>()
-                .Join<TitlePartRecord>()
-                .OrderBy(p => p.Title)
-                .List().ToList();
+            var attributes = _productAttributeAdminServices.GetAllProductAttributeParts();
             var paginatedAttributes = attributes
-                .Skip(pager.GetStartIndex())
-                .Take(pager.PageSize)
-                .ToList();
+                .Skip(pager.GetStartIndex());
+            if (pager.PageSize > 0) {
+                paginatedAttributes = paginatedAttributes.Take(pager.PageSize);
+            }
+            var pageOfAttributes = paginatedAttributes.ToList();
             var pagerShape = Shape.Pager(pager).TotalItemCount(attributes.Count());
             var vm = new AttributesIndexViewModel {
-                Attributes = paginatedAttributes,
+                Attributes = pageOfAttributes,
                 Pager = pagerShape
             };
 

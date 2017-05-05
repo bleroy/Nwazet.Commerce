@@ -5,7 +5,7 @@
 @{
     var currentAttributeIds = Model.Part.AttributeIds.ToList();
 }
-<fieldset>
+<fieldset id="attributes-fieldset-@Html.IdFor(m => m.Part)">
     <legend>@T("Attributes")</legend>
     @foreach(var attribute in Model.Attributes) {
         var attributeName = attribute.As<TitlePart>().Title;
