@@ -12,8 +12,8 @@ using Orchard.MediaLibrary.Models;
 namespace Nwazet.Commerce.Services {
     [OrchardFeature("Nwazet.Bundles")]
     public abstract class BundleServiceBase : IBundleService {
-        private readonly IContentManager _contentManager;
-        private readonly IRepository<BundleProductsRecord> _bundleProductsRepository;
+        protected readonly IContentManager _contentManager;
+        protected readonly IRepository<BundleProductsRecord> _bundleProductsRepository;
 
         public BundleServiceBase (
            IContentManager contentManager,
@@ -32,10 +32,15 @@ namespace Nwazet.Commerce.Services {
                 });
         }
 
+        protected virtual bool ConsiderProductValid(IContent prod, BundlePart part) {
+            return true;
+        }
+
         public virtual BundleViewModel BuildEditorViewModel(BundlePart part) {
             var bundleProductQuantities = part.ProductQuantities.ToDictionary(pq => pq.ProductId, pq => pq.Quantity);
             return new BundleViewModel {
                 Products = GetProducts()
+                    .Where(p => ConsiderProductValid(p, part))
                     .Select(
                         p => {
                             var id = p.ContentItem.Id;

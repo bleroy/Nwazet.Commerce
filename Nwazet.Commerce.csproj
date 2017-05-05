@@ -332,7 +332,7 @@
     <Compile Include="Routes\StripeRoutes.cs" />
     <Compile Include="Routes\OrderRoutes.cs" />
     <Compile Include="Routes\CommerceRoutes.cs" />
-    <Compile Include="Services\BundleProductLocalizationBudleService.cs" />
+    <Compile Include="Services\BundleProductLocalizationBundleService.cs" />
     <Compile Include="Services\BundleServiceBase.cs" />
     <Compile Include="Services\CurrencyProviderBase.cs" />
     <Compile Include="Services\IBundleService.cs" />
