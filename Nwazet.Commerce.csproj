@@ -214,6 +214,7 @@
     <Compile Include="Controllers\StripeController.cs" /> 
     <Compile Include="Drivers\AdvancedSKUProductPartDriver.cs" /> 
     <Compile Include="Drivers\AdvancedSKUsSiteSettingPartDriver.cs" /> 
+    <Compile Include="Drivers\AttributeLocalizationProductAttributesPartDriver.cs" /> 
     <Compile Include="Drivers\BundlePartDriver.cs" /> 
     <Compile Include="Drivers\ECommerceCurrencySiteSettingsPartDriver.cs" /> 
     <Compile Include="Drivers\InventoryBySKUProductPartDriver.cs" /> 
@@ -244,6 +245,7 @@
     <Compile Include="Handlers\AttributesPartHandler.cs" /> 
     <Compile Include="Handlers\ECommerceCurrencySiteSettingsPartHandler.cs" /> 
     <Compile Include="Handlers\InventoryBySKUSiteSettingsPartHandler.cs" /> 
+    <Compile Include="Handlers\LocalizationAttributePartHandler.cs" /> 
     <Compile Include="Handlers\OrderPartHandler.cs" /> 
     <Compile Include="Handlers\ProductSettingsPartHandler.cs" /> 
     <Compile Include="Handlers\StateOrCountryTaxPartHandler.cs" /> 
@@ -263,6 +265,7 @@
     <Compile Include="Menus\PromotionAdminMenu.cs" /> 
     <Compile Include="Menus\ProductAdminMenu.cs" /> 
     <Compile Include="Menus\ShippingAdminMenu.cs" /> 
+    <Compile Include="Migrations\AttributesLocalizationExtensionsMigrations.cs" /> 
     <Compile Include="Migrations\BundleMigrations.cs" /> 
     <Compile Include="Migrations\CommerceMigrations.cs" /> 
     <Compile Include="Migrations\AttributesMigrations.cs" /> 
@@ -345,11 +348,16 @@
     <Compile Include="Services\CurrencyProviderBase.cs" /> 
     <Compile Include="Services\InventoriesAreNotSynchronizedBySKU.cs" />
     <Compile Include="Services\InventoryBySKUProductInventoryService.cs" /> 
+    <Compile Include="Services\IProductAttributeAdminServices.cs" /> 
+    <Compile Include="Services\IProductAttributeLocalizationServices.cs" />
     <Compile Include="Services\IProductInventoryService.cs" /> 
     <Compile Include="Services\ISKUGenerationServices.cs" /> 
     <Compile Include="Services\ISKUUniquenessHelper.cs" /> 
+    <Compile Include="Services\LatestProductAttributeAdminServices.cs" /> 
     <Compile Include="Services\LocalizationSKUUniquenessHelper.cs" /> 
     <Compile Include="Services\IProductAttributeNameService.cs" /> 
+    <Compile Include="Services\ProductAttributeAdminServices.cs" /> 
+    <Compile Include="Services\ProductAttributeLocalizationServices.cs" />
     <Compile Include="Services\ProductAttributeNameService.cs" /> 
     <Compile Include="Services\Currency.cs" /> 
     <Compile Include="Services\ICurrencyProvider.cs" /> 
@@ -406,6 +414,9 @@
     <Compile Include="Services\UspsWebService.cs" /> 
     <Compile Include="Services\WeightBasedShippingMethodProvider.cs" /> 
     <Compile Include="Services\UnitedStates.cs" /> 
+    <Compile Include="Settings\ProductAttributeLocalizationEditorEvents.cs" /> 
+    <Compile Include="Settings\ProductAttributeLocalizationSettings.cs" /> 
+    <Compile Include="Shapes\ProductAttributesLocalizationAdminShapeProvider.cs" />
     <Compile Include="Tokens\CartTokens.cs" /> 
     <Compile Include="Tokens\OrderTokens.cs" /> 
     <Compile Include="Tokens\ProductTokens.cs" /> 
@@ -413,6 +424,7 @@
     <Compile Include="ViewModels\AdvancedSKUProductEditorViewModel.cs" /> 
     <Compile Include="ViewModels\ECommerceCurrencySiteSettingsViewModel.cs" /> 
     <Compile Include="ViewModels\ECommerceSettingsViewModel.cs" /> 
+    <Compile Include="ViewModels\AttributeLocalizationProductAttributesPartEditViewModel.cs" /> 
     <Compile Include="ViewModels\InventoryBySKUProductEditorViewModel.cs" /> 
     <Compile Include="ViewModels\InventoryBySKUSiteSettingsPartViewModel.cs" />
     <Compile Include="ViewModels\ProductAttributePartDisplayViewModel.cs" /> 
@@ -533,13 +545,19 @@
   <ItemGroup> 
     <None Include="app.config" /> 
     <None Include="packages.config" /> 
+    <None Include="Views\ProductAttributesAdminList.cshtml" />
+    <None Include="Views\ProductAttributesAdminListItem.cshtml" />
+    <None Include="Views\DefinitionTemplates\ProductAttributeLocalizationSettings.cshtml" /> 
     <None Include="Views\ECommerceSettingsAdmin\Index.cshtml" /> 
     <None Include="Views\EditorTemplates\Parts\AdvancedSKUProduct.cshtml" /> 
+    <None Include="Views\EditorTemplates\Parts\AttributeLocalizationProductAttributes.cshtml" /> 
     <None Include="Views\EditorTemplates\Parts\InventoryBySKUProduct.cshtml" /> 
     <None Include="Views\EditorTemplates\SiteSettings\AdvancedSKUs.cshtml" /> 
     <None Include="Views\EditorTemplates\SiteSettings\Currency.cshtml" /> 
     <None Include="Views\EditorTemplates\SiteSettings\InventoryBySKU.cshtml" /> 
+    <None Include="Views\ProductAttributesLocalizationAdminListItem.cshtml" />
   </ItemGroup> 
+  <ItemGroup />
   <PropertyGroup> 
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion> 
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath> 

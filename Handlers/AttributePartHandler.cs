@@ -10,7 +10,7 @@ namespace Nwazet.Commerce.Handlers {
         public AttributePartHandler(IRepository<ProductAttributePartRecord> repository) {
             Filters.Add(StorageFilter.For(repository));
         }
-
+        
         protected override void GetItemMetadata(GetContentItemMetadataContext context) {
             var part = context.ContentItem.As<ProductAttributePart>();
             if (part != null) {

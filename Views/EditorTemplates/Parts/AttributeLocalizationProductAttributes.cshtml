@@ -1,0 +1,82 @@
+﻿@model Nwazet.Commerce.ViewModels.AttributeLocalizationProductAttributesPartEditViewModel
+@using Nwazet.Commerce.Settings
+@using Nwazet.Commerce.Models
+@using Orchard.ContentManagement
+@using Orchard.Localization.Models
+@using System.Globalization
+@using System.Collections
+@using System.Collections.Generic
+
+@{
+    Script.Require("jQuery").AtFoot();
+
+    string dataPartName = HttpUtility.JavaScriptStringEncode(Model.Part.PartDefinition.Name);
+
+    string additionalHint = "";
+    List<string> addHints = new List<string>();
+    var settings = Model.Part.TypePartDefinition.Settings.GetModel<ProductAttributeLocalizationSettings>();
+    if (settings.TryToLocalizeAttributes) {
+        addHints.Add(T("Attributes with a culture different than the product will be localized.").Text);
+    }
+    if (settings.RemoveAttributesWithoutLocalization) {
+        addHints.Add(T("If localization is not possible, attributes will be removed.").Text);
+    }
+    if (settings.AssertAttributesHaveSameCulture) {
+        addHints.Add(T("Publication will fail if attributes have a different culture than that of the product.").Text);
+    }
+    additionalHint = string.Join(" ", addHints);
+}
+
+@using (Script.Foot()) {
+    //this script will add to the hints of the ProductAttributesPart
+    <script type="text/javascript">
+        $(function () {
+            var hint = $("#attributes-fieldset-@Html.IdFor(m => m.Part)").find("div.hint")[0];
+            if (hint) {
+                hint.innerText += " @additionalHint";
+            }
+        });
+    </script>
+}
+
+@using (Script.Foot()) {
+    //this script will remove the attributes from the UI
+    if (Model.AttributesToHide.Any()) {
+        <script type="text/javascript">
+            $(function () {
+                @foreach (ProductAttributePart badAttribute in Model.AttributesToHide) {
+                    string idString = badAttribute.Id.ToString(CultureInfo.InvariantCulture);
+                    <text>
+                    $("label.forcheckbox[for='@Html.Id(idString)']").hide();
+                    $("#@Html.Id(idString)").hide();
+                    </text>
+            }
+
+            });
+        </script>
+    }
+
+}
+
+@using (Script.Foot()) {
+    //this script will add a string for the culture to all attributes whose culture is not the products
+    if (Model.AttributesToMark.Any()) {
+        <script type="text/javascript">
+            $(function () {
+                @foreach (ProductAttributePart badAttribute in Model.AttributesToMark) {
+                    string idString = badAttribute.Id.ToString(CultureInfo.InvariantCulture);
+                    LocalizationPart lPart = badAttribute.ContentItem.As<LocalizationPart>();
+                    string mark = "";
+                    if (lPart == null || lPart.Culture == null || string.IsNullOrEmpty(lPart.Culture.Culture)) {
+                        mark = T(" (Culture undefined)").Text;
+                    } else {
+                        mark = T(" ({0})", lPart.Culture.Culture).Text;
+                    }
+                    <text>
+                    $("label.forcheckbox[for='@Html.Id(idString)']")[0].innerText += "@mark";
+                    </text>
+            }
+            });
+        </script>
+    }
+}
