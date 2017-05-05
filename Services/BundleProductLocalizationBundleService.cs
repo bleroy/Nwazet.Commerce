@@ -9,6 +9,7 @@ using Nwazet.Commerce.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.Environment.Extensions;
+using Orchard.Localization;
 using Orchard.Localization.Models;
 
 namespace Nwazet.Commerce.Services {
@@ -18,7 +19,12 @@ namespace Nwazet.Commerce.Services {
         public BundleProductLocalizationBundleService(
             IContentManager contentManager,
             IRepository<BundleProductsRecord> bundleProductsRepository)
-            : base(contentManager, bundleProductsRepository) { }
+            : base(contentManager, bundleProductsRepository) {
+
+            T = NullLocalizer.Instance;
+        }
+
+        public Localizer T { get; set; }
 
         private static bool HasDifferentCulture(IContent ci, LocalizationPart locPart) {
             var lP = ci.As<LocalizationPart>();
@@ -49,6 +55,28 @@ namespace Nwazet.Commerce.Services {
                 );
         }
 
+        public override BundleViewModel BuildEditorViewModel(BundlePart part) {
+            var bvm = base.BuildEditorViewModel(part);
+            LocalizationPart locPart = part.ContentItem.As<LocalizationPart>();
+            if (ValidLocalizationPart(locPart)) {
+                List<ProductEntry> oldProducts = bvm.Products.ToList();
+                bvm.Products = new List<ProductEntry>();
+                foreach (var prodEntry in oldProducts) {
+                    var item = _contentManager.Get(prodEntry.ProductId);
+                    var lPart = item.As<LocalizationPart>();
+                    if (ValidLocalizationPart(lPart)) {
+                        if (lPart.Culture != locPart.Culture) {
+                            prodEntry.DisplayText += T(" ({0})", lPart.Culture.Culture);
+                        }
+                    }
+                    else {
+                        prodEntry.DisplayText += T(" (culture undefined)");
+                    }
+                    bvm.Products.Add(prodEntry);
+                }
+            }
+            return bvm;
+        }
         //public override void UpdateBundleProducts(ContentItem item, IEnumerable<ProductEntry> products) {
         //    throw new NotImplementedException();
         //}
