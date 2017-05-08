@@ -342,8 +342,10 @@
     <Compile Include="Routes\OrderRoutes.cs" /> 
     <Compile Include="Routes\CommerceRoutes.cs" /> 
     <Compile Include="Services\BundleProductLocalizationBundleService.cs" /> 
+    <Compile Include="Services\BundleProductLocalizationServices.cs" />
     <Compile Include="Services\BundleServiceBase.cs" /> 
     <Compile Include="Services\CurrencyProviderBase.cs" /> 
+    <Compile Include="Services\IBundleProductLocalizationServices.cs" />
     <Compile Include="Services\IBundleService.cs" /> 
     <Compile Include="Services\IProductAttributeAdminServices.cs" /> 
     <Compile Include="Services\IProductAttributeLocalizationServices.cs" /> 
@@ -539,6 +541,7 @@
   <ItemGroup> 
     <None Include="app.config" /> 
     <None Include="packages.config" /> 
+    <None Include="Views\EditorTemplates\Parts\ProductLocalizationBundle.cshtml" />
     <None Include="Views\ProductAttributesAdminList.cshtml" /> 
     <None Include="Views\ProductAttributesAdminListItem.cshtml" /> 
     <None Include="Views\DefinitionTemplates\BundleProductLocalizationSettings.cshtml" /> 

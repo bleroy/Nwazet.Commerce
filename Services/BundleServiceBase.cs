@@ -7,6 +7,7 @@ using Orchard.ContentManagement;
 using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.Environment.Extensions;
+using Orchard.Localization;
 using Orchard.MediaLibrary.Models;
 
 namespace Nwazet.Commerce.Services {
@@ -21,7 +22,11 @@ namespace Nwazet.Commerce.Services {
 
             _contentManager = contentManager;
             _bundleProductsRepository = bundleProductsRepository;
+
+            T = NullLocalizer.Instance;
         }
+
+        public Localizer T { get; set; }
 
         public virtual void AddProduct(int quantity, int product, BundlePartRecord record) {
             _bundleProductsRepository.Create(
@@ -75,7 +80,7 @@ namespace Nwazet.Commerce.Services {
                 .Where(p => !p.Has<BundlePart>());
         }
 
-        public virtual void UpdateBundleProducts(ContentItem item, IEnumerable<ProductEntry> products) {
+        public virtual UpdateBundleResults UpdateBundleProducts(ContentItem item, IEnumerable<ProductEntry> products) {
             var record = item.As<BundlePart>().Record;
             var oldProducts = _bundleProductsRepository
                 .Fetch(r => r.BundlePartRecord == record)
@@ -103,6 +108,7 @@ namespace Nwazet.Commerce.Services {
 
                 AddProduct(productQuantity.Quantity, productQuantity.ProductId, record);
             }
+            return new UpdateBundleResults();
         }
     }
 }

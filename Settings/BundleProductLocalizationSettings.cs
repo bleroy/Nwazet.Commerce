@@ -13,6 +13,7 @@ namespace Nwazet.Commerce.Settings {
 
         public bool TryToLocalizeProducts { get; set; }
         public bool RemoveProductsWithoutLocalization { get; set; }
+        public bool AddProductQuantitiesWhenLocalizing { get; set; }
         public bool AssertProductsHaveSameCulture { get; set; }
         public bool HideProductsFromEditor { get; set; }
 
