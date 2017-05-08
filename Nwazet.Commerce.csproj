@@ -231,6 +231,7 @@
     <Compile Include="Handlers\BundlePartHandler.cs" />
     <Compile Include="Handlers\AttributePartHandler.cs" />
     <Compile Include="Handlers\AttributesPartHandler.cs" />
+    <Compile Include="Handlers\BundleProductLocalizationBundlePartHandler.cs" />
     <Compile Include="Handlers\ECommerceCurrencySiteSettingsPartHandler.cs" />
     <Compile Include="Handlers\LocalizationAttributePartHandler.cs" />
     <Compile Include="Handlers\OrderPartHandler.cs" />
@@ -333,8 +334,10 @@
     <Compile Include="Routes\OrderRoutes.cs" />
     <Compile Include="Routes\CommerceRoutes.cs" />
     <Compile Include="Services\BundleProductLocalizationBundleService.cs" />
+    <Compile Include="Services\BundleProductLocalizationServices.cs" />
     <Compile Include="Services\BundleServiceBase.cs" />
     <Compile Include="Services\CurrencyProviderBase.cs" />
+    <Compile Include="Services\IBundleProductLocalizationServices.cs" />
     <Compile Include="Services\IBundleService.cs" />
     <Compile Include="Services\IProductAttributeAdminServices.cs" />
     <Compile Include="Services\IProductAttributeLocalizationServices.cs" />

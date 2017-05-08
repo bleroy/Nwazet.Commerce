@@ -19,7 +19,7 @@ namespace Nwazet.Commerce.Services {
         IEnumerable<AttributeIdPair> GetLocalizationIdPairs(ProductAttributesPart attributesPart, LocalizationPart locPart);
         /// <summary>
         /// Returns an IEnumerable containing the ProductAttributeParts that are selected in the given ProductAttributesPart
-        /// and whose culture does not match the culture from the give LocalizationPart
+        /// and whose culture does not match the culture from the given LocalizationPart
         /// </summary>
         /// <param name="attributesPart">THe ProductAttributesPart whose selected attributes will be verified</param>
         /// <param name="locPart">The LocalizationPart with the base culture we are looking for.</param>

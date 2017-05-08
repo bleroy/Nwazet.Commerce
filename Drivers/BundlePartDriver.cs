@@ -20,7 +20,8 @@ namespace Nwazet.Commerce.Drivers {
             _contentManager = contentManager;
         }
 
-        protected override string Prefix {
+        protected override string Prefix
+        {
             get { return "Bundle"; }
         }
 
@@ -54,11 +55,12 @@ namespace Nwazet.Commerce.Drivers {
 
         protected override DriverResult Editor(BundlePart part, IUpdateModel updater, dynamic shapeHelper) {
             var model = new BundleViewModel();
-            updater.TryUpdateModel(model, Prefix, null, null);
-
-            if (part.ContentItem.Id != 0) {
-                _bundleService.UpdateBundleProducts(part.ContentItem, model.Products);
+            if (updater.TryUpdateModel(model, Prefix, null, null)) {
+                if (part.ContentItem.Id != 0) {
+                    _bundleService.UpdateBundleProducts(part.ContentItem, model.Products);
+                }
             }
+
             return Editor(part, shapeHelper);
         }
 
