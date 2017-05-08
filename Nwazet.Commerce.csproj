@@ -71,7 +71,7 @@
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj"> 
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project> 
       <Name>Orchard.Framework</Name> 
-    </ProjectReference>
+    </ProjectReference> 
     <ProjectReference Include="..\..\..\Orchard.Web\Modules\Orchard.Localization\Orchard.Localization.csproj"> 
       <Project>{fbc8b571-ed50-49d8-8d9d-64ab7454a0d6}</Project> 
       <Name>Orchard.Localization</Name> 
@@ -197,7 +197,7 @@
   <ItemGroup> 
     <Compile Include="Activities\CommerceActivity.cs" /> 
     <Compile Include="Activities\OrderActivity.cs" /> 
-    <Compile Include="Controllers\ECommerceSettingsAdminController.cs" />
+    <Compile Include="Controllers\ECommerceSettingsAdminController.cs" /> 
     <Compile Include="Controllers\ProductSettingsAdminController.cs" /> 
     <Compile Include="Controllers\BundleAdminController.cs" /> 
     <Compile Include="Controllers\AttributesAdminController.cs" /> 
@@ -214,8 +214,9 @@
     <Compile Include="Drivers\AdvancedSKUProductPartDriver.cs" /> 
     <Compile Include="Drivers\AdvancedSKUsSiteSettingPartDriver.cs" /> 
     <Compile Include="Drivers\AttributeLocalizationProductAttributesPartDriver.cs" /> 
+    <Compile Include="Drivers\BundleLocalizationPartDriver.cs" /> 
     <Compile Include="Drivers\BundlePartDriver.cs" /> 
-    <Compile Include="Drivers\ECommerceCurrencySiteSettingsPartDriver.cs" />
+    <Compile Include="Drivers\ECommerceCurrencySiteSettingsPartDriver.cs" /> 
     <Compile Include="Drivers\OrderPartDriver.cs" /> 
     <Compile Include="Drivers\ProductSettingsPartDriver.cs" /> 
     <Compile Include="Drivers\ZipCodeTaxPartDriver.cs" /> 
@@ -232,14 +233,14 @@
     <Compile Include="Drivers\WeightBasedShippingMethodPartDriver.cs" /> 
     <Compile Include="Exceptions\StripeException.cs" /> 
     <Compile Include="Extensions\AttributeNameUtilities.cs" /> 
-    <Compile Include="Features\CurrencyProviderBySiteSettingFeature.cs" />
+    <Compile Include="Features\CurrencyProviderBySiteSettingFeature.cs" /> 
     <Compile Include="Filters\ReferrerFilter.cs" /> 
     <Compile Include="Handlers\AdvancedSKUManagementHandler.cs" /> 
     <Compile Include="Handlers\AdvancedSKUsSiteSettingPartHandler.cs" /> 
     <Compile Include="Handlers\BundlePartHandler.cs" /> 
     <Compile Include="Handlers\AttributePartHandler.cs" /> 
     <Compile Include="Handlers\AttributesPartHandler.cs" /> 
-    <Compile Include="Handlers\ECommerceCurrencySiteSettingsPartHandler.cs" />
+    <Compile Include="Handlers\ECommerceCurrencySiteSettingsPartHandler.cs" /> 
     <Compile Include="Handlers\LocalizationAttributePartHandler.cs" /> 
     <Compile Include="Handlers\OrderPartHandler.cs" /> 
     <Compile Include="Handlers\ProductSettingsPartHandler.cs" /> 
@@ -262,6 +263,7 @@
     <Compile Include="Menus\ShippingAdminMenu.cs" /> 
     <Compile Include="Migrations\AttributesLocalizationExtensionsMigrations.cs" /> 
     <Compile Include="Migrations\BundleMigrations.cs" /> 
+    <Compile Include="Migrations\BundlesLocalizationExtensionsMigrations.cs" /> 
     <Compile Include="Migrations\CommerceMigrations.cs" /> 
     <Compile Include="Migrations\AttributesMigrations.cs" /> 
     <Compile Include="Migrations\OrderMigrations.cs" /> 
@@ -275,7 +277,7 @@
     <Compile Include="Models\CheckoutItem.cs" /> 
     <Compile Include="Models\ConversionUtilities.cs" /> 
     <Compile Include="Models\Charge.cs" /> 
-    <Compile Include="Models\ECommerceCurrencySiteSettingsPart.cs" />
+    <Compile Include="Models\ECommerceCurrencySiteSettingsPart.cs" /> 
     <Compile Include="Models\ICharge.cs" /> 
     <Compile Include="Models\OrderEvent.cs" /> 
     <Compile Include="Models\OrderPart.cs" /> 
@@ -339,19 +341,24 @@
     <Compile Include="Routes\StripeRoutes.cs" /> 
     <Compile Include="Routes\OrderRoutes.cs" /> 
     <Compile Include="Routes\CommerceRoutes.cs" /> 
-    <Compile Include="Services\CurrencyProviderBase.cs" />
+    <Compile Include="Services\BundleProductLocalizationBundleService.cs" /> 
+    <Compile Include="Services\BundleProductLocalizationServices.cs" />
+    <Compile Include="Services\BundleServiceBase.cs" /> 
+    <Compile Include="Services\CurrencyProviderBase.cs" /> 
+    <Compile Include="Services\IBundleProductLocalizationServices.cs" />
+    <Compile Include="Services\IBundleService.cs" /> 
     <Compile Include="Services\IProductAttributeAdminServices.cs" /> 
-    <Compile Include="Services\IProductAttributeLocalizationServices.cs" />
+    <Compile Include="Services\IProductAttributeLocalizationServices.cs" /> 
     <Compile Include="Services\ISKUGenerationServices.cs" /> 
     <Compile Include="Services\ISKUUniquenessHelper.cs" /> 
     <Compile Include="Services\LatestProductAttributeAdminServices.cs" /> 
     <Compile Include="Services\LocalizationSKUUniquenessHelper.cs" /> 
     <Compile Include="Services\IProductAttributeNameService.cs" /> 
     <Compile Include="Services\ProductAttributeAdminServices.cs" /> 
-    <Compile Include="Services\ProductAttributeLocalizationServices.cs" />
+    <Compile Include="Services\ProductAttributeLocalizationServices.cs" /> 
     <Compile Include="Services\ProductAttributeNameService.cs" /> 
-    <Compile Include="Services\Currency.cs" />
-    <Compile Include="Services\ICurrencyProvider.cs" />
+    <Compile Include="Services\Currency.cs" /> 
+    <Compile Include="Services\ICurrencyProvider.cs" /> 
     <Compile Include="Services\ProductResolverSelector.cs" /> 
     <Compile Include="Services\AddressFormatter.cs" /> 
     <Compile Include="Services\BundleService.cs" /> 
@@ -371,8 +378,8 @@
     <Compile Include="Services\ShippingService.cs" /> 
     <Compile Include="Services\SKUGenerationServices.cs" /> 
     <Compile Include="Services\TextProductAttributeExtensionProvider.cs" /> 
-    <Compile Include="Services\UseCurrencyFromSiteCultureProvider.cs" />
-    <Compile Include="Services\UseCurrencyFromSiteSettingsProvider.cs" />
+    <Compile Include="Services\UseCurrencyFromSiteCultureProvider.cs" /> 
+    <Compile Include="Services\UseCurrencyFromSiteSettingsProvider.cs" /> 
     <Compile Include="Services\ZipCodeTaxProvider.cs" /> 
     <Compile Include="Services\StateOrCountryTaxProvider.cs" /> 
     <Compile Include="Services\StripeWebService.cs" /> 
@@ -403,16 +410,18 @@
     <Compile Include="Services\UspsWebService.cs" /> 
     <Compile Include="Services\WeightBasedShippingMethodProvider.cs" /> 
     <Compile Include="Services\UnitedStates.cs" /> 
+    <Compile Include="Settings\BundleProductLocalizationEditorEvents.cs" /> 
+    <Compile Include="Settings\BundleProductLocalizationSettings.cs" /> 
     <Compile Include="Settings\ProductAttributeLocalizationEditorEvents.cs" /> 
     <Compile Include="Settings\ProductAttributeLocalizationSettings.cs" /> 
-    <Compile Include="Shapes\ProductAttributesLocalizationAdminShapeProvider.cs" />
+    <Compile Include="Shapes\ProductAttributesLocalizationAdminShapeProvider.cs" /> 
     <Compile Include="Tokens\CartTokens.cs" /> 
     <Compile Include="Tokens\OrderTokens.cs" /> 
     <Compile Include="Tokens\ProductTokens.cs" /> 
     <Compile Include="ViewModels\AdancedSKUsSiteSettingsViewModel.cs" /> 
     <Compile Include="ViewModels\AdvancedSKUProductEditorViewModel.cs" /> 
-    <Compile Include="ViewModels\ECommerceCurrencySiteSettingsViewModel.cs" />
-    <Compile Include="ViewModels\ECommerceSettingsViewModel.cs" />
+    <Compile Include="ViewModels\ECommerceCurrencySiteSettingsViewModel.cs" /> 
+    <Compile Include="ViewModels\ECommerceSettingsViewModel.cs" /> 
     <Compile Include="ViewModels\AttributeLocalizationProductAttributesPartEditViewModel.cs" /> 
     <Compile Include="ViewModels\ProductAttributePartDisplayViewModel.cs" /> 
     <Compile Include="ViewModels\ProductAttributePartEditViewModel.cs" /> 
@@ -532,17 +541,19 @@
   <ItemGroup> 
     <None Include="app.config" /> 
     <None Include="packages.config" /> 
-    <None Include="Views\ProductAttributesAdminList.cshtml" />
-    <None Include="Views\ProductAttributesAdminListItem.cshtml" />
+    <None Include="Views\EditorTemplates\Parts\ProductLocalizationBundle.cshtml" />
+    <None Include="Views\ProductAttributesAdminList.cshtml" /> 
+    <None Include="Views\ProductAttributesAdminListItem.cshtml" /> 
+    <None Include="Views\DefinitionTemplates\BundleProductLocalizationSettings.cshtml" /> 
     <None Include="Views\DefinitionTemplates\ProductAttributeLocalizationSettings.cshtml" /> 
     <None Include="Views\ECommerceSettingsAdmin\Index.cshtml" /> 
     <None Include="Views\EditorTemplates\Parts\AdvancedSKUProduct.cshtml" /> 
     <None Include="Views\EditorTemplates\Parts\AttributeLocalizationProductAttributes.cshtml" /> 
     <None Include="Views\EditorTemplates\SiteSettings\AdvancedSKUs.cshtml" /> 
-    <None Include="Views\EditorTemplates\SiteSettings\Currency.cshtml" />
-    <None Include="Views\ProductAttributesLocalizationAdminListItem.cshtml" />
+    <None Include="Views\EditorTemplates\SiteSettings\Currency.cshtml" /> 
+    <None Include="Views\ProductAttributesLocalizationAdminListItem.cshtml" /> 
   </ItemGroup> 
-  <ItemGroup />
+  <ItemGroup /> 
   <PropertyGroup> 
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion> 
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath> 
@@ -550,20 +561,20 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" /> 
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" /> 
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" /> 
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.  
-       Other similar extension points exist, see Microsoft.Common.targets. 
-  <Target Name="BeforeBuild"> 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.   
+       Other similar extension points exist, see Microsoft.Common.targets.  
+  <Target Name="BeforeBuild">  
   </Target> --> 
   <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler"> 
     <PropertyGroup> 
       <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir> 
     </PropertyGroup> 
-    <!-- If this is an area child project, uncomment the following line: 
-    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" /> 
+    <!-- If this is an area child project, uncomment the following line:  
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />  
     --> 
-    <!-- If this is an area parent project, uncomment the following lines: 
-    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" /> 
-    <CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" /> 
+    <!-- If this is an area parent project, uncomment the following lines:  
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />  
+    <CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" />  
     --> 
   </Target> 
   <Target Name="AfterBuildCompiler" Condition="'$(MvcBuildViews)'=='true'"> 
