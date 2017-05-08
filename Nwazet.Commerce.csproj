@@ -231,7 +231,6 @@
     <Compile Include="Handlers\BundlePartHandler.cs" />
     <Compile Include="Handlers\AttributePartHandler.cs" />
     <Compile Include="Handlers\AttributesPartHandler.cs" />
-    <Compile Include="Handlers\BundleProductLocalizationBundlePartHandler.cs" />
     <Compile Include="Handlers\ECommerceCurrencySiteSettingsPartHandler.cs" />
     <Compile Include="Handlers\LocalizationAttributePartHandler.cs" />
     <Compile Include="Handlers\OrderPartHandler.cs" />
@@ -533,6 +532,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Views\EditorTemplates\Parts\ProductLocalizationBundle.cshtml" />
     <None Include="Views\ProductAttributesAdminList.cshtml" />
     <None Include="Views\ProductAttributesAdminListItem.cshtml" />
     <None Include="Views\DefinitionTemplates\BundleProductLocalizationSettings.cshtml" />

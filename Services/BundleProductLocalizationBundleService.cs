@@ -65,8 +65,109 @@ namespace Nwazet.Commerce.Services {
             }
             return bvm;
         }
-        //public override void UpdateBundleProducts(ContentItem item, IEnumerable<ProductEntry> products) {
-        //    throw new NotImplementedException();
-        //}
+
+        private string DisplayTextFromId(int id) {
+            return _contentManager.GetItemMetadata(_contentManager.GetLatest(id)).DisplayText;
+        }
+
+        public override UpdateBundleResults UpdateBundleProducts(ContentItem item, IEnumerable<ProductEntry> products) {
+            //localization logic
+            var locPart = item.As<LocalizationPart>();
+            if (!_bundleProductLocalizationServices.ValidLocalizationPart(locPart)) {
+                return base.UpdateBundleProducts(item, products);
+            }
+            //LocalizationPart in the ContentItem has the info we need
+            var bundlePart = item.As<BundlePart>();
+            var results = new UpdateBundleResults();
+            var record = bundlePart.Record;
+            var oldProducts = _bundleProductsRepository
+                .Fetch(r => r.BundlePartRecord == record)
+                .ToList();
+
+            var settings = bundlePart.TypePartDefinition.Settings.GetModel<BundleProductLocalizationSettings>();
+
+            var newProductsList = settings.TryToLocalizeProducts ?
+                _bundleProductLocalizationServices.GetLocalizationIdPairs(
+                    products
+                    .Where(e => e.Quantity > 0)
+                    .Select(pe => new ProductQuantity() {
+                        ProductId = pe.ProductId,
+                        Quantity = pe.Quantity
+                    }), locPart) :
+                products
+                    .Where(e => e.Quantity > 0)
+                    .Select(pr => new ProductQuantityPair(
+                        op: new ProductQuantity { ProductId = pr.ProductId, Quantity = pr.Quantity },
+                        np: pr.ProductId
+                    ));
+
+            if (settings.TryToLocalizeProducts) {
+                //try to replace selected products with the correct localization
+                if (newProductsList.Any(pqp => pqp.NewProductId < 0)) {
+                    if (settings.RemoveProductsWithoutLocalization) {
+                        results.Warnings.Add(T(
+                            "We could not find a correct localization for the following products, so they were removed from this bundle: {0}",
+                            string.Join(", ", newProductsList.Where(pqp => pqp.NewProductId < 0)
+                                .Select(pqp => DisplayTextFromId(pqp.OriginalProduct.ProductId)
+                                )
+                            )
+                        ));
+                        newProductsList = newProductsList.Where(pqp => pqp.NewProductId > 0);
+                    }
+                    else {
+                        //negative Ids are made positive again
+                        newProductsList = newProductsList.Select(pqp =>
+                            pqp = new ProductQuantityPair(pqp.OriginalProduct, Math.Abs(pqp.NewProductId)));
+                    }
+                }
+            }
+
+            if (settings.AssertProductsHaveSameCulture) {
+                //verify that all products are in the same culture as the bundle
+                var badProducts = _bundleProductLocalizationServices
+                    .GetProductsInTheWrongCulture(newProductsList.Select(pqp => pqp.NewProductId), locPart);
+                if (badProducts.Any()) {
+                    results.Errors.Add(T("Some of the products are in the wrong culture: {0}",
+                        string.Join(", ", badProducts.Select(bp => _contentManager.GetItemMetadata(bp).DisplayText))
+                        ));
+                    return results;
+                }
+            }
+            //generate the list of new product quantities
+            Dictionary<int, int> newQuantities = new Dictionary<int, int>(); //Dictionary<TProductId, TQuantity>
+            foreach (var quantityPair in newProductsList) {
+                if (newQuantities.ContainsKey(quantityPair.NewProductId)) {
+                    if (settings.TryToLocalizeProducts && settings.AddProductQuantitiesWhenLocalizing) {
+                        newQuantities[quantityPair.NewProductId] += quantityPair.OriginalProduct.Quantity;
+                    }
+                    else if (quantityPair.NewProductId == quantityPair.OriginalProduct.ProductId) {
+                        newQuantities[quantityPair.NewProductId] = quantityPair.OriginalProduct.Quantity;
+                    }
+                }
+                else {
+                    newQuantities.Add(quantityPair.NewProductId, quantityPair.OriginalProduct.Quantity);
+                }
+            }
+            //assign
+            var innerResults = base.UpdateBundleProducts(item,
+                newQuantities.Select(kvp => new ProductEntry {
+                    ProductId = kvp.Key,
+                    Quantity = kvp.Value
+                }));
+            results.Warnings.AddRange(innerResults.Warnings);
+            results.Errors.AddRange(innerResults.Errors);
+            //notify
+            if (newProductsList.Where(pqp => pqp.OriginalProduct.ProductId != pqp.NewProductId).Any()) {
+                results.Warnings.Add(T(
+                       "The following products where replaced by their correct localization: {0}",
+                       string.Join(", ", newProductsList.Where(pqp => pqp.OriginalProduct.ProductId != pqp.NewProductId)
+                           .Select(pqp => DisplayTextFromId(pqp.OriginalProduct.ProductId)
+                           )
+                       )
+                   ));
+            }
+
+            return results; //no error
+        }
     }
 }

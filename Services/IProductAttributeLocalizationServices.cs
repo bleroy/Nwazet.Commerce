@@ -6,14 +6,15 @@ using Orchard.Localization.Models;
 
 namespace Nwazet.Commerce.Services {
     public interface IProductAttributeLocalizationServices : IDependency {
-        
+
         /// <summary>
-        /// Returns an enumerable of pairs of Ids. Each tuple
+        /// Returns an enumerable of pairs of Ids. Each struct
         /// from the enumerable has the form:
-        /// Item1 is the attribute id in the initial ProductAttributesPart
-        /// Item2 is the attribute id after localization
-        /// Items 2 may be negative in the case where no localization to the target culture was found.
+        /// OriginalId is the attribute id in the initial ProductAttributesPart
+        /// NewId is the attribute id after localization
+        /// NewIds  may be negative in the case where no localization to the target culture was found.
         /// </summary>
+        /// <param name="attributesPart">THe ProductAttributesPart whose selected attributes will be verified</param>
         /// <param name="locPart">A LocalizationPart for the desired target culture.</param>
         /// <returns>A IEnumerable as described.</returns>
         IEnumerable<AttributeIdPair> GetLocalizationIdPairs(ProductAttributesPart attributesPart, LocalizationPart locPart);

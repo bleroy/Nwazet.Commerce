@@ -9,6 +9,11 @@
         @Html.CheckBoxFor(m => m.RemoveProductsWithoutLocalization)
         <label for="@Html.FieldIdFor(m => m.RemoveProductsWithoutLocalization)" class="forcheckbox">@T("Remove products that do not have the correct translation.")</label>
         <span class="hint">@T("Check to unselect products from the bundle when the products selected do not have a version in the correct culture (they have a LocalizationPart, but not a translation in the bundle's culture').")</span>
+        @Html.CheckBoxFor(m => m.AddProductQuantitiesWhenLocalizing)
+        <label for="@Html.FieldIdFor(m => m.AddProductQuantitiesWhenLocalizing)" class="forcheckbox">@T("Merge product quantities across localizations.")</label>
+        <span class="hint">@T(@"When localizing products, there is the issue of the quantities set for the bundle. If this option is NOT CHECKED, 
+            quantities of the item in the wrong localization will be used only if the correct localization was not in the bundle yet, and will be ignored otherwise.
+            If this option is CHECKED, quantities of the item in the wrong localization will be added to those of the product in the correct culture.")</span>
     </div>
 
     @Html.CheckBoxFor(m => m.AssertProductsHaveSameCulture)

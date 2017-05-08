@@ -53,6 +53,9 @@ namespace Nwazet.Commerce.Settings {
                         .WithSetting("BundleProductLocalizationSettings.RemoveProductsWithoutLocalization",
                             settings.RemoveProductsWithoutLocalization.ToString(CultureInfo.InvariantCulture));
                     builder
+                        .WithSetting("BundleProductLocalizationSettings.AddProductQuantitiesWhenLocalizing",
+                            settings.AddProductQuantitiesWhenLocalizing.ToString(CultureInfo.InvariantCulture));
+                    builder
                         .WithSetting("BundleProductLocalizationSettings.AssertProductsHaveSameCulture",
                             settings.AssertProductsHaveSameCulture.ToString(CultureInfo.InvariantCulture));
                     builder

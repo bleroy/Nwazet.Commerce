@@ -25,13 +25,56 @@ namespace Nwazet.Commerce.Services {
         /// <param name="part">The LocalizationPart to be analyzed</param>
         /// <returns>True if the LocalizationPart can safely be used in comparisons.</returns>
         bool ValidLocalizationPart(LocalizationPart part);
+
         /// <summary>
         /// Returns an IEnumerable containing the content items that are selected in the given BundlePart
         /// and whose culture does not match the culture from the given LocalizationPart
         /// </summary>
-        /// <param name="bundlePart">The BundlePart whose selected attributes will be verified</param>
+        /// <param name="bundlePart">The BundlePart whose selected products will be verified</param>
         /// <param name="locPart">The LocalizationPart with the base culture we are looking for.</param>
         /// <returns>A IEnumerable as described</returns>
         IEnumerable<IContent> GetProductsInTheWrongCulture(BundlePart bundlePart, LocalizationPart locPart);
+        /// <summary>
+        /// Returns an IEnumerable containing the products from the BundlePart
+        /// whose culture does not match the culture from the given LocalizationPart
+        /// </summary>
+        /// <param name="productIds">The ids of products of the BundlePart that will be verified</param>
+        /// <param name="locPart">The LocalizationPart with the base culture we are looking for.</param>
+        /// <returns>A IEnumerable as described</returns>
+        IEnumerable<IContent> GetProductsInTheWrongCulture(IEnumerable<int> productIds, LocalizationPart locPart);
+
+        /// <summary>
+        /// Returns an enumerable of pairs of <ProductQantity, int>. Each struct
+        /// from the enumerable has the form:
+        /// OriginalProduct is the productQUantity id in the initial BundlePart
+        /// NewProductID is the product id after localization
+        /// NewProductId may be negative in the case where no localization to the target culture was found.
+        /// </summary>
+        /// <param name="bundlePart">The BundlePart whose selected products will be verified</param>
+        /// <param name="locPart">A LocalizationPart for the desired target culture.</param>
+        /// <returns>A IEnumerable as described.</returns>
+        IEnumerable<ProductQuantityPair> GetLocalizationIdPairs(BundlePart bundlePart, LocalizationPart locPart);
+        /// <summary>
+        /// Returns an enumerable of pairs of <ProductQantity, int>. Each struct
+        /// from the enumerable has the form:
+        /// OriginalProduct is the productQUantity id in the initial BundlePart
+        /// NewProductID is the product id after localization
+        /// NewProductId may be negative in the case where no localization to the target culture was found.
+        /// </summary>
+        /// <param name="originalProducts">The products of the BundlePart that will be verified</param>
+        /// <param name="locPart">A LocalizationPart for the desired target culture.</param>
+        /// <returns>A IEnumerable as described.</returns>
+        IEnumerable<ProductQuantityPair> GetLocalizationIdPairs(IEnumerable<ProductQuantity> originalProducts, LocalizationPart locPart);
+
+    }
+
+    public struct ProductQuantityPair {
+        public ProductQuantity OriginalProduct;
+        public int NewProductId;
+
+        public ProductQuantityPair(ProductQuantity op, int np) {
+            OriginalProduct = op;
+            NewProductId = np;
+        }
     }
 }

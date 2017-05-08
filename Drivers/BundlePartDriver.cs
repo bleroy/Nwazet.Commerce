@@ -4,20 +4,27 @@ using System.Xml.Linq;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
 using Nwazet.Commerce.ViewModels;
+using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Environment.Extensions;
+using Orchard.UI.Notify;
 
 namespace Nwazet.Commerce.Drivers {
     [OrchardFeature("Nwazet.Bundles")]
     public class BundlePartDriver : ContentPartDriver<BundlePart> {
         private readonly IBundleService _bundleService;
         private readonly IContentManager _contentManager;
+        private readonly IOrchardServices _orchardServices;
+        public BundlePartDriver(
+            IBundleService bundleService,
+            IContentManager contentManager,
+            IOrchardServices orchardServices) {
 
-        public BundlePartDriver(IBundleService bundleService, IContentManager contentManager) {
             _bundleService = bundleService;
             _contentManager = contentManager;
+            _orchardServices = orchardServices;
         }
 
         protected override string Prefix
@@ -57,7 +64,13 @@ namespace Nwazet.Commerce.Drivers {
             var model = new BundleViewModel();
             if (updater.TryUpdateModel(model, Prefix, null, null)) {
                 if (part.ContentItem.Id != 0) {
-                    _bundleService.UpdateBundleProducts(part.ContentItem, model.Products);
+                    var updateResults = _bundleService.UpdateBundleProducts(part.ContentItem, model.Products);
+                    foreach (var error in updateResults.Errors) {
+                        updater.AddModelError("", error);
+                    }
+                    foreach (var warning in updateResults.Warnings) {
+                        _orchardServices.Notifier.Warning(warning);
+                    }
                 }
             }
 
