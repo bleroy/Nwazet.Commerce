@@ -21,15 +21,8 @@ namespace Nwazet.Commerce.Handlers {
             Filters.Add(StorageFilter.For(versionRepository));
 
             _contentManager = contentManager;
-
-            OnPublished<ProductPart>(SynchronizeOnPublish);
+            
             OnUpdated<ProductPart>(SynchronizeOnUpdate);
-        }
-
-        protected void SynchronizeOnPublish(PublishContentContext context, ProductPart part) {
-            //The Inventory gets copied over to Latest and Published
-            var sSet = GetSynchronizationSet(part);
-            SynchronizeInventory(part, sSet);
         }
 
         protected void SynchronizeOnUpdate(UpdateContentContext context, ProductPart part) {
