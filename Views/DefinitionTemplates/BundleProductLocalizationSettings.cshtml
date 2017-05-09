@@ -1,0 +1,27 @@
+﻿@model Nwazet.Commerce.Settings.BundleProductLocalizationSettings
+
+<fieldset>
+
+    @Html.CheckBoxFor(m => m.TryToLocalizeProducts)
+    <label for="@Html.FieldIdFor(m => m.TryToLocalizeProducts)" class="forcheckbox">@T("Try to replace selected products with their correct localization.")</label>
+    <span class="hint">@T("Check to attempt to replace selected products with their translation in the bundle's culture. This only applies if the bundle has a LocalizationPart.")</span>
+    <div data-controllerid="@Html.FieldIdFor(m => m.TryToLocalizeProducts)">
+        @Html.CheckBoxFor(m => m.RemoveProductsWithoutLocalization)
+        <label for="@Html.FieldIdFor(m => m.RemoveProductsWithoutLocalization)" class="forcheckbox">@T("Remove products that do not have the correct translation.")</label>
+        <span class="hint">@T("Check to unselect products from the bundle when the products selected do not have a version in the correct culture (they have a LocalizationPart, but not a translation in the bundle's culture').")</span>
+        @Html.CheckBoxFor(m => m.AddProductQuantitiesWhenLocalizing)
+        <label for="@Html.FieldIdFor(m => m.AddProductQuantitiesWhenLocalizing)" class="forcheckbox">@T("Merge product quantities across localizations.")</label>
+        <span class="hint">@T(@"When localizing products, there is the issue of the quantities set for the bundle. If this option is NOT CHECKED, 
+            quantities of the item in the wrong localization will be used only if the correct localization was not in the bundle yet, and will be ignored otherwise.
+            If this option is CHECKED, quantities of the item in the wrong localization will be added to those of the product in the correct culture.")</span>
+    </div>
+
+    @Html.CheckBoxFor(m => m.AssertProductsHaveSameCulture)
+    <label for="@Html.FieldIdFor(m => m.AssertProductsHaveSameCulture)" class="forcheckbox">@T("Verify culture of selected products.")</label>
+    <span class="hint">@T("Check to prevent publication of bundles when the products selected have a different culture. This only applies if the bundle has a LocalizationPart.")</span>
+
+    @Html.CheckBoxFor(m => m.HideProductsFromEditor)
+    <label for="@Html.FieldIdFor(m => m.HideProductsFromEditor)" class="forcheckbox">@T("Don't show products.")</label>
+    <span class="hint">@T("Check to prevent showing products that have a different culture than the bundle in its editor view. This only applies if the bundle has a LocalizationPart.")</span>
+
+</fieldset>
