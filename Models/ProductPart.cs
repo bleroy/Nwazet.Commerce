@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.Commerce")]
-    public class ProductPart : ContentPart<ProductPartRecord>, IProduct {
+    public class ProductPart : ContentPart<ProductPartVersionRecord>, IProduct {
         [Required]
         public string Sku
         {

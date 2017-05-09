@@ -75,7 +75,7 @@ namespace Nwazet.Commerce.Services {
 
         public virtual IEnumerable<IContent> GetProducts() {
             return _contentManager
-                .Query<ProductPart, ProductPartRecord>(VersionOptions.Latest)
+                .Query<ProductPart, ProductPartVersionRecord>(VersionOptions.Latest)
                 .List()
                 .Where(p => !p.Has<BundlePart>());
         }
