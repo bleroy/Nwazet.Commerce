@@ -205,6 +205,7 @@
     <Compile Include="Drivers\AdvancedSKUProductPartDriver.cs" />
     <Compile Include="Drivers\AdvancedSKUsSiteSettingPartDriver.cs" />
     <Compile Include="Drivers\AttributeLocalizationProductAttributesPartDriver.cs" /> 
+    <Compile Include="Drivers\BundleLocalizationPartDriver.cs" /> 
     <Compile Include="Drivers\BundlePartDriver.cs" />
     <Compile Include="Drivers\ECommerceCurrencySiteSettingsPartDriver.cs" />
     <Compile Include="Drivers\InventoryBySKUProductPartDriver.cs" />
@@ -257,6 +258,7 @@
     <Compile Include="Menus\ShippingAdminMenu.cs" />
     <Compile Include="Migrations\AttributesLocalizationExtensionsMigrations.cs" /> 
     <Compile Include="Migrations\BundleMigrations.cs" />
+    <Compile Include="Migrations\BundlesLocalizationExtensionsMigrations.cs" /> 
     <Compile Include="Migrations\CommerceMigrations.cs" />
     <Compile Include="Migrations\AttributesMigrations.cs" />
     <Compile Include="Migrations\OrderMigrations.cs" />
@@ -335,7 +337,12 @@
     <Compile Include="Routes\StripeRoutes.cs" />
     <Compile Include="Routes\OrderRoutes.cs" />
     <Compile Include="Routes\CommerceRoutes.cs" />
+    <Compile Include="Services\BundleProductLocalizationBundleService.cs" /> 
+    <Compile Include="Services\BundleProductLocalizationServices.cs" />
+    <Compile Include="Services\BundleServiceBase.cs" /> 
     <Compile Include="Services\CurrencyProviderBase.cs" />
+    <Compile Include="Services\IBundleProductLocalizationServices.cs" />
+    <Compile Include="Services\IBundleService.cs" /> 
     <Compile Include="Services\InventoriesAreNotSynchronizedBySKU.cs" />
     <Compile Include="Services\InventoryBySKUProductInventoryService.cs" />
     <Compile Include="Services\IProductAttributeAdminServices.cs" /> 
@@ -404,6 +411,8 @@
     <Compile Include="Services\UspsWebService.cs" />
     <Compile Include="Services\WeightBasedShippingMethodProvider.cs" />
     <Compile Include="Services\UnitedStates.cs" />
+    <Compile Include="Settings\BundleProductLocalizationEditorEvents.cs" /> 
+    <Compile Include="Settings\BundleProductLocalizationSettings.cs" /> 
     <Compile Include="Settings\ProductAttributeLocalizationEditorEvents.cs" /> 
     <Compile Include="Settings\ProductAttributeLocalizationSettings.cs" /> 
     <Compile Include="Shapes\ProductAttributesLocalizationAdminShapeProvider.cs" />
@@ -535,8 +544,10 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Views\EditorTemplates\Parts\ProductLocalizationBundle.cshtml" />
     <None Include="Views\ProductAttributesAdminList.cshtml" />
     <None Include="Views\ProductAttributesAdminListItem.cshtml" />
+    <None Include="Views\DefinitionTemplates\BundleProductLocalizationSettings.cshtml" /> 
     <None Include="Views\DefinitionTemplates\ProductAttributeLocalizationSettings.cshtml" /> 
     <None Include="Views\ECommerceSettingsAdmin\Index.cshtml" />
     <None Include="Views\EditorTemplates\Parts\AdvancedSKUProduct.cshtml" />

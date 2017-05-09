@@ -76,7 +76,7 @@ Features:
         Description: Makes the use of SKUs more advanced, by providing options related to their uniqueness and automatic generation
         Category: Commerce
         Dependencies: Nwazet.Commerce
-	Nwazet.CurrencyProviderBySiteSetting
+	Nwazet.CurrencyProviderBySiteSetting:
 		Name: SiteSettings Currency Provider
         Description: Enables a currency provider for the site based on a site's setting
         Category: Commerce
@@ -86,7 +86,11 @@ Features:
 		Description: Provides advanced handling of product attributes in multi-language stores
 		Category: Commerce
 		Dependencies: Nwazet.Commerce, Nwazet.Attributes, Orchard.Localization
-	Nwazet.InventoryBySKU:
+	Nwazet.BundlesLocalizationExtension:
+		Name: Nwazet Bundles Localization Extensions
+		Description: Provides advanced handling of product Bundles in multi-language stores
+		Category: Commerce
+		Dependencies: Nwazet.Commerce, Nwazet.Bundles, Orchard.Localization	Nwazet.InventoryBySKU:
 		Name: Nwazet Relate Inventory to SKU
 		Description: Estabilish 1-to-1 relationship between SKU and inventory.
 		Category: Commerce
