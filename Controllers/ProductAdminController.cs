@@ -50,7 +50,7 @@ namespace Nwazet.Commerce.Controllers {
                 return new HttpUnauthorizedResult();
             
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
-            var query = _contentManager.Query<ProductPart, ProductPartRecord>(VersionOptions.Latest);
+            var query = _contentManager.Query<ProductPart, ProductPartVersionRecord>(VersionOptions.Latest);
 
             switch (model.Options.OrderBy) {
                 case ContentsOrder.Modified:

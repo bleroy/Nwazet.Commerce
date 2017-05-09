@@ -38,7 +38,7 @@ namespace Nwazet.Commerce.Services
             }
 
             return _contentManager
-                .Query<ProductPart, ProductPartRecord>()
+                .Query<ProductPart, ProductPartVersionRecord>()
                 .Where(p => p.Sku == identifier)
                 .List<ContentItem>()
                 .Where(c => ContentIdentity.ContentIdentityEqualityComparer.AreEquivalent(
