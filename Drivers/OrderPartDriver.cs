@@ -26,6 +26,7 @@ namespace Nwazet.Commerce.Drivers {
         private readonly IWorkflowManager _workflowManager;
         private readonly IMembershipService _membershipService;
         private readonly IEnumerable<IProductAttributeExtensionProvider> _extensionProviders;
+        private readonly ICurrencyProvider _currencyProvider;
 
         public OrderPartDriver(
             IOrderService orderService,
@@ -35,7 +36,8 @@ namespace Nwazet.Commerce.Drivers {
             IOrchardServices orchardServices,
             IWorkflowManager workflowManager,
             IMembershipService membershipService,
-            IEnumerable<IProductAttributeExtensionProvider> extensionProviders) {
+            IEnumerable<IProductAttributeExtensionProvider> extensionProviders,
+            ICurrencyProvider currencyProvider) {
 
             _orderService = orderService;
             _addressFormatter = addressFormatter;
@@ -45,6 +47,8 @@ namespace Nwazet.Commerce.Drivers {
             _workflowManager = workflowManager;
             _membershipService = membershipService;
             _extensionProviders = extensionProviders;
+            _currencyProvider = currencyProvider;
+
             T = NullLocalizer.Instance;
         }
 
@@ -62,7 +66,8 @@ namespace Nwazet.Commerce.Drivers {
         private const string TaxesName = "Taxes";
         private const string UserName = "User";
 
-        protected override string Prefix {
+        protected override string Prefix
+        {
             get { return "NwazetCommerceOrder"; }
         }
 
@@ -93,7 +98,7 @@ namespace Nwazet.Commerce.Drivers {
                     TrackingUrl: part.TrackingUrl,
                     Charge: part.Charge,
                     Activity: part.Activity,
-
+                    CurrencyCode: string.IsNullOrWhiteSpace(part.CurrencyCode) ? _currencyProvider.CurrencyCode : part.CurrencyCode,
                     ContentPart: part
                     )
                 );
@@ -136,7 +141,8 @@ namespace Nwazet.Commerce.Drivers {
                 EventCategoryLabels = _orderService.EventCategoryLabels,
                 LinkToTransaction = linkToTransaction,
                 UserName = part.User == null ? "" : part.User.UserName,
-                UserNameNeeded = productContents.Any(p => p.As<ProductPart>() == null ? false : p.As<ProductPart>().AuthenticationRequired)
+                UserNameNeeded = productContents.Any(p => p.As<ProductPart>() == null ? false : p.As<ProductPart>().AuthenticationRequired),
+                CurrencyCode = string.IsNullOrWhiteSpace(part.CurrencyCode) ? _currencyProvider.CurrencyCode : part.CurrencyCode
             };
             return ContentShape("Parts_Order_Edit",
                 () => shapeHelper.EditorTemplate(
@@ -156,7 +162,7 @@ namespace Nwazet.Commerce.Drivers {
             var previousStatus = part.Status;
             var eventText = "";
 
-            var updateModel = new OrderEditorViewModel {Order = part};
+            var updateModel = new OrderEditorViewModel { Order = part };
             updater.TryUpdateModel(updateModel, Prefix, null, null);
 
             var currentUser = _wca.GetContext().CurrentUser;
@@ -199,7 +205,7 @@ namespace Nwazet.Commerce.Drivers {
                     }
                 }
             }
-            
+
             if (!String.IsNullOrEmpty(updateModel.UserName)) {
                 var user = _membershipService.GetUser(updateModel.UserName);
                 if (user != null) {
@@ -219,7 +225,7 @@ namespace Nwazet.Commerce.Drivers {
 
         protected override void Importing(OrderPart part, ImportContentContext context) {
 
-            var xel = context.Data.Element(typeof (OrderPart).Name);
+            var xel = context.Data.Element(typeof(OrderPart).Name);
             if (xel == null) return;
 
             var itemsEl = xel.Element(ItemsName);
@@ -275,13 +281,16 @@ namespace Nwazet.Commerce.Drivers {
                             .FromAttr(coi => coi.PromotionId)
                             .Context;
                             if (i.Element(AttributesName) != null) {
-                                checkoutItem.Attributes = 
+                                checkoutItem.Attributes =
                                     i.Elements(AttributesName).Elements(AttributeName).Select(a =>
-                                        new { Key = Convert.ToInt32(a.Attr("Key")), Value = new ProductAttributeValueExtended {
-                                            Value = a.Attr("Value"),
-                                            ExtendedValue = a.Attr("Extra"),
-                                            ExtensionProvider = a.Attr("ExtensionProvider")
-                                        }}).ToDictionary(k => k.Key, k => k.Value);
+                                        new {
+                                            Key = Convert.ToInt32(a.Attr("Key")),
+                                            Value = new ProductAttributeValueExtended {
+                                                Value = a.Attr("Value"),
+                                                ExtendedValue = a.Attr("Extra"),
+                                                ExtensionProvider = a.Attr("ExtensionProvider")
+                                            }
+                                        }).ToDictionary(k => k.Key, k => k.Value);
                             }
                             return checkoutItem;
                         }),
@@ -294,6 +303,7 @@ namespace Nwazet.Commerce.Drivers {
                 el.Attr(p => p.CustomerEmail),
                 el.Attr(p => p.CustomerPhone),
                 el.Attr(p => p.SpecialInstructions),
+                el.Attr(p => p.CurrencyCode),
                 el.Attr(p => p.AmountPaid));
             el.With(part)
                 .FromAttr(p => p.IsTestOrder)
@@ -317,12 +327,12 @@ namespace Nwazet.Commerce.Drivers {
                 var userName = userNameEl.Attr("UserName");
                 if (!String.IsNullOrEmpty(userName)) {
                     part.User = _membershipService.GetUser(userName);
-                }                
+                }
             }
         }
 
         protected override void Exporting(OrderPart part, ExportContentContext context) {
-            context.Element(typeof (OrderPart).Name).With(part)
+            context.Element(typeof(OrderPart).Name).With(part)
                 .ToAttr(o => o.CustomerEmail)
                 .ToAttr(o => o.CustomerPhone)
                 .ToAttr(o => o.IsTestOrder)
@@ -334,6 +344,7 @@ namespace Nwazet.Commerce.Drivers {
                 .ToAttr(o => o.AmountPaid)
                 .ToAttr(o => o.TrackingUrl)
                 .ToAttr(o => o.PurchaseOrder)
+                .ToAttr(o => o.CurrencyCode)
                 .Element
 
                 .AddEl(new XElement(ItemsName,

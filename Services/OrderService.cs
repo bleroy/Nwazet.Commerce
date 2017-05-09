@@ -15,10 +15,13 @@ namespace Nwazet.Commerce.Services {
 
         private readonly IContentManager _contentManager;
         private readonly UrlHelper _url;
+        private readonly ICurrencyProvider _currencyProvider;
 
-        public OrderService(IContentManager contentManager, UrlHelper url) {
+        public OrderService(IContentManager contentManager, UrlHelper url, ICurrencyProvider currencyProvider) {
             _contentManager = contentManager;
             _url = url;
+            _currencyProvider = currencyProvider;
+
             T = NullLocalizer.Instance;
         }
 
@@ -49,12 +52,15 @@ namespace Nwazet.Commerce.Services {
             bool isTestOrder = false,
             int userId = -1,
             decimal amountPaid = 0,
-            string purchaseOrder = "") {
+            string purchaseOrder = "",
+            string currencyCode = "") {
 
             var order = _contentManager.Create("Order", VersionOptions.DraftRequired).As<OrderPart>();
             order.Build(charge, items, subTotal, total, taxes,
                 shippingOption, shippingAddress, billingAddress, customerEmail,
-                customerPhone, specialInstructions, amountPaid, purchaseOrder);
+                customerPhone, specialInstructions,
+                string.IsNullOrWhiteSpace(currencyCode) ? _currencyProvider.CurrencyCode : currencyCode,
+                amountPaid, purchaseOrder);
             order.Status = status;
             order.TrackingUrl = trackingUrl;
             order.IsTestOrder = isTestOrder;

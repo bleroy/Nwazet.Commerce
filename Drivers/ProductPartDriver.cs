@@ -18,20 +18,24 @@ namespace Nwazet.Commerce.Drivers {
         private readonly IPriceService _priceService;
         private readonly IEnumerable<IProductAttributesDriver> _attributeProviders;
         private readonly ITieredPriceProvider _tieredPriceProvider;
+        private readonly ICurrencyProvider _currencyProvider;
 
         public ProductPartDriver(
             IWorkContextAccessor wca,
             IPriceService priceService,
             IEnumerable<IProductAttributesDriver> attributeProviders,
+            ICurrencyProvider currencyProvider,
             ITieredPriceProvider tieredPriceProvider = null) {
 
             _wca = wca;
             _priceService = priceService;
             _attributeProviders = attributeProviders;
             _tieredPriceProvider = tieredPriceProvider;
+            _currencyProvider = currencyProvider;
         }
         
-        protected override string Prefix {
+        protected override string Prefix
+        {
             get { return "NwazetCommerceProduct"; }
         }
 
@@ -59,7 +63,8 @@ namespace Nwazet.Commerce.Drivers {
                     IsDigital: part.IsDigital,
                     ConsiderInventory: part.ConsiderInventory,
                     MinimumOrderQuantity: part.MinimumOrderQuantity,
-                    ContentPart: part
+                    ContentPart: part,
+                    CurrencyProvider: _currencyProvider
                     )
                 ));
             if (part.Inventory > 0 || part.AllowBackOrder || (part.IsDigital && !part.ConsiderInventory)) {
@@ -83,7 +88,8 @@ namespace Nwazet.Commerce.Drivers {
                         () => {
                             return shapeHelper.Parts_Product_PriceTiers(
                                 PriceTiers: priceTiers,
-                                DiscountedPriceTiers: discountedPriceTiers
+                                DiscountedPriceTiers: discountedPriceTiers,
+                                CurrencyProvider: _currencyProvider
                                 );
                         })
                     );

@@ -150,7 +150,8 @@ namespace Nwazet.Commerce.Controllers {
                 _stripeService.IsInTestMode(),
                 userId,
                 total,
-                checkoutData.PurchaseOrder);
+                checkoutData.PurchaseOrder,
+                _stripeService.GetSettings().Currency);
             TempData["OrderId"] = order.Id;
             _workflowManager.TriggerEvent(
                 isProductOrder ? "NewOrder" : "NewPayment",

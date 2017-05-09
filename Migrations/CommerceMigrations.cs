@@ -136,74 +136,74 @@ namespace Nwazet.Commerce.Migrations {
             return 11;
         }
 
-        public int UpdateFrom11() {
-            //Price, ShippingCost and DiscountPrice are now decimal rather than double
-            //  SchemaBuilder.AlterTable("ProductPartRecord", table =>
-            //    table.AlterColumn("Price", column =>
-            //        column.WithType(DbType.Decimal)
-            //    )
-            //);
-            //SchemaBuilder.AlterTable("ProductPartRecord", table =>
-            //    table.AlterColumn("ShippingCost", column =>
-            //        column.WithType(DbType.Decimal)
-            //    )
-            //);
-            //the DiscountPrice column has a default constraint applied to it, so it cannot be dropped
-            var allProducts = new List<ProductPartRecord>();
-            allProducts.AddRange(_repository.Fetch(ppr => true).ToArray());
+        //public int UpdateFrom11() {
+        //    //Price, ShippingCost and DiscountPrice are now decimal rather than double
+        //    //  SchemaBuilder.AlterTable("ProductPartRecord", table =>
+        //    //    table.AlterColumn("Price", column =>
+        //    //        column.WithType(DbType.Decimal)
+        //    //    )
+        //    //);
+        //    //SchemaBuilder.AlterTable("ProductPartRecord", table =>
+        //    //    table.AlterColumn("ShippingCost", column =>
+        //    //        column.WithType(DbType.Decimal)
+        //    //    )
+        //    //);
+        //    //the DiscountPrice column has a default constraint applied to it, so it cannot be dropped
+        //    var allProducts = new List<ProductPartRecord>();
+        //    allProducts.AddRange(_repository.Fetch(ppr => true).ToArray());
 
-            //Drop the ProductPartRecord table and recreate it with the correct types
-            SchemaBuilder.DropTable("ProductPartRecord");
+        //    //Drop the ProductPartRecord table and recreate it with the correct types
+        //    SchemaBuilder.DropTable("ProductPartRecord");
 
-            SchemaBuilder.CreateTable("ProductPartRecord", table => table
-                .ContentPartRecord()
-                .Column("Sku", DbType.String)
-                .Column("Price", DbType.Decimal)
-                .Column("ShippingCost", DbType.Decimal, column => column.Nullable())
-                .Column("Weight", DbType.Single)
-                .Column("IsDigital", DbType.Boolean, column => column.WithDefault(false))
-                .Column("Inventory", DbType.Int32, column => column.WithDefault(0))
-                .Column("OutOfStockMessage", DbType.String)
-                .Column("AllowBackOrder", DbType.Boolean, column => column.WithDefault(false))
-                .Column("Size", DbType.String)
-                .Column("MinimumOrderQuantity", DbType.Int32)
-                .Column("AuthenticationRequired", DbType.Boolean)
-                .Column("OverrideTieredPricing", DbType.Boolean, column => column.WithDefault(false))
-                .Column("PriceTiers", DbType.String)
-                .Column("DiscountPrice", DbType.Decimal, column => column.NotNull().WithDefault(-1))
-                .Column("ConsiderInventory", DbType.Boolean)
-            );
+        //    SchemaBuilder.CreateTable("ProductPartRecord", table => table
+        //        .ContentPartRecord()
+        //        .Column("Sku", DbType.String)
+        //        .Column("Price", DbType.Decimal)
+        //        .Column("ShippingCost", DbType.Decimal, column => column.Nullable())
+        //        .Column("Weight", DbType.Single)
+        //        .Column("IsDigital", DbType.Boolean, column => column.WithDefault(false))
+        //        .Column("Inventory", DbType.Int32, column => column.WithDefault(0))
+        //        .Column("OutOfStockMessage", DbType.String)
+        //        .Column("AllowBackOrder", DbType.Boolean, column => column.WithDefault(false))
+        //        .Column("Size", DbType.String)
+        //        .Column("MinimumOrderQuantity", DbType.Int32)
+        //        .Column("AuthenticationRequired", DbType.Boolean)
+        //        .Column("OverrideTieredPricing", DbType.Boolean, column => column.WithDefault(false))
+        //        .Column("PriceTiers", DbType.String)
+        //        .Column("DiscountPrice", DbType.Decimal, column => column.NotNull().WithDefault(-1))
+        //        .Column("ConsiderInventory", DbType.Boolean)
+        //    );
 
-            SchemaBuilder.AlterTable("ProductPartRecord",
-            table => table
-                .CreateIndex("IDX_ProductPart_Sku", "Sku")
-            );
+        //    SchemaBuilder.AlterTable("ProductPartRecord",
+        //    table => table
+        //        .CreateIndex("IDX_ProductPart_Sku", "Sku")
+        //    );
 
-            _repository.Flush();
+        //    _repository.Flush();
 
-            foreach (var ppr in allProducts) {
-                //ProductPartRecord newProd = new ProductPartRecord() {
-                //    Sku = ppr.Sku,
-                //    Price = ppr.Price,
-                //    DiscountPrice = ppr.DiscountPrice,
-                //    IsDigital = ppr.IsDigital,
-                //    ConsiderInventory = ppr.ConsiderInventory,
-                //    ShippingCost = ppr.ShippingCost,
-                //    Weight = ppr.Weight,
-                //    Size = ppr.Size,
-                //    Inventory = ppr.Inventory,
-                //    OutOfStockMessage = ppr.OutOfStockMessage,
-                //    AllowBackOrder = ppr.AllowBackOrder,
-                //    OverrideTieredPricing = ppr.OverrideTieredPricing,
-                //    PriceTiers = ppr.PriceTiers,
-                //    MinimumOrderQuantity = ppr.MinimumOrderQuantity,
-                //    AuthenticationRequired = ppr.AuthenticationRequired
-                //};
-                //newProd.ContentItemRecord = ppr.ContentItemRecord;
-                _repository.Create(ppr);
-            }
+        //    foreach (var ppr in allProducts) {
+        //        //ProductPartRecord newProd = new ProductPartRecord() {
+        //        //    Sku = ppr.Sku,
+        //        //    Price = ppr.Price,
+        //        //    DiscountPrice = ppr.DiscountPrice,
+        //        //    IsDigital = ppr.IsDigital,
+        //        //    ConsiderInventory = ppr.ConsiderInventory,
+        //        //    ShippingCost = ppr.ShippingCost,
+        //        //    Weight = ppr.Weight,
+        //        //    Size = ppr.Size,
+        //        //    Inventory = ppr.Inventory,
+        //        //    OutOfStockMessage = ppr.OutOfStockMessage,
+        //        //    AllowBackOrder = ppr.AllowBackOrder,
+        //        //    OverrideTieredPricing = ppr.OverrideTieredPricing,
+        //        //    PriceTiers = ppr.PriceTiers,
+        //        //    MinimumOrderQuantity = ppr.MinimumOrderQuantity,
+        //        //    AuthenticationRequired = ppr.AuthenticationRequired
+        //        //};
+        //        //newProd.ContentItemRecord = ppr.ContentItemRecord;
+        //        _repository.Create(ppr);
+        //    }
 
-            return 12;
-        }
+        //    return 12;
+        //}
     }
 }

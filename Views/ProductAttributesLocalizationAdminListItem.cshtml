@@ -1,0 +1,15 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.Localization.Models
+@{ 
+    var cultureString = "";
+    var contentItem = (ContentItem)(Model.ContentItem);
+    var locPart = contentItem.As<LocalizationPart>();
+    if (locPart != null) {
+        if (locPart.Culture != null && !string.IsNullOrWhiteSpace(locPart.Culture.Culture)) {
+            cultureString = T(" ({0})", locPart.Culture.Culture).Text;
+        } else {
+            cultureString = T(" (culture undefined)").Text;
+        }
+    }
+}
+@Html.ItemEditLinkWithReturnUrl(Html.ItemDisplayText(contentItem).ToHtmlString(), contentItem) @cultureString

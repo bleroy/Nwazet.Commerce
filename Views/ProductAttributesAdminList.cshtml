@@ -1,0 +1,25 @@
+﻿@using Orchard.Utility.Extensions
+@using Nwazet.Commerce.Models
+@{
+    IEnumerable<ProductAttributePart> attributes = (IEnumerable<ProductAttributePart>)(Model.ProductAttributes);
+    var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
+}
+
+<table class="items">
+    <thead>
+        <tr>
+            <th scope="col">@T("Name")</th>
+            <th scope="col" class="actions">&nbsp;</th>
+        </tr>
+    </thead>
+    @foreach (var attribute in attributes) {
+        <tr>
+            <td>
+                @Display.ProductAttributesAdminListItem(ContentItem: attribute.ContentItem)
+            </td>
+            <td>
+                @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(attribute.ContentItem, new { returnUrl }), new { itemprop = "RemoveUrl UnsafeUrl" })
+            </td>
+        </tr>
+    }
+</table>
