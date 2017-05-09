@@ -73,16 +73,21 @@ Features:
         Dependencies: Nwazet.Commerce, Nwazet.Attributes
 	Nwazet.AdvancedSKUManagement:
 		Name: Nwazet Advanced SKU Management
-        Description: Makes the use of SKUs more advanced, by providing options related to their uniqueness and automatic generation
-        Category: Commerce
-        Dependencies: Nwazet.Commerce
-	Nwazet.CurrencyProviderBySiteSetting
+		Description: Makes the use of SKUs more advanced, by providing options related to their uniqueness and automatic generation
+		Category: Commerce
+		Dependencies: Nwazet.Commerce
+	Nwazet.CurrencyProviderBySiteSetting:
 		Name: SiteSettings Currency Provider
-        Description: Enables a currency provider for the site based on a site's setting
-        Category: Commerce
-        Dependencies: Nwazet.Commerce
+		Description: Enables a currency provider for the site based on a site's setting
+		Category: Commerce
+		Dependencies: Nwazet.Commerce
 	Nwazet.AttributesLocalizationExtension:
 		Name: Nwazet Attribute Localization Extensions
 		Description: Provides advanced handling of product attributes in multi-language stores
 		Category: Commerce
 		Dependencies: Nwazet.Commerce, Nwazet.Attributes, Orchard.Localization
+	Nwazet.BundlesLocalizationExtension:
+		Name: Nwazet Bundles Localization Extensions
+		Description: Provides advanced handling of product Bundles in multi-language stores
+		Category: Commerce
+		Dependencies: Nwazet.Commerce, Nwazet.Bundles, Orchard.Localization

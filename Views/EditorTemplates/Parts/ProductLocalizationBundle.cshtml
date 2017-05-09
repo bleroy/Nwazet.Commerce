@@ -1,0 +1,42 @@
+﻿@model Nwazet.Commerce.Settings.BundleProductLocalizationSettings
+
+@{ 
+    Script.Require("jQuery").AtFoot();
+
+    string additionalHint = "";
+
+    List<string> addHints = new List<string>();
+    if (Model.TryToLocalizeProducts) {
+        addHints.Add(T("Products with a culture different than the bundle will be localized.").Text);
+        if (Model.RemoveProductsWithoutLocalization) {
+            addHints.Add(T("If localization is not possible, products will be removed.").Text);
+        }
+        if (Model.AddProductQuantitiesWhenLocalizing) {
+            addHints.Add(T("If more localizations of a single product are in the bundle, their quantities will be added to each other.").Text);
+        }
+    }
+    if (Model.AssertProductsHaveSameCulture) {
+        addHints.Add(T("Publication will fail if products have a different culture than that of the bundle.").Text);
+    }
+    if (Model.HideProductsFromEditor) {
+        addHints.Add(T("Products with a culture different than the bundle may be hidden.").Text);
+    }
+    additionalHint = string.Join(" ", addHints);
+
+    string divId = Guid.NewGuid().ToString();
+}
+
+<div id="@divId" style="display: none;" class="hint">
+    @additionalHint
+</div>
+@if (!string.IsNullOrEmpty(additionalHint)) {
+    using (Script.Foot()) {
+        <script type="text/javascript">
+            $(function () {
+                var myDiv = $("#@divId");
+                $("fieldset > ul.bundle").before(myDiv);
+                myDiv.show();
+            })
+        </script>
+    }
+}
