@@ -54,7 +54,7 @@ namespace Nwazet.Commerce.Services {
                 ShippingCompany = properties[1].Substring(8),
                 IncludedShippingAreas = properties[2].Substring(9).Split(','),
                 ExcludedShippingAreas = properties[3].Substring(9).Split(','),
-                Price = double.Parse(properties[4].Substring(6))
+                Price = decimal.Parse(properties[4].Substring(6))
             };
             return shippingOption;
         }

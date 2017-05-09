@@ -29,7 +29,7 @@ namespace Nwazet.Commerce.Reports {
 
         public abstract ChartType ChartType { get; }
 
-        public abstract double ComputeResultForInterval(IList<OrderPart> ordersForInterval);
+        public abstract decimal ComputeResultForInterval(IList<OrderPart> ordersForInterval);
 
         public ReportData GetData(DateTime startDate, DateTime endDate, TimePeriod granularity) {
             startDate = granularity.BeginningDate(startDate);

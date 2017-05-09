@@ -6,7 +6,7 @@ using Orchard.Environment.Extensions;
 namespace Nwazet.Commerce.Services {
     [OrchardFeature("Nwazet.Commerce")]
     public class ProductDiscountPriceProvider : IPriceProvider {
-        private const double Epsilon = 0.001;
+        private const decimal Epsilon = 0.001M;
         public string Name { get { return "ProductDiscount"; } }
         public string ContentTypeName { get { return null; }}
 

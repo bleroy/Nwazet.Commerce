@@ -56,6 +56,7 @@
       <HintPath>..\..\..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath> 
       <Private>True</Private> 
     </Reference> 
+    <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4" /> 
     <ProjectReference Include="..\..\..\Orchard.Web\Modules\Orchard.Autoroute\Orchard.Autoroute.csproj"> 
       <Project>{66fccd76-2761-47e3-8d11-b45d0001ddaa}</Project> 
       <Name>Orchard.Autoroute</Name> 
@@ -243,6 +244,7 @@
     <Compile Include="Handlers\ECommerceCurrencySiteSettingsPartHandler.cs" /> 
     <Compile Include="Handlers\LocalizationAttributePartHandler.cs" /> 
     <Compile Include="Handlers\OrderPartHandler.cs" /> 
+    <Compile Include="Handlers\ProductPartVersioningHandler.cs" />
     <Compile Include="Handlers\ProductSettingsPartHandler.cs" /> 
     <Compile Include="Handlers\StateOrCountryTaxPartHandler.cs" /> 
     <Compile Include="Handlers\UspsShippingMethodPartHandler.cs" /> 
@@ -285,6 +287,7 @@
     <Compile Include="Models\PriceTier.cs" /> 
     <Compile Include="Models\ProductAttributeValue.cs" /> 
     <Compile Include="Models\ProductAttributeValueExtended.cs" /> 
+    <Compile Include="Models\ProductPartVersionRecord.cs" />
     <Compile Include="Models\ProductSettingsPart.cs" /> 
     <Compile Include="Models\Reporting\ChartType.cs" /> 
     <Compile Include="Models\Reporting\ICommerceReport.cs" /> 
@@ -342,10 +345,10 @@
     <Compile Include="Routes\OrderRoutes.cs" /> 
     <Compile Include="Routes\CommerceRoutes.cs" /> 
     <Compile Include="Services\BundleProductLocalizationBundleService.cs" /> 
-    <Compile Include="Services\BundleProductLocalizationServices.cs" />
+    <Compile Include="Services\BundleProductLocalizationServices.cs" /> 
     <Compile Include="Services\BundleServiceBase.cs" /> 
     <Compile Include="Services\CurrencyProviderBase.cs" /> 
-    <Compile Include="Services\IBundleProductLocalizationServices.cs" />
+    <Compile Include="Services\IBundleProductLocalizationServices.cs" /> 
     <Compile Include="Services\IBundleService.cs" /> 
     <Compile Include="Services\IProductAttributeAdminServices.cs" /> 
     <Compile Include="Services\IProductAttributeLocalizationServices.cs" /> 
@@ -541,7 +544,7 @@
   <ItemGroup> 
     <None Include="app.config" /> 
     <None Include="packages.config" /> 
-    <None Include="Views\EditorTemplates\Parts\ProductLocalizationBundle.cshtml" />
+    <None Include="Views\EditorTemplates\Parts\ProductLocalizationBundle.cshtml" /> 
     <None Include="Views\ProductAttributesAdminList.cshtml" /> 
     <None Include="Views\ProductAttributesAdminListItem.cshtml" /> 
     <None Include="Views\DefinitionTemplates\BundleProductLocalizationSettings.cshtml" /> 
@@ -561,20 +564,20 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" /> 
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" /> 
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" /> 
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.   
-       Other similar extension points exist, see Microsoft.Common.targets.  
-  <Target Name="BeforeBuild">  
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.  
+       Other similar extension points exist, see Microsoft.Common.targets. 
+  <Target Name="BeforeBuild"> 
   </Target> --> 
   <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler"> 
     <PropertyGroup> 
       <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir> 
     </PropertyGroup> 
-    <!-- If this is an area child project, uncomment the following line:  
-    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />  
+    <!-- If this is an area child project, uncomment the following line: 
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" /> 
     --> 
-    <!-- If this is an area parent project, uncomment the following lines:  
-    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />  
-    <CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" />  
+    <!-- If this is an area parent project, uncomment the following lines: 
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" /> 
+    <CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" /> 
     --> 
   </Target> 
   <Target Name="AfterBuildCompiler" Condition="'$(MvcBuildViews)'=='true'"> 

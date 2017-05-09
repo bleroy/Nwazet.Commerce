@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.Commerce")]
-    public class ProductPart : ContentPart<ProductPartRecord>, IProduct {
+    public class ProductPart : ContentPart<ProductPartVersionRecord>, IProduct {
         [Required]
         public string Sku
         {
@@ -14,13 +14,13 @@ namespace Nwazet.Commerce.Models {
         }
 
         [Required]
-        public double Price {
+        public decimal Price {
             get { return Retrieve(r => r.Price); }
             set { Store(r => r.Price, value); }
         }
 
-        public double DiscountPrice {
-            get { return Retrieve(r => r.DiscountPrice, -1); }
+        public decimal DiscountPrice {
+            get {return Retrieve(r => r.DiscountPrice, -1);}
             set { Store(r => r.DiscountPrice, value); }
         }
 
@@ -36,7 +36,7 @@ namespace Nwazet.Commerce.Models {
             set { Store(r => r.ConsiderInventory, value); }
         }
 
-        public double? ShippingCost
+        public decimal? ShippingCost
         {
             get { return Retrieve(r => r.ShippingCost); }
             set { Store(r => r.ShippingCost, value); }
@@ -71,7 +71,7 @@ namespace Nwazet.Commerce.Models {
             get { return Retrieve(r => r.AllowBackOrder); }
             set { Store(r => r.AllowBackOrder, value); }
         }
-
+ 
         public bool OverrideTieredPricing
         {
             get { return Retrieve(r => r.OverrideTieredPricing); }
@@ -102,7 +102,7 @@ namespace Nwazet.Commerce.Models {
             set
             {
                 var minimumOrderQuantity = value > 1 ? value : 1;
-                Store(r => r.MinimumOrderQuantity, minimumOrderQuantity);
+                Store(r => r.MinimumOrderQuantity, minimumOrderQuantity); 
             }
         }
 

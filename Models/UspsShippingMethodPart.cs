@@ -28,7 +28,7 @@ namespace Nwazet.Commerce.Models {
             get { return UspsContainer.List[Record.Container].ToString(); }
         }
 
-        public double Markup {
+        public decimal Markup {
             get { return Retrieve(r => r.Markup); }
             set { Store(r => r.Markup, value); }
         }
@@ -138,7 +138,7 @@ namespace Nwazet.Commerce.Models {
                 .Where(pq => pq.Product.ShippingCost != null &&
                              pq.Product.ShippingCost >= 0 &&
                              !pq.Product.IsDigital)
-                .Sum(pq => pq.Quantity*(double) pq.Product.ShippingCost);
+                .Sum(pq => pq.Quantity*(decimal) pq.Product.ShippingCost);
             var relevantQuantities = quantities
                 .Where(pq => (pq.Product.ShippingCost == null || pq.Product.ShippingCost < 0) &&
                              !pq.Product.IsDigital)
@@ -220,7 +220,7 @@ namespace Nwazet.Commerce.Models {
             }
         }
 
-        private ShippingOption GetOption(double price, IList<string> includedShippingAreas, IList<string> excludedShippingAreas) {
+        private ShippingOption GetOption(decimal price, IList<string> includedShippingAreas, IList<string> excludedShippingAreas) {
             return new ShippingOption {
                 Description = Name,
                 Price = price,

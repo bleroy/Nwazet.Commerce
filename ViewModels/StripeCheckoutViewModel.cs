@@ -14,6 +14,6 @@ namespace Nwazet.Commerce.ViewModels {
         public string Phone { get; set; }
         public string SpecialInstructions { get; set; }
         public string PurchaseOrder { get; set; }
-        public double Amount { get; set; }
+        public decimal Amount { get; set; }
     }
 }

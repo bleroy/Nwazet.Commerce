@@ -7,11 +7,11 @@ namespace Nwazet.Commerce.Models {
 
         public int ProductId { get; set; }
         public int Quantity { get; set; }
-        public double Price { get; set; }
+        public decimal Price { get; set; }
 
-        public double OriginalPrice { get; set; }
+        public decimal OriginalPrice { get; set; }
 
-        public double LinePriceAdjustment { get; set; }
+        public decimal LinePriceAdjustment { get; set; }
         public string Title { get; set; }
         public IDictionary<int, ProductAttributeValueExtended> Attributes { get; set; }
 

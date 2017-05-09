@@ -25,7 +25,7 @@ namespace Nwazet.Commerce.Controllers {
             string userId,
             double weightInOunces,
             double paddingWeight,
-            double valueOfContents,
+            decimal valueOfContents,
             string container,
             string serviceNameValidationExpression,
             string serviceNameExclusionExpression,

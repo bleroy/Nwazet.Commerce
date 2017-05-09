@@ -9,12 +9,12 @@ namespace Nwazet.Commerce.Models {
     public class DiscountPart : ContentPart<DiscountPartRecord> {
         public string Name { get { return Record.Name; } set { Record.Name = value; } }
 
-        public double? DiscountPercent {
+        public decimal? DiscountPercent {
             get {
-                double percent;
+                decimal percent;
                 var discount = (Retrieve(r => r.Discount) ?? "").Trim();
                 if (!discount.EndsWith("%")) return null;
-                if (double.TryParse(discount.Substring(0, discount.Length - 1), out percent)) {
+                if (decimal.TryParse(discount.Substring(0, discount.Length - 1), out percent)) {
                     return percent;
                 }
                 return null;
@@ -22,12 +22,12 @@ namespace Nwazet.Commerce.Models {
             set { Store(r => r.Discount, value.ToString() + '%'); }
         }
 
-        public double? Discount {
+        public decimal? Discount {
             get {
-                double discount;
+                decimal discount;
                 var discountString = Retrieve(r => r.Discount).Trim();
                 if (discountString.EndsWith("%")) return null;
-                if (double.TryParse(discountString, out discount)) {
+                if (decimal.TryParse(discountString, out discount)) {
                     return discount;
                 }
                 return null;

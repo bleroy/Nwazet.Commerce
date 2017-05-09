@@ -82,9 +82,9 @@ namespace Nwazet.Commerce.Drivers {
                 .FromAttr(p => p.IncludedShippingAreas)
                 .FromAttr(p => p.ExcludedShippingAreas);
             var priceAttr = el.Attribute("Price");
-            double price;
+            decimal price;
             if (priceAttr != null &&
-                Double.TryParse(priceAttr.Value, NumberStyles.Currency, CultureInfo.InvariantCulture, out price)) {
+                decimal.TryParse(priceAttr.Value, NumberStyles.Currency, CultureInfo.InvariantCulture, out price)) {
                 part.Price = price;
             }
         }
