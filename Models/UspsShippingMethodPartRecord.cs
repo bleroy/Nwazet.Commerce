@@ -7,7 +7,7 @@ namespace Nwazet.Commerce.Models {
         public virtual string Name { get; set; }
         public virtual string Size { get; set; }
         public virtual string Container { get; set; }
-        public virtual double Markup { get; set; }
+        public virtual decimal Markup { get; set; }
         public virtual int WidthInInches { get; set; }
         public virtual int LengthInInches { get; set; }
         public virtual int HeightInInches { get; set; }

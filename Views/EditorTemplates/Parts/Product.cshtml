@@ -5,6 +5,7 @@
 <fieldset>
     <label class="sub" for="@Html.IdFor(m => m.Product.Sku)">@T("Sku")</label><br />
     @Html.TextBoxFor(m => m.Product.Sku, new { @class = "text" })<br />
+    <span class="hint">@T("The SKU uniquely identifies a product. Changing the SKU may have unwanted side-effects.")</span>
     <label class="sub" for="@Html.IdFor(m => m.Product.Price)">@T("Regular Price")</label><br />
     @Html.TextBox("Product.Price", Model.Product.Price.ToString("0.00"), new { @class = "small text" })<br />
     <label class="sub" for="@Html.Id("DiscountPrice")">@T("Discounted Price")</label><br />
@@ -30,6 +31,7 @@
     }
     else {
         <br />@Html.TextBoxFor(m => m.Product.Inventory, new { @class = "text" })
+        <span class="hint">@T("Changes to the inventory value will propagate to other versions of this product.")</span>
     }<br />
     <label class="sub" for="@Html.IdFor(m => m.Product.OutOfStockMessage)">@T("Out of stock message")</label><br />
     @Html.TextBoxFor(m => m.Product.OutOfStockMessage, new { @class = "text-medium" })<br />

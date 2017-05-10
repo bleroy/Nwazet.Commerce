@@ -13,11 +13,11 @@ namespace Nwazet.Commerce.Models {
 
         public int Quantity { get; private set; }
         public ProductPart Product { get; private set; }
-        public double Price { get; set; }
-        public double OriginalPrice { get; set; }
+        public decimal Price { get; set; }
+        public decimal OriginalPrice { get; set; }
 
         // Captures attribute price adjustments that apply to the line item, not each item
-        public double LinePriceAdjustment { get; set; }
+        public decimal LinePriceAdjustment { get; set; }
         public IContent Promotion { get; set; }
         public string Comment { get; set; }
         public IDictionary<int, ProductAttributeValueExtended> AttributeIdsToValues { get; set; }

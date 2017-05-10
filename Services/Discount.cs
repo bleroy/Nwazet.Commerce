@@ -82,7 +82,7 @@ namespace Nwazet.Commerce.Services {
             if (percent != null) {
                 return new ShoppingCartQuantityProduct(quantityProduct.Quantity, quantityProduct.Product, quantityProduct.AttributeIdsToValues) {
                     Comment = comment,
-                    Price = Math.Round(quantityProduct.Price * (1 - ((double)percent / 100)), 2),
+                    Price = Math.Round(quantityProduct.Price * (1 - ((decimal)percent / 100)), 2),
                     Promotion = DiscountPart
                 };
             }
@@ -90,7 +90,7 @@ namespace Nwazet.Commerce.Services {
             if (discount != null) {
                 return new ShoppingCartQuantityProduct(quantityProduct.Quantity, quantityProduct.Product, quantityProduct.AttributeIdsToValues) {
                     Comment = comment,
-                    Price = Math.Round(Math.Max(0, quantityProduct.Price - (double)discount), 2),
+                    Price = Math.Round(Math.Max(0, quantityProduct.Price - (decimal)discount), 2),
                     Promotion = DiscountPart
                 };
             }

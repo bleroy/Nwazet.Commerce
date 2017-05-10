@@ -234,6 +234,7 @@
     <Compile Include="Handlers\ECommerceCurrencySiteSettingsPartHandler.cs" /> 
     <Compile Include="Handlers\LocalizationAttributePartHandler.cs" /> 
     <Compile Include="Handlers\OrderPartHandler.cs" /> 
+    <Compile Include="Handlers\ProductPartVersioningHandler.cs" />
     <Compile Include="Handlers\ProductSettingsPartHandler.cs" /> 
     <Compile Include="Handlers\StateOrCountryTaxPartHandler.cs" /> 
     <Compile Include="Handlers\UspsShippingMethodPartHandler.cs" /> 
@@ -276,6 +277,7 @@
     <Compile Include="Models\PriceTier.cs" /> 
     <Compile Include="Models\ProductAttributeValue.cs" /> 
     <Compile Include="Models\ProductAttributeValueExtended.cs" /> 
+    <Compile Include="Models\ProductPartVersionRecord.cs" />
     <Compile Include="Models\ProductSettingsPart.cs" /> 
     <Compile Include="Models\Reporting\ChartType.cs" /> 
     <Compile Include="Models\Reporting\ICommerceReport.cs" /> 

@@ -33,7 +33,7 @@ namespace Nwazet.Commerce.Drivers {
             _tieredPriceProvider = tieredPriceProvider;
             _currencyProvider = currencyProvider;
         }
-
+        
         protected override string Prefix
         {
             get { return "NwazetCommerceProduct"; }
@@ -107,7 +107,7 @@ namespace Nwazet.Commerce.Drivers {
                 inventory =
                     bundleService
                         .GetProductQuantitiesFor(bundlePart)
-                        .Min(p => p.Product.Inventory / p.Quantity);
+                        .Min(p => p.Product.Inventory/p.Quantity);
             }
             return inventory;
         }
@@ -148,22 +148,22 @@ namespace Nwazet.Commerce.Drivers {
                 if (model.PriceTiers != null) {
                     part.PriceTiers = model.PriceTiers.Select(t => new PriceTier() {
                         Quantity = t.Quantity,
-                        Price = (!t.Price.EndsWith("%") ? t.Price.ToDouble() : null),
+                        Price = (!t.Price.EndsWith("%") ? t.Price.ToDecimal() : null),
                         PricePercent =
-                            (t.Price.EndsWith("%") ? t.Price.Substring(0, t.Price.Length - 1).ToDouble() : null)
+                            (t.Price.EndsWith("%") ? t.Price.Substring(0, t.Price.Length - 1).ToDecimal() : null)
                     }).ToList();
                 }
                 else {
                     part.PriceTiers = new List<PriceTier>();
                 }
-                part.DiscountPrice = model.DiscountPrice == null
-                    ? -1 : (double)model.DiscountPrice;
+                part.DiscountPrice = model.DiscountPrice == null 
+                    ? -1 : (decimal)model.DiscountPrice;
             }
             return Editor(part, shapeHelper);
         }
 
         protected override void Importing(ProductPart part, ImportContentContext context) {
-            var el = context.Data.Element(typeof(ProductPart).Name);
+            var el = context.Data.Element(typeof (ProductPart).Name);
             if (el == null) return;
             el.With(part)
                 .FromAttr(p => p.Sku)
@@ -177,9 +177,9 @@ namespace Nwazet.Commerce.Drivers {
                 .FromAttr(p => p.MinimumOrderQuantity)
                 .FromAttr(p => p.AuthenticationRequired);
             var priceAttr = el.Attribute("Price");
-            double price;
+            decimal price;
             if (priceAttr != null &&
-                double.TryParse(priceAttr.Value, NumberStyles.Currency, CultureInfo.InvariantCulture, out price)) {
+                decimal.TryParse(priceAttr.Value, NumberStyles.Currency, CultureInfo.InvariantCulture, out price)) {
                 part.Price = price;
             }
             var priceTiersAttr = el.Attribute("PriceTiers");
@@ -187,16 +187,16 @@ namespace Nwazet.Commerce.Drivers {
                 part.PriceTiers = PriceTier.DeserializePriceTiers(priceTiersAttr.Value);
             }
             var shippingCostAttr = el.Attribute("ShippingCost");
-            double shippingCost;
+            decimal shippingCost;
             if (shippingCostAttr != null &&
-                double.TryParse(shippingCostAttr.Value, NumberStyles.Currency, CultureInfo.InvariantCulture,
+                decimal.TryParse(shippingCostAttr.Value, NumberStyles.Currency, CultureInfo.InvariantCulture,
                     out shippingCost)) {
                 part.ShippingCost = shippingCost;
             }
         }
 
         protected override void Exporting(ProductPart part, ExportContentContext context) {
-            var el = context.Element(typeof(ProductPart).Name);
+            var el = context.Element(typeof (ProductPart).Name);
             el
                 .With(part)
                 .ToAttr(p => p.Sku)
@@ -213,7 +213,7 @@ namespace Nwazet.Commerce.Drivers {
             el.SetAttributeValue("PriceTiers", PriceTier.SerializePriceTiers(part.PriceTiers));
             if (part.ShippingCost != null) {
                 el.SetAttributeValue(
-                    "ShippingCost", ((double)part.ShippingCost).ToString("C", CultureInfo.InvariantCulture));
+                    "ShippingCost", ((double) part.ShippingCost).ToString("C", CultureInfo.InvariantCulture));
             }
         }
     }

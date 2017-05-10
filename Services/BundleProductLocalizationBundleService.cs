@@ -24,10 +24,7 @@ namespace Nwazet.Commerce.Services {
             : base(contentManager, bundleProductsRepository) {
 
             _bundleProductLocalizationServices = bundleProductLocalizationServices;
-            T = NullLocalizer.Instance;
         }
-
-        public Localizer T { get; set; }
 
         protected override bool ConsiderProductValid(IContent prod, BundlePart part) {
             var settings = part.TypePartDefinition.Settings.GetModel<BundleProductLocalizationSettings>();

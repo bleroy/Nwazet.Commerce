@@ -35,10 +35,10 @@ namespace Nwazet.Commerce.Reports {
             get { return ChartType.Line; }
         }
 
-        public override double ComputeResultForInterval(IList<OrderPart> ordersForInterval) {
+        public override decimal ComputeResultForInterval(IList<OrderPart> ordersForInterval) {
             return ordersForInterval.Any()
                 ? ordersForInterval.Average(order => order.As<OrderPart>().AmountPaid)
-                : 0.0;
+                : 0.0M;
         }
     }
 }
