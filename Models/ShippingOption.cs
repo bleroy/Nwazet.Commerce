@@ -2,7 +2,7 @@
 
 namespace Nwazet.Commerce.Models {
     public class ShippingOption {
-        public double Price { get; set; }
+        public decimal Price { get; set; }
         public string Description { get; set; }
         public string ShippingCompany { get; set; }
         public IEnumerable<string> IncludedShippingAreas { get; set; }

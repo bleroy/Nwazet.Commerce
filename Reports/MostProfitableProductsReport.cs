@@ -53,7 +53,7 @@ namespace Nwazet.Commerce.Reports {
                 .Where(order => order.Status != OrderPart.Cancelled)
                 .List()
                 .ToList();
-            var totalRevenues = new Dictionary<int, double>();
+            var totalRevenues = new Dictionary<int, decimal>();
             foreach (var order in orders) {
                 var checkoutItems = order.As<OrderPart>().Items;
                 foreach (var checkoutItem in checkoutItems) {

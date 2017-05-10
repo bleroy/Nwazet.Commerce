@@ -40,7 +40,9 @@
         $(function () {
             var myDiv = $("#@divId");
             var tb = $("#@Html.IdFor(m => m.Product.Sku)"); //input where in the normal view we write the sku
+            tb.next('br').remove(); //remove line breaks
             var lbl = $("[for='@Html.IdFor(m => m.Product.Sku)'"); //corresponding label
+            lbl.next('br').remove(); //remove line breaks
             tb.after(myDiv);
             myDiv.show();
             tb.remove();

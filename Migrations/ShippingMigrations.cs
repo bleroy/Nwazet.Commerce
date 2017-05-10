@@ -44,5 +44,15 @@ namespace Nwazet.Commerce.Migrations {
 
             return 2;
         }
+
+        public int UpdateFrom2() {
+            SchemaBuilder.AlterTable("WeightBasedShippingMethodPartRecord", table =>
+                table.AlterColumn("Price", column =>
+                    column.WithType(DbType.Decimal)));
+            SchemaBuilder.AlterTable("SizeBasedShippingMethodPartRecord", table =>
+                table.AlterColumn("Price", column =>
+                    column.WithType(DbType.Decimal)));
+            return 3;
+        }
     }
 }

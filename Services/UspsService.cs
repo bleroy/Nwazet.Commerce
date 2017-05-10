@@ -60,7 +60,7 @@ namespace Nwazet.Commerce.Services {
         public static XElement BuildDomesticShippingRequestDocument(
             string userId,
             double weightInOunces,
-            double valueOfContents,
+            decimal valueOfContents,
             string container,
             int lengthInInches,
             int widthInInches,
@@ -134,7 +134,7 @@ namespace Nwazet.Commerce.Services {
         public static XElement BuildInternationalShippingRequestDocument(
             string userId,
             double weightInOunces,
-            double valueOfContents,
+            decimal valueOfContents,
             string container,
             string country,
             int lengthInInches,
@@ -226,7 +226,7 @@ namespace Nwazet.Commerce.Services {
         public IEnumerable<ShippingOption> Prices(
             string userId,
             double weightInOunces,
-            double valueOfContents,
+            decimal valueOfContents,
             string container,
             string serviceNameValidationExpression,
             string serviceNameExclusionExpression,
@@ -306,35 +306,35 @@ namespace Nwazet.Commerce.Services {
                         if (basePriceNode == null) {
                             throw new InvalidOperationException("USPS rate not found in response");
                         }
-                        var price = Double.Parse(basePriceNode.Value);
+                        var price = Decimal.Parse(basePriceNode.Value);
                         if (registeredMail) {
                             var serviceNode = FindDomesticServiceNode(s, RegisteredMailDomestic);
                             if (serviceNode == null) return Nothing;
-                            price += Double.Parse(serviceNode.Value);
+                            price += decimal.Parse(serviceNode.Value);
                             AddServiceNameToDescription(serviceNode, descriptionBuilder);
                         }
                         if (insurance) {
                             var serviceNode = FindDomesticServiceNode(s, InsuranceDomestic);
                             if (serviceNode == null) return Nothing;
-                            price += Double.Parse(serviceNode.Value);
+                            price += decimal.Parse(serviceNode.Value);
                             AddServiceNameToDescription(serviceNode, descriptionBuilder);
                         }
                         if (returnReceipt) {
                             var serviceNode = FindDomesticServiceNode(s, ReturnReceiptDomestic);
                             if (serviceNode == null) return Nothing;
-                            price += Double.Parse(serviceNode.Value);
+                            price += decimal.Parse(serviceNode.Value);
                             AddServiceNameToDescription(serviceNode, descriptionBuilder);
                         }
                         if (certificateOfMailing) {
                             var serviceNode = FindDomesticServiceNode(s, CertificateOfMailingDomestic);
                             if (serviceNode == null) return Nothing;
-                            price += Double.Parse(serviceNode.Value);
+                            price += decimal.Parse(serviceNode.Value);
                             AddServiceNameToDescription(serviceNode, descriptionBuilder);
                         }
                         if (electronicConfirmation) {
                             var serviceNode = FindDomesticServiceNode(s, ElectronicConfirmationDomestic);
                             if (serviceNode == null) return Nothing;
-                            price += Double.Parse(serviceNode.Value);
+                            price += decimal.Parse(serviceNode.Value);
                             AddServiceNameToDescription(serviceNode, descriptionBuilder);
                         }
                         return new[] {
@@ -372,35 +372,35 @@ namespace Nwazet.Commerce.Services {
                     if (basePriceNode == null) {
                         throw new InvalidOperationException("USPS rate not found in response");
                     }
-                    var price = Double.Parse(basePriceNode.Value);
+                    var price = decimal.Parse(basePriceNode.Value);
                     if (registeredMail) {
                         var serviceNode = FindInternationalServiceNode(s, RegisteredMailInternational);
                         if (serviceNode == null) return Nothing;
-                        price += Double.Parse(serviceNode.Value);
+                        price += decimal.Parse(serviceNode.Value);
                         AddServiceNameToDescription(serviceNode, descriptionBuilder);
                     }
                     if (insurance) {
                         var serviceNode = FindInternationalServiceNode(s, InsuranceInternational);
                         if (serviceNode == null) return Nothing;
-                        price += Double.Parse(serviceNode.Value);
+                        price += decimal.Parse(serviceNode.Value);
                         AddServiceNameToDescription(serviceNode, descriptionBuilder);
                     }
                     if (returnReceipt) {
                         var serviceNode = FindInternationalServiceNode(s, ReturnReceiptInternational);
                         if (serviceNode == null) return Nothing;
-                        price += Double.Parse(serviceNode.Value);
+                        price += decimal.Parse(serviceNode.Value);
                         AddServiceNameToDescription(serviceNode, descriptionBuilder);
                     }
                     if (certificateOfMailing) {
                         var serviceNode = FindInternationalServiceNode(s, CertificateOfMailingInternational);
                         if (serviceNode == null) return Nothing;
-                        price += Double.Parse(serviceNode.Value);
+                        price += decimal.Parse(serviceNode.Value);
                         AddServiceNameToDescription(serviceNode, descriptionBuilder);
                     }
                     if (electronicConfirmation) {
                         var serviceNode = FindInternationalServiceNode(s, ElectronicConfirmationInternational);
                         if (serviceNode == null) return Nothing;
-                        price += Double.Parse(serviceNode.Value);
+                        price += decimal.Parse(serviceNode.Value);
                         AddServiceNameToDescription(serviceNode, descriptionBuilder);
                     }
 

@@ -1,13 +1,27 @@
 ﻿using System.Data;
+using Nwazet.Commerce.Models;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
+using Orchard.Data;
 using Orchard.Data.Migration;
 using Orchard.Environment.Extensions;
 using Orchard.Indexing;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Nwazet.Commerce.Migrations {
     [OrchardFeature("Nwazet.Commerce")]
     public class CommerceMigrations : DataMigrationImpl {
+
+        private readonly IRepository<ProductPartRecord> _repository;
+        IRepository<ProductPartVersionRecord> _versionRepository;
+        public CommerceMigrations(
+            IRepository<ProductPartRecord> repository,
+            IRepository<ProductPartVersionRecord> versionRepository) {
+
+            _repository = repository;
+            _versionRepository = versionRepository;
+        }
 
         public int Create() {
             SchemaBuilder.CreateTable("ProductPartRecord", table => table
@@ -121,5 +135,55 @@ namespace Nwazet.Commerce.Migrations {
                 table.AddColumn<bool>("ConsiderInventory"));
             return 11;
         }
+
+        public int UpdateFrom11() {
+            //Versioning of ProductPart (and we take the chance to upgrade to decimal)
+            SchemaBuilder.CreateTable("ProductPartVersionRecord", table => table
+                .ContentPartVersionRecord()
+                .Column("Sku", DbType.String)
+                .Column("Price", DbType.Decimal)
+                .Column("ShippingCost", DbType.Decimal, column => column.Nullable())
+                .Column("Weight", DbType.Single)
+                .Column("IsDigital", DbType.Boolean, column => column.WithDefault(false))
+                .Column("Inventory", DbType.Int32, column => column.WithDefault(0))
+                .Column("OutOfStockMessage", DbType.String)
+                .Column("AllowBackOrder", DbType.Boolean, column => column.WithDefault(false))
+                .Column("Size", DbType.String)
+                .Column("MinimumOrderQuantity", DbType.Int32)
+                .Column("AuthenticationRequired", DbType.Boolean)
+                .Column("OverrideTieredPricing", DbType.Boolean, column => column.WithDefault(false))
+                .Column("PriceTiers", DbType.String)
+                .Column("DiscountPrice", DbType.Decimal, column => column.NotNull().WithDefault(-1))
+                .Column("ConsiderInventory", DbType.Boolean)
+            );
+
+            foreach (var row in _repository.Table) {
+                foreach (var version in row.ContentItemRecord.Versions) {
+                    var newItem = new ProductPartVersionRecord() {
+                        ContentItemRecord = row.ContentItemRecord,
+                        ContentItemVersionRecord = version,
+                        Sku = row.Sku,
+                        Price = row.Price,
+                        ShippingCost = row.ShippingCost,
+                        Weight = row.Weight,
+                        IsDigital = row.IsDigital,
+                        Inventory = row.Inventory,
+                        OutOfStockMessage = row.OutOfStockMessage,
+                        AllowBackOrder = row.AllowBackOrder,
+                        Size = row.Size,
+                        MinimumOrderQuantity = row.MinimumOrderQuantity,
+                        AuthenticationRequired = row.AuthenticationRequired,
+                        OverrideTieredPricing = row.OverrideTieredPricing,
+                        PriceTiers = row.PriceTiers,
+                        DiscountPrice = row.DiscountPrice,
+                        ConsiderInventory = row.ConsiderInventory
+                    };
+                    _versionRepository.Create(newItem);
+                }
+            }
+
+            return 12;
+        }
+        
     }
 }

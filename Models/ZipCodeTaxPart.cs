@@ -26,20 +26,20 @@ namespace Nwazet.Commerce.Models {
             set { this.Store(r => r.Rates, value); }
         }
 
-        public Dictionary<string, double> GetRates() {
+        public Dictionary<string, decimal> GetRates() {
 
-            var rates = new Dictionary<string, double>();
+            var rates = new Dictionary<string, decimal>();
             string[] rateLines = Rates.Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
             foreach(var rateLine in rateLines) {
                 var rateSplit = rateLine.Split(new string[] { ",", "\t" }, StringSplitOptions.None);
-                rates.Add(rateSplit[0], Convert.ToDouble(rateSplit[1]));
+                rates.Add(rateSplit[0], Convert.ToDecimal(rateSplit[1]));
             }
 
             return rates;
         }
 
-        public double ComputeTax(IEnumerable<ShoppingCartQuantityProduct> productQuantities, double subtotal,
-            double shippingCost, string country, string zipCode) {
+        public decimal ComputeTax(IEnumerable<ShoppingCartQuantityProduct> productQuantities, decimal subtotal,
+            decimal shippingCost, string country, string zipCode) {
 
             var rates = GetRates();
             if (country == Country.UnitedStates && rates.ContainsKey(zipCode)) {

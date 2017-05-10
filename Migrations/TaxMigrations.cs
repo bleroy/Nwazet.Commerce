@@ -1,6 +1,7 @@
 ﻿using Orchard.ContentManagement.MetaData;
 using Orchard.Data.Migration;
 using Orchard.Environment.Extensions;
+using System.Data;
 
 namespace Nwazet.Commerce.Migrations {
     [OrchardFeature("Nwazet.Taxes")]
@@ -25,6 +26,13 @@ namespace Nwazet.Commerce.Migrations {
             ContentDefinitionManager.AlterTypeDefinition("ZipCodeTax", cfg => cfg
                 .WithPart("ZipCodeTaxPart"));
             return 2;
+        }
+
+        public int UpdateFrom2() {
+            SchemaBuilder.AlterTable("StateOrCountryTaxPartRecord", table =>
+                table.AlterColumn("Rate", column =>
+                    column.WithType(DbType.Decimal)));
+            return 3;
         }
     }
 }

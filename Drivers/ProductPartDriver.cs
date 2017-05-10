@@ -136,16 +136,16 @@ namespace Nwazet.Commerce.Drivers {
                 if (model.PriceTiers != null) {
                     part.PriceTiers = model.PriceTiers.Select(t => new PriceTier() {
                         Quantity = t.Quantity,
-                        Price = (!t.Price.EndsWith("%") ? t.Price.ToDouble() : null),
+                        Price = (!t.Price.EndsWith("%") ? t.Price.ToDecimal() : null),
                         PricePercent =
-                            (t.Price.EndsWith("%") ? t.Price.Substring(0, t.Price.Length - 1).ToDouble() : null)
+                            (t.Price.EndsWith("%") ? t.Price.Substring(0, t.Price.Length - 1).ToDecimal() : null)
                     }).ToList();
                 }
                 else {
                     part.PriceTiers = new List<PriceTier>();
                 }
                 part.DiscountPrice = model.DiscountPrice == null
-                    ? -1 : (double)model.DiscountPrice;
+                    ? -1 : (decimal)model.DiscountPrice;
             }
             return Editor(part, shapeHelper);
         }
@@ -165,9 +165,9 @@ namespace Nwazet.Commerce.Drivers {
                 .FromAttr(p => p.MinimumOrderQuantity)
                 .FromAttr(p => p.AuthenticationRequired);
             var priceAttr = el.Attribute("Price");
-            double price;
+            decimal price;
             if (priceAttr != null &&
-                double.TryParse(priceAttr.Value, NumberStyles.Currency, CultureInfo.InvariantCulture, out price)) {
+                decimal.TryParse(priceAttr.Value, NumberStyles.Currency, CultureInfo.InvariantCulture, out price)) {
                 part.Price = price;
             }
             var priceTiersAttr = el.Attribute("PriceTiers");
@@ -175,9 +175,9 @@ namespace Nwazet.Commerce.Drivers {
                 part.PriceTiers = PriceTier.DeserializePriceTiers(priceTiersAttr.Value);
             }
             var shippingCostAttr = el.Attribute("ShippingCost");
-            double shippingCost;
+            decimal shippingCost;
             if (shippingCostAttr != null &&
-                double.TryParse(shippingCostAttr.Value, NumberStyles.Currency, CultureInfo.InvariantCulture,
+                decimal.TryParse(shippingCostAttr.Value, NumberStyles.Currency, CultureInfo.InvariantCulture,
                     out shippingCost)) {
                 part.ShippingCost = shippingCost;
             }
