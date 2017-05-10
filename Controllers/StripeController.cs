@@ -104,7 +104,7 @@ namespace Nwazet.Commerce.Controllers {
             if (!String.IsNullOrWhiteSpace(back)) {
                 return RedirectToAction(checkoutData.Amount >= 0 ? "SendMoney" : "Ship");
             }
-            var subTotal = 0.0;
+            decimal subTotal = 0.0M;
             var total = checkoutData.Amount;
             var isProductOrder = checkoutData.CheckoutItems.Any();
             if (isProductOrder) {
@@ -167,7 +167,7 @@ namespace Nwazet.Commerce.Controllers {
             return RedirectToAction("Confirmation", "OrderSsl");
         }
 
-        public ActionResult SendMoney(string purchaseOrder = "", double amount = 0) {
+        public ActionResult SendMoney(string purchaseOrder = "", decimal amount = 0) {
             _wca.GetContext().Layout.IsCartPage = true;
             var checkoutData = new StripeCheckoutViewModel {
                 Amount = amount,

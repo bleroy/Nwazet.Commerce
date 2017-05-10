@@ -87,7 +87,7 @@ namespace Nwazet.Commerce.Services {
         }
 
         private IEnumerable<ProductPart> GetSimilarSkus(string sku) {
-            return _contentManager.Query<ProductPart, ProductPartRecord>()
+            return _contentManager.Query<ProductPart, ProductPartVersionRecord>()
                 .Where(part => part.Sku != null && part.Sku.StartsWith(sku))
                 .List();
         }

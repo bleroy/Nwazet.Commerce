@@ -19,7 +19,7 @@ namespace Nwazet.Commerce.Models {
             set { Store(r => r.ShippingCompany, value); }
         }
 
-        public double Price {
+        public decimal Price {
             get { return Retrieve(r => r.Price); }
             set { Store(r => r.Price, value); }
         }
@@ -62,7 +62,7 @@ namespace Nwazet.Commerce.Models {
             var fixedCost = quantities
                 .Where(pq => pq.Product.ShippingCost != null && pq.Product.ShippingCost >= 0 && !pq.Product.IsDigital)
             // ReSharper disable PossibleInvalidOperationException
-                .Sum(pq => pq.Quantity * (double)pq.Product.ShippingCost);
+                .Sum(pq => pq.Quantity * (decimal)pq.Product.ShippingCost);
             // ReSharper restore PossibleInvalidOperationException
             var relevantQuantities = quantities
                 .Where(pq => (pq.Product.ShippingCost == null || pq.Product.ShippingCost < 0) && !pq.Product.IsDigital)
@@ -88,7 +88,7 @@ namespace Nwazet.Commerce.Models {
             }
         }
 
-        private ShippingOption GetOption(double price) {
+        private ShippingOption GetOption(decimal price) {
             return new ShippingOption {
                 Description = Name,
                 Price = price,

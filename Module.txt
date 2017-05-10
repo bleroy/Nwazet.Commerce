@@ -90,7 +90,8 @@ Features:
 		Name: Nwazet Bundles Localization Extensions
 		Description: Provides advanced handling of product Bundles in multi-language stores
 		Category: Commerce
-		Dependencies: Nwazet.Commerce, Nwazet.Bundles, Orchard.Localization	Nwazet.InventoryBySKU:
+		Dependencies: Nwazet.Commerce, Nwazet.Bundles, Orchard.Localization
+	Nwazet.InventoryBySKU:
 		Name: Nwazet Relate Inventory to SKU
 		Description: Estabilish 1-to-1 relationship between SKU and inventory.
 		Category: Commerce

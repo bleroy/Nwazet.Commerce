@@ -15,10 +15,12 @@ namespace Nwazet.Commerce.Services {
             : base(workContextAccessor, contentManager) { }
 
         public override IEnumerable<ProductPart> GetProductsWithSameInventory(ProductPart part) {
-            return _contentManager
-                .Query<ProductPart, ProductPartRecord>(VersionOptions.Latest)
-                .Where(pa => pa.Sku == part.Sku && pa.ContentItemRecord.Id != part.ContentItem.Id)
-                .List();
+            var sSet = base.GetProductsWithSameInventory(part).ToList();
+            sSet.AddRange(_contentManager
+                .Query<ProductPart, ProductPartVersionRecord>(VersionOptions.Latest)
+                .Where(pa => pa.Sku == part.Record.Sku && pa.ContentItemRecord.Id != part.Record.ContentItemRecord.Id)
+                .List());
+            return sSet;
         }
 
         public override void SynchronizeInventories(ProductPart part) {
@@ -34,7 +36,7 @@ namespace Nwazet.Commerce.Services {
         public override IEnumerable<ProductPart> GetProductsWithInventoryIssues() {
             var badProducts = //new List<ProductPart>();
             _contentManager
-            .Query<ProductPart, ProductPartRecord>(VersionOptions.Latest)
+            .Query<ProductPart, ProductPartVersionRecord>(VersionOptions.Latest)
             .List() //Get all ProductParts
             .GroupBy(pp => pp.Sku) //group them based on their SKU
             .Where(group => group.Count() > 1) //single products are not groups

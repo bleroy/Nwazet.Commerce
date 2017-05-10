@@ -18,7 +18,14 @@ namespace Nwazet.Commerce.Services {
         }
 
         public virtual IEnumerable<ProductPart> GetProductsWithSameInventory(ProductPart part) {
-            return new List<ProductPart>(); //do nothing
+            //return Latest and Published versions, unless they coincide or are the same as part
+            var sSet = new ProductPart[] {
+                _contentManager.Query<ProductPart>(VersionOptions.Published, part.ContentItem.ContentType)
+                    .Where<ProductPartVersionRecord>(ppvr => ppvr.ContentItemRecord == part.Record.ContentItemRecord).List().FirstOrDefault(),
+                _contentManager.Query<ProductPart>(VersionOptions.Latest, part.ContentItem.ContentType)
+                    .Where<ProductPartVersionRecord>(ppvr => ppvr.ContentItemRecord == part.Record.ContentItemRecord).List().FirstOrDefault()
+            };
+            return sSet.Distinct().Where(lp => lp != null && lp.Record.Id != part.Record.Id);
         }
 
         /// <summary>
@@ -27,6 +34,13 @@ namespace Nwazet.Commerce.Services {
         /// </summary>
         /// <param name="part">The ProductPart whose inventory will be copied over.</param>
         public virtual void SynchronizeInventories(ProductPart part) {
+            //Synchronize inventory between Latest and Published versions
+            int inv = GetInventory(part);
+            foreach (var pp in
+               GetProductsWithSameInventory(part)
+                   .Where(pa => GetInventory(pa) != inv)) { //condition to avoid infinite recursion
+                SetInventory(pp, GetInventory(part)); //call methods from base class
+            }
             //Synchronize the inventory for the eventual bundles that contain the product
             IBundleService bundleService;
             if (_workContextAccessor.GetContext().TryResolve(out bundleService)) {

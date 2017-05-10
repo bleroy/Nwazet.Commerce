@@ -17,7 +17,7 @@ namespace Nwazet.Commerce.Models {
             set { Store(r => r.Country, value); }
         }
 
-        public double Rate {
+        public decimal Rate {
             get { return Retrieve(r => r.Rate); }
             set { Store(r => r.Rate, value); }
         }
@@ -34,8 +34,8 @@ namespace Nwazet.Commerce.Models {
             }
         }
 
-        public double ComputeTax(IEnumerable<ShoppingCartQuantityProduct> productQuantities, double subtotal,
-            double shippingCost, string country, string zipCode) {
+        public decimal ComputeTax(IEnumerable<ShoppingCartQuantityProduct> productQuantities, decimal subtotal,
+            decimal shippingCost, string country, string zipCode) {
 
             var tax = (subtotal + shippingCost)*Rate;
             var state = UnitedStates.State(zipCode);

@@ -52,5 +52,12 @@ namespace Nwazet.Commerce.Migrations {
                     .NotNull().WithDefault(false)));
             return 5;
         }
+
+        public int UpdateFrom5() {
+            SchemaBuilder.AlterTable("UspsShippingMethodPartRecord", table => 
+                table.AlterColumn("Markup", column =>
+                    column.WithType(DbType.Decimal)));
+            return 6;
+        }
     }
 }

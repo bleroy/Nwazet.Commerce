@@ -96,7 +96,7 @@ namespace Nwazet.Commerce.Reports {
                     Description = granularity.ToString(intervalStart, CultureInfo.CurrentUICulture),
                     Value = ordersForInterval.Any()
                         ? ordersForInterval.Sum(order => order.AmountPaid)
-                        : 0.0,
+                        : 0.0M,
                     Series = ordersForInterval
                         .SelectMany(order => order
                             .Items

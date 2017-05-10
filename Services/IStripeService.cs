@@ -5,7 +5,7 @@ namespace Nwazet.Commerce.Services {
     public interface IStripeService : ICheckoutService {
         StripeSettingsPart GetSettings();
         StripeCheckoutViewModel DecryptCheckoutData(string checkoutData);
-        CreditCardCharge Charge(string token, double amount);
+        CreditCardCharge Charge(string token, decimal amount);
         bool IsInTestMode();
     }
 }

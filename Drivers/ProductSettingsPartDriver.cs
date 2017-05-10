@@ -42,8 +42,8 @@ namespace Nwazet.Commerce.Drivers {
                 part.AllowProductOverrides = model.AllowProductOverrides;
                 part.PriceTiers = model.PriceTiers.Select(t => new PriceTier {
                     Quantity = t.Quantity,
-                    Price = (!t.Price.EndsWith("%") ? t.Price.ToDouble() : null),
-                    PricePercent = (t.Price.EndsWith("%") ? t.Price.Substring(0, t.Price.Length - 1).ToDouble() : null)
+                    Price = (!t.Price.EndsWith("%") ? t.Price.ToDecimal() : null),
+                    PricePercent = (t.Price.EndsWith("%") ? t.Price.Substring(0, t.Price.Length - 1).ToDecimal() : null)
                 }).ToList();
             }
             return Editor(part, shapeHelper);
