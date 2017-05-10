@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Nwazet.Commerce.Models;
+using Nwazet.Commerce.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
@@ -13,22 +14,24 @@ namespace Nwazet.Commerce.Handlers {
     [OrchardFeature("Nwazet.Commerce")]
     public class ProductPartVersioningHandler : ContentHandler {
         private readonly IContentManager _contentManager;
+        private readonly IProductInventoryService _productInventoryService;
         public ProductPartVersioningHandler(
             IRepository<ProductPartVersionRecord> versionRepository,
-            IContentManager contentManager
+            IContentManager contentManager,
+            IProductInventoryService productInventoryService
             ) {
 
             Filters.Add(StorageFilter.For(versionRepository));
 
             _contentManager = contentManager;
+            _productInventoryService = productInventoryService;
             
             OnUpdated<ProductPart>(SynchronizeOnUpdate);
         }
 
         protected void SynchronizeOnUpdate(UpdateContentContext context, ProductPart part) {
             //The Inventory gets copied over to Latest and Published
-            var sSet = GetSynchronizationSet(part);
-            SynchronizeInventory(part, sSet);
+            _productInventoryService.SynchronizeInventories(part);
         }
 
         private void SynchronizeInventory(ProductPart part, IEnumerable<ProductPart> targets) {
