@@ -4,6 +4,7 @@ using Nwazet.Commerce.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Environment.Extensions;
+using System.Linq;
 
 namespace Nwazet.Commerce.Drivers {
     [OrchardFeature("Nwazet.InventoryBySKU")]
@@ -26,7 +27,8 @@ namespace Nwazet.Commerce.Drivers {
             var model = new InventoryBySKUProductEditorViewModel() {
                 Product = part
             };
-            model.SameInventoryItems = _productInventoryService.GetProductsWithSameInventory(part);
+            model.SameInventoryItems = _productInventoryService.GetProductsWithSameInventory(part)
+                .Where(pa => pa.ContentItem.Id != part.ContentItem.Id);
 
             return ContentShape("Part_Product_InventoryBySKUEdit",
                 () => shapeHelper.EditorTemplate(
