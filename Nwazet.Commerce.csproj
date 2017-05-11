@@ -189,6 +189,7 @@
     <Compile Include="Activities\CommerceActivity.cs" /> 
     <Compile Include="Activities\OrderActivity.cs" /> 
     <Compile Include="Controllers\ECommerceSettingsAdminController.cs" /> 
+    <Compile Include="Controllers\InventoryBySKUSettingsAdminController.cs" />
     <Compile Include="Controllers\ProductSettingsAdminController.cs" /> 
     <Compile Include="Controllers\BundleAdminController.cs" /> 
     <Compile Include="Controllers\AttributesAdminController.cs" /> 
@@ -208,6 +209,8 @@
     <Compile Include="Drivers\BundleLocalizationPartDriver.cs" /> 
     <Compile Include="Drivers\BundlePartDriver.cs" /> 
     <Compile Include="Drivers\ECommerceCurrencySiteSettingsPartDriver.cs" /> 
+    <Compile Include="Drivers\InventoryBySKUProductPartDriver.cs" /> 
+    <Compile Include="Drivers\InventoryBySKUSiteSettingsPartDriver.cs" /> 
     <Compile Include="Drivers\OrderPartDriver.cs" /> 
     <Compile Include="Drivers\ProductSettingsPartDriver.cs" /> 
     <Compile Include="Drivers\ZipCodeTaxPartDriver.cs" /> 
@@ -225,6 +228,7 @@
     <Compile Include="Exceptions\StripeException.cs" /> 
     <Compile Include="Extensions\AttributeNameUtilities.cs" /> 
     <Compile Include="Features\CurrencyProviderBySiteSettingFeature.cs" /> 
+    <Compile Include="Features\InventoryBySKUFeature.cs" />
     <Compile Include="Filters\ReferrerFilter.cs" /> 
     <Compile Include="Handlers\AdvancedSKUManagementHandler.cs" /> 
     <Compile Include="Handlers\AdvancedSKUsSiteSettingPartHandler.cs" /> 
@@ -232,6 +236,7 @@
     <Compile Include="Handlers\AttributePartHandler.cs" /> 
     <Compile Include="Handlers\AttributesPartHandler.cs" /> 
     <Compile Include="Handlers\ECommerceCurrencySiteSettingsPartHandler.cs" /> 
+    <Compile Include="Handlers\InventoryBySKUSiteSettingsPartHandler.cs" /> 
     <Compile Include="Handlers\LocalizationAttributePartHandler.cs" /> 
     <Compile Include="Handlers\OrderPartHandler.cs" /> 
     <Compile Include="Handlers\ProductPartVersioningHandler.cs" />
@@ -271,6 +276,7 @@
     <Compile Include="Models\Charge.cs" /> 
     <Compile Include="Models\ECommerceCurrencySiteSettingsPart.cs" /> 
     <Compile Include="Models\ICharge.cs" /> 
+    <Compile Include="Models\InventoryBySKUSiteSettingsPart.cs" /> 
     <Compile Include="Models\OrderEvent.cs" /> 
     <Compile Include="Models\OrderPart.cs" /> 
     <Compile Include="Models\OrderPartRecord.cs" /> 
@@ -340,8 +346,11 @@
     <Compile Include="Services\CurrencyProviderBase.cs" /> 
     <Compile Include="Services\IBundleProductLocalizationServices.cs" />
     <Compile Include="Services\IBundleService.cs" /> 
+    <Compile Include="Services\InventoriesAreNotSynchronizedBySKU.cs" />
+    <Compile Include="Services\InventoryBySKUProductInventoryService.cs" /> 
     <Compile Include="Services\IProductAttributeAdminServices.cs" /> 
     <Compile Include="Services\IProductAttributeLocalizationServices.cs" />
+    <Compile Include="Services\IProductInventoryService.cs" /> 
     <Compile Include="Services\ISKUGenerationServices.cs" /> 
     <Compile Include="Services\ISKUUniquenessHelper.cs" /> 
     <Compile Include="Services\LatestProductAttributeAdminServices.cs" /> 
@@ -352,6 +361,8 @@
     <Compile Include="Services\ProductAttributeNameService.cs" /> 
     <Compile Include="Services\Currency.cs" /> 
     <Compile Include="Services\ICurrencyProvider.cs" /> 
+    <Compile Include="Services\ProductInventoryService.cs" /> 
+    <Compile Include="Services\ProductInventoryServiceBase.cs" /> 
     <Compile Include="Services\ProductResolverSelector.cs" /> 
     <Compile Include="Services\AddressFormatter.cs" /> 
     <Compile Include="Services\BundleService.cs" /> 
@@ -416,6 +427,8 @@
     <Compile Include="ViewModels\ECommerceCurrencySiteSettingsViewModel.cs" /> 
     <Compile Include="ViewModels\ECommerceSettingsViewModel.cs" /> 
     <Compile Include="ViewModels\AttributeLocalizationProductAttributesPartEditViewModel.cs" /> 
+    <Compile Include="ViewModels\InventoryBySKUProductEditorViewModel.cs" /> 
+    <Compile Include="ViewModels\InventoryBySKUSiteSettingsPartViewModel.cs" />
     <Compile Include="ViewModels\ProductAttributePartDisplayViewModel.cs" /> 
     <Compile Include="ViewModels\ProductAttributePartEditViewModel.cs" /> 
     <Compile Include="ViewModels\AttributesIndexViewModel.cs" /> 
@@ -542,8 +555,10 @@
     <None Include="Views\ECommerceSettingsAdmin\Index.cshtml" /> 
     <None Include="Views\EditorTemplates\Parts\AdvancedSKUProduct.cshtml" /> 
     <None Include="Views\EditorTemplates\Parts\AttributeLocalizationProductAttributes.cshtml" /> 
+    <None Include="Views\EditorTemplates\Parts\InventoryBySKUProduct.cshtml" /> 
     <None Include="Views\EditorTemplates\SiteSettings\AdvancedSKUs.cshtml" /> 
     <None Include="Views\EditorTemplates\SiteSettings\Currency.cshtml" /> 
+    <None Include="Views\EditorTemplates\SiteSettings\InventoryBySKU.cshtml" /> 
     <None Include="Views\ProductAttributesLocalizationAdminListItem.cshtml" />
   </ItemGroup> 
   <ItemGroup />
