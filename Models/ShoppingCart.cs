@@ -19,7 +19,7 @@ namespace Nwazet.Commerce.Models {
         private readonly IEnumerable<ITaxProvider> _taxProviders;
         private readonly INotifier _notifier;
 
-        private IEnumerable<ShoppingCartQuantityProduct> _products; 
+        protected IEnumerable<ShoppingCartQuantityProduct> _products; 
 
         public ShoppingCart(
             IContentManager contentManager,
@@ -93,7 +93,7 @@ namespace Nwazet.Commerce.Models {
                      && i.AttributeIdsToValues.All(attributeIdsToValues.Contains));
         }
 
-        private bool ValidateAttributes(int productId, IDictionary<int, ProductAttributeValueExtended> attributeIdsToValues) {
+        protected bool ValidateAttributes(int productId, IDictionary<int, ProductAttributeValueExtended> attributeIdsToValues) {
             if (_attributesDrivers == null ||
                 attributeIdsToValues == null ||
                 !attributeIdsToValues.Any()) return true;
