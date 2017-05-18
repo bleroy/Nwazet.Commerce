@@ -213,6 +213,7 @@
     <Compile Include="Drivers\InventoryBySKUSiteSettingsPartDriver.cs" />
     <Compile Include="Drivers\OrderPartDriver.cs" />
     <Compile Include="Drivers\ProductSettingsPartDriver.cs" />
+    <Compile Include="Drivers\ProductsListPartDriver.cs" />
     <Compile Include="Drivers\ZipCodeTaxPartDriver.cs" />
     <Compile Include="Drivers\StateOrCountryTaxPartDriver.cs" />
     <Compile Include="Drivers\UspsShippingMethodPartDriver.cs" />
@@ -239,7 +240,6 @@
     <Compile Include="Handlers\InventoryBySKUSiteSettingsPartHandler.cs" />
     <Compile Include="Handlers\LocalizationAttributePartHandler.cs" />
     <Compile Include="Handlers\OrderPartHandler.cs" />
-    <Compile Include="Handlers\PersistentShoppingCartPartHandler.cs" />
     <Compile Include="Handlers\ProductPartVersioningHandler.cs" />
     <Compile Include="Handlers\ProductSettingsPartHandler.cs" />
     <Compile Include="Handlers\StateOrCountryTaxPartHandler.cs" />
@@ -279,9 +279,8 @@
     <Compile Include="Models\ECommerceCurrencySiteSettingsPart.cs" />
     <Compile Include="Models\ICharge.cs" />
     <Compile Include="Models\InventoryBySKUSiteSettingsPart.cs" />
-    <Compile Include="Models\NamedProductsListRecord.cs" />
     <Compile Include="Models\PersistentShoppingCart.cs" />
-    <Compile Include="Models\PersistentShoppingCartPart.cs" />
+    <Compile Include="Models\ProductsListPart.cs" />
     <Compile Include="Models\OrderEvent.cs" />
     <Compile Include="Models\OrderPart.cs" />
     <Compile Include="Models\OrderPartRecord.cs" />
@@ -345,12 +344,10 @@
     <Compile Include="Routes\StripeRoutes.cs" />
     <Compile Include="Routes\OrderRoutes.cs" />
     <Compile Include="Routes\CommerceRoutes.cs" />
-    <Compile Include="Services\AnonymousIdentityBaseProvider.cs" />
     <Compile Include="Services\BundleProductLocalizationBundleService.cs" />
     <Compile Include="Services\BundleProductLocalizationServices.cs" />
     <Compile Include="Services\BundleServiceBase.cs" />
     <Compile Include="Services\CurrencyProviderBase.cs" />
-    <Compile Include="Services\IAnonymousIdentityProvider.cs" />
     <Compile Include="Services\IBundleProductLocalizationServices.cs" />
     <Compile Include="Services\IBundleService.cs" />
     <Compile Include="Services\InventoriesAreNotSynchronizedBySKU.cs" />
@@ -388,7 +385,6 @@
     <Compile Include="Services\OrderService.cs" />
     <Compile Include="Services\ProductAttributeService.cs" />
     <Compile Include="Services\ProductDiscountPriceProvider.cs" />
-    <Compile Include="Services\SessionAnonymousIdentityProvider.cs" />
     <Compile Include="Services\ShippingService.cs" />
     <Compile Include="Services\ShoppingCartInfosetPartStorage.cs" />
     <Compile Include="Services\SKUGenerationServices.cs" />

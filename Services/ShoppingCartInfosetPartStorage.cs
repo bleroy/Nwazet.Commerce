@@ -12,6 +12,8 @@ using Orchard.Environment.Extensions;
 namespace Nwazet.Commerce.Services {
     [OrchardFeature("Nwazet.PersistentCart")]
     public class ShoppingCartInfosetPartStorage : IShoppingCartStorage {
+        //we store the cart in a content item for authenticated users, and in the session
+        //for anonymous users
         private readonly IWorkContextAccessor _wca;
         private readonly IEnumerable<IProductAttributeExtensionProvider> _extensionProviders;
         private readonly IContentManager _contentManager;
@@ -29,61 +31,39 @@ namespace Nwazet.Commerce.Services {
             _persistentShoppingCartServices = persistentShoppingCartServices;
         }
 
-        public string Country
-        {
-            get
-            {
-                var cart = GetCart();
-                return cart == null ? "" : cart.Country;
+        public string Country {
+            get {
+                return _persistentShoppingCartServices.Country;
             }
 
-            set
-            {
-                _persistentShoppingCartServices.UpdateCountry(GetCart(), value);
+            set {
+                _persistentShoppingCartServices.Country = value;
             }
         }
 
-        public ShippingOption ShippingOption
-        {
-            get
-            {
-                var cart = GetCart();
-                return cart == null ? null : cart.ShippingOption;
+        public ShippingOption ShippingOption {
+            get {
+                return _persistentShoppingCartServices.ShippingOption;
             }
 
-            set
-            {
-                _persistentShoppingCartServices.UpdateShippingOption(GetCart(), value);
+            set {
+                _persistentShoppingCartServices.ShippingOption = value;
             }
         }
 
-        public string ZipCode
-        {
-            get
-            {
-                var cart = GetCart();
-                return cart == null ? "" : cart.ZipCode;
+        public string ZipCode {
+            get {
+                return _persistentShoppingCartServices.ZipCode;
             }
 
-            set
-            {
-                _persistentShoppingCartServices.UpdateZipCode(GetCart(), value);
+            set {
+                _persistentShoppingCartServices.ZipCode = value;
             }
         }
 
         public List<ShoppingCartItem> Retrieve() {
-            var cart = GetCart();
-            return cart == null ? new List<ShoppingCartItem>() : cart.Items;
+            return _persistentShoppingCartServices.RetrieveCartItems();
         }
 
-        private PersistentShoppingCartPart GetCart() {
-            //get the cart for the current user, if he's logged in. 
-            var user = _wca.GetContext().CurrentUser;
-            if (user != null) {
-                //authenticated user
-                return _persistentShoppingCartServices.GetCartForUser(user);
-            }
-            return _persistentShoppingCartServices.GetAnonymousCart();
-        }
     }
 }

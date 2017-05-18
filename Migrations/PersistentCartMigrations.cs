@@ -13,19 +13,10 @@ namespace Nwazet.Commerce.Migrations {
 
         public int Create() {
 
-            SchemaBuilder.CreateTable("NamedProductsListRecord", table => table
-                .ContentPartVersionRecord()
-                .Column<string>("SerializedItems", col => col.Unlimited())
-                .Column<string>("Country")
-                .Column<string>("ZipCode")
-                .Column<string>("SerializedShippingOption", col => col.Unlimited())
-                .Column<string>("Event", col => col.Unlimited())
-                .Column<string>("AnonymousId")
-            );
 
             ContentDefinitionManager.AlterTypeDefinition("ShoppingCart", cfg => cfg
                 .WithPart("CommonPart")
-                .WithPart("PersistentShoppingCartPart")
+                .WithPart("ProductsListPart")
             );
 
             return 1;

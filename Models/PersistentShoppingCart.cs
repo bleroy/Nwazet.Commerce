@@ -8,10 +8,12 @@ using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.UI.Notify;
+using Orchard.Core.Title.Models;
+using Orchard.Autoroute.Models;
 
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.PersistentCart")]
-    public class PersistentShoppingCart : ShoppingCart {
+    public class PersistentShoppingCart : IShoppingCart {
 
         private readonly IContentManager _contentManager;
         private readonly IShoppingCartStorage _cartStorage;
@@ -19,6 +21,9 @@ namespace Nwazet.Commerce.Models {
         private readonly IEnumerable<IProductAttributesDriver> _attributesDrivers;
         private readonly IEnumerable<ITaxProvider> _taxProviders;
         private readonly INotifier _notifier;
+        private readonly IPersistentShoppingCartServices _persistentShoppingCartServices;
+
+        private IEnumerable<ShoppingCartQuantityProduct> _products;
 
         public PersistentShoppingCart(
             IContentManager contentManager,
@@ -26,8 +31,8 @@ namespace Nwazet.Commerce.Models {
             IPriceService priceService,
             IEnumerable<IProductAttributesDriver> attributesDrivers,
             IEnumerable<ITaxProvider> taxProviders,
-            INotifier notifier) 
-            : base (contentManager, cartStorage, priceService, attributesDrivers, taxProviders, notifier) {
+            INotifier notifier,
+            IPersistentShoppingCartServices persistentShoppingCartServices) {
 
             _contentManager = contentManager;
             _cartStorage = cartStorage;
@@ -35,47 +40,139 @@ namespace Nwazet.Commerce.Models {
             _attributesDrivers = attributesDrivers;
             _taxProviders = taxProviders;
             _notifier = notifier;
+            _persistentShoppingCartServices = persistentShoppingCartServices;
 
             T = NullLocalizer.Instance;
         }
-        
-        
-        public new void Add(int productId, int quantity = 1, IDictionary<int, ProductAttributeValueExtended> attributeIdsToValues = null) {
+
+        public Localizer T { get; set; }
+        public string Country {
+            get { return _cartStorage.Country; }
+            set { _cartStorage.Country = value; }
+        }
+
+        public string ZipCode {
+            get { return _cartStorage.ZipCode; }
+            set { _cartStorage.ZipCode = value; }
+        }
+
+        public ShippingOption ShippingOption {
+            get { return _cartStorage.ShippingOption; }
+            set { _cartStorage.ShippingOption = value; }
+        }
+        public IEnumerable<ShoppingCartItem> Items {
+            get { return _cartStorage.Retrieve(); }
+        }
+
+        public ShoppingCartItem FindCartItem(int productId, IDictionary<int, ProductAttributeValueExtended> attributeIdsToValues = null) {
+            return _persistentShoppingCartServices.FindCartItem(Items, productId, attributeIdsToValues);
+        }
+
+        private bool ValidateAttributes(int productId, IDictionary<int, ProductAttributeValueExtended> attributeIdsToValues) {
+            if (_attributesDrivers == null ||
+                attributeIdsToValues == null ||
+                !attributeIdsToValues.Any()) return true;
+
+            var product = _contentManager.Get(productId);
+            return _attributesDrivers.All(d => d.ValidateAttributes(product, attributeIdsToValues));
+        }
+
+        public void Add(int productId, int quantity = 1, IDictionary<int, ProductAttributeValueExtended> attributeIdsToValues = null) {
             if (!ValidateAttributes(productId, attributeIdsToValues)) {
                 // If attributes don't validate, don't add the product, but notify
                 _notifier.Warning(T("Couldn't add this product because of invalid attributes. Please refresh the page and try again."));
                 return;
             }
 
-            var item = FindCartItem(productId, attributeIdsToValues);
-            if (item != null) {
-                //TODO: update quantity for item
-            }
-            else {
-                //TODO: add a new item
-            }
-            _products = null;
+            _persistentShoppingCartServices.AddItem(new ShoppingCartItem(productId, quantity, attributeIdsToValues));
 
-            throw new NotImplementedException();
+            _products = null;
         }
 
-        public new void Clear() {
+        public void AddRange(IEnumerable<ShoppingCartItem> items) {
+            foreach (var item in items) {
+                Add(item.ProductId, item.Quantity, item.AttributeIdsToValues);
+            }
+        }
+
+        public void Clear() {
             _products = null;
-            //TODO: empty the cart
+            _persistentShoppingCartServices.ClearCart();
             UpdateItems();
         }
-        
-        public new void Remove(int productId, IDictionary<int, ProductAttributeValueExtended> attributeIdsToValues = null) {
-            var item = FindCartItem(productId, attributeIdsToValues);
-            if (item == null) return;
 
-            //TODO: actually remove the item
+        public void Remove(int productId, IDictionary<int, ProductAttributeValueExtended> attributeIdsToValues = null) {
+            _persistentShoppingCartServices.RemoveItem(productId, attributeIdsToValues);
             _products = null;
         }
-        
-        public new void UpdateItems() {
-            //TODO: remove all elements whose quantity is zero
+
+        public void UpdateItems() {
+            _persistentShoppingCartServices.ConsolidateCart();
             _products = null;
+        }
+
+        public IEnumerable<ShoppingCartQuantityProduct> GetProducts() {
+            if (_products != null) return _products;
+
+            var ids = Items.Select(x => x.ProductId);
+
+            var productParts =
+                _contentManager.GetMany<ProductPart>(ids, VersionOptions.Published,
+                new QueryHints().ExpandParts<TitlePart, ProductPart, AutoroutePart>()).ToArray();
+
+            var productPartIds = productParts.Select(p => p.Id);
+
+            var shoppingCartQuantities =
+                (from item in Items
+                 where productPartIds.Contains(item.ProductId) && item.Quantity > 0
+                 select new ShoppingCartQuantityProduct(item.Quantity, productParts.First(p => p.Id == item.ProductId), item.AttributeIdsToValues))
+                    .ToList();
+
+            return _products = shoppingCartQuantities
+                .Select(q => _priceService.GetDiscountedPrice(q, shoppingCartQuantities))
+                .Where(q => q.Quantity > 0)
+                .ToList();
+        }
+
+        public decimal Subtotal() {
+            return Math.Round(GetProducts().Sum(pq => Math.Round(pq.Price * pq.Quantity + pq.LinePriceAdjustment, 2)), 2);
+        }
+
+        public TaxAmount Taxes(decimal subTotal = 0) {
+            if (Country == null && ZipCode == null) return null;
+            var taxes = _taxProviders
+                .SelectMany(p => p.GetTaxes())
+                .OrderByDescending(t => t.Priority);
+            var shippingPrice = ShippingOption == null ? 0 : ShippingOption.Price;
+            if (subTotal.Equals(0)) {
+                subTotal = Subtotal();
+            }
+            return (
+                from tax in taxes
+                let name = tax.Name
+                let amount = tax.ComputeTax(GetProducts(), subTotal, shippingPrice, Country, ZipCode)
+                where amount > 0
+                select new TaxAmount { Name = name, Amount = amount }
+                ).FirstOrDefault() ?? new TaxAmount { Amount = 0, Name = null };
+        }
+
+        public decimal Total(decimal subTotal = 0, TaxAmount taxes = null) {
+            if (taxes == null) {
+                taxes = Taxes();
+            }
+            if (subTotal.Equals(0)) {
+                subTotal = Subtotal();
+            }
+            if (taxes == null || taxes.Amount <= 0) {
+                if (ShippingOption == null) return subTotal;
+                return subTotal + ShippingOption.Price;
+            }
+            if (ShippingOption == null) return subTotal + taxes.Amount;
+            return subTotal + taxes.Amount + ShippingOption.Price;
+        }
+
+        public double ItemCount() {
+            return Items.Sum(x => x.Quantity);
         }
     }
 }
