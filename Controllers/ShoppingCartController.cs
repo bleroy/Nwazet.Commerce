@@ -30,6 +30,7 @@ namespace Nwazet.Commerce.Controllers {
         private readonly INotifier _notifier;
         private readonly IEnumerable<IProductAttributeExtensionProvider> _attributeExtensionProviders;
         private readonly ICurrencyProvider _currencyProvider;
+        private readonly ILocalStorageSettings _localStorageSettings;
 
         public Localizer T { get; set; }
 
@@ -47,7 +48,8 @@ namespace Nwazet.Commerce.Controllers {
             IWorkflowManager workflowManager,
             INotifier notifier,
             IEnumerable<IProductAttributeExtensionProvider> attributeExtensionProviders,
-            ICurrencyProvider currencyProvider) {
+            ICurrencyProvider currencyProvider,
+            ILocalStorageSettings localStorageSettings) {
 
             _shippingMethodProviders = shippingMethodProviders;
             _shoppingCart = shoppingCart;
@@ -60,6 +62,7 @@ namespace Nwazet.Commerce.Controllers {
             _notifier = notifier;
             _attributeExtensionProviders = attributeExtensionProviders;
             _currencyProvider = currencyProvider;
+            _localStorageSettings = localStorageSettings;
 
             T = NullLocalizer.Instance;
         }
@@ -306,6 +309,12 @@ namespace Nwazet.Commerce.Controllers {
                 _notifier.Error(new LocalizedString(ex.Message));
                 return RedirectToAction("Index");
             }
+        }
+
+        [HttpPost]
+        public JsonResult UseLocalStorage() {
+            bool response = _localStorageSettings.UseLocalStorage();
+            return (JsonResult)Json(new { Response = response });
         }
 
         [HttpPost]

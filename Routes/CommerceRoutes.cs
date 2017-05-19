@@ -70,6 +70,20 @@ namespace Nwazet.Commerce.Routes {
                             {"area", "Nwazet.Commerce"}
                         },
                         new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Route = new Route(
+                        "uselocalstorage",
+                        new RouteValueDictionary {
+                            {"area", "Nwazet.Commerce"},
+                            {"controller", "ShoppingCart"},
+                            {"action", "UseLocalStorage"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Nwazet.Commerce"}
+                        },
+                        new MvcRouteHandler())
                 }
             };
         }

@@ -42,7 +42,8 @@ namespace Nwazet.Commerce.Services {
             //if we have an authenticated user, we get their cart and use that instead of the session
             if (User != null) {
                 //authenticated user
-                var cartPartItems = GetCartForUser().Items;
+                var cartPart = GetCartForUser();
+                var cartPartItems = cartPart.Items;
                 if (items.Count() > 0) {
                     //items were added to session while anonymous, then login happened
                     foreach (var item in items) { //merge into persistent cart
@@ -53,7 +54,7 @@ namespace Nwazet.Commerce.Services {
                             cartPartItems.Insert(0, item);
                         }
                     }
-                    GetCartForUser().Items = cartPartItems;
+                    cartPart.Items = cartPartItems;
                 }
                 items = cartPartItems;
                 context.Session["ShoppingCart"] = new List<ShoppingCartItem>(); //session is kept clear if the user is logged in to avoid duplication

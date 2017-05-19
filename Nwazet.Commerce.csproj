@@ -347,9 +347,11 @@
     <Compile Include="Services\BundleProductLocalizationBundleService.cs" />
     <Compile Include="Services\BundleProductLocalizationServices.cs" />
     <Compile Include="Services\BundleServiceBase.cs" />
+    <Compile Include="Services\CommerceLocalStorageSettings.cs" />
     <Compile Include="Services\CurrencyProviderBase.cs" />
     <Compile Include="Services\IBundleProductLocalizationServices.cs" />
     <Compile Include="Services\IBundleService.cs" />
+    <Compile Include="Services\ILocalStorageSettings.cs" />
     <Compile Include="Services\InventoriesAreNotSynchronizedBySKU.cs" />
     <Compile Include="Services\InventoryBySKUProductInventoryService.cs" />
     <Compile Include="Services\IPersistentShoppingCartServices.cs" />
@@ -361,6 +363,7 @@
     <Compile Include="Services\LatestProductAttributeAdminServices.cs" />
     <Compile Include="Services\LocalizationSKUUniquenessHelper.cs" />
     <Compile Include="Services\IProductAttributeNameService.cs" />
+    <Compile Include="Services\PersistentCartLocalStorageSettings.cs" />
     <Compile Include="Services\PersistentShoppingCartServices.cs" />
     <Compile Include="Services\ProductAttributeAdminServices.cs" />
     <Compile Include="Services\ProductAttributeLocalizationServices.cs" />

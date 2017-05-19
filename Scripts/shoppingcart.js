@@ -6,6 +6,10 @@
                 return false;
             }
         },
+        setUseLocalStorage = function (data, status) {
+            useLocalStorage = !!(data.Response);
+        },
+        useLocalStorage = true,
         setLoading = function(state) {
             if (hasLocalStorage()) {
                 localStorage["nwazet-cart-loading"] = !!state;
@@ -57,53 +61,58 @@
                 var gotCart = text === false ||
                     (typeof (text) === "string" && $.trim(text).length > 0);
                 if (hasLocalStorage()) {
-                    if (gotCart) {
-                        var form = cartContainer.find("form");
-                        if (form.length === 0) {
-                            form = cartContainer.closest("form");
-                        }
-                        if (form.length !== 0 && form[0].length > 1) {
-                            var cartArray = form.serializeArray(),
-                                cart = {};
-                            $.each(cartArray, function(index, formField) {
-                                cart[formField.name] = formField.value;
-                            });
-                            delete cart.__RequestVerificationToken;
-                            localStorage[nwazetCart] = JSON.stringify(cart);
-                        }
-                        setLoading(false);
-                    } else {
-                        var cachedCart, cachedCartString = localStorage[nwazetCart];
-                        if (cachedCartString) {
-                            if (loading) {
-                                localStorage[nwazetCart] = JSON.stringify({
-                                    Country: localStorage[nwazetCart].Country || null,
-                                    ZipCode: localStorage[nwazetCart].ZipCode || null
+                    if (useLocalStorage) {
+                        if (gotCart) {
+                            var form = cartContainer.find("form");
+                            if (form.length === 0) {
+                                form = cartContainer.closest("form");
+                            }
+                            if (form.length !== 0 && form[0].length > 1) {
+                                var cartArray = form.serializeArray(),
+                                    cart = {};
+                                $.each(cartArray, function (index, formField) {
+                                    cart[formField.name] = formField.value;
                                 });
-                                setLoading(false);
-                                return;
+                                delete cart.__RequestVerificationToken;
+                                localStorage[nwazetCart] = JSON.stringify(cart);
                             }
-                            try {
-                                cachedCart = JSON.parse(cachedCartString);
-                            } catch(ex) {
-                                localStorage.removeItem(nwazetCart);
-                                return;
-                            }
-                            var cartContainerForm = cartContainer.closest("form");
-                            if (cartContainerForm.length === 0) {
-                                cartContainerForm = $("<form></form>")
-                                    .append($("<input name='__RequestVerificationToken'/>").val(token));
-                            }
-                            buildForm(cachedCart, cartContainerForm);
-                            notify(window.Nwazet.WaitWhileWeRestoreYourCart);
-                            if (cartContainer.hasClass("minicart")) {
-                                cartContainerLoad(cartContainerForm);
-                            } else {
-                                setLoading(true);
-                                cartContainer.closest("form").submit();
-                                return;
+                            setLoading(false);
+                        } else {
+                            var cachedCart, cachedCartString = localStorage[nwazetCart];
+                            if (cachedCartString) {
+                                if (loading) {
+                                    localStorage[nwazetCart] = JSON.stringify({
+                                        Country: localStorage[nwazetCart].Country || null,
+                                        ZipCode: localStorage[nwazetCart].ZipCode || null
+                                    });
+                                    setLoading(false);
+                                    return;
+                                }
+                                try {
+                                    cachedCart = JSON.parse(cachedCartString);
+                                } catch (ex) {
+                                    localStorage.removeItem(nwazetCart);
+                                    return;
+                                }
+                                var cartContainerForm = cartContainer.closest("form");
+                                if (cartContainerForm.length === 0) {
+                                    cartContainerForm = $("<form></form>")
+                                        .append($("<input name='__RequestVerificationToken'/>").val(token));
+                                }
+                                buildForm(cachedCart, cartContainerForm);
+                                notify(window.Nwazet.WaitWhileWeRestoreYourCart);
+                                if (cartContainer.hasClass("minicart")) {
+                                    cartContainerLoad(cartContainerForm);
+                                } else {
+                                    setLoading(true);
+                                    cartContainer.closest("form").submit();
+                                    return;
+                                }
                             }
                         }
+                    } else {
+                        localStorage.removeItem("nwazet.cart");
+                        localStorage.removeItem("nwazet-cart-loading");
                     }
                 }
                 if (cartContainer.hasClass("minicart")) {
@@ -130,7 +139,21 @@
         },
         loadUrl = cartContainer.data("load"),
         updateUrl = cartContainer.data("update"),
-        token = cartContainer.data("token");
+        token = cartContainer.data("token"),
+        useLocalStoragePath = cartContainer.data("use-local-storage");
+
+    if (useLocalStoragePath) {
+        var formData = {
+            __RequestVerificationToken: token
+        };
+        $.ajax({
+            url: useLocalStoragePath,
+            data: formData,
+            type: 'POST',
+            async: false,
+            success: setUseLocalStorage
+        });
+    }
 
     if (loadUrl) {
         cartContainer
