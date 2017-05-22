@@ -115,7 +115,7 @@ namespace Nwazet.Commerce.Services {
                 var commonPart = newCart.As<CommonPart>();
                 commonPart.Owner = user;
                 var cartPart = newCart.As<ProductsListPart>();
-                cartPart = new ProductsListPart();
+                cartPart.IsCart = true;
                 _contentManager.Create(newCart);
 
                 return newCart.As<ProductsListPart>();
