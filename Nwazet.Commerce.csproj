@@ -556,6 +556,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="bundleconfig.json" />
     <None Include="packages.config" />
     <None Include="Views\EditorTemplates\Parts\ProductLocalizationBundle.cshtml" />
     <None Include="Views\ProductAttributesAdminList.cshtml" />
