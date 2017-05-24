@@ -1,23 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Utilities;
 using Orchard.Environment.Extensions;
-using Orchard.Security;
-using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.PersistentCart")]
     public class ProductsListPart : ContentPart {
         //This part goes in the infoset
 
-        private List<ShoppingCartItem> _items {
+        private IEnumerable<ShoppingCartItem> _items {
             get {
                 var fromInfoset = Retrieve<string>("SerializedItems");
                 if (string.IsNullOrWhiteSpace(fromInfoset)) {
@@ -26,24 +20,21 @@ namespace Nwazet.Commerce.Models {
                 var jsonInfoset = JObject.Parse("{'List':" + fromInfoset + "}");
                 return jsonInfoset["List"].Children()
                     .Select(jt => {
-                        var item = new ShoppingCartItem(
+                        return new ShoppingCartItem(
                             productId: int.Parse(jt["ProductId"].ToString()),
                             quantity: int.Parse(jt["Quantity"].ToString()),
                             attributeIdsToValues: JsonConvert.DeserializeObject<Dictionary<int, ProductAttributeValueExtended>>(jt["AttributeIdsToValues"].ToString())
                             );
-
-                        return item;
                     })
                     .ToList();
             }
             set {
-                Store<string>("SerializedItems",
-                    JsonConvert.SerializeObject(value));
+                Store("SerializedItems", JsonConvert.SerializeObject(value));
             }
         }
 
         public List<ShoppingCartItem> Items {
-            get { return _items == null ? new List<ShoppingCartItem>() : _items; }
+            get { return _items != null ? _items.ToList() : new List<ShoppingCartItem>(); }
             set { _items = value; }
         }
 

@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using Nwazet.Commerce.Models;
+﻿using Nwazet.Commerce.Models;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Security;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 
 namespace Nwazet.Commerce.Services {
     [OrchardFeature("Nwazet.PersistentCart")]

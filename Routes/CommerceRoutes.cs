@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Orchard.Environment.Extensions;
+using Orchard.Mvc.Routes;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Orchard.Environment.Extensions;
-using Orchard.Mvc.Routes;
 
 namespace Nwazet.Commerce.Routes {
     [OrchardFeature("Nwazet.Commerce")]
@@ -64,20 +64,6 @@ namespace Nwazet.Commerce.Routes {
                             {"controller", "ShoppingCart"},
                             {"action", "Add"},
                             {"productattributes", null}
-                        },
-                        new RouteValueDictionary(),
-                        new RouteValueDictionary {
-                            {"area", "Nwazet.Commerce"}
-                        },
-                        new MvcRouteHandler())
-                },
-                new RouteDescriptor {
-                    Route = new Route(
-                        "uselocalstorage",
-                        new RouteValueDictionary {
-                            {"area", "Nwazet.Commerce"},
-                            {"controller", "ShoppingCart"},
-                            {"action", "UseLocalStorage"}
                         },
                         new RouteValueDictionary(),
                         new RouteValueDictionary {
