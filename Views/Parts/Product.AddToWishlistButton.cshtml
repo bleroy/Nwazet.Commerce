@@ -1,0 +1,35 @@
+﻿@using Nwazet.Commerce.Models
+@using Orchard.Security
+@{
+    var productId = (int)Model.ProductId;
+    var wishLists = (List<WishListListPart>)Model.WishLists;
+    var user = (IUser)Model.User;
+
+    Script.Require("jQuery");
+}
+
+@using (Html.BeginFormAntiForgeryPost()) {
+    <div id="add-to-wishlist-button-group">
+        <span id="add-to-wishlist-main-button">
+
+        </span>
+        @if (user != null) {
+            <span id="add-to-wishlist-dropdown">
+
+            </span>
+        }
+    </div>
+
+    @if (user != null) {
+        <div id="add-to-wishlist-popover" style="display: none;">
+            <ul id="add-to-wishlist-popover-list">
+                @foreach (var wl in wishLists) {
+                    <li>
+                        @Display.AddToWishListButtonElement(ProductId: productId, WishList: wl)
+                    </li>
+                }
+                <li></li>
+            </ul>
+        </div>
+    }
+}

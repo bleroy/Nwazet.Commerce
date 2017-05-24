@@ -5,6 +5,7 @@
   <Place Parts_Product="Content:3.1"/>
   <Place Parts_Product_PriceTiers="Content:3.2"/>
   <Place Parts_Product_AddButton="Content:3.3"/>
+  <Place Parts_Product_AddToWishlistButton="Content:3.3"/>
   <Place ShoppingCartWidget="Content:0" />
   <Place Parts_Usps_Settings="Content:5"/>
   <Place Parts_Stripe_Settings="Content:5"/>

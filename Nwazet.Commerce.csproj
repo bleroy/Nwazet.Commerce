@@ -212,6 +212,7 @@
     <Compile Include="Drivers\InventoryBySKUProductPartDriver.cs" />
     <Compile Include="Drivers\InventoryBySKUSiteSettingsPartDriver.cs" />
     <Compile Include="Drivers\OrderPartDriver.cs" />
+    <Compile Include="Drivers\ProductPartWishListDriver.cs" />
     <Compile Include="Drivers\ProductSettingsPartDriver.cs" />
     <Compile Include="Drivers\ZipCodeTaxPartDriver.cs" />
     <Compile Include="Drivers\StateOrCountryTaxPartDriver.cs" />
@@ -450,7 +451,7 @@
     <Compile Include="ViewModels\ShippingMethodIndexViewModel.cs" />
     <Compile Include="ViewModels\StripeCheckoutViewModel.cs" />
     <Compile Include="ViewModels\UpdateShoppingCartItemViewModel.cs" />
-    <Compile Include="WishListListPart.cs" />
+    <Compile Include="Models\WishListListPart.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Web.config" />
@@ -554,7 +555,9 @@
     <None Include="app.config" />
     <None Include="bundleconfig.json" />
     <None Include="packages.config" />
+    <None Include="Views\AddToWishListButtonElement.cshtml" />
     <None Include="Views\EditorTemplates\Parts\ProductLocalizationBundle.cshtml" />
+    <None Include="Views\Parts\Product.AddToWishlistButton.cshtml" />
     <None Include="Views\ProductAttributesAdminList.cshtml" />
     <None Include="Views\ProductAttributesAdminListItem.cshtml" />
     <None Include="Views\DefinitionTemplates\BundleProductLocalizationSettings.cshtml" />

@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Nwazet.Commerce {
+namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.WishLists")]
     public class WishListListPart : ContentPart {
         private static readonly char[] separator = new[] { '{', '}', ',' };
@@ -39,6 +39,6 @@ namespace Nwazet.Commerce {
             get { return Retrieve<bool>("IsDefault"); }
             set { Store<bool>("IsDefault", value); }
         }
-
+        
     }
 }
