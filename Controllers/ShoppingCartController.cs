@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
-using Nwazet.Commerce.Models;
+﻿using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
 using Nwazet.Commerce.ViewModels;
 using Orchard;
@@ -15,6 +11,10 @@ using Orchard.Mvc;
 using Orchard.Themes;
 using Orchard.UI.Notify;
 using Orchard.Workflows.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace Nwazet.Commerce.Controllers {
     [OrchardFeature("Nwazet.Commerce")]

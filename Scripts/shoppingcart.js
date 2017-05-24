@@ -143,6 +143,10 @@
         useLocalStoragePath = cartContainer.data("use-local-storage");
 
     if (useLocalStoragePath) {
+        if (!token) {
+            //__RequestVerificationToken
+            token = cartContainer.closest("form").find("[name=__RequestVerificationToken]")[0].value;
+        }
         var formData = {
             __RequestVerificationToken: token
         };
