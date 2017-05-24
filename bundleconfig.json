@@ -1,0 +1,44 @@
+[
+  {
+    "outputFileName": "Scripts/shoppingcart.min.js",
+    "inputFiles": [
+      "Scripts/shoppingcart.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/chartjs.min.js",
+    "inputFiles": [
+      "Scripts/chartjs.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/inventory.min.js",
+    "inputFiles": [
+      "Scripts/inventory.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/order-admin.min.js",
+    "inputFiles": [
+      "Scripts/order-admin.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/referral.min.js",
+    "inputFiles": [
+      "Scripts/referral.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/report.min.js",
+    "inputFiles": [
+      "Scripts/report.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/ship.min.js",
+    "inputFiles": [
+      "Scripts/ship.js"
+    ]
+  }
+]

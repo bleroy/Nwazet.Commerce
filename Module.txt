@@ -96,3 +96,8 @@ Features:
 		Description: Estabilish 1-to-1 relationship between SKU and inventory.
 		Category: Commerce
 		Dependencies: Nwazet.AdvancedSKUManagement
+	Nwazet.WishLists:
+		Name: Nwazet WishLists
+		Description: Enables wish lists for authenticated users
+		Category: Commerce
+		Dependencies: Nwazet.Commerce
