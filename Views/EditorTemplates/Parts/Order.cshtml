@@ -95,7 +95,7 @@
                 @foreach (var item in Model.OrderItems) {
 
                     string originalPrice = "";
-                    if (item.Price != item.OriginalPrice && item.OriginalPrice != 0.0)
+                    if (item.Price != item.OriginalPrice && item.OriginalPrice != (decimal)0.0)
                     {
                         originalPrice = String.Format("<strike>{0}</strike>", currencyInUse.PriceAsString(item.OriginalPrice, cultureInUse));
                     }
