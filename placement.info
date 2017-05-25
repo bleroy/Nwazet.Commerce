@@ -20,6 +20,7 @@
   <Place Parts_ZipCodeTax_Edit="Content:2"/>
   <Place Parts_Bundle="Content:3.2"/>
   <Place Parts_Bundle_Edit="Content:3.2"/>
+  <Place Parts_Bundle_Autocomplete_Edit="Content:3.2"/>
   <Place Parts_Discount_Edit="Content:2"/>
   <Place Parts_ProductAttribute_Edit="Content:2"/>
   <Place Parts_ProductAttributes_Edit="Content:3.3"/>

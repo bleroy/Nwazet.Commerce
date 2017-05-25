@@ -15,7 +15,7 @@ namespace Nwazet.Commerce.Services {
         public BundleService(
             IContentManager contentManager,
             IRepository<BundleProductsRecord> bundleProductsRepository) 
-            : base(contentManager, bundleProductsRepository) { }
-        
+            : base(contentManager, bundleProductsRepository) {
+        }
     }
 }

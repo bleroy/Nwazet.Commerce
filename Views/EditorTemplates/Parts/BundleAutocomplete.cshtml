@@ -1,0 +1,70 @@
+﻿@model Nwazet.Commerce.ViewModels.BundleViewModel
+
+@{
+    Script.Require("jQueryUI_Autocomplete").AtHead();
+    Style.Require("jQuery_Autocomplete").AtHead();
+    Style.Include("bundle.nwazet-commerce-admin.css");
+    var productIndex = 0;
+}
+<fieldset>
+    <label>@T("Products in this bundle")</label>
+    <ul class="bundle">
+        @foreach (var productEntry in Model.Products) {
+            <li>
+                <input type="hidden" value="@productEntry.ProductId"
+                       name="@Html.FieldNameFor(m => m.Products[productIndex].ProductId)" />
+                <label for="@Html.FieldNameFor(m => m.Products[productIndex].Quantity)">
+                    <input type="number" min="0"
+                           value="@productEntry.Quantity"
+                           name="@Html.FieldNameFor(m => m.Products[productIndex].Quantity)"
+                           id="@Html.FieldNameFor(m => m.Products[productIndex].Quantity)" />
+                    <a href="@(Url.ItemEditUrl(productEntry.Product))">@productEntry.DisplayText</a>
+                </label>
+                @{productIndex++;}
+            </li>
+        }
+    </ul>
+    <div class="ui-widget">
+        <input id="search" />
+        <p class="hint">@T("Search for a product to add , at least 2 characters (title or sku).")</p>
+    </div>
+</fieldset>
+
+
+@using (Script.Head()) {
+    <script type="text/javascript">
+        //<![CDATA[
+        $(document).ready(function () {
+            var aft = $("input[name=__RequestVerificationToken]:first").val();
+            $.widget("custom.myautocomplete", $.ui.autocomplete, {
+                _renderItem: function (ul, item) {
+                    var row = $("<li style='width:30em'>");
+                    var aux = "<div style='width:14em;display:inline-block;vertical-align:top;word-wrap:break-word'>" + item.DisplayText + "</div>";
+                    row = row.append($("<a>").html(aux));
+                    row = row.appendTo(ul);
+                    return row;
+                }
+            });
+            $("#search").myautocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "@Url.Action("SearchProduct", "BundleAdmin", new { area = "Nwazet.Commerce" })",
+                        data: { searchText: $("#search").val(),exclude:$("ul.bundle li input[type=hidden]").map(function () { return parseInt($(this).val()); }).get(),  __RequestVerificationToken: aft },
+                        success: function (dataAutocomplete) {
+                             response(dataAutocomplete);
+                        },
+                    });
+                },
+               response: function (event, ui) {
+                },
+                minLength: 2,
+                select: function (event, ui) {
+                    var name = 'Bundle.Products[' + $('ul.bundle li').length + ']';
+                    $("ul.bundle").append('<li><input type="hidden" value="' + ui.item.ProductId + '" name="' + name + '.ProductId" /><label for="' + name + '.Quantity"><input type="number" min="0" value="' + ui.item.Quantity + '" name="' + name + '.Quantity" id="' + name + '.Quantity" /> <a href="' + ui.item.EditUrl + '">' + ui.item.DisplayText + '</a> </label></li>');
+                }
+            });
+        });
+        //]]>
+    </script>
+}
