@@ -167,6 +167,7 @@
     <Content Include="Styles\bundle.nwazet-commerce-admin.css" />
     <Content Include="Styles\attribute.nwazet-commerce-admin.css" />
     <Content Include="Styles\reports-admin.css" />
+    <Content Include="Styles\wishlists.nwazet-commerce.css" />
     <Content Include="Styles\workflows-activity-order-status-changed-product.css" />
     <Content Include="Styles\workflows-activity-order-tracking-url-changed.css" />
     <Content Include="Styles\workflows-activity-new-order.css" />
@@ -203,6 +204,7 @@
     <Compile Include="Controllers\ShippingAdminController.cs" />
     <Compile Include="Controllers\ShoppingCartController.cs" />
     <Compile Include="Controllers\StripeController.cs" />
+    <Compile Include="Controllers\WishListsController.cs" />
     <Compile Include="Drivers\AdvancedSKUProductPartDriver.cs" />
     <Compile Include="Drivers\AdvancedSKUsSiteSettingPartDriver.cs" />
     <Compile Include="Drivers\AttributeLocalizationProductAttributesPartDriver.cs" />
@@ -214,6 +216,8 @@
     <Compile Include="Drivers\OrderPartDriver.cs" />
     <Compile Include="Drivers\ProductPartWishListDriver.cs" />
     <Compile Include="Drivers\ProductSettingsPartDriver.cs" />
+    <Compile Include="Drivers\WishListListPartDriver.cs" />
+    <Compile Include="Drivers\WishListListWidgetDriver.cs" />
     <Compile Include="Drivers\ZipCodeTaxPartDriver.cs" />
     <Compile Include="Drivers\StateOrCountryTaxPartDriver.cs" />
     <Compile Include="Drivers\UspsShippingMethodPartDriver.cs" />
@@ -296,6 +300,8 @@
     <Compile Include="Models\Reporting\TimePeriod.cs" />
     <Compile Include="Models\WishListElementPart.cs" />
     <Compile Include="Models\WishListElementPartRecord.cs" />
+    <Compile Include="Models\WishListListPartRecord.cs" />
+    <Compile Include="Models\WishListListWidgetPart.cs" />
     <Compile Include="Models\ZipCodeTaxPart.cs" />
     <Compile Include="Models\StateOrCountryTaxPart.cs" />
     <Compile Include="Models\StateOrCountryTaxPartRecord.cs" />
@@ -346,6 +352,7 @@
     <Compile Include="Routes\StripeRoutes.cs" />
     <Compile Include="Routes\OrderRoutes.cs" />
     <Compile Include="Routes\CommerceRoutes.cs" />
+    <Compile Include="Routes\WishListRoutes.cs" />
     <Compile Include="Services\BundleProductLocalizationBundleService.cs" />
     <Compile Include="Services\BundleProductLocalizationServices.cs" />
     <Compile Include="Services\BundleServiceBase.cs" />
@@ -359,6 +366,7 @@
     <Compile Include="Services\IProductInventoryService.cs" />
     <Compile Include="Services\ISKUGenerationServices.cs" />
     <Compile Include="Services\ISKUUniquenessHelper.cs" />
+    <Compile Include="Services\IWishListServices.cs" />
     <Compile Include="Services\LatestProductAttributeAdminServices.cs" />
     <Compile Include="Services\LocalizationSKUUniquenessHelper.cs" />
     <Compile Include="Services\IProductAttributeNameService.cs" />
@@ -390,6 +398,7 @@
     <Compile Include="Services\TextProductAttributeExtensionProvider.cs" />
     <Compile Include="Services\UseCurrencyFromSiteCultureProvider.cs" />
     <Compile Include="Services\UseCurrencyFromSiteSettingsProvider.cs" />
+    <Compile Include="Services\WishListServices.cs" />
     <Compile Include="Services\ZipCodeTaxProvider.cs" />
     <Compile Include="Services\StateOrCountryTaxProvider.cs" />
     <Compile Include="Services\StripeWebService.cs" />
@@ -452,6 +461,7 @@
     <Compile Include="ViewModels\StripeCheckoutViewModel.cs" />
     <Compile Include="ViewModels\UpdateShoppingCartItemViewModel.cs" />
     <Compile Include="Models\WishListListPart.cs" />
+    <Compile Include="ViewModels\WishListsIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Web.config" />
@@ -557,6 +567,7 @@
     <None Include="packages.config" />
     <None Include="Views\AddToWishListButtonElement.cshtml" />
     <None Include="Views\EditorTemplates\Parts\ProductLocalizationBundle.cshtml" />
+    <None Include="Views\ListOfWishLists.cshtml" />
     <None Include="Views\Parts\Product.AddToWishlistButton.cshtml" />
     <None Include="Views\ProductAttributesAdminList.cshtml" />
     <None Include="Views\ProductAttributesAdminListItem.cshtml" />
@@ -570,6 +581,8 @@
     <None Include="Views\EditorTemplates\SiteSettings\Currency.cshtml" />
     <None Include="Views\EditorTemplates\SiteSettings\InventoryBySKU.cshtml" />
     <None Include="Views\ProductAttributesLocalizationAdminListItem.cshtml" />
+    <None Include="Views\WishListListWidget.cshtml" />
+    <None Include="Views\WishLists\Index.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

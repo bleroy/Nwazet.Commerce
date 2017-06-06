@@ -8,16 +8,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
+using Nwazet.Commerce.Services;
 
 namespace Nwazet.Commerce.Drivers {
     [OrchardFeature("Nwazet.WishLists")]
-    public class ProductPartWishListDriver : ContentPartDriver<ProductPart>{
+    public class ProductPartWishListDriver : ContentPartDriver<ProductPart> {
         private readonly IWorkContextAccessor _wca;
+        private readonly IWishListServices _wishListServices;
 
         public ProductPartWishListDriver(
-            IWorkContextAccessor wca) {
+            IWorkContextAccessor wca,
+            IWishListServices wishListServices) {
 
             _wca = wca;
+            _wishListServices = wishListServices;
         }
 
         protected override string Prefix {
@@ -33,12 +37,12 @@ namespace Nwazet.Commerce.Drivers {
                 //there is an authenticated user, who may have several lists
                 //Get the wish lists for the user
                 //A Site setting tells me how many lists I get at this stage.
-                //we always take the default list
-
+                //we always take at least the default list
+                wishLists = _wishListServices.GetWishLists(user).ToList();
                 //for each wishlist we found, build the shape we will display
                 //as its "add to ..." link in the view
             }
-            
+
 
             return ContentShape("Parts_Product_AddToWishlistButton",
                 () => shapeHelper.Parts_Product_AddToWishlistButton(

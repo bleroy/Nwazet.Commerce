@@ -1,1 +1,10 @@
-﻿
+﻿@using Nwazet.Commerce.Models
+@using Orchard.ContentManagement
+@{ 
+    var productId = (int)Model.ProductId;
+    var wishList = (WishListListPart)Model.WishList;
+
+    var addToWishlistText = T("Add to WishList").Text;
+}
+
+@Html.ActionLink(Html.ItemDisplayText((IContent)(wishList.ContentItem)), "AddToWishList", new { controller = "WishLists", area = "Nwazet.Commerce", productId = productId, wishListId=wishList.ContentItem.Id })

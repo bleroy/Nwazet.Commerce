@@ -1,0 +1,35 @@
+﻿@model Nwazet.Commerce.ViewModels.WishListsIndexViewModel
+@{ 
+    Layout.Title = T("Your Wish Lists").ToString();
+}
+
+@using (Html.BeginFormAntiForgeryPost()) {
+    <div>
+        <div id="your-wish-lists-headers">
+            <div id="your-wish-lists-title" style="float:left;">
+                @T("Your Wish Lists:")
+            </div>
+            <div id="your-wish-lists-actions" style="float:right">
+                @*
+        To create a new wishlist I am not calling an action directly. Rather, the "create" link is part of a shape. Upon clicking
+        it, we open a modal form, where we can insert the list's title. From there we have a button for the action to create the 
+        list, as well as a chance to undo. This same "create" shape is used in the "add to wishlist" button that is displayed in
+        product pages, so it can take product id as a parameter
+                *@
+                @Html.ActionLink(T("New WishList").Text, "CreateWishList", new { controller = "WishLists", area = "Nwazet.Commerce" })
+                &nbsp;|&nbsp;
+                @Html.ActionLink(T("WishList settings").Text, "CreateWishList", new { controller = "WishLists", area = "Nwazet.Commerce" })
+            </div>
+        </div>
+        <div id="your-wish-lists-content" style="clear: both;">
+            <div id="your-wish-lists" style="width:252px;float:left;">
+                @Display.ListOfWishLists(WishLists: Model.WishLists)
+            </div>
+            <div id="active-wish-list" style="padding-left:3.5%;*width:96.1%;float:left;">
+                @Display(Model.WishList)
+            </div>
+        </div>
+        
+    </div>
+    
+}

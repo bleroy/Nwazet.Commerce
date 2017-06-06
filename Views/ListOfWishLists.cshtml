@@ -1,0 +1,11 @@
+﻿@using Nwazet.Commerce.Models
+@using Orchard.ContentManagement
+@{ 
+    var wishLists = (IEnumerable<WishListListPart>)Model.WishLists;
+}
+<div id="list-of-wish-lists">
+    @foreach (var wishList in wishLists) {
+        @Html.ActionLink(Html.ItemDisplayText((IContent)(wishList.ContentItem)), 
+            "Index", new { controller = "WishLists", area = "Nwazet.Commerce", id = wishList.ContentItem.Id })
+    }
+</div>

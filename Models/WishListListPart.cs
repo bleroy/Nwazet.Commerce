@@ -7,14 +7,14 @@ using System.Linq;
 
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.WishLists")]
-    public class WishListListPart : ContentPart {
+    public class WishListListPart : ContentPart<WishListListPartRecord> {
         private static readonly char[] separator = new[] { '{', '}', ',' };
         private readonly LazyField<IEnumerable<ContentItem>> _wishListElements = new LazyField<IEnumerable<ContentItem>>();
         public LazyField<IEnumerable<ContentItem>> WishListElementsField { get { return _wishListElements; } }
 
         private string _serializedItemIds {
-            get { return Retrieve<string>("SerializedItemIds"); }
-            set { Store<string>("SerializedItemIds", value); }
+            get { return Retrieve(r => r.SerializedIds); }
+            set { Store(r => r.SerializedIds, value); }
         }
 
         public int[] Ids {
@@ -36,8 +36,8 @@ namespace Nwazet.Commerce.Models {
         }
 
         public bool IsDefault {
-            get { return Retrieve<bool>("IsDefault"); }
-            set { Store<bool>("IsDefault", value); }
+            get { return Retrieve(r => r.IsDefault); }
+            set { Store(r => r.IsDefault, value); }
         }
         
     }

@@ -13,8 +13,8 @@ namespace Nwazet.Commerce.Handlers {
     public class WishListListPartHandler: ContentHandler {
         private readonly IContentManager _contentManager;
 
-        public WishListListPartHandler(IContentManager contentManager) {
-
+        public WishListListPartHandler(IContentManager contentManager, Orchard.Data.IRepository<WishListListPartRecord> repository) {
+            Filters.Add(StorageFilter.For(repository));
             _contentManager = contentManager;
 
             OnLoading<WishListListPart>((context, part) => LazyLoadHandlers(part));
