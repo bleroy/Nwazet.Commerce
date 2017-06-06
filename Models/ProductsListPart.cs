@@ -12,14 +12,14 @@ using System.Xml.Linq;
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.PersistentCart")]
     public class ProductsListPart : ContentPart {
-
+        //Name strings for XElements
         private const string partName = "ProductsListPart";
 
         //This part goes in the infoset
 
         private IEnumerable<ShoppingCartItem> _items {
             get {
-                return RetrieveItems().ToList();
+                return RetrieveItems();
             }
             set {
                 Store(value);
@@ -28,23 +28,27 @@ namespace Nwazet.Commerce.Models {
 
         private IEnumerable<ShoppingCartItem> RetrieveItems() {
             var partElement = GetInfosetElement();
-            return partElement.Elements()
-                .Where(el => el.Name.LocalName.StartsWith("ShoppingCartItem_")) //XElements corresponding to items
-                .Select(el =>  //parse the XElement to an item
+            var cartElement = partElement.Element("ShoppingCartItems");
+            if (cartElement == null) {
+                return null;
+            }
+            return cartElement.Elements("ShoppingCartItem")
+                .Select(itemElement =>
                     new ShoppingCartItem(
-                        productId: int.Parse(el.Attribute("ProductId").Value),
-                        quantity: int.Parse(el.Attribute("Quantity").Value),
-                        attributeIdsToValues: el.Elements()
-                            .Where(subel => subel.Name.LocalName.StartsWith("AttributeIdsToValues_")) //XElements corresponding to dictionary entries
-                            .Select(subel => {
-                                var id = int.Parse(subel.Attribute("Id").Value);
-                                var val = new ProductAttributeValueExtended() {
-                                    Value = subel.Attribute("Value")?.Value ?? "",
-                                    ExtendedValue = subel.Attributes("ExtendedValue").Any() ? subel.Attribute("ExtendedValue").Value : null,
-                                    ExtensionProvider = subel.Attributes("ExtensionProvider").Any() ?subel.Attribute("ExtensionProvider").Value : null
-                                };
-                                return new KeyValuePair<int, ProductAttributeValueExtended>(id, val);
-                            }
+                        productId: int.Parse(itemElement.Attribute("ProductId").Value),
+                        quantity: int.Parse(itemElement.Attribute("Quantity").Value),
+                        attributeIdsToValues: itemElement.Element("AttributeIdsToValues") == null ? null :
+                            itemElement.Element("AttributeIdsToValues")
+                            .Elements("AttributeInfo")
+                            .Select(attrElement =>
+                                new KeyValuePair<int, ProductAttributeValueExtended>(
+                                    int.Parse(attrElement.Attribute("Id").Value),
+                                    new ProductAttributeValueExtended() {
+                                        Value = attrElement.Attribute("Value")?.Value ?? "",
+                                        ExtendedValue = attrElement.Attributes("ExtendedValue").Any() ? attrElement.Attribute("ExtendedValue").Value : null,
+                                        ExtensionProvider = attrElement.Attributes("ExtensionProvider").Any() ? attrElement.Attribute("ExtensionProvider").Value : null
+                                    }
+                                    )
                             )
                             .ToDictionary(pair => pair.Key, pair => pair.Value)
                         )
@@ -54,38 +58,29 @@ namespace Nwazet.Commerce.Models {
         private void Store(IEnumerable<ShoppingCartItem> items) {
             var partElement = GetInfosetElement();
             //1. Remove all items already in infoset
-            var oldItemElements = partElement.Elements()
-                .Where(subel => subel.Name.LocalName.StartsWith("ShoppingCartItem_"));
-            foreach (var itemElement in oldItemElements.ToList()) {
-                itemElement.Remove();
+            var oldItemsElement = partElement.Element("ShoppingCartItems");
+            if (oldItemsElement != null) {
+                oldItemsElement.Remove();
             }
             //2. Store new version in infoset, by adding 1 sub-element per item
-            var itemsArray = items.ToArray();
-            for (int i = 0; i < itemsArray.Length; i++) {
-                var item = itemsArray[i];
-                var itemName = "ShoppingCartItem_" + i.ToString();
-                //2.1. Get the element for the item
-                var itemElement = GetSubElement(partElement, itemName);
-                itemElement.SetAttributeValue("ProductId", item.ProductId);
-                itemElement.SetAttributeValue("Quantity", item.Quantity);
-                //2.2. Remove attributes
-                var oldAttrElements = itemElement.Elements()
-                    .Where(subel => subel.Name.LocalName.StartsWith("AttributeIdsToValues_"));
-                foreach (var attrElement in oldAttrElements.ToList()) {
-                    attrElement.Remove();
+            var itemsElement = GetSubElement(partElement, "ShoppingCartItems");
+            itemsElement.Add(items.Select(sci => {
+                var itemEl = new XElement("ShoppingCartItem");
+                itemEl.SetAttributeValue("ProductId", sci.ProductId);
+                itemEl.SetAttributeValue("Quantity", sci.Quantity);
+                if (sci.AttributeIdsToValues != null && sci.AttributeIdsToValues.Any()) {
+                    var attrElement = GetSubElement(itemEl, "AttributeIdsToValues");
+                    attrElement.Add(sci.AttributeIdsToValues.Select(kvp => {
+                        var atEl = new XElement("AttributeInfo");
+                        atEl.SetAttributeValue("Id", kvp.Key);
+                        atEl.SetAttributeValue("Value", kvp.Value.Value ?? "");
+                        atEl.SetAttributeValue("ExtendedValue", kvp.Value.ExtendedValue);
+                        atEl.SetAttributeValue("ExtensionProvider", kvp.Value.ExtensionProvider);
+                        return atEl;
+                    }));
                 }
-                //2.3. Update attributes
-                var attributesArray = item.AttributeIdsToValues.ToArray();
-                for (int j = 0; j < attributesArray.Length; j++) {
-                    var attribute = attributesArray[j];
-                    var attrName = "AttributeIdsToValues_" + j.ToString();
-                    var attrElement = GetSubElement(itemElement, attrName);
-                    attrElement.SetAttributeValue("Id", attribute.Key);
-                    attrElement.SetAttributeValue("Value", attribute.Value.Value ?? "");
-                    attrElement.SetAttributeValue("ExtendedValue", attribute.Value.ExtendedValue);
-                    attrElement.SetAttributeValue("ExtensionProvider", attribute.Value.ExtensionProvider);
-                }
-            }
+                return itemEl;
+            }));
         }
 
         public List<ShoppingCartItem> Items {
@@ -115,20 +110,26 @@ namespace Nwazet.Commerce.Models {
             var partElement = GetInfosetElement();
             var shipElement = GetSubElement(partElement, "ShippingOption");
             if (shippingOption == null) {
-                shipElement.RemoveAttributes();
+                shipElement.RemoveAll();
+                shipElement.Remove();
             } else {
                 shipElement.SetAttributeValue("Price", shippingOption.Price);
                 shipElement.SetAttributeValue("Description", shippingOption.Description ?? "");
                 shipElement.SetAttributeValue("ShippingCompany", shippingOption.ShippingCompany ?? "");
-                shipElement.SetAttributeValue("IncludedShippingAreas", string.Join(",",
-                    shippingOption.IncludedShippingAreas.Select(ToStringAndLength)) ?? "");
-                shipElement.SetAttributeValue("ExcludedShippingAreas", string.Join(",",
-                    shippingOption.ExcludedShippingAreas.Select(ToStringAndLength)) ?? "");
+                if (shippingOption.IncludedShippingAreas.Any()) {
+                    var includedAreasElement = GetSubElement(shipElement, "IncludedShippingAreas");
+                    foreach (var area in shippingOption.IncludedShippingAreas) {
+                        includedAreasElement.Add(new XElement("Area", area));
+                    }
+                }
+                if (shippingOption.ExcludedShippingAreas.Any()) {
+                    var excludedAreasElement = GetSubElement(shipElement, "ExcludedShippingAreas");
+                    foreach (var area in shippingOption.ExcludedShippingAreas) {
+                        excludedAreasElement.Add(new XElement("Area", area));
+                    }
+                }
                 shipElement.SetAttributeValue("FormValue", shippingOption.FormValue ?? "");
             }
-        }
-        private string ToStringAndLength(string value) {
-            return string.Format(@"{{{0}}}{{{1}}}", value.Length, value);
         }
 
         private ShippingOption RetrieveShippingOption() {
@@ -138,26 +139,12 @@ namespace Nwazet.Commerce.Models {
                 Price = decimal.Parse(shipElement.Attribute("Price").Value),
                 Description = shipElement.Attribute("Description").Value,
                 ShippingCompany = shipElement.Attribute("ShippingCompany").Value,
-                IncludedShippingAreas = FromStringAndLength(shipElement.Attribute("IncludedShippingAreas").Value),
-                ExcludedShippingAreas = FromStringAndLength(shipElement.Attribute("ExcludedShippingAreas").Value),
+                IncludedShippingAreas = shipElement.Element("IncludedShippingAreas") == null ? new List<string>() :
+                    shipElement.Element("IncludedShippingAreas").Elements("Area").Select(el => el.Value),
+                ExcludedShippingAreas = shipElement.Element("ExcludedShippingAreas") == null ? new List<string>() :
+                    shipElement.Element("ExcludedShippingAreas").Elements("Area").Select(el => el.Value),
                 FormValue = shipElement.Attribute("FormValue").Value
             } : null;
-        }
-        private IEnumerable<string> FromStringAndLength(string serialized) {
-            var list = new List<string>();
-            if (string.IsNullOrWhiteSpace(serialized)) {
-                return list;
-            }
-            var length = 0;
-            var fragments = serialized.Split(new string[] { @"}{" }, 2, StringSplitOptions.RemoveEmptyEntries);
-            var num = fragments[0].TrimStart(new char[] { '{' });
-            if (int.TryParse(num, out length)) {
-                list.Add(fragments[1].Substring(0, length));
-                if (length + 2 < fragments[1].Length) {
-                    list.AddRange(FromStringAndLength(fragments[1].Substring(length + 2)));
-                }
-            }
-            return list;
         }
 
         private XElement GetInfosetElement() {
