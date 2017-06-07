@@ -35,14 +35,14 @@ namespace Nwazet.Commerce.Models {
             return cartElement.Elements("ShoppingCartItem")
                 .Select(itemElement =>
                     new ShoppingCartItem(
-                        productId: int.Parse(itemElement.Attribute("ProductId").Value),
-                        quantity: int.Parse(itemElement.Attribute("Quantity").Value),
+                        productId: (int)(itemElement.Attribute("ProductId")),
+                        quantity: (int)(itemElement.Attribute("Quantity")),
                         attributeIdsToValues: itemElement.Element("AttributeIdsToValues") == null ? null :
                             itemElement.Element("AttributeIdsToValues")
                             .Elements("AttributeInfo")
                             .Select(attrElement =>
                                 new KeyValuePair<int, ProductAttributeValueExtended>(
-                                    int.Parse(attrElement.Attribute("Id").Value),
+                                    (int)(attrElement.Attribute("Id")),
                                     new ProductAttributeValueExtended() {
                                         Value = attrElement.Attribute("Value")?.Value ?? "",
                                         ExtendedValue = attrElement.Attributes("ExtendedValue").Any() ? attrElement.Attribute("ExtendedValue").Value : null,
@@ -136,7 +136,7 @@ namespace Nwazet.Commerce.Models {
             var partElement = GetInfosetElement();
             var shipElement = GetSubElement(partElement, "ShippingOption");
             return shipElement.Attributes().Any() ? new ShippingOption() {
-                Price = decimal.Parse(shipElement.Attribute("Price").Value),
+                Price = (decimal)(shipElement.Attribute("Price")),
                 Description = shipElement.Attribute("Description").Value,
                 ShippingCompany = shipElement.Attribute("ShippingCompany").Value,
                 IncludedShippingAreas = shipElement.Element("IncludedShippingAreas") == null ? new List<string>() :
