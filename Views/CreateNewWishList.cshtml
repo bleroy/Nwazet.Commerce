@@ -1,0 +1,37 @@
+﻿@{
+    Style.Include("wishlists.nwazet-commerce.css", "wishlists.nwazet-commerce.min.css");
+
+    var productId = (int)Model.ProductId;
+    var creationShapes = (IEnumerable<dynamic>)Model.CreationShapes;
+}
+
+@using (Html.BeginFormAntiForgeryPost(
+                Url.Action("CreateWishList", "WishLists", new { area = "Nwazet.Commerce" }),
+                FormMethod.Post,
+                new { productId = productId }
+                )) {
+    <a href="#create-new-wishlist-open-modal">@T("New wish list")</a>
+
+    <div id="create-new-wishlist-open-modal" class="wishListModalDialog">
+        <div>
+            <a href="#close" title="Close" class="closeWishListModalDialog">X</a>
+            <label for="new_wishlist_title">@T("Name of the wish list.")</label>
+            <input class="text large" id="new_wishlist_title" name="new_wishlist_title" type="text" value="">
+
+            @foreach (var cShape in creationShapes) {
+                @Display(cShape)
+            }
+
+            @if (Model.ProductAttributes != null) {
+                foreach (var productAttributeShape in Model.ProductAttributes) {
+                    @Display(productAttributeShape)
+                }
+            }
+
+            <div style="float:right;">
+                <input type="submit" value="@T("Create WishList")" />
+            </div>
+
+        </div>
+    </div>
+}

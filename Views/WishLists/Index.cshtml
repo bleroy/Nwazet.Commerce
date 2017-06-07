@@ -3,7 +3,7 @@
     Layout.Title = T("Your Wish Lists").ToString();
 }
 
-@using (Html.BeginFormAntiForgeryPost()) {
+
     <div>
         <div id="your-wish-lists-headers">
             <div id="your-wish-lists-title" style="float:left;">
@@ -16,9 +16,9 @@
         list, as well as a chance to undo. This same "create" shape is used in the "add to wishlist" button that is displayed in
         product pages, so it can take product id as a parameter
                 *@
-                @Html.ActionLink(T("New WishList").Text, "CreateWishList", new { controller = "WishLists", area = "Nwazet.Commerce" })
+                @Display(Model.CreateShape)
                 &nbsp;|&nbsp;
-                @Html.ActionLink(T("WishList settings").Text, "CreateWishList", new { controller = "WishLists", area = "Nwazet.Commerce" })
+                @Display(Model.SettingsShape)
             </div>
         </div>
         <div id="your-wish-lists-content" style="clear: both;">
@@ -26,10 +26,9 @@
                 @Display.ListOfWishLists(WishLists: Model.WishLists)
             </div>
             <div id="active-wish-list" style="padding-left:3.5%;*width:96.1%;float:left;">
-                @Display(Model.WishList)
+                @Display(Model.WishListView)
             </div>
         </div>
         
     </div>
     
-}

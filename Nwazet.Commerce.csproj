@@ -168,6 +168,9 @@
     <Content Include="Styles\attribute.nwazet-commerce-admin.css" />
     <Content Include="Styles\reports-admin.css" />
     <Content Include="Styles\wishlists.nwazet-commerce.css" />
+    <Content Include="Styles\wishlists.nwazet-commerce.min.css">
+      <DependentUpon>wishlists.nwazet-commerce.css</DependentUpon>
+    </Content>
     <Content Include="Styles\workflows-activity-order-status-changed-product.css" />
     <Content Include="Styles\workflows-activity-order-tracking-url-changed.css" />
     <Content Include="Styles\workflows-activity-new-order.css" />
@@ -216,6 +219,7 @@
     <Compile Include="Drivers\OrderPartDriver.cs" />
     <Compile Include="Drivers\ProductPartWishListDriver.cs" />
     <Compile Include="Drivers\ProductSettingsPartDriver.cs" />
+    <Compile Include="Drivers\WishListElementPartDriver.cs" />
     <Compile Include="Drivers\WishListListPartDriver.cs" />
     <Compile Include="Drivers\WishListListWidgetDriver.cs" />
     <Compile Include="Drivers\ZipCodeTaxPartDriver.cs" />
@@ -461,6 +465,8 @@
     <Compile Include="ViewModels\StripeCheckoutViewModel.cs" />
     <Compile Include="ViewModels\UpdateShoppingCartItemViewModel.cs" />
     <Compile Include="Models\WishListListPart.cs" />
+    <Compile Include="ViewModels\WishListElementViewModel.cs" />
+    <Compile Include="ViewModels\WishListListViewModel.cs" />
     <Compile Include="ViewModels\WishListsIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -566,9 +572,12 @@
     <None Include="bundleconfig.json" />
     <None Include="packages.config" />
     <None Include="Views\AddToWishListButtonElement.cshtml" />
+    <None Include="Views\CreateNewWishList.cshtml" />
     <None Include="Views\EditorTemplates\Parts\ProductLocalizationBundle.cshtml" />
     <None Include="Views\ListOfWishLists.cshtml" />
     <None Include="Views\Parts\Product.AddToWishlistButton.cshtml" />
+    <None Include="Views\Parts\WishListElement.cshtml" />
+    <None Include="Views\Parts\WishListList.cshtml" />
     <None Include="Views\ProductAttributesAdminList.cshtml" />
     <None Include="Views\ProductAttributesAdminListItem.cshtml" />
     <None Include="Views\DefinitionTemplates\BundleProductLocalizationSettings.cshtml" />
@@ -582,6 +591,7 @@
     <None Include="Views\EditorTemplates\SiteSettings\InventoryBySKU.cshtml" />
     <None Include="Views\ProductAttributesLocalizationAdminListItem.cshtml" />
     <None Include="Views\WishListListWidget.cshtml" />
+    <None Include="Views\WishListsSettings.cshtml" />
     <None Include="Views\WishLists\Index.cshtml" />
   </ItemGroup>
   <ItemGroup />

@@ -1,0 +1,36 @@
+﻿@using Nwazet.Commerce.Models
+@using Nwazet.Commerce.ViewModels
+@using System.Collections.Generic
+@using Orchard.ContentManagement
+
+@{ 
+    string imageUrl = (Model.ProductImage != null && Model.ProductImage.MediaParts.Count > 0) ? Model.ProductImage.MediaParts[0].MediaUrl : null;
+    var title = Model.Title
+        + (Model.ProductAttributes == null || Model.ProductAttributes.Count == 0
+                ? "" : " (" + string.Join(", ", ((Dictionary<int, ProductAttributeValueExtended>)Model.ProductAttributes).Values
+                    .Select(v => v.Value + (v.ExtensionProviderInstance != null ? v.ExtensionProviderInstance.DisplayString(v.ExtendedValue) : ""))) + ")");
+    var unitPrice = (decimal)Model.DiscountedPrice;
+    var unitPriceOriginal = (decimal)Model.OriginalPrice;
+    string originalUnitPrice = "";
+    if (unitPrice != unitPriceOriginal && unitPriceOriginal != 0) {
+        originalUnitPrice = String.Format("<strike>{0}</strike>", 
+            Model.CurrencyProvider.GetPriceString(Model.OriginalPrice));
+    }
+}
+<fieldset>
+    <legend>@title</legend>
+    <div id="wish-list-element-product-details">
+        @if (!string.IsNullOrWhiteSpace(imageUrl)) {
+            <div id="wish-list-element-product-image" style="float:left;">
+                <a href="@Url.ItemDisplayUrl(contentItem)" class="product-image-link"><img src="@Href(imageUrl)" alt="@title" class="product-image" /></a>
+            </div>
+        }
+        @Html.Raw(originalUnitPrice)
+        @Model.CurrencyProvider.GetPriceString(unitPrice)
+    </div>
+    <div id="wish-list-element-product-actions">
+        @foreach (var shape in Model.ActionShapes) {
+            @Display(shape)
+        }
+    </div>
+</fieldset>

@@ -41,5 +41,16 @@ namespace Nwazet.Commerce.Models {
               JsonConvert.SerializeObject(value));
             }
         }
+
+        public ShoppingCartItem Item {
+            get { return _item; }
+        }
+
+        public WishListElementPart() { }
+
+        public WishListElementPart(int wishListId, ShoppingCartItem item) {
+            WishListId = WishListId;
+            _item = item;
+        }
     }
 }

@@ -6,40 +6,30 @@
     var user = (IUser)Model.User;
 
     Script.Require("jQuery");
-    Style.Include("wishlists.nwazet-commerce.css");
+    Style.Include("wishlists.nwazet-commerce.css", "wishlists.nwazet-commerce.min.css");
 
     var addToWishlistText = T("Add to WishList").Text;
 }
-@if (user == null) {
-        
-    using (Html.BeginFormAntiForgeryPost()) {
-        <div id="add-to-wishlist-button-group">
-            <span id="add-to-wishlist-main-button">
-                @Html.ActionLink(addToWishlistText,
-                    "LogOn",
-                    "Account",
-                    new { area = "Orchard.Users" },
-                    new { @class = "button primaryAction" })
-            </span>
-        </div>
-    }
-} else {
-    using (Html.BeginFormAntiForgeryPost()) {
-        <div id="add-to-wishlist-popover">
-            <ul id="add-to-wishlist-dropdown-list">
-                <li id="add-to-wishlist-base-button">
-                    @Html.ActionLink(addToWishlistText, "AddToWishList", new { controller="WishLists", area="Nwazet.Commerce", productId=productId })
+@using (Html.BeginFormAntiForgeryPost()) {
+    <div id="add-to-wishlist-popover">
+        <ul id="add-to-wishlist-dropdown-list">
+            <li id="add-to-wishlist-base-button">
+                @Html.ActionLink(addToWishlistText, "AddToWishList", new { controller = "WishLists", area = "Nwazet.Commerce", productId = productId })
+                @if (user != null) {
                     <ul>
                         @foreach (var wl in wishLists) {
                             <li>
                                 @Display.AddToWishListButtonElement(ProductId: productId, WishList: wl)
                             </li>
                         }
-                        <li>@Html.ActionLink(T("New WishList").Text, "CreateWishList", new { controller = "WishLists",  area = "Nwazet.Commerce", productId = productId })</li>
+                        <li>
+                            @Display(Model.CreateShape)
+                        </li>
                     </ul>
-                </li>
-            </ul>
-        </div>
-    }
+                }
+
+            </li>
+        </ul>
+    </div>
 }
 

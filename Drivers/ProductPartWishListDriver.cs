@@ -15,13 +15,16 @@ namespace Nwazet.Commerce.Drivers {
     public class ProductPartWishListDriver : ContentPartDriver<ProductPart> {
         private readonly IWorkContextAccessor _wca;
         private readonly IWishListServices _wishListServices;
+        private readonly IEnumerable<IProductAttributesDriver> _attributeDrivers;
 
         public ProductPartWishListDriver(
             IWorkContextAccessor wca,
-            IWishListServices wishListServices) {
+            IWishListServices wishListServices,
+            IEnumerable<IProductAttributesDriver> attributeDrivers) {
 
             _wca = wca;
             _wishListServices = wishListServices;
+            _attributeDrivers = attributeDrivers;
         }
 
         protected override string Prefix {
@@ -43,13 +46,19 @@ namespace Nwazet.Commerce.Drivers {
                 //as its "add to ..." link in the view
             }
 
-
-            return ContentShape("Parts_Product_AddToWishlistButton",
-                () => shapeHelper.Parts_Product_AddToWishlistButton(
+            // Get attributes and add them to the add to list shape
+            var attributeShapes = _attributeDrivers
+                .Select(p => p.GetAttributeDisplayShape(part.ContentItem, shapeHelper))
+                .ToList();
+            return ContentShape("Parts_Product_AddToWishlistButton", () => 
+                shapeHelper.Parts_Product_AddToWishlistButton(
                     ProductId: part.Id,
                     User: user,
                     WishLists: wishLists,
-                    Prefix: Prefix));
+                    Prefix: Prefix,
+                    CreateShape: _wishListServices.CreateShape(user, part),
+                    AttributeShapes: attributeShapes
+                    ));
         }
     }
 }
