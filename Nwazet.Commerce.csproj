@@ -75,7 +75,7 @@
     <ProjectReference Include="..\..\..\Orchard.Web\Modules\Orchard.Localization\Orchard.Localization.csproj"> 
       <Project>{fbc8b571-ed50-49d8-8d9d-64ab7454a0d6}</Project> 
       <Name>Orchard.Localization</Name> 
-    </ProjectReference>
+    </ProjectReference> 
     <ProjectReference Include="..\..\..\Orchard.Web\Modules\Orchard.MediaLibrary\Orchard.MediaLibrary.csproj"> 
       <Project>{73a7688a-5bd3-4f7e-adfa-ce36c5a10e3b}</Project> 
       <Name>Orchard.MediaLibrary</Name> 
@@ -198,7 +198,7 @@
     <Compile Include="Activities\CommerceActivity.cs" /> 
     <Compile Include="Activities\OrderActivity.cs" /> 
     <Compile Include="Controllers\ECommerceSettingsAdminController.cs" /> 
-    <Compile Include="Controllers\InventoryBySKUSettingsAdminController.cs" />
+    <Compile Include="Controllers\InventoryBySKUSettingsAdminController.cs" /> 
     <Compile Include="Controllers\ProductSettingsAdminController.cs" /> 
     <Compile Include="Controllers\BundleAdminController.cs" /> 
     <Compile Include="Controllers\AttributesAdminController.cs" /> 
@@ -222,6 +222,7 @@
     <Compile Include="Drivers\InventoryBySKUSiteSettingsPartDriver.cs" /> 
     <Compile Include="Drivers\OrderPartDriver.cs" /> 
     <Compile Include="Drivers\ProductSettingsPartDriver.cs" /> 
+    <Compile Include="Drivers\ProductsListPartDriver.cs" /> 
     <Compile Include="Drivers\ZipCodeTaxPartDriver.cs" /> 
     <Compile Include="Drivers\StateOrCountryTaxPartDriver.cs" /> 
     <Compile Include="Drivers\UspsShippingMethodPartDriver.cs" /> 
@@ -237,7 +238,7 @@
     <Compile Include="Exceptions\StripeException.cs" /> 
     <Compile Include="Extensions\AttributeNameUtilities.cs" /> 
     <Compile Include="Features\CurrencyProviderBySiteSettingFeature.cs" /> 
-    <Compile Include="Features\InventoryBySKUFeature.cs" />
+    <Compile Include="Features\InventoryBySKUFeature.cs" /> 
     <Compile Include="Filters\ReferrerFilter.cs" /> 
     <Compile Include="Handlers\AdvancedSKUManagementHandler.cs" /> 
     <Compile Include="Handlers\AdvancedSKUsSiteSettingPartHandler.cs" /> 
@@ -248,7 +249,7 @@
     <Compile Include="Handlers\InventoryBySKUSiteSettingsPartHandler.cs" /> 
     <Compile Include="Handlers\LocalizationAttributePartHandler.cs" /> 
     <Compile Include="Handlers\OrderPartHandler.cs" /> 
-    <Compile Include="Handlers\ProductPartVersioningHandler.cs" />
+    <Compile Include="Handlers\ProductPartVersioningHandler.cs" /> 
     <Compile Include="Handlers\ProductSettingsPartHandler.cs" /> 
     <Compile Include="Handlers\StateOrCountryTaxPartHandler.cs" /> 
     <Compile Include="Handlers\UspsShippingMethodPartHandler.cs" /> 
@@ -273,6 +274,7 @@
     <Compile Include="Migrations\CommerceMigrations.cs" /> 
     <Compile Include="Migrations\AttributesMigrations.cs" /> 
     <Compile Include="Migrations\OrderMigrations.cs" /> 
+    <Compile Include="Migrations\PersistentCartMigrations.cs" /> 
     <Compile Include="Migrations\TaxMigrations.cs" /> 
     <Compile Include="Migrations\UspsMigrations.cs" /> 
     <Compile Include="Migrations\DiscountMigrations.cs" /> 
@@ -286,19 +288,22 @@
     <Compile Include="Models\ECommerceCurrencySiteSettingsPart.cs" /> 
     <Compile Include="Models\ICharge.cs" /> 
     <Compile Include="Models\InventoryBySKUSiteSettingsPart.cs" /> 
+    <Compile Include="Models\PersistentShoppingCart.cs" /> 
+    <Compile Include="Models\ProductsListPart.cs" /> 
     <Compile Include="Models\OrderEvent.cs" /> 
     <Compile Include="Models\OrderPart.cs" /> 
     <Compile Include="Models\OrderPartRecord.cs" /> 
     <Compile Include="Models\PriceTier.cs" /> 
     <Compile Include="Models\ProductAttributeValue.cs" /> 
     <Compile Include="Models\ProductAttributeValueExtended.cs" /> 
-    <Compile Include="Models\ProductPartVersionRecord.cs" />
+    <Compile Include="Models\ProductPartVersionRecord.cs" /> 
     <Compile Include="Models\ProductSettingsPart.cs" /> 
     <Compile Include="Models\Reporting\ChartType.cs" /> 
     <Compile Include="Models\Reporting\ICommerceReport.cs" /> 
     <Compile Include="Models\Reporting\ReportData.cs" /> 
     <Compile Include="Models\Reporting\ReportDataPoint.cs" /> 
     <Compile Include="Models\Reporting\TimePeriod.cs" /> 
+    <Compile Include="Models\ShoppingCartBase.cs" />
     <Compile Include="Models\ZipCodeTaxPart.cs" /> 
     <Compile Include="Models\StateOrCountryTaxPart.cs" /> 
     <Compile Include="Models\StateOrCountryTaxPartRecord.cs" /> 
@@ -350,23 +355,28 @@
     <Compile Include="Routes\OrderRoutes.cs" /> 
     <Compile Include="Routes\CommerceRoutes.cs" /> 
     <Compile Include="Services\BundleProductLocalizationBundleService.cs" /> 
-    <Compile Include="Services\BundleProductLocalizationServices.cs" />
+    <Compile Include="Services\BundleProductLocalizationServices.cs" /> 
     <Compile Include="Services\BundleServiceBase.cs" /> 
+    <Compile Include="Services\CommerceLocalStorageSettings.cs" /> 
     <Compile Include="Services\CurrencyProviderBase.cs" /> 
-    <Compile Include="Services\IBundleProductLocalizationServices.cs" />
+    <Compile Include="Services\IBundleProductLocalizationServices.cs" /> 
     <Compile Include="Services\IBundleService.cs" /> 
-    <Compile Include="Services\InventoriesAreNotSynchronizedBySKU.cs" />
+    <Compile Include="Services\ILocalStorageSettings.cs" /> 
+    <Compile Include="Services\InventoriesAreNotSynchronizedBySKU.cs" /> 
     <Compile Include="Services\InventoryBySKUProductInventoryService.cs" /> 
+    <Compile Include="Services\IPersistentShoppingCartServices.cs" /> 
     <Compile Include="Services\IProductAttributeAdminServices.cs" /> 
-    <Compile Include="Services\IProductAttributeLocalizationServices.cs" />
+    <Compile Include="Services\IProductAttributeLocalizationServices.cs" /> 
     <Compile Include="Services\IProductInventoryService.cs" /> 
     <Compile Include="Services\ISKUGenerationServices.cs" /> 
     <Compile Include="Services\ISKUUniquenessHelper.cs" /> 
     <Compile Include="Services\LatestProductAttributeAdminServices.cs" /> 
     <Compile Include="Services\LocalizationSKUUniquenessHelper.cs" /> 
     <Compile Include="Services\IProductAttributeNameService.cs" /> 
+    <Compile Include="Services\PersistentCartLocalStorageSettings.cs" /> 
+    <Compile Include="Services\PersistentShoppingCartServices.cs" /> 
     <Compile Include="Services\ProductAttributeAdminServices.cs" /> 
-    <Compile Include="Services\ProductAttributeLocalizationServices.cs" />
+    <Compile Include="Services\ProductAttributeLocalizationServices.cs" /> 
     <Compile Include="Services\ProductAttributeNameService.cs" /> 
     <Compile Include="Services\Currency.cs" /> 
     <Compile Include="Services\ICurrencyProvider.cs" /> 
@@ -389,6 +399,7 @@
     <Compile Include="Services\ProductAttributeService.cs" /> 
     <Compile Include="Services\ProductDiscountPriceProvider.cs" /> 
     <Compile Include="Services\ShippingService.cs" /> 
+    <Compile Include="Services\ShoppingCartInfosetPartStorage.cs" /> 
     <Compile Include="Services\SKUGenerationServices.cs" /> 
     <Compile Include="Services\TextProductAttributeExtensionProvider.cs" /> 
     <Compile Include="Services\UseCurrencyFromSiteCultureProvider.cs" /> 
@@ -427,7 +438,7 @@
     <Compile Include="Settings\BundleProductLocalizationSettings.cs" /> 
     <Compile Include="Settings\ProductAttributeLocalizationEditorEvents.cs" /> 
     <Compile Include="Settings\ProductAttributeLocalizationSettings.cs" /> 
-    <Compile Include="Shapes\ProductAttributesLocalizationAdminShapeProvider.cs" />
+    <Compile Include="Shapes\ProductAttributesLocalizationAdminShapeProvider.cs" /> 
     <Compile Include="Tokens\CartTokens.cs" /> 
     <Compile Include="Tokens\OrderTokens.cs" /> 
     <Compile Include="Tokens\ProductTokens.cs" /> 
@@ -437,7 +448,7 @@
     <Compile Include="ViewModels\ECommerceSettingsViewModel.cs" /> 
     <Compile Include="ViewModels\AttributeLocalizationProductAttributesPartEditViewModel.cs" /> 
     <Compile Include="ViewModels\InventoryBySKUProductEditorViewModel.cs" /> 
-    <Compile Include="ViewModels\InventoryBySKUSiteSettingsPartViewModel.cs" />
+    <Compile Include="ViewModels\InventoryBySKUSiteSettingsPartViewModel.cs" /> 
     <Compile Include="ViewModels\ProductAttributePartDisplayViewModel.cs" /> 
     <Compile Include="ViewModels\ProductAttributePartEditViewModel.cs" /> 
     <Compile Include="ViewModels\AttributesIndexViewModel.cs" /> 
@@ -555,10 +566,11 @@
   </ItemGroup> 
   <ItemGroup> 
     <None Include="app.config" /> 
+    <None Include="bundleconfig.json" />
     <None Include="packages.config" /> 
-    <None Include="Views\EditorTemplates\Parts\ProductLocalizationBundle.cshtml" />
-    <None Include="Views\ProductAttributesAdminList.cshtml" />
-    <None Include="Views\ProductAttributesAdminListItem.cshtml" />
+    <None Include="Views\EditorTemplates\Parts\ProductLocalizationBundle.cshtml" /> 
+    <None Include="Views\ProductAttributesAdminList.cshtml" /> 
+    <None Include="Views\ProductAttributesAdminListItem.cshtml" /> 
     <None Include="Views\DefinitionTemplates\BundleProductLocalizationSettings.cshtml" /> 
     <None Include="Views\DefinitionTemplates\ProductAttributeLocalizationSettings.cshtml" /> 
     <None Include="Views\ECommerceSettingsAdmin\Index.cshtml" /> 
@@ -568,9 +580,9 @@
     <None Include="Views\EditorTemplates\SiteSettings\AdvancedSKUs.cshtml" /> 
     <None Include="Views\EditorTemplates\SiteSettings\Currency.cshtml" /> 
     <None Include="Views\EditorTemplates\SiteSettings\InventoryBySKU.cshtml" /> 
-    <None Include="Views\ProductAttributesLocalizationAdminListItem.cshtml" />
+    <None Include="Views\ProductAttributesLocalizationAdminListItem.cshtml" /> 
   </ItemGroup> 
-  <ItemGroup />
+  <ItemGroup /> 
   <PropertyGroup> 
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion> 
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath> 
