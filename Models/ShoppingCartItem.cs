@@ -40,5 +40,15 @@ namespace Nwazet.Commerce.Models {
                 + (string.IsNullOrWhiteSpace(AttributeDescription) ? "" : " " + AttributeDescription)
                 + "}";
         }
+
+        public static bool ItemsAreEqual(ShoppingCartItem A, ShoppingCartItem B) {
+            if (A.AttributeIdsToValues == null || A.AttributeIdsToValues.Count == 0) {
+                return A.ProductId == B.ProductId && (B.AttributeIdsToValues == null || B.AttributeIdsToValues.Count == 0);
+            }
+            return A.ProductId == B.ProductId
+                && B.AttributeIdsToValues != null
+                && B.AttributeIdsToValues.Count == A.AttributeIdsToValues.Count
+                && B.AttributeIdsToValues.All(A.AttributeIdsToValues.Contains);
+        }
     }
 }

@@ -1,0 +1,35 @@
+﻿@using Nwazet.Commerce.Models
+@{
+    Style.Include("wishlists.nwazet-commerce.css", "wishlists.nwazet-commerce.min.css");
+
+    var productId = (int)Model.ProductId;
+    int quantityValue = Model.MinimumOrderQuantity > 1 ? Model.MinimumOrderQuantity : 1;
+}
+
+@using (Html.BeginFormAntiForgeryPost(
+                            Url.Action("AddToCart", "WishLists",
+                                        new { area = "Nwazet.Commerce", id = productId }),
+                            FormMethod.Post,
+                            new Dictionary<string, object> {
+        {"class", "addtocart"},
+        {"data-productid", productId},
+        {"enctype", "multipart/form-data"}
+                                                                })) {
+    if (Model.AttributeIdsToValues != null) {
+        <div style="display:none;">
+            @foreach (var attributeValue in (IDictionary<int, ProductAttributeValueExtended>)Model.AttributeIdsToValues) {
+                var attributeId = attributeValue.Key;
+                var value = attributeValue.Value;
+                <input type="hidden" id="attributeKey_@attributeId" name="attributeKey_@attributeId" value="@attributeId" />
+                <input type="hidden" id="value_@attributeId" name="value_@attributeId" value="@value.Value" />
+                <input type="hidden" id="ExtendedValue_@attributeId" name="ExtendedValue_@attributeId" value="@value.ExtendedValue" />
+                <input type="hidden" id="ExtensionProvider_@attributeId" name="ExtensionProvider_@attributeId" value="@value.ExtensionProvider" />
+            }
+        </div>
+    }
+    <div class="wishlist-addtocart-button">
+        <input name="productId" value="@productId" type="hidden" />
+        <input name="quantity" value="@quantityValue" class="addtocart-quantity" type="hidden" />
+        <button type="submit" class="addtocart-button">@T("Add to cart")</button>
+    </div>
+}

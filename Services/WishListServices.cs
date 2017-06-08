@@ -1,4 +1,5 @@
 ﻿using Nwazet.Commerce.Models;
+using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Title.Models;
@@ -6,6 +7,7 @@ using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Security;
+using Orchard.UI.Notify;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,16 +19,19 @@ namespace Nwazet.Commerce.Services {
     public class WishListServices : IWishListServices {
         private readonly IContentManager _contentManager;
         private readonly dynamic _shapeFactory;
-        private readonly IEnumerable<IProductAttributesDriver> _attributeDrivers;
+        private readonly IEnumerable<IProductAttributesDriver> _attributesDrivers;
+        private readonly INotifier _notifier;
 
         public WishListServices(
             IContentManager contentManager,
             IShapeFactory shapeFactory,
-            IEnumerable<IProductAttributesDriver> attributeDrivers) {
+            IEnumerable<IProductAttributesDriver> attributesDrivers,
+            INotifier notifier) {
 
             _contentManager = contentManager;
             _shapeFactory = shapeFactory;
-            _attributeDrivers = attributeDrivers;
+            _attributesDrivers = attributesDrivers;
+            _notifier = notifier;
 
             T = NullLocalizer.Instance;
         }
@@ -119,8 +124,53 @@ namespace Nwazet.Commerce.Services {
             return ci.As<WishListListPart>();
         }
 
-        public void AddProductToWishList(IUser user, WishListListPart wishlist, ProductPart product, Dictionary<int, ProductAttributeValueExtended> attributes) {
+        public void AddProductToWishList(IUser user, WishListListPart wishlist, ProductPart product, IDictionary<int, ProductAttributeValueExtended> attributes) {
+            if (user == null) {
+                throw new ArgumentNullException("user");
+            }
+            if (wishlist.ContentItem.As<CommonPart>().Owner != user) {
+                throw new ArgumentException(T("Users may only edit wishlists they own.").Text);
+            }
+            //we can add the product to the wishlist
+            if (!ValidateAttributes(product.ContentItem.Id, attributes)) {
+                // If attributes don't validate, don't add the product, but notify
+                _notifier.Warning(T("Couldn't add this product because of invalid attributes. Please refresh the page and try again."));
+                return;
+            }
+            //compute the ShoppingCartItem for the product we are adding
+            var item = new ShoppingCartItem(product.ContentItem.Id, 1, attributes);
+            //check whether the product is in the wishlist already
+            if (!ItemIsInWishlist(wishlist, item)) {
+                //create a new wishlist element and add it
+                var newELement = _contentManager.New<WishListElementPart>("WishListItem");
+                newELement.WishListId = wishlist.ContentItem.Id;
+                newELement.Item = item;
+                _contentManager.Create(newELement.ContentItem);
+                //add to list
+                var elementIds = wishlist.Ids.ToList();
+                elementIds.Add(newELement.ContentItem.Id);
+                wishlist.Ids = elementIds.ToArray();
+            }
+        }
+        public IEnumerable<WishListElementPart> GetElements(IUser user, WishListListPart wishlist) {
+            if (user == null) {
+                throw new ArgumentNullException("user");
+            }
+            if (wishlist.ContentItem.As<CommonPart>().Owner != user) {
+                throw new ArgumentException(T("Users may only edit wishlists they own.").Text);
+            }
 
+            return GetElements(wishlist);
+        }
+        private IEnumerable<WishListElementPart> GetElements(WishListListPart wishlist) {
+            return _contentManager.Query<WishListElementPart, WishListElementPartRecord>()
+                .Where(epr => epr.WishListId == wishlist.ContentItem.Id)
+                .List();
+        }
+
+        public bool ItemIsInWishlist(WishListListPart wishlist, ShoppingCartItem item) {
+            return GetElements(wishlist).Any(wel =>
+                ShoppingCartItem.ItemsAreEqual(wel.Item, item));
         }
 
         public dynamic CreateShape(IUser user, ProductPart product = null) {
@@ -130,9 +180,9 @@ namespace Nwazet.Commerce.Services {
 
             var productId = 0;
             var attributeShapes = new List<dynamic>();
-            if (product!=null) {
+            if (product != null) {
                 productId = product.ContentItem.Id;
-                attributeShapes = _attributeDrivers
+                attributeShapes = _attributesDrivers
                 .Select(p => p.GetAttributeDisplayShape(product.ContentItem, _shapeFactory))
                 .ToList();
             }
@@ -153,5 +203,17 @@ namespace Nwazet.Commerce.Services {
             }
             return _shapeFactory.WishListsSettings();
         }
+
+
+        private bool ValidateAttributes(int productId, IDictionary<int, ProductAttributeValueExtended> attributeIdsToValues) {
+            if (_attributesDrivers == null ||
+                attributeIdsToValues == null ||
+                !attributeIdsToValues.Any()) return true;
+
+            var product = _contentManager.Get(productId);
+            return _attributesDrivers.All(d => d.ValidateAttributes(product, attributeIdsToValues));
+        }
+
+        
     }
 }

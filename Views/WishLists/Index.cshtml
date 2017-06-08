@@ -1,5 +1,7 @@
 ﻿@model Nwazet.Commerce.ViewModels.WishListsIndexViewModel
 @{ 
+    Style.Include("wishlists.nwazet-commerce.css", "wishlists.nwazet-commerce.min.css");
+
     Layout.Title = T("Your Wish Lists").ToString();
 }
 
@@ -21,11 +23,11 @@
                 @Display(Model.SettingsShape)
             </div>
         </div>
-        <div id="your-wish-lists-content" style="clear: both;">
-            <div id="your-wish-lists" style="width:252px;float:left;">
+        <div id="your-wish-lists-content">
+            <div id="your-wish-lists">
                 @Display.ListOfWishLists(WishLists: Model.WishLists)
             </div>
-            <div id="active-wish-list" style="padding-left:3.5%;*width:96.1%;float:left;">
+            <div id="active-wish-list">
                 @Display(Model.WishListView)
             </div>
         </div>

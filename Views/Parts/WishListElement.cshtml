@@ -4,6 +4,8 @@
 @using Orchard.ContentManagement
 
 @{ 
+    Style.Include("wishlists.nwazet-commerce.css", "wishlists.nwazet-commerce.min.css");
+
     string imageUrl = (Model.ProductImage != null && Model.ProductImage.MediaParts.Count > 0) ? Model.ProductImage.MediaParts[0].MediaUrl : null;
     var title = Model.Title
         + (Model.ProductAttributes == null || Model.ProductAttributes.Count == 0
@@ -13,12 +15,13 @@
     var unitPriceOriginal = (decimal)Model.OriginalPrice;
     string originalUnitPrice = "";
     if (unitPrice != unitPriceOriginal && unitPriceOriginal != 0) {
-        originalUnitPrice = String.Format("<strike>{0}</strike>", 
+        originalUnitPrice = String.Format("<strike>{0}</strike>",
             Model.CurrencyProvider.GetPriceString(Model.OriginalPrice));
     }
+    var contentItem = (ContentItem)Model.ContentItem;
 }
-<fieldset>
-    <legend>@title</legend>
+<fieldset class="wishlist-element">
+    <legend><a href="@Url.ItemDisplayUrl(contentItem)">@title</a></legend>
     <div id="wish-list-element-product-details">
         @if (!string.IsNullOrWhiteSpace(imageUrl)) {
             <div id="wish-list-element-product-image" style="float:left;">
@@ -27,10 +30,5 @@
         }
         @Html.Raw(originalUnitPrice)
         @Model.CurrencyProvider.GetPriceString(unitPrice)
-    </div>
-    <div id="wish-list-element-product-actions">
-        @foreach (var shape in Model.ActionShapes) {
-            @Display(shape)
-        }
     </div>
 </fieldset>

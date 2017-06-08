@@ -1,10 +1,49 @@
 ﻿@using Nwazet.Commerce.Models
 @using Orchard.ContentManagement
-@{ 
+@{
+    Script.Require("jQuery");
+    Style.Include("wishlists.nwazet-commerce.css", "wishlists.nwazet-commerce.min.css");
+
     var productId = (int)Model.ProductId;
     var wishList = (WishListListPart)Model.WishList;
-
-    var addToWishlistText = T("Add to WishList").Text;
+    var wishListId = wishList == null ? 0 : wishList.ContentItem.Id;
+    var addToWishlistText = wishList == null ? T("Add to WishList").Text :
+        Html.ItemDisplayText((IContent)(wishList.ContentItem)).ToString();
 }
 
-@Html.ActionLink(Html.ItemDisplayText((IContent)(wishList.ContentItem)), "AddToWishList", new { controller = "WishLists", area = "Nwazet.Commerce", productId = productId, wishListId=wishList.ContentItem.Id })
+@using (Html.BeginFormAntiForgeryPost(
+                                                    Url.Action("AddToWishList", "WishLists", new { area = "Nwazet.Commerce" }),
+                                                    FormMethod.Post,
+                                                    new { enctype = "multipart/form-data" }
+                                                    )) {
+    <input type="hidden" id="productid" name="productid" value="@productId" />
+    <input type="hidden" id="wishListid" name="wishListid" value="@wishListId" />
+
+    if (Model.AttributeShapes != null) {
+        <div id="add-to-wishlist-attributes_@wishListId" style="display:none;">
+            @*Attributes will be copied in this div once the button is clicked*@
+            @*@foreach (var productAttributeShape in Model.AttributeShapes) {
+                    @Display(productAttributeShape)
+                }*@
+        </div>
+    }
+
+    <button id="button-add-to-wishlist_@wishListId" href="#" onclick="form.submit();" typ="submit" values="@addToWishlistText" class="button-looks-like-link">
+        @addToWishlistText
+    </button>
+}
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        jQuery(function ($) {
+            $('#button-add-to-wishlist_@wishListId').click(function () {
+                $('#add-to-cart-attributes').clone().appendTo('#add-to-wishlist-attributes_@wishListId');
+                //jQuery does not clone selected values: https://stackoverflow.com/a/743871/2669614
+                var selects = $('#add-to-cart-attributes').find("select");
+                $(selects).each(function (i) {
+                    var select = this;
+                    $('#add-to-wishlist-attributes_@wishListId').find("select").eq(i).val($(select).val());
+                });
+            });
+        });
+    </script>
+}

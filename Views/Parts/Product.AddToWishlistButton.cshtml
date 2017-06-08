@@ -10,16 +10,15 @@
 
     var addToWishlistText = T("Add to WishList").Text;
 }
-@using (Html.BeginFormAntiForgeryPost()) {
     <div id="add-to-wishlist-popover">
         <ul id="add-to-wishlist-dropdown-list">
             <li id="add-to-wishlist-base-button">
-                @Html.ActionLink(addToWishlistText, "AddToWishList", new { controller = "WishLists", area = "Nwazet.Commerce", productId = productId })
+                @Display.AddToWishListButtonElement(ProductId: productId, WishList: null, AttributeShapes: Model.AttributeShapes)
                 @if (user != null) {
                     <ul>
                         @foreach (var wl in wishLists) {
                             <li>
-                                @Display.AddToWishListButtonElement(ProductId: productId, WishList: wl)
+                                @Display.AddToWishListButtonElement(ProductId: productId, WishList: wl, AttributeShapes: Model.AttributeShapes)
                             </li>
                         }
                         <li>
@@ -31,5 +30,3 @@
             </li>
         </ul>
     </div>
-}
-

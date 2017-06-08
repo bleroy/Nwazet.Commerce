@@ -1,6 +1,9 @@
 ﻿
-<fieldset style="padding:2%;">
+<fieldset class="wishlist-list-of-elements">
     @foreach (var shape in Model.ElementsShapes) {
+        @Display(shape)
+    }
+    @foreach (var shape in Model.ExtensionShapes) {
         @Display(shape)
     }
 </fieldset>

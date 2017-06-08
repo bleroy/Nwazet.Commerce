@@ -20,15 +20,15 @@ namespace Nwazet.Commerce.Routes {
             return new[] {
                 new RouteDescriptor {
                     Route = new Route(
-                        "wishlists/new/{productId}",
+                        "wishlists/new/{productid}",
                         new RouteValueDictionary {
                             {"area", "Nwazet.Commerce"},
                             {"controller", "WishLists"},
                             {"action", "CreateWishList"},
-                            {"productId", 0 }
+                            {"productid", 0 }
                         },
                         new RouteValueDictionary {
-                            {"productId", @"\d*" }
+                            {"productid", @"\d*" }
                         },
                         new RouteValueDictionary {
                             {"area", "Nwazet.Commerce"}
@@ -37,17 +37,17 @@ namespace Nwazet.Commerce.Routes {
                 },
                 new RouteDescriptor {
                     Route = new Route(
-                        "wishlists/add/{wishListId}/{productId}",
+                        "wishlists/add/{wishListid}/{productid}",
                         new RouteValueDictionary {
                             {"area", "Nwazet.Commerce"},
                             {"controller", "WishLists"},
                             {"action", "AddToWishList"},
-                            {"productId", 0 },
-                            {"wishListId", 0 }
+                            {"productid", 0 },
+                            {"wishListid", 0 }
                         },
                         new RouteValueDictionary {
-                            {"productId", @"\d*" },
-                            {"wishListId", @"\d*" }
+                            {"productid", @"\d*" },
+                            {"wishListid", @"\d*" }
                         },
                         new RouteValueDictionary {
                             {"area", "Nwazet.Commerce"}

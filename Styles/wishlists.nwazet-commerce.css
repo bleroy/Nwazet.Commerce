@@ -166,3 +166,45 @@ being the ones which make the drop-down to stay hidden */
     .closeWishListModalDialog:hover {
         background: #00d9ff;
     }
+
+
+.button-looks-like-link {
+    background: none !important;
+    color: inherit;
+    border: none;
+    padding: 0 !important;
+    font: inherit;
+    cursor: pointer;
+}
+
+.wishlist-addtocart-button {
+    float: right;
+}
+
+fieldset.wishlist-element {
+    width: 96%;
+    padding-left: 2%;
+    padding-right: 2%;
+}
+
+fieldset.wishlist-list-of-elements {
+    width: 96%;
+    padding-left: 2%;
+    padding-right: 2%;
+}
+
+div#your-wish-lists-content {
+    clear: both;
+}
+
+    div#your-wish-lists-content > div#your-wish-lists {
+        width: 252px;
+        float: left;
+    }
+
+    div#your-wish-lists-content > div#active-wish-list {
+        padding-left: 3.5%;
+        overflow:hidden;
+        float: left;
+        width: auto;
+    }

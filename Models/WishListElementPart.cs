@@ -44,6 +44,7 @@ namespace Nwazet.Commerce.Models {
 
         public ShoppingCartItem Item {
             get { return _item; }
+            set { _item = value; }
         }
 
         public WishListElementPart() { }

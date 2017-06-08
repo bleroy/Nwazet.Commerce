@@ -575,6 +575,7 @@
     <None Include="Views\CreateNewWishList.cshtml" />
     <None Include="Views\EditorTemplates\Parts\ProductLocalizationBundle.cshtml" />
     <None Include="Views\ListOfWishLists.cshtml" />
+    <None Include="Views\Parts\Product.AddToCartFromWishlist.cshtml" />
     <None Include="Views\Parts\Product.AddToWishlistButton.cshtml" />
     <None Include="Views\Parts\WishListElement.cshtml" />
     <None Include="Views\Parts\WishListList.cshtml" />

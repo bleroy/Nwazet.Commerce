@@ -23,7 +23,5 @@ namespace Nwazet.Commerce.ViewModels {
         public bool AllowBackOrder { get; set; }
         public string OutOfStockMessage { get; set; }
         public ICurrencyProvider CurrencyProvider { get; set; }
-        public IEnumerable<dynamic> ActionShapes { get; set; }
-        public IEnumerable<dynamic> ExtensionsShapes { get; set; }
     }
 }

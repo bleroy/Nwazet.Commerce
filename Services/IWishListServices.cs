@@ -46,7 +46,7 @@ namespace Nwazet.Commerce.Services {
         /// <param name="wishlist">The wish list we are updating</param>
         /// <param name="product">The product to add</param>
         /// <param name="attributes">The product's attributes</param>
-        void AddProductToWishList(IUser user, WishListListPart wishlist, ProductPart product, Dictionary<int, ProductAttributeValueExtended> attributes);
+        void AddProductToWishList(IUser user, WishListListPart wishlist, ProductPart product, IDictionary<int, ProductAttributeValueExtended> attributes);
         /// <summary>
         /// Generates the shape for the creation of a new wishlist.
         /// </summary>

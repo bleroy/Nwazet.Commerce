@@ -56,28 +56,10 @@ namespace Nwazet.Commerce.Drivers {
             var productDetails = _priceService.GetDiscountedPrice(
                 new ShoppingCartQuantityProduct(item.Quantity, product, item.AttributeIdsToValues));
 
-            //get the shapes for the actions on the element
-            List<dynamic> actionShapes = new List<dynamic>();
-            //Add to cart
-            if (product.Inventory > 0 || product.AllowBackOrder || (product.IsDigital && !product.ConsiderInventory)) {
-                actionShapes.Add(ContentShape(
-                        "Parts_Product_AddButton",
-                        () => {
-                            // Get attributes and add them to the add to cart shape
-                            var attributeShapes = _attributeDrivers
-                                .Select(p => p.GetAttributeDisplayShape(part.ContentItem, shapeHelper))
-                                .ToList();
-                            return shapeHelper.Parts_Product_AddButton(
-                                ProductId: part.Id,
-                                MinimumOrderQuantity: product.MinimumOrderQuantity,
-                                ProductAttributes: attributeShapes);
-                        })
-                    );
-            }
-            //Remove from list
-            //Additional shapes form extensions
-
-            return ContentShape("Parts_WishListElement", () =>
+            
+            var shapes = new List<DriverResult>();
+            //base element shape
+            shapes.Add(ContentShape("Parts_WishListElement", () =>
                 shapeHelper.Parts_WishListElement(new WishListElementViewModel {
                     Title = _contentManager.GetItemMetadata(product.ContentItem).DisplayText,
                     ProductAttributes = productDetails.AttributeIdsToValues,
@@ -91,9 +73,25 @@ namespace Nwazet.Commerce.Drivers {
                     Inventory = product.Inventory,
                     AllowBackOrder = product.AllowBackOrder,
                     OutOfStockMessage = product.OutOfStockMessage,
-                    CurrencyProvider = _currencyProvider,
-                    ActionShapes = actionShapes
-                }));
+                    CurrencyProvider = _currencyProvider
+                })));
+            //get the shapes for the actions on the element
+            //Add to cart
+            if (product.Inventory > 0 || product.AllowBackOrder || (product.IsDigital && !product.ConsiderInventory)) {
+                shapes.Add(ContentShape(
+                        "Parts_Product_AddToCartFromWishlist",
+                        () => {
+                            return shapeHelper.Parts_Product_AddToCartFromWishlist(
+                                ProductId: product.Id,
+                                MinimumOrderQuantity: product.MinimumOrderQuantity,
+                                AttributeIdsToValues: part.Item.AttributeIdsToValues);
+                        })
+                    );
+            }
+            //Remove from list
+            //Additional shapes from extensions
+
+            return Combined(shapes.ToArray());
         }
 
     }

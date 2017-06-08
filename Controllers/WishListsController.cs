@@ -5,6 +5,7 @@ using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 using Orchard.Themes;
+using Orchard.Workflows.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,17 +21,23 @@ namespace Nwazet.Commerce.Controllers {
         private readonly IWishListServices _wishListServices;
         private readonly IContentManager _contentManager;
         private readonly IEnumerable<IProductAttributeExtensionProvider> _attributeExtensionProviders;
-        
+        private readonly IShoppingCart _shoppingCart;
+        private readonly IWorkflowManager _workflowManager;
+
         public WishListsController(
             IWorkContextAccessor wca,
             IWishListServices wishListServices,
             IContentManager contentManager,
-            IEnumerable<IProductAttributeExtensionProvider> attributeExtensionProviders) {
+            IEnumerable<IProductAttributeExtensionProvider> attributeExtensionProviders,
+            IShoppingCart shoppingCart,
+            IWorkflowManager workflowManager) {
 
             _wca = wca;
             _wishListServices = wishListServices;
             _contentManager = contentManager;
             _attributeExtensionProviders = attributeExtensionProviders;
+            _shoppingCart = shoppingCart;
+            _workflowManager = workflowManager;
         }
 
         private const string AttributePrefix = "productattributes.a";
@@ -56,7 +63,7 @@ namespace Nwazet.Commerce.Controllers {
         }
 
         [HttpPost]
-        public ActionResult CreateWishList(string new_wishlist_title, int productId = 0) {
+        public ActionResult CreateWishList(string new_wishlist_title, int productid = 0) {
             var user = _wca.GetContext().CurrentUser;
             if (user == null) {
                 return new HttpUnauthorizedResult();
@@ -67,11 +74,68 @@ namespace Nwazet.Commerce.Controllers {
             var wishList = _wishListServices.CreateWishList(user, new_wishlist_title);
             wishlistId = wishList.ContentItem.Id;
             //add product to wishlist
-            if (productId > 0) {
-                var productPart = _contentManager.Get<ProductPart>(productId);
-                var form = HttpContext.Request.Form;
-                var files = HttpContext.Request.Files;
-                var productattributes = form.AllKeys
+            if (productid > 0) {
+                var productPart = _contentManager.Get<ProductPart>(productid);
+                var productattributes = ParseAttributes();
+
+                _wishListServices.AddProductToWishList(user, wishList, productPart, productattributes);
+            }
+            return RedirectToAction("Index", new { id = wishlistId });
+        }
+
+        [HttpPost]
+        public ActionResult AddToWishList(int wishListid, int productid) {
+            var user = _wca.GetContext().CurrentUser;
+            if (user == null) {
+                return new HttpUnauthorizedResult();
+            }
+            //get selected wishlist
+            var wishList = _wishListServices.GetWishList(user, wishListid);
+            
+            if (productid > 0) {
+                var productPart = _contentManager.Get<ProductPart>(productid);
+                var productattributes = ParseAttributes();
+
+                _wishListServices.AddProductToWishList(user, wishList, productPart, productattributes);
+            }
+
+            return RedirectToAction("Index", new { id = wishList.ContentItem.Id });
+        }
+
+        [HttpPost]
+        public ActionResult AddToCart(int productId, int quantity = 1) {
+
+            //read attributes from the form
+            var form = HttpContext.Request.Form;
+            var productattributes = form.AllKeys
+                .Where(key => key.StartsWith("attributeKey"))
+                .Select(key => int.Parse(form[key]))
+                .ToDictionary(
+                    key => key, //id of the attribute
+                    key => { //ProductAttributeValueExtended
+                        return new ProductAttributeValueExtended {
+                            Value = form["value_"+key],
+                            ExtendedValue = form["ExtendedValue_" + key],
+                            ExtensionProvider = form["ExtensionProvider_" + key]
+                        };
+                    }
+                );
+
+            _shoppingCart.Add(productId, quantity, productattributes);
+
+            _workflowManager.TriggerEvent("CartUpdated",
+                _wca.GetContext().CurrentSite,
+                () => new Dictionary<string, object> {
+                    {"Cart", _shoppingCart}
+                });
+
+            return RedirectToAction("Index", new { controller = "ShoppingCart"});
+        }
+
+        private Dictionary<int, ProductAttributeValueExtended> ParseAttributes() {
+            var form = HttpContext.Request.Form;
+            var files = HttpContext.Request.Files;
+            return form.AllKeys
                .Where(key => key.StartsWith(AttributePrefix))
                .ToDictionary(
                    key => int.Parse(key.Substring(AttributePrefix.Length)),
@@ -95,22 +159,6 @@ namespace Nwazet.Commerce.Controllers {
                            ExtensionProvider = null
                        };
                    });
-
-                _wishListServices.AddProductToWishList(user, wishList, productPart, productattributes);
-            }
-            return RedirectToAction("Index", new { id = wishlistId });
-        }
-
-        [HttpPost]
-        public ActionResult AddToWishList(int productId, int wishListId = 0) {
-            var user = _wca.GetContext().CurrentUser;
-            if (user == null) {
-                return new HttpUnauthorizedResult();
-            }
-
-            var wishlistId = 0;
-
-            return RedirectToAction("Index", new { id = wishlistId });
         }
     }
 }
