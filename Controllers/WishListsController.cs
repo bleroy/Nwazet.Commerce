@@ -43,6 +43,7 @@ namespace Nwazet.Commerce.Controllers {
         private const string AttributePrefix = "productattributes.a";
         private const string ExtensionPrefix = "ext.";
 
+        [OutputCache(Duration = 0)]
         public ActionResult Index(int id = 0) {
             var user = _wca.GetContext().CurrentUser;
             if (user == null) {
