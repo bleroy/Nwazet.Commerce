@@ -227,6 +227,7 @@
     <Compile Include="Drivers\WeightBasedShippingMethodPartDriver.cs" />
     <Compile Include="Exceptions\StripeException.cs" />
     <Compile Include="Extensions\AttributeNameUtilities.cs" />
+    <Compile Include="Extensions\DefaultHqlExpressionFactoryExtension.cs" />
     <Compile Include="Features\CurrencyProviderBySiteSettingFeature.cs" />
     <Compile Include="Features\InventoryBySKUFeature.cs" />
     <Compile Include="Filters\ReferrerFilter.cs" />
