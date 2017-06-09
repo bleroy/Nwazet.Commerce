@@ -23,6 +23,7 @@ namespace Nwazet.Commerce.Controllers {
         private readonly IEnumerable<IProductAttributeExtensionProvider> _attributeExtensionProviders;
         private readonly IShoppingCart _shoppingCart;
         private readonly IWorkflowManager _workflowManager;
+        private readonly IEnumerable<IWishListExtensionProvider> _wishListExtensionProviders;
 
         public WishListsController(
             IWorkContextAccessor wca,
@@ -30,7 +31,8 @@ namespace Nwazet.Commerce.Controllers {
             IContentManager contentManager,
             IEnumerable<IProductAttributeExtensionProvider> attributeExtensionProviders,
             IShoppingCart shoppingCart,
-            IWorkflowManager workflowManager) {
+            IWorkflowManager workflowManager,
+            IEnumerable<IWishListExtensionProvider> wishListExtensionProviders) {
 
             _wca = wca;
             _wishListServices = wishListServices;
@@ -38,6 +40,7 @@ namespace Nwazet.Commerce.Controllers {
             _attributeExtensionProviders = attributeExtensionProviders;
             _shoppingCart = shoppingCart;
             _workflowManager = workflowManager;
+            _wishListExtensionProviders = wishListExtensionProviders;
         }
 
         private const string AttributePrefix = "productattributes.a";
@@ -77,10 +80,11 @@ namespace Nwazet.Commerce.Controllers {
             //add product to wishlist
             if (productid > 0) {
                 var productPart = _contentManager.Get<ProductPart>(productid);
-                var productattributes = ParseAttributes();
+                var productattributes = ParseProductAttributes();
 
                 _wishListServices.AddProductToWishList(user, wishList, productPart, productattributes);
             }
+
             return RedirectToAction("Index", new { id = wishlistId });
         }
 
@@ -95,7 +99,7 @@ namespace Nwazet.Commerce.Controllers {
             
             if (productid > 0) {
                 var productPart = _contentManager.Get<ProductPart>(productid);
-                var productattributes = ParseAttributes();
+                var productattributes = ParseProductAttributes();
 
                 _wishListServices.AddProductToWishList(user, wishList, productPart, productattributes);
             }
@@ -133,7 +137,28 @@ namespace Nwazet.Commerce.Controllers {
             return RedirectToAction("Index", new { controller = "ShoppingCart"});
         }
 
-        private Dictionary<int, ProductAttributeValueExtended> ParseAttributes() {
+        [HttpPost]
+        public ActionResult RemoveFromWishList(int wishListid, int elementId) {
+            var user = _wca.GetContext().CurrentUser;
+            if (user == null) {
+                return new HttpUnauthorizedResult();
+            }
+            //get selected wishlist
+            var wishList = _wishListServices.GetWishList(user, wishListid);
+
+            if (wishList.ContentItem.Id == wishListid) { //GetWIshList may return the default wish list
+                _wishListServices.RemoveElementFromWishlist(user, wishList, elementId);
+            }
+
+            return RedirectToAction("Index", new { id = wishListid });
+        }
+
+        [HttpPost]
+        public ActionResult UpdateSettings(int wishListid) {
+            return RedirectToAction("Index", new { id = wishListid });
+        }
+
+        private Dictionary<int, ProductAttributeValueExtended> ParseProductAttributes() {
             var form = HttpContext.Request.Form;
             var files = HttpContext.Request.Files;
             return form.AllKeys

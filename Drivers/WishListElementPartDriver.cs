@@ -22,19 +22,22 @@ namespace Nwazet.Commerce.Drivers {
         private readonly IContentManager _contentManager;
         private readonly IPriceService _priceService;
         private readonly ICurrencyProvider _currencyProvider;
+        private readonly IEnumerable<IWishListExtensionProvider> _wishListExtensionProviders;
 
         public WishListElementPartDriver(
             IEnumerable<IProductAttributeExtensionProvider> extensionProviders,
             IContentManager contentManager,
             IPriceService priceService,
             ICurrencyProvider currencyProvider,
-            IEnumerable<IProductAttributesDriver> attributeDrivers) {
+            IEnumerable<IProductAttributesDriver> attributeDrivers,
+            IEnumerable<IWishListExtensionProvider> wishListExtensionProviders) {
 
             _extensionProviders = extensionProviders;
             _contentManager = contentManager;
             _priceService = priceService;
             _currencyProvider = currencyProvider;
             _attributeDrivers = attributeDrivers;
+            _wishListExtensionProviders = wishListExtensionProviders;
         }
 
         protected override string Prefix {
@@ -56,9 +59,14 @@ namespace Nwazet.Commerce.Drivers {
             var productDetails = _priceService.GetDiscountedPrice(
                 new ShoppingCartQuantityProduct(item.Quantity, product, item.AttributeIdsToValues));
 
-            
+
             var shapes = new List<DriverResult>();
             //base element shape
+            //Additional shapes from extensions
+            var extensionShapes = new List<dynamic>();
+            foreach (var ext in _wishListExtensionProviders) {
+                extensionShapes.Add(ext.BuildElementDisplayShape(part));
+            }
             shapes.Add(ContentShape("Parts_WishListElement", () =>
                 shapeHelper.Parts_WishListElement(new WishListElementViewModel {
                     Title = _contentManager.GetItemMetadata(product.ContentItem).DisplayText,
@@ -73,23 +81,27 @@ namespace Nwazet.Commerce.Drivers {
                     Inventory = product.Inventory,
                     AllowBackOrder = product.AllowBackOrder,
                     OutOfStockMessage = product.OutOfStockMessage,
-                    CurrencyProvider = _currencyProvider
+                    CurrencyProvider = _currencyProvider,
+                    ExtensionShapes = extensionShapes
                 })));
             //get the shapes for the actions on the element
             //Add to cart
             if (product.Inventory > 0 || product.AllowBackOrder || (product.IsDigital && !product.ConsiderInventory)) {
-                shapes.Add(ContentShape(
-                        "Parts_Product_AddToCartFromWishlist",
-                        () => {
-                            return shapeHelper.Parts_Product_AddToCartFromWishlist(
-                                ProductId: product.Id,
-                                MinimumOrderQuantity: product.MinimumOrderQuantity,
-                                AttributeIdsToValues: part.Item.AttributeIdsToValues);
-                        })
-                    );
+                shapes.Add(ContentShape("Parts_Product_AddToCartFromWishList", () =>
+                    shapeHelper.Parts_Product_AddToCartFromWishList(
+                        ProductId: product.Id,
+                        MinimumOrderQuantity: product.MinimumOrderQuantity,
+                        AttributeIdsToValues: part.Item.AttributeIdsToValues)
+                ));
             }
             //Remove from list
-            //Additional shapes from extensions
+            shapes.Add(ContentShape("Parts_Product_RemoveFromWishList", () =>
+                shapeHelper.Parts_Product_RemoveFromWishList(
+                    WishListElementId: part.ContentItem.Id,
+                    WishListId: part.WishListId
+                    )
+            ));
+            
 
             return Combined(shapes.ToArray());
         }

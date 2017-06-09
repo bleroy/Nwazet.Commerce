@@ -21,17 +21,20 @@ namespace Nwazet.Commerce.Services {
         private readonly dynamic _shapeFactory;
         private readonly IEnumerable<IProductAttributesDriver> _attributesDrivers;
         private readonly INotifier _notifier;
+        private readonly IEnumerable<IWishListExtensionProvider> _wishListExtensionProviders;
 
         public WishListServices(
             IContentManager contentManager,
             IShapeFactory shapeFactory,
             IEnumerable<IProductAttributesDriver> attributesDrivers,
-            INotifier notifier) {
+            INotifier notifier,
+            IEnumerable<IWishListExtensionProvider> wishListExtensionProviders) {
 
             _contentManager = contentManager;
             _shapeFactory = shapeFactory;
             _attributesDrivers = attributesDrivers;
             _notifier = notifier;
+            _wishListExtensionProviders = wishListExtensionProviders;
 
             T = NullLocalizer.Instance;
         }
@@ -82,6 +85,10 @@ namespace Nwazet.Commerce.Services {
                 ci.As<TitlePart>().Title = DefaultWishListTitle;
                 _contentManager.Create(ci);
                 wishList = ci.As<WishListListPart>();
+                //process extensions
+                foreach (var ext in _wishListExtensionProviders) {
+                    ext.WishListCreation(user, wishList);
+                }
             }
 
             return wishList;
@@ -121,6 +128,11 @@ namespace Nwazet.Commerce.Services {
             ci.As<TitlePart>().Title = title;
             _contentManager.Create(ci);
 
+            //process extensions
+            foreach (var ext in _wishListExtensionProviders) {
+                ext.WishListCreation(user, ci.As<WishListListPart>());
+            }
+
             return ci.As<WishListListPart>();
         }
 
@@ -150,6 +162,11 @@ namespace Nwazet.Commerce.Services {
                 var elementIds = wishlist.Ids.ToList();
                 elementIds.Add(newELement.ContentItem.Id);
                 wishlist.Ids = elementIds.ToArray();
+
+                //process extensions
+                foreach (var ext in _wishListExtensionProviders) {
+                    ext.WishListAddedElement(user, wishlist, newELement);
+                }
             }
         }
         public IEnumerable<WishListElementPart> GetElements(IUser user, WishListListPart wishlist) {
@@ -173,6 +190,61 @@ namespace Nwazet.Commerce.Services {
                 ShoppingCartItem.ItemsAreEqual(wel.Item, item));
         }
 
+        public void RemoveElementFromWishlist(IUser user, WishListListPart wishlist, int elementId) {
+            if (user == null) {
+                throw new ArgumentNullException("user");
+            }
+            if (wishlist.ContentItem.As<CommonPart>().Owner != user) {
+                throw new ArgumentException(T("Users may only edit wishlists they own.").Text);
+            }
+
+            var elementPart = _contentManager.Get<WishListElementPart>(elementId);
+            
+            RemoveElementFromWishlist(wishlist, elementPart);
+        }
+        private void RemoveElementFromWishlist(WishListListPart wishlist, WishListElementPart elementPart) {
+            //process extensions
+            foreach (var ext in _wishListExtensionProviders) {
+                ext.WishListElementCleanup(wishlist, elementPart);
+            }
+
+            var elementId = elementPart.ContentItem.Id;
+            if (wishlist.Ids.Contains(elementId)) {
+                var elementIds = wishlist.Ids.ToList().Where(id => id != elementId);
+                wishlist.Ids = elementIds.ToArray();
+            }
+            _contentManager.Destroy(elementPart.ContentItem); //hard delete
+        }
+
+        public void DeleteWishlist(IUser user, WishListListPart wishlist) {
+            if (user == null) {
+                throw new ArgumentNullException("user");
+            }
+            if (wishlist.ContentItem.As<CommonPart>().Owner != user) {
+                throw new ArgumentException(T("Users may only edit wishlists they own.").Text);
+            }
+
+            //remove all elements
+            foreach (var element in GetElements(wishlist)) {
+                RemoveElementFromWishlist(wishlist, element);
+            }
+            //destroy wishlist
+            //process extensions
+            foreach (var ext in _wishListExtensionProviders) {
+                ext.WishListCleanup(user, wishlist);
+            }
+            if (wishlist.IsDefault) {//user must still have a default
+                var otherLists = GetWishLists(user).Where(wl => wl.ContentItem.Id != wishlist.ContentItem.Id);
+                if (otherLists.Any()) {
+                    otherLists.First().IsDefault = true;
+                } else {
+                    GetDefaultWishList(user); //create a new default wishlist
+                }
+                wishlist.IsDefault = false;
+            }
+            _contentManager.Destroy(wishlist.ContentItem);
+        }
+
         public dynamic CreateShape(IUser user, ProductPart product = null) {
             if (user == null) {
                 throw new ArgumentNullException("user");
@@ -188,6 +260,10 @@ namespace Nwazet.Commerce.Services {
             }
             //get the additional shapes from the extension providers
             var creationShapes = new List<dynamic>();
+            //process extensions
+            foreach (var ext in _wishListExtensionProviders) {
+                creationShapes.Add(ext.BuildCreationShape(user, product));
+            }
 
             return _shapeFactory.CreateNewWishList(
                 ProductId: productId,
@@ -201,7 +277,17 @@ namespace Nwazet.Commerce.Services {
             if (user == null) {
                 throw new ArgumentNullException("user");
             }
-            return _shapeFactory.WishListsSettings();
+            //build the settings shape for each wishlist
+            var settingsShapes = new List<dynamic>();
+            var wishlists = GetWishLists(user);
+            foreach (var ext in _wishListExtensionProviders) {
+                settingsShapes.Add(ext.BuildSettingsShape(wishlists));
+            }
+
+            return _shapeFactory.WishListsSettings(
+                WishLists: wishlists,
+                SettingsShapes: settingsShapes
+                );
         }
 
 

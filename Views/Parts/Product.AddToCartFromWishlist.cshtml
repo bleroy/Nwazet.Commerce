@@ -7,14 +7,14 @@
 }
 
 @using (Html.BeginFormAntiForgeryPost(
-                            Url.Action("AddToCart", "WishLists",
-                                        new { area = "Nwazet.Commerce", id = productId }),
-                            FormMethod.Post,
-                            new Dictionary<string, object> {
-        {"class", "addtocart"},
-        {"data-productid", productId},
-        {"enctype", "multipart/form-data"}
-                                                                })) {
+        Url.Action("AddToCart", "WishLists",
+                    new { area = "Nwazet.Commerce", id = productId }),
+        FormMethod.Post,
+        new Dictionary<string, object> {
+            {"class", "addtocart"},
+            {"data-productid", productId},
+            {"enctype", "multipart/form-data"}
+        })) {
     if (Model.AttributeIdsToValues != null) {
         <div style="display:none;">
             @foreach (var attributeValue in (IDictionary<int, ProductAttributeValueExtended>)Model.AttributeIdsToValues) {

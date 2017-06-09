@@ -56,6 +56,42 @@ namespace Nwazet.Commerce.Routes {
                 },
                 new RouteDescriptor {
                     Route = new Route(
+                        "wishlists/remove/{wishListid}/{productid}",
+                        new RouteValueDictionary {
+                            {"area", "Nwazet.Commerce"},
+                            {"controller", "WishLists"},
+                            {"action", "RemoveFromWishList"},
+                            {"productid", 0 },
+                            {"wishListid", 0 }
+                        },
+                        new RouteValueDictionary {
+                            {"productid", @"\d*" },
+                            {"wishListid", @"\d*" }
+                        },
+                        new RouteValueDictionary {
+                            {"area", "Nwazet.Commerce"}
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Route = new Route(
+                        "wishlists/settings/{wishListid}",
+                        new RouteValueDictionary {
+                            {"area", "Nwazet.Commerce"},
+                            {"controller", "WishLists"},
+                            {"action", "UpdateSettings"},
+                            {"wishListid", 0 }
+                        },
+                        new RouteValueDictionary {
+                            {"wishListid", @"\d*" }
+                        },
+                        new RouteValueDictionary {
+                            {"area", "Nwazet.Commerce"}
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Route = new Route(
                         "wishlists/{id}",
                         new RouteValueDictionary {
                             {"area", "Nwazet.Commerce"},

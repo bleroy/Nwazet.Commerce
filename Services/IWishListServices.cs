@@ -48,6 +48,19 @@ namespace Nwazet.Commerce.Services {
         /// <param name="attributes">The product's attributes</param>
         void AddProductToWishList(IUser user, WishListListPart wishlist, ProductPart product, IDictionary<int, ProductAttributeValueExtended> attributes);
         /// <summary>
+        /// Remove the specific element from the wishilst given. This does an hard delete on the element.
+        /// </summary>
+        /// <param name="user">The user whose wishlist we are updating</param>
+        /// <param name="wishlist">The wish list we are updating</param>
+        /// <param name="elementId">The id of the element to remove</param>
+        void RemoveElementFromWishlist(IUser user, WishListListPart wishlist, int elementId);
+        /// <summary>
+        /// Deletes the wishlist and all its elements. This is an hard delete.
+        /// </summary>
+        /// <param name="user">The user whose wishlist we are deleting</param>
+        /// <param name="wishlist">The wish list we are deleting</param>
+        void DeleteWishlist(IUser user, WishListListPart wishlist);
+        /// <summary>
         /// Generates the shape for the creation of a new wishlist.
         /// </summary>
         /// <param name="user">The user whose wishlists we are trying to get.</param>

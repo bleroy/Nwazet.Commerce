@@ -31,4 +31,9 @@
         @Html.Raw(originalUnitPrice)
         @Model.CurrencyProvider.GetPriceString(unitPrice)
     </div>
+    <div>
+        @foreach(var shape in Model.ExtensionShapes) {
+            @Display(shape);
+        }
+    </div>
 </fieldset>

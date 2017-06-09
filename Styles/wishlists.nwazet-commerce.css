@@ -1,4 +1,4 @@
-﻿/* Style for "add to wishlist" button*/
+﻿/* Style for "add to wishlist" button in product page*/
 #add-to-wishlist-popover {
     position: relative;
     width: 620px;
@@ -167,7 +167,7 @@ being the ones which make the drop-down to stay hidden */
         background: #00d9ff;
     }
 
-
+/**/
 .button-looks-like-link {
     background: none !important;
     color: inherit;
@@ -178,6 +178,9 @@ being the ones which make the drop-down to stay hidden */
 }
 
 .wishlist-addtocart-button {
+    float: right;
+}
+.wishlist-remove-from-wishlist-button{
     float: right;
 }
 

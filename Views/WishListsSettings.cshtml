@@ -1,1 +1,24 @@
-﻿
+﻿@using Nwazet.Commerce.Models
+@{ 
+    Script.Require("jQuery");
+    Style.Include("wishlists.nwazet-commerce.css", "wishlists.nwazet-commerce.min.css");
+
+    var wishLists = (IEnumerable<WishListListPart>)Model.WishLists;
+}
+
+@using (Html.BeginFormAntiForgeryPost(
+                Url.Action("UpdateSettings", "WishLists", new { area = "Nwazet.Commerce" }),
+                FormMethod.Post,
+                new { enctype = "multipart/form-data" }
+                )) {
+
+    <a href="#wishlists-settings-open-modal">@T("Wish lists' settings")</a>
+
+    <div id="wishlists-settings-open-modal" class="wishListModalDialog">
+        @*display the base settings shape for each wishlist*@
+
+        @*display the extension shapes*@
+
+        @*submit button*@
+    </div>
+}

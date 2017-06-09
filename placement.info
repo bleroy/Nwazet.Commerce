@@ -5,8 +5,9 @@
   <Place Parts_Product="Content:3.1"/>
   <Place Parts_Product_PriceTiers="Content:3.2"/>
   <Place Parts_Product_AddButton="Content:3.3"/>
-  <Place Parts_Product_AddToWishlistButton="Content:3.3"/>
-  <Place Parts_Product_AddToCartFromWishlist="Content:3.3"/>
+  <Place Parts_Product_AddToWishListButton="Content:3.3"/>
+  <Place Parts_Product_AddToCartFromWishList="Content:3.3"/>
+  <Place Parts_Product_RemoveFromWishList="Content:3.3"/>
   <Place Parts_WishListList="Content:3.1"/>
   <Place Parts_WishListElement="Content:3.2"/>
   <Place ShoppingCartWidget="Content:0" />

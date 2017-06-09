@@ -9,16 +9,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
 using Nwazet.Commerce.ViewModels;
+using Nwazet.Commerce.Services;
 
 namespace Nwazet.Commerce.Drivers {
     [OrchardFeature("Nwazet.WishLists")]
     public class WishListListPartDriver : ContentPartDriver<WishListListPart> {
         private readonly IContentManager _contentManager;
+        private readonly IEnumerable<IWishListExtensionProvider> _wishListExtensionProviders;
 
         public WishListListPartDriver(
-            IContentManager contentManager) {
+            IContentManager contentManager,
+            IEnumerable<IWishListExtensionProvider> wishListExtensionProviders) {
 
             _contentManager = contentManager;
+            _wishListExtensionProviders = wishListExtensionProviders;
         }
 
         protected override string Prefix {
@@ -36,6 +40,9 @@ namespace Nwazet.Commerce.Drivers {
             }
             //Get the additional shapes form the extensions
             List<dynamic> extensionsShapes = new List<dynamic>();
+            foreach (var ext in _wishListExtensionProviders) {
+                extensionsShapes.Add(ext.BuildWishListDisplayShape(part));
+            }
 
             return ContentShape("Parts_WishListList", () =>
                 shapeHelper.Parts_WishListList(new WishListListViewModel {

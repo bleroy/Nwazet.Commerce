@@ -370,6 +370,7 @@
     <Compile Include="Services\IProductInventoryService.cs" />
     <Compile Include="Services\ISKUGenerationServices.cs" />
     <Compile Include="Services\ISKUUniquenessHelper.cs" />
+    <Compile Include="Services\IWishListExtensionProvider.cs" />
     <Compile Include="Services\IWishListServices.cs" />
     <Compile Include="Services\LatestProductAttributeAdminServices.cs" />
     <Compile Include="Services\LocalizationSKUUniquenessHelper.cs" />
@@ -577,6 +578,7 @@
     <None Include="Views\ListOfWishLists.cshtml" />
     <None Include="Views\Parts\Product.AddToCartFromWishlist.cshtml" />
     <None Include="Views\Parts\Product.AddToWishlistButton.cshtml" />
+    <None Include="Views\Parts\Product.RemoveFromWishList.cshtml" />
     <None Include="Views\Parts\WishListElement.cshtml" />
     <None Include="Views\Parts\WishListList.cshtml" />
     <None Include="Views\ProductAttributesAdminList.cshtml" />

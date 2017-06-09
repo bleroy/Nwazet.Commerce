@@ -21,6 +21,9 @@ namespace Nwazet.Commerce.Handlers {
             OnLoading<WishListElementPart>((context, part) => LazyLoadHandlers(part));
             OnVersioning<WishListElementPart>((context, part, newVersionPart) => LazyLoadHandlers(newVersionPart));
 
+            OnDestroying<WishListElementPart>((context, part) => {
+                repository.Delete(part.Record);
+            });
         }
 
         protected void LazyLoadHandlers(WishListElementPart part) {
