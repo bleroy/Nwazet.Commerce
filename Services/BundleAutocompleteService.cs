@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Nwazet.Commerce.Extensions;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.ViewModels;
 using Orchard.ContentManagement;
@@ -46,24 +47,41 @@ namespace Nwazet.Commerce.Services {
         }
 
         private IEnumerable<ProductPart> GetProductParts(IEnumerable<int> ids) {
-            return _contentManager
-               .Query<ProductPart, ProductPartVersionRecord>(VersionOptions.Latest)
-               .List()
-               .Where(p => !p.Has<BundlePart>() && ids.Contains(p.Id));
+            return _contentManager.GetMany<ProductPart>(ids, VersionOptions.Latest, QueryHints.Empty)
+                    .Where(p => !p.Has<BundlePart>());
         }
 
-        public List<ProductEntryAutocomplete> GetProducts(string searchtext, List<int> exclude) {
-            if (exclude == null)
-                exclude = new List<int>();
-            return _contentManager
-                .Query<ProductPart, ProductPartVersionRecord>(VersionOptions.Latest)
-                .List()
-                .Where(p => !p.Has<BundlePart>() && !(exclude.Contains(p.Id)) && (p.Sku.IndexOf(searchtext,StringComparison.OrdinalIgnoreCase)>=0 || p.ContentItem.As<TitlePart>().Title.IndexOf(searchtext, StringComparison.OrdinalIgnoreCase) >= 0)).Select(x => new ProductEntryAutocomplete {
-                    ProductId = x.Id,
-                    EditUrl = _url.ItemEditUrl(x),
-                    Quantity = 1,
-                    DisplayText = _contentManager.GetItemMetadata(x.ContentItem).DisplayText
-                }).OrderBy(x=>x.DisplayText).ToList();
+        public List<ProductEntryAutocomplete> GetProducts(string searchText, List<int> excludedProductIds) {
+            if (excludedProductIds == null)
+                excludedProductIds = new List<int>();
+            var productAlias = "productPartVersionRecord";
+            var titleAlias = "titlePartRecord";
+            Action<IAliasFactory> productPartRecordAlias = x => x.ContentPartRecord<ProductPartVersionRecord>().Named(productAlias);
+            Action<IAliasFactory> titlePartRecordAlias = x => x.ContentPartRecord<TitlePartRecord>().Named(titleAlias);
+            Action<IHqlExpressionFactory> titleSearch = title => title.InsensitiveLikeSpecificAlias(titleAlias, "Title", searchText, HqlMatchMode.Anywhere);
+            Action<IHqlExpressionFactory> skuSearch = sku => sku.InsensitiveLikeSpecificAlias(productAlias, "Sku", searchText, HqlMatchMode.Anywhere);
+            Action<IHqlExpressionFactory> idNotExcluded = p => p.Gt("Id", 0);
+            if (excludedProductIds.Count > 0)
+                idNotExcluded = p => p.Not(q => q.In("Id", excludedProductIds.ToArray()));
+            return _contentManager.HqlQuery()
+                .ForVersion(VersionOptions.Latest)
+                .Join(productPartRecordAlias)
+                .Join(titlePartRecordAlias)
+                .Where(a => a.ContentItem(),
+                    x => x.And(
+                      idNotExcluded,
+                           search => search.Or(
+                           titleSearch,
+                           skuSearch)))
+               .OrderBy(titlePartRecordAlias, o => o.Asc("Title"))
+               .List()
+               .Select(x => new ProductEntryAutocomplete {
+                   ProductId = x.Id,
+                   EditUrl = _url.ItemEditUrl(x),
+                   Quantity = 1,
+                   DisplayText = _contentManager.GetItemMetadata(x).DisplayText
+               })
+               .ToList();
         }
     }
 }

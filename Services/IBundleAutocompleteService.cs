@@ -6,6 +6,6 @@ using Orchard;
 namespace Nwazet.Commerce.Services {
     public interface IBundleAutocompleteService : IDependency {
         BundleViewModel BuildEditorViewModel(BundlePart part);
-        List<ProductEntryAutocomplete> GetProducts(string searchtext,List<int> exclude);
+        List<ProductEntryAutocomplete> GetProducts(string searchtext,List<int> excludedProductIds);
     }
 }

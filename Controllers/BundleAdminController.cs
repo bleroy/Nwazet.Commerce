@@ -11,21 +11,21 @@ using Orchard.UI.Admin;
 
 namespace Nwazet.Commerce.Controllers {
     [OrchardFeature("Nwazet.Bundles")]
-    //[Admin]
+    [Admin]
     public class BundleAdminController : Controller {
         private readonly IBundleService _bundleService;
-        private readonly IBundleAutocompleteService _bundleAutocompliteService;
+        private readonly IBundleAutocompleteService _bundleAutocompleteService;
         private readonly IContentManager _contentManager;
         private readonly IProductInventoryService _productInventoryService;
 
         public BundleAdminController(
             IBundleService bundleService,
-            IBundleAutocompleteService bundleAutocompliteService,
+            IBundleAutocompleteService bundleAutocompleteService,
             IContentManager contentManager,
             IProductInventoryService productInventoryService) {
 
             _bundleService = bundleService;
-            _bundleAutocompliteService = bundleAutocompliteService;
+            _bundleAutocompleteService = bundleAutocompleteService;
             _contentManager = contentManager;
             _productInventoryService = productInventoryService;
         }
@@ -46,8 +46,8 @@ namespace Nwazet.Commerce.Controllers {
         }
 
         [HttpPost]
-        public ActionResult SearchProduct(string searchtext,List<int> exclude) {
-           var model =  _bundleAutocompliteService.GetProducts(searchtext, exclude);
+        public ActionResult SearchProduct(string searchText,List<int> excludedProductIds) {
+           var model =  _bundleAutocompleteService.GetProducts(searchText, excludedProductIds);
            return Json(model);
          }
     }
