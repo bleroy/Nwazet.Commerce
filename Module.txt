@@ -96,3 +96,8 @@ Features:
 		Description: Estabilish 1-to-1 relationship between SKU and inventory.
 		Category: Commerce
 		Dependencies: Nwazet.AdvancedSKUManagement
+	Nwazet.PersistentCart:
+		Name: Nwazet Persistent Carts
+		Description: Enables persistent database storage of a user's shopping cart
+		Category: Commerce
+		Dependencies: Nwazet.Commerce

@@ -40,5 +40,6 @@ namespace Nwazet.Commerce.Models {
                 + (string.IsNullOrWhiteSpace(AttributeDescription) ? "" : " " + AttributeDescription)
                 + "}";
         }
+        
     }
 }
