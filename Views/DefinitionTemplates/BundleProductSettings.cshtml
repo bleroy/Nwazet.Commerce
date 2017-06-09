@@ -1,0 +1,6 @@
+﻿@model Nwazet.Commerce.Settings.BundleProductSettings
+<fieldset>
+    @Html.CheckBoxFor(m => m.Autocomplete)
+    <label for="@Html.FieldIdFor(m => m.Autocomplete)" class="forcheckbox">@T("Enable Autocomplete.")</label>
+    <span class="hint">@T("Check to enable autocomplete search for product title / product sku  .")</span>
+</fieldset>
