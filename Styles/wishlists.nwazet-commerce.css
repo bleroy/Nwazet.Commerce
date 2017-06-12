@@ -144,7 +144,7 @@ being the ones which make the drop-down to stay hidden */
         background: -o-linear-gradient(#fff, #999);
     }
 
-.closeWishListModalDialog {
+a.closeWishListModalDialog {
     background: #606061;
     color: #FFFFFF;
     line-height: 25px;
@@ -163,7 +163,7 @@ being the ones which make the drop-down to stay hidden */
     box-shadow: 1px 1px 3px #000;
 }
 
-    .closeWishListModalDialog:hover {
+    a.closeWishListModalDialog:hover {
         background: #00d9ff;
     }
 
@@ -214,7 +214,7 @@ div#your-wish-lists-content {
     }
 
 /*Style for "wishlist settings" modal*/
-#wishlist-settings-table-header-row {
+#wishlist-settings-table-header-row > th {
     font-weight: bold;
 }
 

@@ -6,12 +6,12 @@
     var creationShapes = (IEnumerable<dynamic>)Model.CreationShapes;
 }
 
+<a href="#create-new-wishlist-open-modal">@T("New wish list")</a>
 @using (Html.BeginFormAntiForgeryPost(
     Url.Action("CreateWishList", "WishLists", new { area = "Nwazet.Commerce" }),
     FormMethod.Post,
     new { enctype = "multipart/form-data" }
     )) {
-    <a href="#create-new-wishlist-open-modal">@T("New wish list")</a>
 
     <div id="create-new-wishlist-open-modal" class="wishListModalDialog">
         <div>
@@ -27,9 +27,6 @@
             @if (productId != 0 && Model.AttributeShapes != null) {
                 <div id="add-to-wishlist-attributes" style="display:none;">
                     @*Attributes will be copied in this div once the button is clicked*@
-                    @*@foreach (var productAttributeShape in Model.AttributeShapes) {
-                        @Display(productAttributeShape)
-                    }*@
                 </div>
             }
 
