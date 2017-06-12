@@ -12,23 +12,20 @@
 }
 
 @using (Html.BeginFormAntiForgeryPost(
-                                                    Url.Action("AddToWishList", "WishLists", new { area = "Nwazet.Commerce" }),
-                                                    FormMethod.Post,
-                                                    new { enctype = "multipart/form-data" }
-                                                    )) {
+    Url.Action("AddToWishList", "WishLists", new { area = "Nwazet.Commerce" }),
+    FormMethod.Post,
+    new { enctype = "multipart/form-data" }
+    )) {
     <input type="hidden" id="productid" name="productid" value="@productId" />
     <input type="hidden" id="wishListid" name="wishListid" value="@wishListId" />
 
     if (Model.AttributeShapes != null) {
         <div id="add-to-wishlist-attributes_@wishListId" style="display:none;">
             @*Attributes will be copied in this div once the button is clicked*@
-            @*@foreach (var productAttributeShape in Model.AttributeShapes) {
-                    @Display(productAttributeShape)
-                }*@
         </div>
     }
 
-    <button id="button-add-to-wishlist_@wishListId" href="#" onclick="form.submit();" typ="submit" values="@addToWishlistText" class="button-looks-like-link">
+    <button id="button-add-to-wishlist_@wishListId" href="#" onclick="form.submit();" type="submit" values="@addToWishlistText" class="button-looks-like-link">
         @addToWishlistText
     </button>
 }

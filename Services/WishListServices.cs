@@ -168,7 +168,7 @@ namespace Nwazet.Commerce.Services {
                 newELement.Item = item;
                 _contentManager.Create(newELement.ContentItem);
                 //add to list
-                var elementIds = wishlist.Ids.ToList();
+                var elementIds = wishlist.Ids?.ToList();
                 elementIds.Add(newELement.ContentItem.Id);
                 wishlist.Ids = elementIds.ToArray();
 
