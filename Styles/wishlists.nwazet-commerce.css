@@ -180,7 +180,8 @@ being the ones which make the drop-down to stay hidden */
 .wishlist-addtocart-button {
     float: right;
 }
-.wishlist-remove-from-wishlist-button{
+
+.wishlist-remove-from-wishlist-button {
     float: right;
 }
 
@@ -207,7 +208,16 @@ div#your-wish-lists-content {
 
     div#your-wish-lists-content > div#active-wish-list {
         padding-left: 3.5%;
-        overflow:hidden;
+        overflow: hidden;
         float: left;
         width: auto;
     }
+
+/*Style for "wishlist settings" modal*/
+#wishlist-settings-table-header-row {
+    font-weight: bold;
+}
+
+#button-apply-wishlist-settings {
+    float: right;
+}

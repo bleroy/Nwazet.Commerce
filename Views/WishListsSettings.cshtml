@@ -1,24 +1,71 @@
 ﻿@using Nwazet.Commerce.Models
-@{ 
+@using Orchard.Core.Title.Models
+@using Orchard.ContentManagement
+@{
     Script.Require("jQuery");
     Style.Include("wishlists.nwazet-commerce.css", "wishlists.nwazet-commerce.min.css");
 
     var wishLists = (IEnumerable<WishListListPart>)Model.WishLists;
+    var settingsShapes = (List<dynamic>)Model.SettingsShapes;
+    var wishListId = (int)Model.WishListId;
 }
 
 @using (Html.BeginFormAntiForgeryPost(
-                Url.Action("UpdateSettings", "WishLists", new { area = "Nwazet.Commerce" }),
-                FormMethod.Post,
-                new { enctype = "multipart/form-data" }
-                )) {
-
+    Url.Action("UpdateSettings", "WishLists", new { area = "Nwazet.Commerce" }),
+    FormMethod.Post,
+    new { enctype = "multipart/form-data" }
+    )) {
+    <input type="hidden" id="wishListid" name="wishListid" value="@wishListId" />
     <a href="#wishlists-settings-open-modal">@T("Wish lists' settings")</a>
 
     <div id="wishlists-settings-open-modal" class="wishListModalDialog">
+        <a href="#close" title="Close" class="closeWishListModalDialog">X</a>
         @*display the base settings shape for each wishlist*@
-
-        @*display the extension shapes*@
-
-        @*submit button*@
-    </div>
+        <table id="wishlist-settings-table">
+            <thead id="wishlist-settings-table-header">
+                <tr id="wishlist-settings-table-header-row">
+                    <th>@T("List name")</th>
+                    <th>@T("Default list")</th>
+                    <th>@T("Delete list")</th>
+                </tr>
+            </thead>
+            <tbody id="wishlist-settings-table-body">
+                @foreach (var wl in wishLists) {
+                    var wlId = wl.ContentItem.Id;
+                    var title = wl.ContentItem.As<TitlePart>().Title;
+                    <tr id="wishlist-settings-table-body-row-@wlId">
+                        <td>
+                            <input class="text large" 
+                                id="wishlist-title-@wlId" 
+                                name="wishlist-title-@wlId" 
+                                type="text" 
+                                value="@title">
+                        </td>
+                        <td>
+                            <input type="radio" 
+                                name="is-default-wishlist" 
+                                id="wishlist-is-default-@wlId"
+                                value="@wlId" 
+                                @if (wl.IsDefault) {
+                                    <text>checked</text>
+                                }
+                                />
+                        </td>
+                        <td>
+                            <input type="checkbox"
+                                name="delete-wishlist"
+                                id="delete-wishlist-@wlId"
+                                value="@wlId" />
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+            @*display the extension shapes*@
+            @foreach (var shape in settingsShapes) {
+                @Display(shape)
+            }
+            @*submit button*@
+            <input id="button-apply-wishlist-settings" type="submit" value="@T("Apply settings")" />
+        </div>
 }

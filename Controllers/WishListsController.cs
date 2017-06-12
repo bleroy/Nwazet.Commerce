@@ -3,6 +3,7 @@ using Nwazet.Commerce.Services;
 using Nwazet.Commerce.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
+using Orchard.Core.Title.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Themes;
 using Orchard.Workflows.Services;
@@ -59,7 +60,7 @@ namespace Nwazet.Commerce.Controllers {
             }
             return View(new WishListsIndexViewModel {
                 CreateShape = _wishListServices.CreateShape(user),
-                SettingsShape = _wishListServices.SettingsShape(user),
+                SettingsShape = _wishListServices.SettingsShape(user, id),
                 WishLists = wishLists,
                 WishList = selectedList,
                 WishListView = _contentManager.BuildDisplay(selectedList)
@@ -96,7 +97,7 @@ namespace Nwazet.Commerce.Controllers {
             }
             //get selected wishlist
             var wishList = _wishListServices.GetWishList(user, wishListid);
-            
+
             if (productid > 0) {
                 var productPart = _contentManager.Get<ProductPart>(productid);
                 var productattributes = ParseProductAttributes();
@@ -119,7 +120,7 @@ namespace Nwazet.Commerce.Controllers {
                     key => key, //id of the attribute
                     key => { //ProductAttributeValueExtended
                         return new ProductAttributeValueExtended {
-                            Value = form["value_"+key],
+                            Value = form["value_" + key],
                             ExtendedValue = form["ExtendedValue_" + key],
                             ExtensionProvider = form["ExtensionProvider_" + key]
                         };
@@ -134,7 +135,7 @@ namespace Nwazet.Commerce.Controllers {
                     {"Cart", _shoppingCart}
                 });
 
-            return RedirectToAction("Index", new { controller = "ShoppingCart"});
+            return RedirectToAction("Index", new { controller = "ShoppingCart" });
         }
 
         [HttpPost]
@@ -155,6 +156,49 @@ namespace Nwazet.Commerce.Controllers {
 
         [HttpPost]
         public ActionResult UpdateSettings(int wishListid) {
+            var user = _wca.GetContext().CurrentUser;
+            if (user == null) {
+                return new HttpUnauthorizedResult();
+            }
+            var wishLists = _wishListServices.GetWishLists(user);
+            //1. Read what should change from the form
+            var form = HttpContext.Request.Form;
+            //1.1 Get the id of the new default wish list
+            var defaultId = int.Parse(form["is-default-wishlist"]);
+            //1.2 Get the new titles
+            var newTitles = form.AllKeys
+                .Where(key => key.StartsWith("wishlist-title-"))
+                .ToDictionary(
+                    key => int.Parse(key.Substring("wishlist-title-".Length)),
+                    key => form[key]
+                );
+            //1.3 Get the list of wish lists to delete
+            var toDelete = new List<int>();
+            if (form.AllKeys.Contains("delete-wishlist")) {
+                toDelete.AddRange(form["delete-wishlist"]
+                    .Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(int.Parse));
+            }
+            foreach (var wishList in wishLists) {
+                var wlId = wishList.ContentItem.Id;
+                if (toDelete.Contains(wlId)) {
+                    //Delete this list
+                    _wishListServices.DeleteWishlist(user, wishList);
+                } else {
+                    //2. Update titles
+                    var title = newTitles[wlId];
+                    wishList.ContentItem.As<TitlePart>().Title = title;
+                    //3. Update default wishlist
+                    wishList.IsDefault = wlId == defaultId;
+                    //4. Process extension behaviours
+                    foreach (var ext in _wishListExtensionProviders) {
+                        ext.UpdateSettings(user, wishList);
+                    }
+                }
+            }
+            //we may have deleted the default wishlist
+            //that condition is handled in the GetDefaultWishList method
+
             return RedirectToAction("Index", new { id = wishListid });
         }
 

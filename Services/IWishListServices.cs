@@ -71,7 +71,8 @@ namespace Nwazet.Commerce.Services {
         /// Generate the shape to access the settings of a users wishlists
         /// </summary>
         /// <param name="user">The user whose wishlists we are trying to get.</param>
+        /// <param name="wishListId">The id of the wish list we are currently displaying.</param>
         /// <returns>A shape that can be displayed.</returns>
-        dynamic SettingsShape(IUser user);
+        dynamic SettingsShape(IUser user, int wishListId = 0);
     }
 }

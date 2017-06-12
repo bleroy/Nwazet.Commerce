@@ -78,16 +78,25 @@ namespace Nwazet.Commerce.Services {
                 .Where(cpr => cpr.OwnerId == user.Id) //match owner
                 .Slice(1).FirstOrDefault();
             if (wishList == null) {
-                //create the wishlist if no default one exists
-                var ci = _contentManager.New("WishList");
-                ci.As<WishListListPart>().IsDefault = true;
-                ci.As<CommonPart>().Owner = user;
-                ci.As<TitlePart>().Title = DefaultWishListTitle;
-                _contentManager.Create(ci);
-                wishList = ci.As<WishListListPart>();
-                //process extensions
-                foreach (var ext in _wishListExtensionProviders) {
-                    ext.WishListCreation(user, wishList);
+                //if there are wishlists, make the first one default
+                wishList = _contentManager.Query<WishListListPart, WishListListPartRecord>()
+                    .Join<CommonPartRecord>()
+                    .Where(cpr => cpr.OwnerId == user.Id)
+                    .Slice(1).FirstOrDefault();
+                if (wishList == null) { //no wishlist exists
+                    //create the wishlist if no default one exists
+                    var ci = _contentManager.New("WishList");
+                    ci.As<WishListListPart>().IsDefault = true;
+                    ci.As<CommonPart>().Owner = user;
+                    ci.As<TitlePart>().Title = DefaultWishListTitle;
+                    _contentManager.Create(ci);
+                    wishList = ci.As<WishListListPart>();
+                    //process extensions
+                    foreach (var ext in _wishListExtensionProviders) {
+                        ext.WishListCreation(user, wishList);
+                    }
+                } else {
+                    wishList.IsDefault = true;
                 }
             }
 
@@ -273,7 +282,7 @@ namespace Nwazet.Commerce.Services {
                 );
         }
 
-        public dynamic SettingsShape(IUser user) {
+        public dynamic SettingsShape(IUser user, int wishListId = 0) {
             if (user == null) {
                 throw new ArgumentNullException("user");
             }
@@ -286,6 +295,7 @@ namespace Nwazet.Commerce.Services {
 
             return _shapeFactory.WishListsSettings(
                 WishLists: wishlists,
+                WishListId: wishListId,
                 SettingsShapes: settingsShapes
                 );
         }

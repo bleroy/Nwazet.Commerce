@@ -69,5 +69,10 @@ namespace Nwazet.Commerce.Services {
         /// <param name="wishlist">The wish list we are updating</param>
         /// <param name="elementPart">The the element we are adding</param>
         void WishListAddedElement(IUser user, WishListListPart wishlist, WishListElementPart elementPart);
+        /// <summary>
+        /// Perform the extension's operations related to wishlist settings
+        /// </summary>
+        /// <param name="user">The user whose wishlist we are updating</param>
+        void UpdateSettings(IUser user, WishListListPart wishlist);
     }
 }
