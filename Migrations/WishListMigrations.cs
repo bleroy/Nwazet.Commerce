@@ -1,12 +1,7 @@
 ﻿using Orchard.ContentManagement.MetaData;
 using Orchard.Data.Migration;
 using Orchard.Environment.Extensions;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Nwazet.Commerce.Migrations {
     [OrchardFeature("Nwazet.WishLists")]
@@ -34,14 +29,7 @@ namespace Nwazet.Commerce.Migrations {
             ContentDefinitionManager.AlterTypeDefinition("WishListItem", cfg => cfg
                 .WithPart("WishListElementPart")
             );
-
-            ContentDefinitionManager.AlterTypeDefinition("WishListListWidget", type => type
-                .WithPart("WishListListWidgetPart")
-                .WithPart("CommonPart")
-                .WithPart("WidgetPart")
-                .WithSetting("Stereotype", "Widget")
-                );
-
+            
             return 1;
         }
     }

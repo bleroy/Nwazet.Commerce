@@ -1,14 +1,10 @@
 ﻿using Nwazet.Commerce.Models;
+using Nwazet.Commerce.Services;
 using Orchard;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Environment.Extensions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.CompilerServices;
-using Nwazet.Commerce.Services;
 
 namespace Nwazet.Commerce.Drivers {
     [OrchardFeature("Nwazet.WishLists")]

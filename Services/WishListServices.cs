@@ -1,5 +1,4 @@
 ﻿using Nwazet.Commerce.Models;
-using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Title.Models;
@@ -11,8 +10,6 @@ using Orchard.UI.Notify;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Nwazet.Commerce.Services {
     [OrchardFeature("Nwazet.WishLists")]

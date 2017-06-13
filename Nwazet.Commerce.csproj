@@ -221,7 +221,6 @@
     <Compile Include="Drivers\ProductSettingsPartDriver.cs" />
     <Compile Include="Drivers\WishListElementPartDriver.cs" />
     <Compile Include="Drivers\WishListListPartDriver.cs" />
-    <Compile Include="Drivers\WishListListWidgetDriver.cs" />
     <Compile Include="Drivers\ZipCodeTaxPartDriver.cs" />
     <Compile Include="Drivers\StateOrCountryTaxPartDriver.cs" />
     <Compile Include="Drivers\UspsShippingMethodPartDriver.cs" />
@@ -305,7 +304,6 @@
     <Compile Include="Models\WishListElementPart.cs" />
     <Compile Include="Models\WishListElementPartRecord.cs" />
     <Compile Include="Models\WishListListPartRecord.cs" />
-    <Compile Include="Models\WishListListWidgetPart.cs" />
     <Compile Include="Models\ZipCodeTaxPart.cs" />
     <Compile Include="Models\StateOrCountryTaxPart.cs" />
     <Compile Include="Models\StateOrCountryTaxPartRecord.cs" />
@@ -593,7 +591,6 @@
     <None Include="Views\EditorTemplates\SiteSettings\Currency.cshtml" />
     <None Include="Views\EditorTemplates\SiteSettings\InventoryBySKU.cshtml" />
     <None Include="Views\ProductAttributesLocalizationAdminListItem.cshtml" />
-    <None Include="Views\WishListListWidget.cshtml" />
     <None Include="Views\WishListsSettings.cshtml" />
     <None Include="Views\WishLists\Index.cshtml" />
   </ItemGroup>

@@ -110,7 +110,7 @@ being the ones which make the drop-down to stay hidden */
                 width: 150px;
             }
 
-/*Style for "create new wishlist" modal*/
+/*Style for "create new wishlist" and "wishlists' settings" modals*/
 .wishListModalDialog {
     position: fixed;
     font-family: Arial, Helvetica, sans-serif;
@@ -166,7 +166,7 @@ being the ones which make the drop-down to stay hidden */
     .closeWishListModalDialog:hover {
         background: #00d9ff;
     }
-/*Style for "create new wishlist" modal*/
+/*Style for "create new wishlist" modal are separate because it may be contained in the dropdown*/
 #create-new-wishlist-open-modal {
     position: fixed;
     font-family: Arial, Helvetica, sans-serif;
