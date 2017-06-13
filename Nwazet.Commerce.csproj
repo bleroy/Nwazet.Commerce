@@ -184,6 +184,7 @@
     <Content Include="Styles\order-admin.min.css">
       <DependentUpon>order-admin.less</DependentUpon>
     </Content>
+    <None Include="Views\Parts\WishListsActions.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Properties\AssemblyInfo.cs" />
@@ -591,7 +592,7 @@
     <None Include="Views\DefinitionTemplates\BundleProductSettings.cshtml" />
     <None Include="Views\EditorTemplates\Parts\BundleAutocomplete.cshtml" />
     <None Include="Views\EditorTemplates\Parts\ProductLocalizationBundle.cshtml" />
-    <None Include="Views\ListOfWishLists.cshtml" />
+    <None Include="Views\Parts\ListOfWishLists.cshtml" />
     <None Include="Views\Parts\Product.AddToCartFromWishlist.cshtml" />
     <None Include="Views\Parts\Product.AddToWishlistButton.cshtml" />
     <None Include="Views\Parts\Product.RemoveFromWishList.cshtml" />
