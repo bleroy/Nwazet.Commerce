@@ -1,8 +1,11 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
+using Nwazet.Commerce.ViewModels;
 using Orchard.ContentManagement;
+using Orchard.Core.Title.Models;
 using Orchard.Environment.Extensions;
 using Orchard.UI.Admin;
 
@@ -11,14 +14,18 @@ namespace Nwazet.Commerce.Controllers {
     [Admin]
     public class BundleAdminController : Controller {
         private readonly IBundleService _bundleService;
+        private readonly IBundleAutocompleteService _bundleAutocompleteService;
         private readonly IContentManager _contentManager;
         private readonly IProductInventoryService _productInventoryService;
 
-        public BundleAdminController(IBundleService bundleService, 
+        public BundleAdminController(
+            IBundleService bundleService,
+            IBundleAutocompleteService bundleAutocompleteService,
             IContentManager contentManager,
             IProductInventoryService productInventoryService) {
 
             _bundleService = bundleService;
+            _bundleAutocompleteService = bundleAutocompleteService;
             _contentManager = contentManager;
             _productInventoryService = productInventoryService;
         }
@@ -37,5 +44,11 @@ namespace Nwazet.Commerce.Controllers {
                 Data = newInventory
             };
         }
+
+        [HttpPost]
+        public ActionResult SearchProduct(string searchText,List<int> excludedProductIds) {
+           var model =  _bundleAutocompleteService.GetProducts(searchText, excludedProductIds);
+           return Json(model);
+         }
     }
 }

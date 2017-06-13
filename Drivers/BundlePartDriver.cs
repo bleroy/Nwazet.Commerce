@@ -1,8 +1,10 @@
-﻿using System.Globalization;
+﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
+using Nwazet.Commerce.Settings;
 using Nwazet.Commerce.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
@@ -15,14 +17,17 @@ namespace Nwazet.Commerce.Drivers {
     [OrchardFeature("Nwazet.Bundles")]
     public class BundlePartDriver : ContentPartDriver<BundlePart> {
         private readonly IBundleService _bundleService;
+        private readonly IBundleAutocompleteService _bundleAutocompleteService;
         private readonly IContentManager _contentManager;
         private readonly IOrchardServices _orchardServices;
         public BundlePartDriver(
             IBundleService bundleService,
+            IBundleAutocompleteService bundleAutocompleteService,
             IContentManager contentManager,
             IOrchardServices orchardServices) {
 
             _bundleService = bundleService;
+            _bundleAutocompleteService = bundleAutocompleteService;
             _contentManager = contentManager;
             _orchardServices = orchardServices;
         }
@@ -53,6 +58,14 @@ namespace Nwazet.Commerce.Drivers {
         }
 
         protected override DriverResult Editor(BundlePart part, dynamic shapeHelper) {
+           if (part.TypePartDefinition.Settings.GetModel<BundleProductSettings>().Autocomplete) {
+                return ContentShape("Parts_Bundle_Autocomplete_Edit",
+                    () => shapeHelper.EditorTemplate(
+                    TemplateName: "Parts/BundleAutocomplete",
+                    Model: _bundleAutocompleteService.BuildEditorViewModel(part),
+                    Prefix: Prefix));
+            }
+           else
             return ContentShape("Parts_Bundle_Edit",
                 () => shapeHelper.EditorTemplate(
                     TemplateName: "Parts/Bundle",

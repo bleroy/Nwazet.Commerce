@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Orchard.Environment.Extensions;
+using Orchard.Mvc.Routes;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Orchard.Environment.Extensions;
-using Orchard.Mvc.Routes;
 
 namespace Nwazet.Commerce.Routes {
     [OrchardFeature("Nwazet.Commerce")]

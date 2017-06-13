@@ -219,6 +219,7 @@
     <Compile Include="Drivers\OrderPartDriver.cs" />
     <Compile Include="Drivers\ProductPartWishListDriver.cs" />
     <Compile Include="Drivers\ProductSettingsPartDriver.cs" />
+    <Compile Include="Drivers\ProductsListPartDriver.cs" />
     <Compile Include="Drivers\WishListElementPartDriver.cs" />
     <Compile Include="Drivers\WishListListPartDriver.cs" />
     <Compile Include="Drivers\ZipCodeTaxPartDriver.cs" />
@@ -235,6 +236,7 @@
     <Compile Include="Drivers\WeightBasedShippingMethodPartDriver.cs" />
     <Compile Include="Exceptions\StripeException.cs" />
     <Compile Include="Extensions\AttributeNameUtilities.cs" />
+    <Compile Include="Extensions\DefaultHqlExpressionFactoryExtension.cs" />
     <Compile Include="Features\CurrencyProviderBySiteSettingFeature.cs" />
     <Compile Include="Features\InventoryBySKUFeature.cs" />
     <Compile Include="Filters\ReferrerFilter.cs" />
@@ -274,6 +276,7 @@
     <Compile Include="Migrations\CommerceMigrations.cs" />
     <Compile Include="Migrations\AttributesMigrations.cs" />
     <Compile Include="Migrations\OrderMigrations.cs" />
+    <Compile Include="Migrations\PersistentCartMigrations.cs" />
     <Compile Include="Migrations\TaxMigrations.cs" />
     <Compile Include="Migrations\UspsMigrations.cs" />
     <Compile Include="Migrations\DiscountMigrations.cs" />
@@ -288,6 +291,8 @@
     <Compile Include="Models\ECommerceCurrencySiteSettingsPart.cs" />
     <Compile Include="Models\ICharge.cs" />
     <Compile Include="Models\InventoryBySKUSiteSettingsPart.cs" />
+    <Compile Include="Models\PersistentShoppingCart.cs" />
+    <Compile Include="Models\ProductsListPart.cs" />
     <Compile Include="Models\OrderEvent.cs" />
     <Compile Include="Models\OrderPart.cs" />
     <Compile Include="Models\OrderPartRecord.cs" />
@@ -301,6 +306,7 @@
     <Compile Include="Models\Reporting\ReportData.cs" />
     <Compile Include="Models\Reporting\ReportDataPoint.cs" />
     <Compile Include="Models\Reporting\TimePeriod.cs" />
+    <Compile Include="Models\ShoppingCartBase.cs" />
     <Compile Include="Models\WishListElementPart.cs" />
     <Compile Include="Models\WishListElementPartRecord.cs" />
     <Compile Include="Models\WishListListPartRecord.cs" />
@@ -355,14 +361,19 @@
     <Compile Include="Routes\OrderRoutes.cs" />
     <Compile Include="Routes\CommerceRoutes.cs" />
     <Compile Include="Routes\WishListRoutes.cs" />
+    <Compile Include="Services\BundleAutocompleteService.cs" />
     <Compile Include="Services\BundleProductLocalizationBundleService.cs" />
     <Compile Include="Services\BundleProductLocalizationServices.cs" />
     <Compile Include="Services\BundleServiceBase.cs" />
+    <Compile Include="Services\CommerceLocalStorageSettings.cs" />
     <Compile Include="Services\CurrencyProviderBase.cs" />
+    <Compile Include="Services\IBundleAutocompleteService.cs" />
     <Compile Include="Services\IBundleProductLocalizationServices.cs" />
     <Compile Include="Services\IBundleService.cs" />
+    <Compile Include="Services\ILocalStorageSettings.cs" />
     <Compile Include="Services\InventoriesAreNotSynchronizedBySKU.cs" />
     <Compile Include="Services\InventoryBySKUProductInventoryService.cs" />
+    <Compile Include="Services\IPersistentShoppingCartServices.cs" />
     <Compile Include="Services\IProductAttributeAdminServices.cs" />
     <Compile Include="Services\IProductAttributeLocalizationServices.cs" />
     <Compile Include="Services\IProductInventoryService.cs" />
@@ -373,6 +384,8 @@
     <Compile Include="Services\LatestProductAttributeAdminServices.cs" />
     <Compile Include="Services\LocalizationSKUUniquenessHelper.cs" />
     <Compile Include="Services\IProductAttributeNameService.cs" />
+    <Compile Include="Services\PersistentCartLocalStorageSettings.cs" />
+    <Compile Include="Services\PersistentShoppingCartServices.cs" />
     <Compile Include="Services\ProductAttributeAdminServices.cs" />
     <Compile Include="Services\ProductAttributeLocalizationServices.cs" />
     <Compile Include="Services\ProductAttributeNameService.cs" />
@@ -397,6 +410,7 @@
     <Compile Include="Services\ProductAttributeService.cs" />
     <Compile Include="Services\ProductDiscountPriceProvider.cs" />
     <Compile Include="Services\ShippingService.cs" />
+    <Compile Include="Services\ShoppingCartInfosetPartStorage.cs" />
     <Compile Include="Services\SKUGenerationServices.cs" />
     <Compile Include="Services\TextProductAttributeExtensionProvider.cs" />
     <Compile Include="Services\UseCurrencyFromSiteCultureProvider.cs" />
@@ -432,8 +446,10 @@
     <Compile Include="Services\UspsWebService.cs" />
     <Compile Include="Services\WeightBasedShippingMethodProvider.cs" />
     <Compile Include="Services\UnitedStates.cs" />
+    <Compile Include="Settings\BundleProductEditorEvents.cs" />
     <Compile Include="Settings\BundleProductLocalizationEditorEvents.cs" />
     <Compile Include="Settings\BundleProductLocalizationSettings.cs" />
+    <Compile Include="Settings\BundleProductSettings.cs" />
     <Compile Include="Settings\ProductAttributeLocalizationEditorEvents.cs" />
     <Compile Include="Settings\ProductAttributeLocalizationSettings.cs" />
     <Compile Include="Shapes\ProductAttributesLocalizationAdminShapeProvider.cs" />
@@ -572,6 +588,8 @@
     <None Include="packages.config" />
     <None Include="Views\AddToWishListButtonElement.cshtml" />
     <None Include="Views\CreateNewWishList.cshtml" />
+    <None Include="Views\DefinitionTemplates\BundleProductSettings.cshtml" />
+    <None Include="Views\EditorTemplates\Parts\BundleAutocomplete.cshtml" />
     <None Include="Views\EditorTemplates\Parts\ProductLocalizationBundle.cshtml" />
     <None Include="Views\ListOfWishLists.cshtml" />
     <None Include="Views\Parts\Product.AddToCartFromWishlist.cshtml" />

@@ -6,7 +6,8 @@
         <div class="shopping-cart-container minicart"
              data-load="@Url.Action("NakedCart", "ShoppingCart", new {area="Nwazet.Commerce"})"
              data-update="@Url.Action("AjaxUpdate", "ShoppingCart", new {area="Nwazet.Commerce"})"
-             data-token="@Html.AntiForgeryTokenValueOrchard()"></div>
+             data-token="@Html.AntiForgeryTokenValueOrchard()"
+             data-use-local-storage="@Url.Action("UseLocalStorage", "ShoppingCart", new {area="Nwazet.Commerce"})"></div>
         <script type="text/javascript">
             var Nwazet = window.Nwazet || {};
             Nwazet.WaitWhileWeRestoreYourCart = "@T("Please wait while we restore your shopping cart...")";

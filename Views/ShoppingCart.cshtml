@@ -20,7 +20,8 @@
     }
     @using (Html.BeginFormAntiForgeryPost(Url.Action("Update", "ShoppingCart", new { area = "Nwazet.Commerce" }))) {
         if (!items.Any()) {
-            <p class="shopping-cart-container" data-got-cart="false">
+            <p class="shopping-cart-container" data-got-cart="false" 
+               data-use-local-storage="@Url.Action("UseLocalStorage", "ShoppingCart", new {area="Nwazet.Commerce"})">
                 @T("You don't have any items in your shopping cart.")
             </p>
             <script type="text/javascript">
@@ -30,7 +31,8 @@
             </script>
         }
         else {
-            <div class="shopping-cart-container">
+            <div class="shopping-cart-container" 
+                 data-use-local-storage="@Url.Action("UseLocalStorage", "ShoppingCart", new {area="Nwazet.Commerce"})">
                 <table>
                     <thead>
                         <tr>                            
