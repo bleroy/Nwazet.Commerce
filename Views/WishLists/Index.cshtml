@@ -1,36 +1,35 @@
 ﻿@model Nwazet.Commerce.ViewModels.WishListsIndexViewModel
-@{ 
+@{
     Style.Include("wishlists.nwazet-commerce.css", "wishlists.nwazet-commerce.min.css");
 
     Layout.Title = T("Your Wish Lists").ToString();
 }
 
 
-    <div>
-        <div id="your-wish-lists-headers">
-            <div id="your-wish-lists-title" style="float:left;">
-                @T("Your Wish Lists:")
-            </div>
-            <div id="your-wish-lists-actions" style="float:right">
-                @*
-        To create a new wishlist I am not calling an action directly. Rather, the "create" link is part of a shape. Upon clicking
-        it, we open a modal form, where we can insert the list's title. From there we have a button for the action to create the 
-        list, as well as a chance to undo. This same "create" shape is used in the "add to wishlist" button that is displayed in
-        product pages, so it can take product id as a parameter
-                *@
-                @Display(Model.CreateShape)
-                &nbsp;|&nbsp;
-                @Display(Model.SettingsShape)
-            </div>
+<div>
+    <div id="your-wish-lists-headers">
+        <div id="your-wish-lists-title" style="float:left;">
+            @T("Your Wish Lists:")
         </div>
-        <div id="your-wish-lists-content">
-            <div id="your-wish-lists">
-                @Display.ListOfWishLists(WishLists: Model.WishLists)
-            </div>
-            <div id="active-wish-list">
-                @Display(Model.WishListView)
-            </div>
+        <div id="your-wish-lists-actions" style="float:right">
+            @*
+                To create a new wishlist I am not calling an action directly. Rather, the "create" link is part of a shape. Upon clicking
+                it, we open a modal form, where we can insert the list's title. From there we have a button for the action to create the
+                list, as well as a chance to undo. This same "create" shape is used in the "add to wishlist" button that is displayed in
+                product pages, so it can take product id as a parameter
+            *@
+            @Html.ActionLink(T("New wishlist").Text, "Create", "WishLists", new { area = "Nwazet.Commerce" })
+            &nbsp;|&nbsp;
+            @Html.ActionLink(T("Wish lists' settings").Text, "Edit", "WishLists", new { area = "Nwazet.Commerce", id = Model.WishList.Id })
         </div>
-        
     </div>
-    
+    <div id="your-wish-lists-content">
+        <div id="your-wish-lists">
+            @Display.ListOfWishLists(WishLists: Model.WishLists)
+        </div>
+        <div id="active-wish-list">
+            @Display(Model.WishListView)
+        </div>
+    </div>
+
+</div>

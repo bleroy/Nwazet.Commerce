@@ -586,8 +586,7 @@
     <None Include="app.config" />
     <None Include="bundleconfig.json" />
     <None Include="packages.config" />
-    <None Include="Views\AddToWishListButtonElement.cshtml" />
-    <None Include="Views\CreateNewWishList.cshtml" />
+    <None Include="Views\WishListEditor.cshtml" />
     <None Include="Views\DefinitionTemplates\BundleProductSettings.cshtml" />
     <None Include="Views\EditorTemplates\Parts\BundleAutocomplete.cshtml" />
     <None Include="Views\EditorTemplates\Parts\ProductLocalizationBundle.cshtml" />
