@@ -7,15 +7,24 @@ using Orchard.Core.Title.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Tokens;
+using Nwazet.Commerce.Services;
 
 namespace Nwazet.Commerce.Tokens {
     [OrchardFeature("Nwazet.Commerce")]
     public class CartTokens : ITokenProvider {
         private readonly IShoppingCart _shoppingCart;
+        private readonly IContentManager _contentManager;
+        private readonly ICurrencyProvider _currencyProvider;
 
-        public CartTokens(IShoppingCart shoppingCart) {
+        public CartTokens(
+            IShoppingCart shoppingCart,
+            IContentManager contentManager,
+            ICurrencyProvider currencyProvider) {
+
             T = NullLocalizer.Instance;
             _shoppingCart = shoppingCart;
+            _contentManager = contentManager;
+            _currencyProvider = currencyProvider;
         }
 
         public Localizer T { get; set; }
@@ -53,13 +62,13 @@ namespace Nwazet.Commerce.Tokens {
                 .Token("ZipCode", c => (c ?? _shoppingCart).ZipCode)
                 .Token("Shipping", c => (c ?? _shoppingCart).ShippingOption.ToString())
                 .Chain("Shipping", "ShippingOption", c => (c ?? _shoppingCart).ShippingOption)
-                .Token("Subtotal", c => (c ?? _shoppingCart).Subtotal().ToString("C"))
+                .Token("Subtotal", c => _currencyProvider.GetPriceString((c ?? _shoppingCart).Subtotal()))
                 .Token("Taxes", c => {
                     var taxes = (c ?? _shoppingCart).Taxes();
-                    return taxes == null ? 0.ToString("C") : taxes.Amount.ToString("C");
+                    return taxes == null ? _currencyProvider.GetPriceString(0.0) : _currencyProvider.GetPriceString(taxes.Amount);
                 })
-                .Chain("Taxes", "TaxAmount", c => (c ?? _shoppingCart).Taxes() ?? new TaxAmount {Amount = 0, Name = ""})
-                .Token("Total", c => (c ?? _shoppingCart).Total().ToString("C"))
+                .Chain("Taxes", "TaxAmount", c => (c ?? _shoppingCart).Taxes() ?? new TaxAmount { Amount = 0, Name = "" })
+                .Token("Total", c => _currencyProvider.GetPriceString((c ?? _shoppingCart).Total()))
                 .Token("Count", c => (c ?? _shoppingCart).ItemCount());
 
             context.For<IEnumerable<ShoppingCartQuantityProduct>>("CartItems")
@@ -80,12 +89,18 @@ namespace Nwazet.Commerce.Tokens {
                             String.Format(format,
                                 qp.Quantity,
                                 qp.Product.Sku,
-                                qp.Product.As<TitlePart>().Title + " " + qp.AttributeDescription,
-                                qp.Price.ToString("C"))));
+                                qp.Product.As<TitlePart>().Title + " " +
+                                    string.Join(", ", 
+                                        qp.AttributeIdsToValues.Select(kvp => 
+                                            "[{{" + kvp.Key + "}} " +
+                                            _contentManager.GetItemMetadata(_contentManager.Get(kvp.Key)).DisplayText
+                                            + ": " + kvp.Value.ToString() + "]")
+                                    ),
+                                _currencyProvider.GetPriceString(qp.Price))));
                     });
 
             context.For<ShippingOption>("ShippingOption")
-                .Token("Price", option => option.Price.ToString("C"))
+                .Token("Price", option => _currencyProvider.GetPriceString(option.Price))
                 .Token("Description", option => option.Description)
                 .Chain("Description", "Text", option => option.Description)
                 .Token("Company", option => option.ShippingCompany)
@@ -94,7 +109,7 @@ namespace Nwazet.Commerce.Tokens {
             context.For<TaxAmount>("TaxAmount")
                 .Token("Name", amount => amount.Name)
                 .Chain("Name", "Text", amount => amount.Name)
-                .Token("Amount", amount => amount.Amount.ToString("C"));
+                .Token("Amount", amount => _currencyProvider.GetPriceString(amount.Amount));
         }
     }
 }

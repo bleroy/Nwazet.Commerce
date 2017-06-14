@@ -134,6 +134,13 @@ namespace Nwazet.Commerce.Controllers {
                     {"Cart", _shoppingCart}
                 });
 
+            _workflowManager.TriggerEvent("CartItemAdded",
+                _wca.GetContext().CurrentSite,
+                () => new Dictionary<string, object> {
+                    {"Cart", _shoppingCart},
+                    {"Item", new ShoppingCartItem(id, quantity, productattributes) }
+                });
+
             // Test isAjaxRequest too because iframe posts won't return true for Request.IsAjaxRequest()
             if (Request.IsAjaxRequest() || isAjaxRequest) {
                 return new ShapePartialResult(
