@@ -1,5 +1,5 @@
 ﻿<div id="your-wish-lists-actions">
-    @Html.ActionLink(T("New wishlist").Text, "Create", "WishLists", new { area = "Nwazet.Commerce" })
+    @Html.ActionLink(T("New wishlist").Text, "Create", new { area = "Nwazet.Commerce", controller = "WishLists" })
     &nbsp;|&nbsp;
-    @Html.ActionLink(T("Wish lists' settings").Text, "Edit", "WishLists", new { area = "Nwazet.Commerce", id = Model.Id })
+    @Html.ActionLink(T("Wish lists' settings").Text, "Edit", new { area = "Nwazet.Commerce", controller = "WishLists", id = Model.Id })
 </div>

@@ -36,6 +36,7 @@ namespace Nwazet.Commerce.Drivers {
             var user = _wca.GetContext().CurrentUser;
             //get the elements out of the wishlist
             List<dynamic> elementsShapes = new List<dynamic>();
+            
             foreach (var element in part.WishListElements) {
                 var elementPart = element.As<WishListElementPart>();
                 if (elementPart != null) {

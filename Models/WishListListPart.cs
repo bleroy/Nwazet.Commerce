@@ -13,7 +13,7 @@ namespace Nwazet.Commerce.Models {
         public LazyField<IEnumerable<ContentItem>> WishListElementsField { get { return _wishListElements; } }
 
         private string _serializedItemIds {
-            get { return Retrieve(r => r.SerializedIds); }
+            get { return Retrieve(r => r.SerializedIds) ?? ""; }
             set { Store(r => r.SerializedIds, value); }
         }
 
