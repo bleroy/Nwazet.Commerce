@@ -1,0 +1,24 @@
+﻿@{
+    Script.Require("jQuery");
+    Style.Include("wishlists.nwazet-commerce.css", "wishlists.nwazet-commerce.min.css");
+
+    var productId = (int)Model.ProductId;
+    var creationShapes = (IEnumerable<dynamic>)Model.CreationShapes;
+}
+
+@using (Html.BeginFormAntiForgeryPost(
+                Url.Action("Create", "WishLists", new { area = "Nwazet.Commerce" }),
+                FormMethod.Post)) {
+
+    <div class="wish-list-editor">
+        <div>
+            <label for="new_wishlist_title">@T("Name of the wish list.")</label>
+            <input class="text large" id="new_wishlist_title" name="new_wishlist_title" type="text" value="">
+            @foreach (var cShape in creationShapes) {
+                @Display(cShape)
+            }
+            <input id="button-create-wishlist" type="submit" value="@T("Create WishList")" />
+
+        </div>
+    </div>
+}

@@ -56,14 +56,37 @@ namespace Nwazet.Commerce.Controllers {
             if (selectedList == null) {
                 selectedList = wishLists.SingleOrDefault(wp => wp.IsDefault);
             }
-            return View(new WishListsIndexViewModel {
-                CreateShape = _wishListServices.CreateShape(user),
-                SettingsShape = _wishListServices.SettingsShape(user, id),
-                WishLists = wishLists,
-                WishList = selectedList,
-                WishListView = _contentManager.BuildDisplay(selectedList)
-            });
+            return View(_contentManager.BuildDisplay(selectedList));
         }
+        [Authorize]
+        public ActionResult Create() {
+            var model = _wishListServices.CreateShape(_wca.GetContext().CurrentUser);
+            return View("WishListEditor", model);
+        }
+        [Authorize]
+        [HttpPost, ActionName("Create")]
+        public ActionResult CreatePost(string new_wishlist_title, int productid = 0) {
+            return (CreateWishList(new_wishlist_title, productid));
+        }
+
+        [Authorize]
+        public ActionResult Edit(int id = 0) {
+            var model = _wishListServices.SettingsShape(_wca.GetContext().CurrentUser, id);
+            return View("WishListsSettings", model);
+        }
+
+        [Authorize]
+        [HttpPost, ActionName("Edit")]
+        public ActionResult EditPost(int id = 0) {
+            return UpdateSettings(id);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult Delete(int id) {
+            return RedirectToAction("Index");
+        }
+
 
         [HttpPost]
         public ActionResult CreateWishList(string new_wishlist_title, int productid = 0) {
@@ -182,7 +205,8 @@ namespace Nwazet.Commerce.Controllers {
                 if (toDelete.Contains(wlId)) {
                     //Delete this list
                     _wishListServices.DeleteWishlist(user, wishList);
-                } else {
+                }
+                else {
                     //2. Update titles
                     var title = newTitles[wlId];
                     wishList.ContentItem.As<TitlePart>().Title = title;

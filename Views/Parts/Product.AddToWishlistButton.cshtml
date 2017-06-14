@@ -1,32 +1,60 @@
 ﻿@using Nwazet.Commerce.Models
+@using Orchard.ContentManagement
+
 @using Orchard.Security
 @{
-    var productId = (int)Model.ProductId;
-    var wishLists = (List<WishListListPart>)Model.WishLists;
-    var user = (IUser)Model.User;
+    int productId = (int)Model.ProductId;
+    List<WishListListPart> wishLists = (List<WishListListPart>)Model.WishLists;
+    IUser user = (IUser)Model.User;
 
     Script.Require("jQuery");
     Style.Include("wishlists.nwazet-commerce.css", "wishlists.nwazet-commerce.min.css");
 
     var addToWishlistText = T("Add to WishList").Text;
 }
-    <div id="add-to-wishlist-popover">
-        <ul id="add-to-wishlist-dropdown-list">
-            <li id="add-to-wishlist-base-button">
-                @Display.AddToWishListButtonElement(ProductId: productId, WishList: null, AttributeShapes: Model.AttributeShapes)
-                @if (user != null) {
-                    <ul>
-                        @foreach (var wl in wishLists) {
-                            <li>
-                                @Display.AddToWishListButtonElement(ProductId: productId, WishList: wl, AttributeShapes: Model.AttributeShapes)
-                            </li>
-                        }
-                        <li>
-                            @Display(Model.CreateShape)
-                        </li>
-                    </ul>
-                }
 
-            </li>
-        </ul>
-    </div>
+@using (Html.BeginFormAntiForgeryPost(
+                                        Url.Action("AddToWishList", "WishLists", new { area = "Nwazet.Commerce" }),
+                                        FormMethod.Post,
+                                        new { enctype = "multipart/form-data" }
+                                        )) {
+
+    if (user != null) {
+        var wishlistItems = new List<SelectListItem>();
+        wishlistItems.Add(new SelectListItem {
+            Value = "0",
+            Text = T("WishList (default)").Text
+        });
+        wishlistItems.AddRange(wishLists.Select(s => new SelectListItem {
+            Value = s.Id.ToString(),
+            Text = Html.ItemDisplayText((IContent)(s.ContentItem)).ToString()
+        }));
+        @Html.DropDownList("wishListid", wishlistItems, new { @class = "wish-list-dropdownlist" })
+        <input type="hidden" id="productid" name="productid" value="@productId" />
+        <button id="wishlist-add" type="submit" name="wishlist-add">
+            @T("Add to wishlist")
+        </button>
+        if (Model.AttributeShapes != null) {
+            <div id="add-to-wishlist-attributes" style="display:none;">
+                @*Attributes will be copied in this div once the button is clicked*@
+            </div>
+        }
+    }
+
+}
+
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        jQuery(function ($) {
+            $('#wishlist-add').click(function () {
+                $('#add-to-cart-attributes').clone().appendTo('#add-to-wishlist-attributes');
+                //jQuery does not clone selected values: https://stackoverflow.com/a/743871/2669614
+                var selects = $('#add-to-cart-attributes').find("select");
+                $(selects).each(function (i) {
+                    var select = this;
+                    $('#add-to-wishlist-attributes').find("select").eq(i).val($(select).val());
+                });
+            });
+        });
+    </script>
+}

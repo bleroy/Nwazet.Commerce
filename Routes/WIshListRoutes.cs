@@ -24,7 +24,7 @@ namespace Nwazet.Commerce.Routes {
                         new RouteValueDictionary {
                             {"area", "Nwazet.Commerce"},
                             {"controller", "WishLists"},
-                            {"action", "CreateWishList"},
+                            {"action", "Create"},
                             {"productid", 0 }
                         },
                         new RouteValueDictionary {

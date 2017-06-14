@@ -1,6 +1,7 @@
 ﻿using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
 using Nwazet.Commerce.ViewModels;
+using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Environment.Extensions;
@@ -11,13 +12,19 @@ namespace Nwazet.Commerce.Drivers {
     public class WishListListPartDriver : ContentPartDriver<WishListListPart> {
         private readonly IContentManager _contentManager;
         private readonly IEnumerable<IWishListExtensionProvider> _wishListExtensionProviders;
+        private readonly IWorkContextAccessor _wca;
+        private readonly IWishListServices _wishListServices;
 
         public WishListListPartDriver(
             IContentManager contentManager,
-            IEnumerable<IWishListExtensionProvider> wishListExtensionProviders) {
+            IEnumerable<IWishListExtensionProvider> wishListExtensionProviders,
+            IWorkContextAccessor wca,
+            IWishListServices wishListServices) {
 
             _contentManager = contentManager;
             _wishListExtensionProviders = wishListExtensionProviders;
+            _wca = wca;
+            _wishListServices = wishListServices;
         }
 
         protected override string Prefix {
@@ -25,8 +32,11 @@ namespace Nwazet.Commerce.Drivers {
         }
 
         protected override DriverResult Display(WishListListPart part, string displayType, dynamic shapeHelper) {
+            var shapes = new List<DriverResult>();
+            var user = _wca.GetContext().CurrentUser;
             //get the elements out of the wishlist
             List<dynamic> elementsShapes = new List<dynamic>();
+            
             foreach (var element in part.WishListElements) {
                 var elementPart = element.As<WishListElementPart>();
                 if (elementPart != null) {
@@ -39,11 +49,22 @@ namespace Nwazet.Commerce.Drivers {
                 extensionsShapes.Add(ext.BuildWishListDisplayShape(part));
             }
 
-            return ContentShape("Parts_WishListList", () =>
-                shapeHelper.Parts_WishListList(new WishListListViewModel {
-                    ElementsShapes = elementsShapes,
-                    ExtensionShapes = extensionsShapes
-                }));
+            shapes.Add(ContentShape("Parts_WishListList", () =>
+               shapeHelper.Parts_WishListList(new WishListListViewModel {
+                   ElementsShapes = elementsShapes,
+                   ExtensionShapes = extensionsShapes
+               })));
+            shapes.Add(ContentShape("Parts_ListOfWishLists", () =>
+                shapeHelper.Parts_ListOfWishLists(
+                    WishLists: _wishListServices.GetWishLists(user)
+                    )));
+            shapes.Add(ContentShape("Parts_WishListsActions", () =>
+                shapeHelper.Parts_WishListsActions(
+                    CreateShape: _wishListServices.CreateShape(user),
+                    SettingsShape: _wishListServices.SettingsShape(user, part.ContentItem.Id)
+                    )));
+
+            return Combined(shapes.ToArray());
         }
     }
 }

@@ -11,16 +11,14 @@
 }
 
 @using (Html.BeginFormAntiForgeryPost(
-                Url.Action("UpdateSettings", "WishLists", new { area = "Nwazet.Commerce" }),
+                Url.Action("Edit", "WishLists", new { area = "Nwazet.Commerce" }),
                 FormMethod.Post,
                 new { enctype = "multipart/form-data" }
                 )) {
     <input type="hidden" id="wishListid" name="wishListid" value="@wishListId" />
-    <a href="#wishlists-settings-open-modal">@T("Wish lists' settings")</a>
 
-    <div id="wishlists-settings-open-modal" class="wishListModalDialog">
+    <div>
         <div>
-            <a href="#close" title="Close" class="closeWishListModalDialog">X</a>
             @*display the base settings shape for each wishlist*@
             <table id="wishlist-settings-table">
                 <thead id="wishlist-settings-table-header">
