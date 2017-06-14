@@ -56,11 +56,7 @@ namespace Nwazet.Commerce.Controllers {
             if (selectedList == null) {
                 selectedList = wishLists.SingleOrDefault(wp => wp.IsDefault);
             }
-            return View(new WishListsIndexViewModel {
-                WishLists = wishLists,
-                WishList = selectedList,
-                WishListView = _contentManager.BuildDisplay(selectedList)
-            });
+            return View(_contentManager.BuildDisplay(selectedList));
         }
         [Authorize]
         public ActionResult Create() {

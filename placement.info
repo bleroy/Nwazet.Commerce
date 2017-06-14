@@ -10,6 +10,8 @@
   <Place Parts_Product_RemoveFromWishList="Content:3.3"/>
   <Place Parts_WishListList="Content:3.1"/>
   <Place Parts_WishListElement="Content:3.2"/>
+  <Place Parts_ListOfWishLists="/AsideFirst:3.2"/>
+  <Place Parts_WishListsActions="Content:before"/>
   <Place ShoppingCartWidget="Content:0" />
   <Place WishListListWidget="Content:0" />
   <Place Parts_Usps_Settings="Content:5"/>

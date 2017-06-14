@@ -3,6 +3,10 @@
 @{
     var wishLists = (IEnumerable<WishListListPart>)Model.WishLists;
 }
+<div id="your-wish-lists-title">
+    @T("Your Wish Lists:")
+</div>
+
 <div id="list-of-wish-lists">
     <ul>
         @foreach (var wishList in wishLists) {
