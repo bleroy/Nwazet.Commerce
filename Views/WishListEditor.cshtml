@@ -12,8 +12,8 @@
 
     <div class="wish-list-editor">
         <div>
-            <label for="new_wishlist_title">@T("Name of the wish list.")</label>
-            <input class="text large" id="new_wishlist_title" name="new_wishlist_title" type="text" value="">
+            <label for="title">@T("Name of the wish list.")</label>
+            <input class="text large" id="title" name="title" type="text" value="">
             @foreach (var cShape in creationShapes) {
                 @Display(cShape)
             }

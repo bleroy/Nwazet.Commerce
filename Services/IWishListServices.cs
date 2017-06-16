@@ -29,6 +29,27 @@ namespace Nwazet.Commerce.Services {
         /// <returns>The specific wishlist.</returns>
         WishListListPart GetWishList(IUser user, int wishListId = 0);
         /// <summary>
+        /// Gets a specific wishlist of the specified user.
+        /// If the specific wishlist cannot be found or accessed, the default wishlist is 
+        /// returned instead.
+        /// </summary>
+        /// <param name="user">The user whose wishlists we are trying to get.</param>
+        /// <param name="wishList">The wish listwe found</param>
+        /// <param name="wishListId">The id of the wishlist.</param>
+        /// <returns>True if the specific wishlist was found. False otherwise.
+        /// In the latter case, the WishListPart in out is the default one.</returns>
+        bool TryGetWishList(IUser user, out WishListListPart wishList, int wishListId = 0);
+        /// <summary>
+        /// Gets a specific wishlist, no matter who owns it.
+        /// If the specific wishlist cannot be found or accessed, the default wishlist is 
+        /// returned instead.
+        /// </summary>
+        /// <param name="wishList">The wish listwe found</param>
+        /// <param name="wishListId">The id of the wishlist.</param>
+        /// <returns>True if the specific wishlist was found. False otherwise.
+        /// In the latter case, the WishListPart in out is the default one.</returns>
+        bool TryGetWishList(out WishListListPart wishList, int wishListId = 0);
+        /// <summary>
         /// Creates a new wish list for the given user and with the given title
         /// </summary>
         /// <param name="user">The user for whom a wish list is being created.</param>
@@ -46,16 +67,14 @@ namespace Nwazet.Commerce.Services {
         /// <summary>
         /// Remove the specific element from the wishilst given. This does an hard delete on the element.
         /// </summary>
-        /// <param name="user">The user whose wishlist we are updating</param>
         /// <param name="wishlist">The wish list we are updating</param>
-        /// <param name="elementId">The id of the element to remove</param>
-        void RemoveElementFromWishlist(IUser user, WishListListPart wishlist, int elementId);
+        /// <param name="itemId">The id of the element to remove</param>
+        void RemoveItemFromWishlist(WishListListPart wishlist, int itemId);
         /// <summary>
         /// Deletes the wishlist and all its elements. This is an hard delete.
         /// </summary>
-        /// <param name="user">The user whose wishlist we are deleting</param>
         /// <param name="wishlist">The wish list we are deleting</param>
-        void DeleteWishlist(IUser user, WishListListPart wishlist);
+        void DeleteWishlist(WishListListPart wishlist);
         /// <summary>
         /// Generates the shape for the creation of a new wishlist.
         /// </summary>

@@ -173,6 +173,10 @@
     <Content Include="Scripts\shoppingcart.min.js"> 
       <DependentUpon>shoppingcart.js</DependentUpon> 
     </Content> 
+    <Content Include="Scripts\wishlists.js" />
+    <Content Include="Scripts\wishlists.min.js">
+      <DependentUpon>wishlists.js</DependentUpon>
+    </Content>
     <Content Include="Styles\bundle.nwazet-commerce-admin.css" /> 
     <Content Include="Styles\attribute.nwazet-commerce-admin.css" /> 
     <Content Include="Styles\reports-admin.css" /> 
@@ -230,7 +234,7 @@
     <Compile Include="Drivers\ProductPartWishListDriver.cs" /> 
     <Compile Include="Drivers\ProductSettingsPartDriver.cs" /> 
     <Compile Include="Drivers\ProductsListPartDriver.cs" /> 
-    <Compile Include="Drivers\WishListElementPartDriver.cs" /> 
+    <Compile Include="Drivers\WishListItemPartDriver.cs" />
     <Compile Include="Drivers\WishListListPartDriver.cs" /> 
     <Compile Include="Drivers\ZipCodeTaxPartDriver.cs" /> 
     <Compile Include="Drivers\StateOrCountryTaxPartDriver.cs" /> 
@@ -269,7 +273,7 @@
     <Compile Include="Handlers\SizeBasedShippingMethodPartHandler.cs" /> 
     <Compile Include="Handlers\WeightBasedShippingMethodPartHandler.cs" /> 
     <Compile Include="Handlers\ProductPartHandler.cs" /> 
-    <Compile Include="Handlers\WishListElementPartHandler.cs" /> 
+    <Compile Include="Handlers\WishListItemPartHandler.cs" />
     <Compile Include="Handlers\WishListListPartHandler.cs" /> 
     <Compile Include="Menus\ECommerceSettingsAdminMenu.cs" /> 
     <Compile Include="Menus\ReportsAdminMenu.cs" /> 
@@ -317,8 +321,8 @@
     <Compile Include="Models\Reporting\ReportDataPoint.cs" /> 
     <Compile Include="Models\Reporting\TimePeriod.cs" /> 
     <Compile Include="Models\ShoppingCartBase.cs" /> 
-    <Compile Include="Models\WishListElementPart.cs" /> 
-    <Compile Include="Models\WishListElementPartRecord.cs" /> 
+    <Compile Include="Models\WishListItemPart.cs" />
+    <Compile Include="Models\WishListItemPartRecord.cs" />
     <Compile Include="Models\WishListListPartRecord.cs" /> 
     <Compile Include="Models\ZipCodeTaxPart.cs" /> 
     <Compile Include="Models\StateOrCountryTaxPart.cs" /> 
@@ -492,7 +496,6 @@
     <Compile Include="Models\WishListListPart.cs" /> 
     <Compile Include="ViewModels\WishListElementViewModel.cs" /> 
     <Compile Include="ViewModels\WishListListViewModel.cs" /> 
-    <Compile Include="ViewModels\WishListsIndexViewModel.cs" /> 
   </ItemGroup> 
   <ItemGroup> 
     <Content Include="Content\Web.config" /> 
@@ -604,7 +607,7 @@
     <None Include="Views\Parts\Product.AddToCartFromWishlist.cshtml" /> 
     <None Include="Views\Parts\Product.AddToWishlistButton.cshtml" /> 
     <None Include="Views\Parts\Product.RemoveFromWishList.cshtml" /> 
-    <None Include="Views\Parts\WishListElement.cshtml" /> 
+    <None Include="Views\Parts\WishListItem.cshtml" />
     <None Include="Views\Parts\WishListList.cshtml" /> 
     <None Include="Views\ProductAttributesAdminList.cshtml" /> 
     <None Include="Views\ProductAttributesAdminListItem.cshtml" /> 

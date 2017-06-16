@@ -6,22 +6,22 @@ using Orchard.Environment.Extensions;
 
 namespace Nwazet.Commerce.Handlers {
     [OrchardFeature("Nwazet.WishLists")]
-    public class WishListElementPartHandler : ContentHandler{
+    public class WishListItemPartHandler : ContentHandler{
         private readonly IContentManager _contentManager;
 
-        public WishListElementPartHandler(IContentManager contentManager, IRepository<WishListElementPartRecord> repository) {
+        public WishListItemPartHandler(IContentManager contentManager, IRepository<WishListItemPartRecord> repository) {
             Filters.Add(StorageFilter.For(repository));
             _contentManager = contentManager;
 
-            OnLoading<WishListElementPart>((context, part) => LazyLoadHandlers(part));
-            OnVersioning<WishListElementPart>((context, part, newVersionPart) => LazyLoadHandlers(newVersionPart));
+            OnLoading<WishListItemPart>((context, part) => LazyLoadHandlers(part));
+            OnVersioning<WishListItemPart>((context, part, newVersionPart) => LazyLoadHandlers(newVersionPart));
 
-            OnDestroying<WishListElementPart>((context, part) => {
+            OnDestroying<WishListItemPart>((context, part) => {
                 repository.Delete(part.Record);
             });
         }
 
-        protected void LazyLoadHandlers(WishListElementPart part) {
+        protected void LazyLoadHandlers(WishListItemPart part) {
             part.WishListField.Loader(() => _contentManager.Get<WishListListPart>(part.WishListId, VersionOptions.Published, QueryHints.Empty));
         }
     }

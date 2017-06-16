@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.WishLists")]
-    public class WishListElementPart : ContentPart<WishListElementPartRecord> {
+    public class WishListItemPart : ContentPart<WishListItemPartRecord> {
         private readonly LazyField<WishListListPart> _wishList = new LazyField<WishListListPart>();
         public LazyField<WishListListPart> WishListField { get { return _wishList; } }
         public int WishListId {
@@ -43,9 +43,9 @@ namespace Nwazet.Commerce.Models {
             set { _item = value; }
         }
 
-        public WishListElementPart() { }
+        public WishListItemPart() { }
 
-        public WishListElementPart(int wishListId, ShoppingCartItem item) {
+        public WishListItemPart(int wishListId, ShoppingCartItem item) {
             WishListId = WishListId;
             _item = item;
         }

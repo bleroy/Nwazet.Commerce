@@ -31,16 +31,9 @@ namespace Nwazet.Commerce.Drivers {
             var user = _wca.GetContext().CurrentUser;
             //usually, wishlists only apply to authenticated users.
             //however, we are still going to show the "Add to list" functionalities, to drive sign-up / login
-            var wishLists = new List<WishListListPart>();
-            if (user != null) {
-                //there is an authenticated user, who may have several lists
-                //Get the wish lists for the user
-                //A Site setting tells me how many lists I get at this stage.
-                //we always take at least the default list
-                wishLists = _wishListServices.GetWishLists(user).ToList();
-                //for each wishlist we found, build the shape we will display
-                //as its "add to ..." link in the view
-            }
+            var wishLists = user == null ? 
+                new List<WishListListPart>() :
+                _wishListServices.GetWishLists(user).ToList();
 
             // Get attributes and add them to the add to list shape
             var attributeShapes = _attributeDrivers
@@ -52,7 +45,7 @@ namespace Nwazet.Commerce.Drivers {
                     User: user,
                     WishLists: wishLists,
                     Prefix: Prefix,
-                    CreateShape: _wishListServices.CreateShape(user, part),
+                    CreateShape: _wishListServices.CreateShape(user, part), //in case we want a "new wishlist" link
                     AttributeShapes: attributeShapes
                     ));
         }

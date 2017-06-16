@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace Nwazet.Commerce.Drivers {
     [OrchardFeature("Nwazet.WishLists")]
-    public class WishListElementPartDriver : ContentPartDriver<WishListElementPart> {
+    public class WishListItemPartDriver : ContentPartDriver<WishListItemPart> {
         private readonly IEnumerable<IProductAttributesDriver> _attributeDrivers;
         private readonly IEnumerable<IProductAttributeExtensionProvider> _extensionProviders;
         private readonly IContentManager _contentManager;
@@ -20,7 +20,7 @@ namespace Nwazet.Commerce.Drivers {
         private readonly ICurrencyProvider _currencyProvider;
         private readonly IEnumerable<IWishListExtensionProvider> _wishListExtensionProviders;
 
-        public WishListElementPartDriver(
+        public WishListItemPartDriver(
             IEnumerable<IProductAttributeExtensionProvider> extensionProviders,
             IContentManager contentManager,
             IPriceService priceService,
@@ -40,7 +40,7 @@ namespace Nwazet.Commerce.Drivers {
             get { return "NwazetCommerceWishListElement"; }
         }
 
-        protected override DriverResult Display(WishListElementPart part, string displayType, dynamic shapeHelper) {
+        protected override DriverResult Display(WishListItemPart part, string displayType, dynamic shapeHelper) {
             var item = part.Item;
             //add attribute extension providers, if any
             if (item.AttributeIdsToValues != null) {
@@ -56,15 +56,15 @@ namespace Nwazet.Commerce.Drivers {
                 new ShoppingCartQuantityProduct(item.Quantity, product, item.AttributeIdsToValues));
 
 
-            var shapes = new List<DriverResult>();
+            var shapes = new List<DriverResult>(3);
             //base element shape
             //Additional shapes from extensions
             var extensionShapes = new List<dynamic>();
             foreach (var ext in _wishListExtensionProviders) {
-                extensionShapes.Add(ext.BuildElementDisplayShape(part));
+                extensionShapes.Add(ext.BuildItemDisplayShape(part));
             }
-            shapes.Add(ContentShape("Parts_WishListElement", () =>
-                shapeHelper.Parts_WishListElement(new WishListElementViewModel {
+            shapes.Add(ContentShape("Parts_WishListItem", () =>
+                shapeHelper.Parts_WishListItem(new WishListItemViewModel {
                     Title = _contentManager.GetItemMetadata(product.ContentItem).DisplayText,
                     ProductAttributes = productDetails.AttributeIdsToValues,
                     ContentItem = product.ContentItem,
@@ -85,19 +85,19 @@ namespace Nwazet.Commerce.Drivers {
             if (product.Inventory > 0 || product.AllowBackOrder || (product.IsDigital && !product.ConsiderInventory)) {
                 shapes.Add(ContentShape("Parts_Product_AddToCartFromWishList", () =>
                     shapeHelper.Parts_Product_AddToCartFromWishList(
-                        ProductId: product.Id,
                         MinimumOrderQuantity: product.MinimumOrderQuantity,
-                        AttributeIdsToValues: part.Item.AttributeIdsToValues)
-                ));
+                        WishListItemId: part.ContentItem.Id,
+                        WishListId: part.WishList.ContentItem.Id
+                    )));
             }
             //Remove from list
             shapes.Add(ContentShape("Parts_Product_RemoveFromWishList", () =>
                 shapeHelper.Parts_Product_RemoveFromWishList(
-                    WishListElementId: part.ContentItem.Id,
+                    WishListItemId: part.ContentItem.Id,
                     WishListId: part.WishListId
                     )
             ));
-            
+
 
             return Combined(shapes.ToArray());
         }

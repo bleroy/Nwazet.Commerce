@@ -241,13 +241,13 @@ being the ones which make the drop-down to stay hidden */
     float: right;
 }
 
-fieldset.wishlist-element {
+fieldset.wishlist-item {
     width: 96%;
     padding-left: 2%;
     padding-right: 2%;
 }
 
-fieldset.wishlist-list-of-elements {
+fieldset.wishlist-list-of-items {
     width: 96%;
     padding-left: 2%;
     padding-right: 2%;

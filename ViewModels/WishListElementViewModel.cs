@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Nwazet.Commerce.ViewModels {
-    public class WishListElementViewModel {
+    public class WishListItemViewModel {
         public string Title { get; set; }
         public IDictionary<int, ProductAttributeValueExtended> ProductAttributes { get; set; }
         public ContentItem ContentItem { get; set; }
