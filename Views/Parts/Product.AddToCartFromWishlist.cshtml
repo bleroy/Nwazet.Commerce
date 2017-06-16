@@ -4,6 +4,7 @@
 
     var productId = (int)Model.ProductId;
     int quantityValue = Math.Max((int)Model.MinimumOrderQuantity, 1);
+    var attributesArray = ((IDictionary<int, ProductAttributeValueExtended>)Model.AttributeIdsToValues).ToArray();
 }
 
 @using (Html.BeginFormAntiForgeryPost(
@@ -13,18 +14,18 @@
         new Dictionary<string, object> {
             {"class", "addtocart"},
             {"data-productid", productId},
-            {"data-attributesDictionary", (IDictionary<int, ProductAttributeValueExtended>)Model.AttributeIdsToValues },
             {"enctype", "multipart/form-data"}
         })) {
     if (Model.AttributeIdsToValues != null) {
         <div style="display:none;">
-            @foreach (var attributeValue in (IDictionary<int, ProductAttributeValueExtended>)Model.AttributeIdsToValues) {
-                var attributeId = attributeValue.Key;
-                var value = attributeValue.Value;
-                <input type="hidden" id="attributeKey_@attributeId" name="attributeKey_@attributeId" value="@attributeId" />
-                <input type="hidden" id="value_@attributeId" name="value_@attributeId" value="@value.Value" />
-                <input type="hidden" id="ExtendedValue_@attributeId" name="ExtendedValue_@attributeId" value="@value.ExtendedValue" />
-                <input type="hidden" id="ExtensionProvider_@attributeId" name="ExtensionProvider_@attributeId" value="@value.ExtensionProvider" />
+            @for (int i = 0; i < attributesArray.Length; i++) {
+                var attr = attributesArray[i];
+                var key = attr.Key;
+                var value = (ProductAttributeValueExtended)attr.Value;
+                <input type="hidden" name="AttributeIdsToValues[@i].Key" value="@key" />
+                <input type="hidden" name="AttributeIdsToValues[@i].Value.Value" value="@value.Value" />
+                <input type="hidden" name="AttributeIdsToValues[@i].Value.ExtendedValue" value="@value.ExtendedValue" />
+                <input type="hidden" name="AttributeIdsToValues[@i].Value.ExtensionProvider" value="@value.ExtensionProvider" />
             }
         </div>
     }

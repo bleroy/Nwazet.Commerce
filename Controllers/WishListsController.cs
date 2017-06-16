@@ -149,25 +149,8 @@ namespace Nwazet.Commerce.Controllers {
         }
 
         [HttpPost]
-        public ActionResult AddToCart(int productId, int quantity = 1) {
-
-            //read attributes from the form
-            var form = HttpContext.Request.Form;
-            var productattributes = form.AllKeys
-                .Where(key => key.StartsWith("attributeKey"))
-                .Select(key => int.Parse(form[key]))
-                .ToDictionary(
-                    key => key, //id of the attribute
-                    key => { //ProductAttributeValueExtended
-                        return new ProductAttributeValueExtended {
-                            Value = form["value_" + key],
-                            ExtendedValue = form["ExtendedValue_" + key],
-                            ExtensionProvider = form["ExtensionProvider_" + key]
-                        };
-                    }
-                );
-
-            _shoppingCart.Add(productId, quantity, productattributes);
+        public ActionResult AddToCart(int productId, int quantity = 1, IDictionary<int, ProductAttributeValueExtended> AttributeIdsToValues = null) {
+            _shoppingCart.Add(productId, quantity, AttributeIdsToValues);
 
             _workflowManager.TriggerEvent("CartUpdated",
                 _wca.GetContext().CurrentSite,
