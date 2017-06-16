@@ -40,6 +40,16 @@ namespace Nwazet.Commerce.Services {
         /// In the latter case, the WishListPart in out is the default one.</returns>
         bool TryGetWishList(IUser user, out WishListListPart wishList, int wishListId = 0);
         /// <summary>
+        /// Gets a specific wishlist, no matter who owns it.
+        /// If the specific wishlist cannot be found or accessed, the default wishlist is 
+        /// returned instead.
+        /// </summary>
+        /// <param name="wishList">The wish listwe found</param>
+        /// <param name="wishListId">The id of the wishlist.</param>
+        /// <returns>True if the specific wishlist was found. False otherwise.
+        /// In the latter case, the WishListPart in out is the default one.</returns>
+        bool TryGetWishList(out WishListListPart wishList, int wishListId = 0);
+        /// <summary>
         /// Creates a new wish list for the given user and with the given title
         /// </summary>
         /// <param name="user">The user for whom a wish list is being created.</param>

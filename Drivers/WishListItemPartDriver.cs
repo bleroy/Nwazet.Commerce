@@ -85,10 +85,10 @@ namespace Nwazet.Commerce.Drivers {
             if (product.Inventory > 0 || product.AllowBackOrder || (product.IsDigital && !product.ConsiderInventory)) {
                 shapes.Add(ContentShape("Parts_Product_AddToCartFromWishList", () =>
                     shapeHelper.Parts_Product_AddToCartFromWishList(
-                        ProductId: product.Id,
                         MinimumOrderQuantity: product.MinimumOrderQuantity,
-                        AttributeIdsToValues: part.Item.AttributeIdsToValues)
-                ));
+                        WishListItemId: part.ContentItem.Id,
+                        WishListId: part.WishList.ContentItem.Id
+                    )));
             }
             //Remove from list
             shapes.Add(ContentShape("Parts_Product_RemoveFromWishList", () =>

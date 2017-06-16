@@ -2,35 +2,22 @@
 @{
     Style.Include("wishlists.nwazet-commerce.css", "wishlists.nwazet-commerce.min.css");
 
-    var productId = (int)Model.ProductId;
-    int quantityValue = Math.Max((int)Model.MinimumOrderQuantity, 1);
-    var attributesArray = ((IDictionary<int, ProductAttributeValueExtended>)Model.AttributeIdsToValues).ToArray();
+    var wishListItemId = (int)Model.WishListItemId;
+    var wishListId = (int)Model.WishListId;
+    var quantityValue = Math.Max((int)Model.MinimumOrderQuantity, 1);
 }
 
 @using (Html.BeginFormAntiForgeryPost(
         Url.Action("AddToCart", "WishLists",
-                    new { area = "Nwazet.Commerce", id = productId }),
+                    new { area = "Nwazet.Commerce" }),
         FormMethod.Post,
         new Dictionary<string, object> {
             {"class", "addtocart"},
-            {"data-productid", productId},
             {"enctype", "multipart/form-data"}
         })) {
-    if (Model.AttributeIdsToValues != null) {
-        <div style="display:none;">
-            @for (int i = 0; i < attributesArray.Length; i++) {
-                var attr = attributesArray[i];
-                var key = attr.Key;
-                var value = (ProductAttributeValueExtended)attr.Value;
-                <input type="hidden" name="AttributeIdsToValues[@i].Key" value="@key" />
-                <input type="hidden" name="AttributeIdsToValues[@i].Value.Value" value="@value.Value" />
-                <input type="hidden" name="AttributeIdsToValues[@i].Value.ExtendedValue" value="@value.ExtendedValue" />
-                <input type="hidden" name="AttributeIdsToValues[@i].Value.ExtensionProvider" value="@value.ExtensionProvider" />
-            }
-        </div>
-    }
     <div class="wishlist-addtocart-button">
-        <input name="productId" value="@productId" type="hidden" />
+        <input name="wishListItemId" value="@wishListItemId" type="hidden" />
+        <input name="wishListId" value="@wishListId" type="hidden" />
         <input name="quantity" value="@quantityValue" class="addtocart-quantity" type="hidden" />
         <button type="submit" class="addtocart-button">@T("Add to cart")</button>
     </div>

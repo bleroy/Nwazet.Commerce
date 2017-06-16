@@ -47,6 +47,7 @@ namespace Nwazet.Commerce.Controllers {
         private const string ExtensionPrefix = "ext.";
 
         [OutputCache(Duration = 0)]
+
         public ActionResult Index(int id = 0) {
             var user = _wca.GetContext().CurrentUser;
 
@@ -82,36 +83,15 @@ namespace Nwazet.Commerce.Controllers {
             var model = _wishListServices.SettingsShape(_wca.GetContext().CurrentUser, wishListId);
             return View("WishListsSettings", model);
         }
-
+        
         [HttpPost, ActionName("Edit")]
-        public ActionResult EditPost(int wishListId, int defaultId) {
-            return UpdateSettings(wishListId, defaultId);
-        }
-
-        [HttpPost]
-        public ActionResult UpdateSettings(int wishListId, int defaultId) {
+        public ActionResult UpdateSettings(int wishListId, int defaultId, IDictionary<int, string> newTitles, IEnumerable<int> wishListsToDelete) {
             var user = _wca.GetContext().CurrentUser;
 
             var wishLists = _wishListServices.GetWishLists(user);
-            //1. Read what should change from the form
-            var form = HttpContext.Request.Form;
-            //1.2 Get the new titles
-            var newTitles = form.AllKeys
-                .Where(key => key.StartsWith("wishlist-title-"))
-                .ToDictionary(
-                    key => int.Parse(key.Substring("wishlist-title-".Length)),
-                    key => form[key]
-                );
-            //1.3 Get the list of wish lists to delete
-            var toDelete = new List<int>();
-            if (form.AllKeys.Contains("delete-wishlist")) {
-                toDelete.AddRange(form["delete-wishlist"]
-                    .Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(int.Parse));
-            }
             foreach (var wishList in wishLists) {
                 var wlId = wishList.ContentItem.Id;
-                if (toDelete.Contains(wlId)) {
+                if (wishListsToDelete?.Contains(wlId) == true) {
                     //Delete this list
                     _wishListServices.DeleteWishlist(wishList);
                 } else {
@@ -149,16 +129,29 @@ namespace Nwazet.Commerce.Controllers {
         }
 
         [HttpPost]
-        public ActionResult AddToCart(int productId, int quantity = 1, IDictionary<int, ProductAttributeValueExtended> AttributeIdsToValues = null) {
-            _shoppingCart.Add(productId, quantity, AttributeIdsToValues);
+        public ActionResult AddToCart(int wishListItemId, int wishListId, int quantity = 1) {
+            
+            WishListListPart wishList;
+            if (_wishListServices.TryGetWishList(out wishList, wishListId)) {
+                if (wishList.Ids.Contains(wishListItemId)) {
+                    //these checks reduce the likelihood that we get here even though someone has tampered with the page.
+                    var wishListItem = _contentManager.Get<WishListItemPart>(wishListItemId);
+                    if (wishListItem != null) {
+                        _shoppingCart.Add(wishListItem.Item.ProductId, quantity, wishListItem.Item.AttributeIdsToValues);
 
-            _workflowManager.TriggerEvent("CartUpdated",
-                _wca.GetContext().CurrentSite,
-                () => new Dictionary<string, object> {
-                    {"Cart", _shoppingCart}
-                });
+                        _workflowManager.TriggerEvent("CartUpdated",
+                            _wca.GetContext().CurrentSite,
+                            () => new Dictionary<string, object> {
+                                {"Cart", _shoppingCart}
+                            });
 
-            return RedirectToAction("Index", new { controller = "ShoppingCart" });
+
+                        return RedirectToAction("Index", new { controller = "ShoppingCart" });
+                    }
+                }
+            }
+            //in case we failed adding the product to the cart
+            return RedirectToAction("Index", new { id = wishList!= null ? wishList.ContentItem.Id : 0 });
         }
 
         [HttpPost]
@@ -172,7 +165,6 @@ namespace Nwazet.Commerce.Controllers {
 
             return RedirectToAction("Index", new { id = wishListId });
         }
-
 
         private Dictionary<int, ProductAttributeValueExtended> ParseProductAttributes() {
             var form = HttpContext.Request.Form;

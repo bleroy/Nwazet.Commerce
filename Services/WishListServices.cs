@@ -117,6 +117,12 @@ namespace Nwazet.Commerce.Services {
             return wishList;
         }
 
+        private WishListListPart GetWishList(int wishListId) {
+            return _contentManager.Query<WishListListPart, WishListListPartRecord>()
+               .Where(pr => pr.ContentItemRecord.Id == wishListId)
+               .Slice(1).FirstOrDefault();
+        }
+
         public bool TryGetWishList(IUser user, out WishListListPart wishList, int wishListId = 0) {
             var ret = true;
             if (wishListId == 0) {
@@ -126,6 +132,11 @@ namespace Nwazet.Commerce.Services {
                 ret = wishListId == wishList.ContentItem.Id;
             }
             return ret;
+        }
+
+        public bool TryGetWishList(out WishListListPart wishList, int wishListId = 0) {
+            wishList = GetWishList(wishListId);
+            return wishList != null;
         }
 
         public WishListListPart CreateWishList(IUser user, string title = null) {
