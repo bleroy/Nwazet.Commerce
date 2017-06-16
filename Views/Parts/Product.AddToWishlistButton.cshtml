@@ -9,15 +9,16 @@
 
     Script.Require("jQuery");
     Style.Include("wishlists.nwazet-commerce.css", "wishlists.nwazet-commerce.min.css");
+    Script.Include("wishlists.js", "wishlists.min.js");
 
     var addToWishlistText = T("Add to WishList").Text;
 }
 
 @using (Html.BeginFormAntiForgeryPost(
-                                        Url.Action("AddToWishList", "WishLists", new { area = "Nwazet.Commerce" }),
-                                        FormMethod.Post,
-                                        new { enctype = "multipart/form-data" }
-                                        )) {
+    Url.Action("AddToWishList", "WishLists", new { area = "Nwazet.Commerce" }),
+    FormMethod.Post,
+    new { enctype = "multipart/form-data" }
+    )) {
 
     if (user != null) {
         var wishlistItems = new List<SelectListItem>();
@@ -41,20 +42,4 @@
         }
     }
 
-}
-
-@using (Script.Foot()) {
-    <script type="text/javascript">
-        jQuery(function ($) {
-            $('#wishlist-add').click(function () {
-                $('#add-to-cart-attributes').clone().appendTo('#add-to-wishlist-attributes');
-                //jQuery does not clone selected values: https://stackoverflow.com/a/743871/2669614
-                var selects = $('#add-to-cart-attributes').find("select");
-                $(selects).each(function (i) {
-                    var select = this;
-                    $('#add-to-wishlist-attributes').find("select").eq(i).val($(select).val());
-                });
-            });
-        });
-    </script>
 }

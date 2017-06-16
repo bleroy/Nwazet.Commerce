@@ -164,6 +164,7 @@
     <Content Include="Scripts\shoppingcart.min.js">
       <DependentUpon>shoppingcart.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\wishlists.js" />
     <Content Include="Styles\bundle.nwazet-commerce-admin.css" />
     <Content Include="Styles\attribute.nwazet-commerce-admin.css" />
     <Content Include="Styles\reports-admin.css" />
