@@ -55,13 +55,10 @@ namespace Nwazet.Commerce.Services {
                .Where(cpr => cpr.OwnerId == user.Id) //must match owner
                .Join<TitlePartRecord>()
                .OrderBy(p => p.Title);
-            if (max > 0) {
-                wishLists.AddRange(wishListsQuery.Slice(max - 1)); //-1, because the default wishlist is there already
-            } else {
-                wishLists.AddRange(wishListsQuery.List());
-            }
-
-            return wishLists;
+            
+            return max > 0 ?
+                wishLists.Concat(wishListsQuery.Slice(max - 1)) : //-1, because the default wishlist is there already
+                wishLists.Concat(wishListsQuery.List());
         }
 
         public WishListListPart GetDefaultWishList(IUser user) {
@@ -120,6 +117,17 @@ namespace Nwazet.Commerce.Services {
             return wishList;
         }
 
+        public bool TryGetWishList(IUser user, out WishListListPart wishList, int wishListId = 0) {
+            var ret = true;
+            if (wishListId == 0) {
+                wishList = GetDefaultWishList(user);
+            } else {
+                wishList = GetWishList(user, wishListId);
+                ret = wishListId == wishList.ContentItem.Id;
+            }
+            return ret;
+        }
+
         public WishListListPart CreateWishList(IUser user, string title = null) {
             if (user == null) {
                 throw new ArgumentNullException("user");
@@ -146,9 +154,6 @@ namespace Nwazet.Commerce.Services {
             if (user == null) {
                 throw new ArgumentNullException("user");
             }
-            if (wishlist.ContentItem.As<CommonPart>().Owner != user) {
-                throw new ArgumentException(T("Users may only edit wishlists they own.").Text);
-            }
             //we can add the product to the wishlist
             if (!ValidateAttributes(product.ContentItem.Id, attributes)) {
                 // If attributes don't validate, don't add the product, but notify
@@ -160,79 +165,55 @@ namespace Nwazet.Commerce.Services {
             //check whether the product is in the wishlist already
             if (!ItemIsInWishlist(wishlist, item)) {
                 //create a new wishlist element and add it
-                var newELement = _contentManager.New<WishListElementPart>("WishListItem");
-                newELement.WishListId = wishlist.ContentItem.Id;
-                newELement.Item = item;
-                _contentManager.Create(newELement.ContentItem);
+                var newElement = _contentManager.New<WishListItemPart>("WishListItem");
+                newElement.WishListId = wishlist.ContentItem.Id;
+                newElement.Item = item;
+                _contentManager.Create(newElement.ContentItem);
                 //add to list
-                var elementIds = wishlist.Ids?.ToList();
-                elementIds.Add(newELement.ContentItem.Id);
+                var elementIds = wishlist.Ids.ToList();
+                elementIds.Add(newElement.ContentItem.Id);
                 wishlist.Ids = elementIds.ToArray();
 
                 //process extensions
                 foreach (var ext in _wishListExtensionProviders) {
-                    ext.WishListAddedElement(user, wishlist, newELement);
+                    ext.WishListAddedItem(user, wishlist, newElement);
                 }
             }
         }
-        public IEnumerable<WishListElementPart> GetElements(IUser user, WishListListPart wishlist) {
-            if (user == null) {
-                throw new ArgumentNullException("user");
-            }
-            if (wishlist.ContentItem.As<CommonPart>().Owner != user) {
-                throw new ArgumentException(T("Users may only edit wishlists they own.").Text);
-            }
-
-            return GetElements(wishlist);
-        }
-        private IEnumerable<WishListElementPart> GetElements(WishListListPart wishlist) {
-            return _contentManager.Query<WishListElementPart, WishListElementPartRecord>()
+        
+        private IEnumerable<WishListItemPart> GetItems(WishListListPart wishlist) {
+            return _contentManager.Query<WishListItemPart, WishListItemPartRecord>()
                 .Where(epr => epr.WishListId == wishlist.ContentItem.Id)
                 .List();
         }
 
         public bool ItemIsInWishlist(WishListListPart wishlist, ShoppingCartItem item) {
-            return GetElements(wishlist).Any(wel =>
+            return GetItems(wishlist).Any(wel =>
                 ShoppingCartItem.ItemsAreEqual(wel.Item, item));
         }
 
-        public void RemoveElementFromWishlist(IUser user, WishListListPart wishlist, int elementId) {
-            if (user == null) {
-                throw new ArgumentNullException("user");
-            }
-            if (wishlist.ContentItem.As<CommonPart>().Owner != user) {
-                throw new ArgumentException(T("Users may only edit wishlists they own.").Text);
-            }
-
-            var elementPart = _contentManager.Get<WishListElementPart>(elementId);
-            
-            RemoveElementFromWishlist(wishlist, elementPart);
+        public void RemoveItemFromWishlist(WishListListPart wishlist, int itemId) {
+            RemoveItemFromWishlist(wishlist, _contentManager.Get<WishListItemPart>(itemId));
         }
-        private void RemoveElementFromWishlist(WishListListPart wishlist, WishListElementPart elementPart) {
+        private void RemoveItemFromWishlist(WishListListPart wishlist, WishListItemPart itemPart) {
             //process extensions
             foreach (var ext in _wishListExtensionProviders) {
-                ext.WishListElementCleanup(wishlist, elementPart);
+                ext.WishListItemCleanup(wishlist, itemPart);
             }
 
-            var elementId = elementPart.ContentItem.Id;
+            var elementId = itemPart.ContentItem.Id;
             if (wishlist.Ids.Contains(elementId)) {
-                var elementIds = wishlist.Ids.ToList().Where(id => id != elementId);
+                var elementIds = wishlist.Ids.Where(id => id != elementId);
                 wishlist.Ids = elementIds.ToArray();
             }
-            _contentManager.Destroy(elementPart.ContentItem); //hard delete
+            _contentManager.Destroy(itemPart.ContentItem); //hard delete
         }
 
-        public void DeleteWishlist(IUser user, WishListListPart wishlist) {
-            if (user == null) {
-                throw new ArgumentNullException("user");
-            }
-            if (wishlist.ContentItem.As<CommonPart>().Owner != user) {
-                throw new ArgumentException(T("Users may only edit wishlists they own.").Text);
-            }
-
+        public void DeleteWishlist(WishListListPart wishlist) {
+            var user = wishlist.ContentItem.As<CommonPart>().Owner;
             //remove all elements
-            foreach (var element in GetElements(wishlist)) {
-                RemoveElementFromWishlist(wishlist, element);
+            foreach (var element in GetItems(wishlist)) {
+                RemoveItemFromWishlist(wishlist, element);
             }
             //destroy wishlist
             //process extensions

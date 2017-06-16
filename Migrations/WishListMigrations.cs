@@ -14,7 +14,7 @@ namespace Nwazet.Commerce.Migrations {
                 .Column("IsDefault", DbType.Boolean)
             );
 
-            SchemaBuilder.CreateTable("WishListElementPartRecord", table => table
+            SchemaBuilder.CreateTable("WishListItemPartRecord", table => table
                 .ContentPartRecord()
                 .Column("SerializedItem", DbType.String)
                 .Column("WishListId", DbType.Int32)
@@ -27,7 +27,7 @@ namespace Nwazet.Commerce.Migrations {
             );
 
             ContentDefinitionManager.AlterTypeDefinition("WishListItem", cfg => cfg
-                .WithPart("WishListElementPart")
+                .WithPart("WishListItemPart")
             );
             
             return 1;

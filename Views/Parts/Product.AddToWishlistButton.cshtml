@@ -29,8 +29,8 @@
             Value = s.Id.ToString(),
             Text = Html.ItemDisplayText((IContent)(s.ContentItem)).ToString()
         }));
-        @Html.DropDownList("wishListid", wishlistItems, new { @class = "wish-list-dropdownlist" })
-        <input type="hidden" id="productid" name="productid" value="@productId" />
+        @Html.DropDownList("wishListId", wishlistItems, new { @class = "wish-list-dropdownlist" })
+        <input type="hidden" id="productId" name="productId" value="@productId" />
         <button id="wishlist-add" type="submit" name="wishlist-add">
             @T("Add to wishlist")
         </button>

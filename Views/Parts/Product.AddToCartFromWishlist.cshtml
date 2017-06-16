@@ -3,7 +3,7 @@
     Style.Include("wishlists.nwazet-commerce.css", "wishlists.nwazet-commerce.min.css");
 
     var productId = (int)Model.ProductId;
-    int quantityValue = Model.MinimumOrderQuantity > 1 ? Model.MinimumOrderQuantity : 1;
+    int quantityValue = Math.Max((int)Model.MinimumOrderQuantity, 1);
 }
 
 @using (Html.BeginFormAntiForgeryPost(
@@ -13,6 +13,7 @@
         new Dictionary<string, object> {
             {"class", "addtocart"},
             {"data-productid", productId},
+            {"data-attributesDictionary", (IDictionary<int, ProductAttributeValueExtended>)Model.AttributeIdsToValues },
             {"enctype", "multipart/form-data"}
         })) {
     if (Model.AttributeIdsToValues != null) {

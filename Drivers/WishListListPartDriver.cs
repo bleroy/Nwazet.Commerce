@@ -32,13 +32,13 @@ namespace Nwazet.Commerce.Drivers {
         }
 
         protected override DriverResult Display(WishListListPart part, string displayType, dynamic shapeHelper) {
-            var shapes = new List<DriverResult>();
+            var shapes = new List<DriverResult>(3);
             var user = _wca.GetContext().CurrentUser;
             //get the elements out of the wishlist
             List<dynamic> elementsShapes = new List<dynamic>();
-            
+
             foreach (var element in part.WishListElements) {
-                var elementPart = element.As<WishListElementPart>();
+                var elementPart = element.As<WishListItemPart>();
                 if (elementPart != null) {
                     elementsShapes.Add(_contentManager.BuildDisplay(elementPart));
                 }

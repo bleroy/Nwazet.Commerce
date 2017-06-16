@@ -1,16 +1,16 @@
 ﻿@{ 
-    var elementId = (int)Model.WishListElementId;
+    var itemId = (int)Model.WishListItemId;
     var wishListid = (int)Model.WishListId;
 }
 
 @using (Html.BeginFormAntiForgeryPost(
     Url.Action("RemoveFromWishList", "WishLists",
-        new { area = "Nwazet.Commerce", elementId = elementId, wishListid = wishListid }),
+        new { area = "Nwazet.Commerce", itemId = itemId, wishListid = wishListid }),
     FormMethod.Post)) {
 
     <div class="wishlist-remove-from-wishlist-button">
-        <input type="hidden" id="elementId" name="elementId" value="@elementId" />
-        <input type="hidden" id="wishListid" name="wishListid" value="@wishListid" />
+        <input type="hidden" id="itemId" name="itemId" value="@itemId" />
+        <input type="hidden" id="wishListId" name="wishListId" value="@wishListid" />
         <button type="submit">@T("Remove from wish list")</button>
     </div>
 }

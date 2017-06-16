@@ -17,9 +17,9 @@ namespace Nwazet.Commerce.Services {
         /// <summary>
         /// Provides a shape to be used during the dispaly of a wishlist's element
         /// </summary>
-        /// <param name="elementPart">The the element to display</param>
+        /// <param name="itemPart">The the element to display</param>
         /// <returns>The shape</returns>
-        dynamic BuildElementDisplayShape(WishListElementPart elementPart);
+        dynamic BuildItemDisplayShape(WishListItemPart itemPart);
         /// <summary>
         /// Provides a shape to be used during the dispaly of a wishlist
         /// </summary>
@@ -50,8 +50,8 @@ namespace Nwazet.Commerce.Services {
         /// Perform cleanup operations when an element is being deleted
         /// </summary>
         /// <param name="wishlist">The wish list we are deleting</param>
-        /// <param name="elementPart">The the element to remove</param>
-        void WishListElementCleanup(WishListListPart wishlist, WishListElementPart elementPart);
+        /// <param name="itemPart">The the element to remove</param>
+        void WishListItemCleanup(WishListListPart wishlist, WishListItemPart itemPart);
         /// <summary>
         /// Perform additional operations when an wish list is being created
         /// </summary>
@@ -63,8 +63,8 @@ namespace Nwazet.Commerce.Services {
         /// </summary>
         /// <param name="user">The user whose wishlist we are updating</param>
         /// <param name="wishlist">The wish list we are updating</param>
-        /// <param name="elementPart">The the element we are adding</param>
-        void WishListAddedElement(IUser user, WishListListPart wishlist, WishListElementPart elementPart);
+        /// <param name="itemPart">The the element we are adding</param>
+        void WishListAddedItem(IUser user, WishListListPart wishlist, WishListItemPart itemPart);
         /// <summary>
         /// Perform the extension's operations related to wishlist settings
         /// </summary>

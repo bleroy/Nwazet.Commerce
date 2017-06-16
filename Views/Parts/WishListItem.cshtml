@@ -20,11 +20,11 @@
     }
     var contentItem = (ContentItem)Model.ContentItem;
 }
-<fieldset class="wishlist-element">
+<fieldset class="wishlist-item">
     <legend><a href="@Url.ItemDisplayUrl(contentItem)">@title</a></legend>
     <div id="wish-list-element-product-details">
         @if (!string.IsNullOrWhiteSpace(imageUrl)) {
-            <div id="wish-list-element-product-image" style="float:left;">
+            <div id="wish-list-item-product-image" style="float:left;">
                 <a href="@Url.ItemDisplayUrl(contentItem)" class="product-image-link"><img src="@Href(imageUrl)" alt="@title" class="product-image" /></a>
             </div>
         }
