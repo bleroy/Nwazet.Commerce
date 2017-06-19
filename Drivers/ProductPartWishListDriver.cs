@@ -11,15 +11,18 @@ namespace Nwazet.Commerce.Drivers {
     public class ProductPartWishListDriver : ContentPartDriver<ProductPart> {
         private readonly IWorkContextAccessor _wca;
         private readonly IWishListServices _wishListServices;
+        private readonly IWishListsUIServices _wishListsUIServices;
         private readonly IEnumerable<IProductAttributesDriver> _attributeDrivers;
 
         public ProductPartWishListDriver(
             IWorkContextAccessor wca,
             IWishListServices wishListServices,
+            IWishListsUIServices wishListsUIServices,
             IEnumerable<IProductAttributesDriver> attributeDrivers) {
 
             _wca = wca;
             _wishListServices = wishListServices;
+            _wishListsUIServices = wishListsUIServices;
             _attributeDrivers = attributeDrivers;
         }
 
@@ -45,7 +48,7 @@ namespace Nwazet.Commerce.Drivers {
                     User: user,
                     WishLists: wishLists,
                     Prefix: Prefix,
-                    CreateShape: _wishListServices.CreateShape(user, part), //in case we want a "new wishlist" link
+                    CreateShape: _wishListsUIServices.CreateShape(user, part), //in case we want a "new wishlist" link
                     AttributeShapes: attributeShapes
                     ));
         }

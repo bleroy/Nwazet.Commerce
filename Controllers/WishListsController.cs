@@ -1,13 +1,14 @@
 ﻿using Nwazet.Commerce.Models;
+using Nwazet.Commerce.Permissions;
 using Nwazet.Commerce.Services;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Title.Models;
 using Orchard.Environment.Extensions;
+using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Themes;
 using Orchard.Workflows.Services;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -19,44 +20,64 @@ namespace Nwazet.Commerce.Controllers {
     public class WishListsController : Controller {
         private readonly IWorkContextAccessor _wca;
         private readonly IWishListServices _wishListServices;
+        private readonly IWishListsUIServices _wishListsUIServices;
         private readonly IContentManager _contentManager;
         private readonly IEnumerable<IProductAttributeExtensionProvider> _attributeExtensionProviders;
         private readonly IShoppingCart _shoppingCart;
         private readonly IWorkflowManager _workflowManager;
         private readonly IEnumerable<IWishListExtensionProvider> _wishListExtensionProviders;
+        private readonly IOrchardServices _orchardServices;
+        private readonly IMembershipService _membershipService;
 
         public WishListsController(
             IWorkContextAccessor wca,
             IWishListServices wishListServices,
+            IWishListsUIServices wishListsUIServices,
             IContentManager contentManager,
             IEnumerable<IProductAttributeExtensionProvider> attributeExtensionProviders,
             IShoppingCart shoppingCart,
             IWorkflowManager workflowManager,
-            IEnumerable<IWishListExtensionProvider> wishListExtensionProviders) {
+            IEnumerable<IWishListExtensionProvider> wishListExtensionProviders,
+            IOrchardServices orchardServices,
+            IMembershipService membershipService) {
 
             _wca = wca;
             _wishListServices = wishListServices;
+            _wishListsUIServices = wishListsUIServices;
             _contentManager = contentManager;
             _attributeExtensionProviders = attributeExtensionProviders;
             _shoppingCart = shoppingCart;
             _workflowManager = workflowManager;
             _wishListExtensionProviders = wishListExtensionProviders;
+            _orchardServices = orchardServices;
+            _membershipService = membershipService;
+
+            T = NullLocalizer.Instance;
         }
+
+        public Localizer T { get; set; }
 
         private const string AttributePrefix = "productattributes.a";
         private const string ExtensionPrefix = "ext.";
 
         [OutputCache(Duration = 0)]
+        public ActionResult Index(string uName, int id = 0) {
+            //the uName string is there to allow accessing other user's wishlists
+            var user = string.IsNullOrWhiteSpace(uName) ? _wca.GetContext().CurrentUser
+                : _membershipService.GetUser(uName);
 
-        public ActionResult Index(int id = 0) {
-            var user = _wca.GetContext().CurrentUser;
+            WishListListPart selectedList;
+            if (_wishListServices.TryGetWishList(out selectedList, id)) {
+                if (!_orchardServices.Authorizer.Authorize(WishListPermissions.ViewWishLists, selectedList))
+                    return RedirectToAction("Index", new { id = 0 }); //redirect to own wish lists
+                return View(_contentManager.BuildDisplay(selectedList));
+            }
 
-            var selectedList = _wishListServices.GetWishList(user, id);
-            return View(_contentManager.BuildDisplay(selectedList));
+            return View(_contentManager.BuildDisplay(_wishListServices.GetDefaultWishList(_wca.GetContext().CurrentUser)));
         }
 
         public ActionResult Create() {
-            var model = _wishListServices.CreateShape(_wca.GetContext().CurrentUser);
+            var model = _wishListsUIServices.CreateShape(_wca.GetContext().CurrentUser);
             return View("WishListEditor", model);
         }
 
@@ -80,16 +101,19 @@ namespace Nwazet.Commerce.Controllers {
         }
 
         public ActionResult Edit(int wishListId = 0) {
-            var model = _wishListServices.SettingsShape(_wca.GetContext().CurrentUser, wishListId);
+            var model = _wishListsUIServices.SettingsShape(_wca.GetContext().CurrentUser, wishListId);
             return View("WishListsSettings", model);
         }
-        
+
         [HttpPost, ActionName("Edit")]
-        public ActionResult UpdateSettings(int wishListId, int defaultId, IDictionary<int, string> newTitles, IEnumerable<int> wishListsToDelete) {
+        public ActionResult UpdateSettings(
+            int wishListId, int defaultId,
+            IDictionary<int, string> newTitles, IEnumerable<int> wishListsToDelete) {
             var user = _wca.GetContext().CurrentUser;
 
             var wishLists = _wishListServices.GetWishLists(user);
             foreach (var wishList in wishLists) {
+                //these are the wishlists for the current user, so we don't need to evaluate their permissions
                 var wlId = wishList.ContentItem.Id;
                 if (wishListsToDelete?.Contains(wlId) == true) {
                     //Delete this list
@@ -114,15 +138,27 @@ namespace Nwazet.Commerce.Controllers {
 
         [HttpPost]
         public ActionResult Delete(int id) {
+            WishListListPart wishList;
+            if (_wishListServices.TryGetWishList(out wishList, id)) {
+                if (!_orchardServices.Authorizer.Authorize(WishListPermissions.DeleteWishLists, wishList))
+                    return RedirectToAction("Index", new { id = 0 }); //redirect to own wish lists
+
+                _wishListServices.DeleteWishlist(wishList);
+            }
+
             return RedirectToAction("Index");
         }
 
         [HttpPost]
         public ActionResult AddToWishList(int wishListId, int productId) {
             var user = _wca.GetContext().CurrentUser;
-            //get selected wishlist
-            var wishList = _wishListServices.GetWishList(user, wishListId);
-
+            WishListListPart wishList;
+            if (_wishListServices.TryGetWishList(out wishList, wishListId)) {
+                if (!_orchardServices.Authorizer.Authorize(WishListPermissions.UpdateWishLists, wishList))
+                    return RedirectToAction("Index", new { id = 0 }); //redirect to own wish lists
+            } else {//the case we are trying to add to the default wishlist also falls here
+                wishList = _wishListServices.GetWishList(user, wishListId);
+            }
             AddProduct(user, wishList, productId);
 
             return RedirectToAction("Index", new { id = wishList.ContentItem.Id });
@@ -130,7 +166,7 @@ namespace Nwazet.Commerce.Controllers {
 
         [HttpPost]
         public ActionResult AddToCart(int wishListItemId, int wishListId, int quantity = 1) {
-            
+
             WishListListPart wishList;
             if (_wishListServices.TryGetWishList(out wishList, wishListId)) {
                 if (wishList.Ids.Contains(wishListItemId)) {
@@ -151,15 +187,16 @@ namespace Nwazet.Commerce.Controllers {
                 }
             }
             //in case we failed adding the product to the cart
-            return RedirectToAction("Index", new { id = wishList!= null ? wishList.ContentItem.Id : 0 });
+            return RedirectToAction("Index", new { id = wishList != null ? wishList.ContentItem.Id : 0 });
         }
 
         [HttpPost]
         public ActionResult RemoveFromWishList(int wishListId, int itemId) {
-            var user = _wca.GetContext().CurrentUser;
-            //get selected wishlist
             WishListListPart wishList;
-            if (_wishListServices.TryGetWishList(user, out wishList, wishListId)) {
+            if (_wishListServices.TryGetWishList(out wishList, wishListId)) {
+                if (!_orchardServices.Authorizer.Authorize(WishListPermissions.UpdateWishLists, wishList))
+                    return RedirectToAction("Index", new { id = 0 }); //redirect to own wish lists
+
                 _wishListServices.RemoveItemFromWishlist(wishList, itemId);
             }
 

@@ -10,7 +10,6 @@ namespace Nwazet.Commerce.Migrations {
 
             SchemaBuilder.CreateTable("WishListListPartRecord", table => table
                 .ContentPartRecord()
-                .Column("SerializedIds", DbType.String)
                 .Column("IsDefault", DbType.Boolean)
             );
 
