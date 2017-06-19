@@ -4,9 +4,9 @@ using Orchard.Core.Common.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Security;
 
-namespace Nwazet.Commerce.Security {
+namespace Nwazet.Commerce.Services {
     [OrchardFeature("Nwazet.WishLists")]
-    public class WishListsAuthorizationEvenHandler : IAuthorizationServiceEventHandler {
+    public class WishListsArePrivatePermissionsService : IWishListsPermissionsService {
         public void Adjust(CheckAccessContext context) { }
 
         public void Checking(CheckAccessContext context) { }
@@ -19,8 +19,7 @@ namespace Nwazet.Commerce.Security {
              context.Granted: set to true if we grant permission; false otherwise
              context.Adjusted: set to true if we changed the value of Granted
              */
-            var wishList = context.Content.As<WishListListPart>();
-            if (wishList != null) {
+            if (context.Content.As<WishListListPart>() != null) {
                 var owner = context.Content.As<CommonPart>().Owner;
                 var oldGranted = context.Granted;
                 context.Granted &= owner == context.User; //wish lists are always private
