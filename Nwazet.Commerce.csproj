@@ -367,7 +367,7 @@
     <Compile Include="Routes\OrderRoutes.cs" />
     <Compile Include="Routes\CommerceRoutes.cs" />
     <Compile Include="Routes\WishListRoutes.cs" />
-    <Compile Include="Security\WishListsAuthorizationEvenHandler.cs" />
+    <Compile Include="Security\WishListsAuthorizationEventHandler.cs" />
     <Compile Include="Services\BundleAutocompleteService.cs" />
     <Compile Include="Services\BundleProductLocalizationBundleService.cs" />
     <Compile Include="Services\BundleProductLocalizationServices.cs" />
@@ -388,6 +388,7 @@
     <Compile Include="Services\ISKUUniquenessHelper.cs" />
     <Compile Include="Services\IWishListExtensionProvider.cs" />
     <Compile Include="Services\IWishListServices.cs" />
+    <Compile Include="Services\IWishListsPermissionsService.cs" />
     <Compile Include="Services\IWishListsUIServices.cs" />
     <Compile Include="Services\LatestProductAttributeAdminServices.cs" />
     <Compile Include="Services\LocalizationSKUUniquenessHelper.cs" />
@@ -423,6 +424,7 @@
     <Compile Include="Services\TextProductAttributeExtensionProvider.cs" />
     <Compile Include="Services\UseCurrencyFromSiteCultureProvider.cs" />
     <Compile Include="Services\UseCurrencyFromSiteSettingsProvider.cs" />
+    <Compile Include="Services\WishListsArePrivatePermissionsService.cs" />
     <Compile Include="Services\WishListServices.cs" />
     <Compile Include="Services\WishListsUIServices.cs" />
     <Compile Include="Services\ZipCodeTaxProvider.cs" />
