@@ -51,6 +51,9 @@ namespace Nwazet.Commerce.Tokens {
             context.For("TaxAmount", T("Tax Amount"), T("Tax Amount"))
                 .Token("Name", T("Name"), T("Name of the tax"), "Text")
                 .Token("Amount", T("Amount"), T("Amount taxed"));
+
+            context.For("Item", T("Item for update"), T("Item for update"))
+                .Token("Format:*", T("Format:<item format>"), T("Formats the contents of the item using a format string that uses $quantity for the quantity, $product for the product name (with attributes), and $price for the price. For example {Item.Format:$quantity x (&sku) $product}"), "Text");
         }
 
         public void Evaluate(EvaluateContext context) {
@@ -110,6 +113,32 @@ namespace Nwazet.Commerce.Tokens {
                 .Token("Name", amount => amount.Name)
                 .Chain("Name", "Text", amount => amount.Name)
                 .Token("Amount", amount => _currencyProvider.GetPriceString(amount.Amount));
+
+            context.For<ShoppingCartItem>("Item")
+                .Token(s => s.StartsWith("Format:", StringComparison.OrdinalIgnoreCase) ? s.Substring("Format:".Length) : null,
+                    (s, sci) => {
+                        var colonIndex = s.IndexOf(':');
+                        if (colonIndex != -1 && s.Length > colonIndex + 1) {
+                            s = s.Substring(colonIndex + 1);
+                        }
+                        var format = s
+                            .Replace("$quantity", "{0}")
+                            .Replace("$sku", "{1}")
+                            .Replace("$product", "{2}")
+                            .Replace("$price", "{3}");
+                        var product = _contentManager.Get<ProductPart>(sci.ProductId);
+                        return string.Format(format, 
+                            sci.Quantity,
+                            product.Sku,
+                            product.As<TitlePart>().Title + " " +
+                                    string.Join(", ",
+                                        sci.AttributeIdsToValues.Select(kvp =>
+                                            "[{{" + kvp.Key + "}} " +
+                                            _contentManager.GetItemMetadata(_contentManager.Get(kvp.Key)).DisplayText
+                                            + ": " + kvp.Value.ToString() + "]")
+                                    ),
+                             _currencyProvider.GetPriceString(product.Price));
+                    });
         }
     }
 }
