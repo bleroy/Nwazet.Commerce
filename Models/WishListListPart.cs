@@ -1,37 +1,26 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Utilities;
 using Orchard.Environment.Extensions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Nwazet.WishLists")]
     public class WishListListPart : ContentPart<WishListListPartRecord> {
-        private static readonly char[] separator = new[] { '{', '}', ',' };
-        private readonly LazyField<IEnumerable<ContentItem>> _wishListElements = new LazyField<IEnumerable<ContentItem>>();
-        public LazyField<IEnumerable<ContentItem>> WishListElementsField { get { return _wishListElements; } }
-
-        private string _serializedItemIds {
-            get { return Retrieve(r => r.SerializedIds) ?? ""; }
-            set { Store(r => r.SerializedIds, value); }
-        }
+        private readonly LazyField<IEnumerable<ContentItem>> _wishListItems = new LazyField<IEnumerable<ContentItem>>();
+        public LazyField<IEnumerable<ContentItem>> WishListItemsField { get { return _wishListItems; } }
 
         public int[] Ids {
             get {
-                return _serializedItemIds
-                    .Split(separator, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(frag => int.Parse(frag))
+                return WishListItems
+                    .Select(it => it.Id)
                     .ToArray();
-            }
-            set {
-                _serializedItemIds = "{" + string.Join("},{", value) + "}";
             }
         }
 
-        public IEnumerable<ContentItem> WishListElements {
+        public IEnumerable<ContentItem> WishListItems {
             get {
-                return _wishListElements.Value ?? Enumerable.Empty<ContentItem>();
+                return _wishListItems.Value ?? Enumerable.Empty<ContentItem>();
             }
         }
 

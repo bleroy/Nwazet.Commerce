@@ -2,7 +2,6 @@
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Title.Models;
-using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Security;
@@ -15,20 +14,17 @@ namespace Nwazet.Commerce.Services {
     [OrchardFeature("Nwazet.WishLists")]
     public class WishListServices : IWishListServices {
         private readonly IContentManager _contentManager;
-        private readonly dynamic _shapeFactory;
         private readonly IEnumerable<IProductAttributesDriver> _attributesDrivers;
         private readonly INotifier _notifier;
         private readonly IEnumerable<IWishListExtensionProvider> _wishListExtensionProviders;
 
         public WishListServices(
             IContentManager contentManager,
-            IShapeFactory shapeFactory,
             IEnumerable<IProductAttributesDriver> attributesDrivers,
             INotifier notifier,
             IEnumerable<IWishListExtensionProvider> wishListExtensionProviders) {
 
             _contentManager = contentManager;
-            _shapeFactory = shapeFactory;
             _attributesDrivers = attributesDrivers;
             _notifier = notifier;
             _wishListExtensionProviders = wishListExtensionProviders;
@@ -175,27 +171,21 @@ namespace Nwazet.Commerce.Services {
             var item = new ShoppingCartItem(product.ContentItem.Id, 1, attributes);
             //check whether the product is in the wishlist already
             if (!ItemIsInWishlist(wishlist, item)) {
-                //create a new wishlist element and add it
-                var newElement = _contentManager.New<WishListItemPart>("WishListItem");
-                newElement.WishListId = wishlist.ContentItem.Id;
-                newElement.Item = item;
-                _contentManager.Create(newElement.ContentItem);
-                //add to list
-                var elementIds = wishlist.Ids.ToList();
-                elementIds.Add(newElement.ContentItem.Id);
-                wishlist.Ids = elementIds.ToArray();
+                //create a new wishlist item and add it
+                var newItem = _contentManager.New<WishListItemPart>("WishListItem");
+                newItem.WishListId = wishlist.ContentItem.Id;
+                newItem.Item = item;
+                _contentManager.Create(newItem.ContentItem);
 
                 //process extensions
                 foreach (var ext in _wishListExtensionProviders) {
-                    ext.WishListAddedItem(user, wishlist, newElement);
+                    ext.WishListAddedItem(user, wishlist, newItem);
                 }
             }
         }
         
         private IEnumerable<WishListItemPart> GetItems(WishListListPart wishlist) {
-            return _contentManager.Query<WishListItemPart, WishListItemPartRecord>()
-                .Where(epr => epr.WishListId == wishlist.ContentItem.Id)
-                .List();
+            return wishlist.WishListItems.Select(it => it.As<WishListItemPart>());
         }
 
         public bool ItemIsInWishlist(WishListListPart wishlist, ShoppingCartItem item) {
@@ -213,10 +203,6 @@ namespace Nwazet.Commerce.Services {
             }
 
             var elementId = itemPart.ContentItem.Id;
-            if (wishlist.Ids.Contains(elementId)) {
-                var elementIds = wishlist.Ids.Where(id => id != elementId);
-                wishlist.Ids = elementIds.ToArray();
-            }
             _contentManager.Destroy(itemPart.ContentItem); //hard delete
         }
 
@@ -242,54 +228,7 @@ namespace Nwazet.Commerce.Services {
             }
             _contentManager.Destroy(wishlist.ContentItem);
         }
-
-        public dynamic CreateShape(IUser user, ProductPart product = null) {
-            if (user == null) {
-                throw new ArgumentNullException("user");
-            }
-
-            var productId = 0;
-            var attributeShapes = new List<dynamic>();
-            if (product != null) {
-                productId = product.ContentItem.Id;
-                attributeShapes = _attributesDrivers
-                .Select(p => p.GetAttributeDisplayShape(product.ContentItem, _shapeFactory))
-                .ToList();
-            }
-            //get the additional shapes from the extension providers
-            var creationShapes = new List<dynamic>();
-            //process extensions
-            foreach (var ext in _wishListExtensionProviders) {
-                creationShapes.Add(ext.BuildCreationShape(user, product));
-            }
-
-            return _shapeFactory.CreateNewWishList(
-                ProductId: productId,
-                AttributeShapes: attributeShapes,
-                CreationShapes: creationShapes,
-                WishListTitle: DefaultWishListTitle
-                );
-        }
-
-        public dynamic SettingsShape(IUser user, int wishListId = 0) {
-            if (user == null) {
-                throw new ArgumentNullException("user");
-            }
-            //build the settings shape for each wishlist
-            var settingsShapes = new List<dynamic>();
-            var wishlists = GetWishLists(user);
-            foreach (var ext in _wishListExtensionProviders) {
-                settingsShapes.Add(ext.BuildSettingsShape(wishlists));
-            }
-
-            return _shapeFactory.WishListsSettings(
-                WishLists: wishlists,
-                WishListId: wishListId,
-                SettingsShapes: settingsShapes
-                );
-        }
-
-
+        
         private bool ValidateAttributes(int productId, IDictionary<int, ProductAttributeValueExtended> attributeIdsToValues) {
             if (_attributesDrivers == null ||
                 attributeIdsToValues == null ||
@@ -298,7 +237,6 @@ namespace Nwazet.Commerce.Services {
             var product = _contentManager.Get(productId);
             return _attributesDrivers.All(d => d.ValidateAttributes(product, attributeIdsToValues));
         }
-
         
     }
 }

@@ -3,6 +3,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.Environment.Extensions;
+using System.Linq;
 
 namespace Nwazet.Commerce.Handlers {
     [OrchardFeature("Nwazet.WishLists")]
@@ -22,7 +23,13 @@ namespace Nwazet.Commerce.Handlers {
         }
         
         protected void LazyLoadHandlers(WishListListPart part) {
-            part.WishListElementsField.Loader(() => _contentManager.GetMany<ContentItem>(part.Ids, VersionOptions.Published, QueryHints.Empty));
+            part.WishListItemsField.Loader(() => 
+                _contentManager
+                .Query<WishListItemPart, WishListItemPartRecord>()
+                .Where(ipr => ipr.WishListId == part.ContentItem.Id)
+                .List()
+                .Select(ip => ip.ContentItem)
+                );
         }
     }
 }
