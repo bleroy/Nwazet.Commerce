@@ -23,7 +23,7 @@ namespace Nwazet.Commerce.Models {
         }
 
         public override string ToString() {
-            return "(" + string.Join(", ", new string[] { Value, ExtendedValue, ExtensionProvider }) + ")";
+            return $"({Value}, {ExtendedValue}, {ExtensionProvider})";
         }
     }
 }
