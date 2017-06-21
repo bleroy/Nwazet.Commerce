@@ -76,8 +76,9 @@ namespace Nwazet.Commerce.Controllers {
             }
 
             selectedList = _wishListServices.GetDefaultWishList(_wca.GetContext().CurrentUser);
-            if (selectedList == null) {
-                //the user has no wish list, not even the default one.
+            if (selectedList == null ||
+                !_orchardServices.Authorizer.Authorize(WishListPermissions.ViewWishLists, selectedList)) {
+                //the user has no wish list they can see, not even the default one.
                 //This does not happen with the default IWishListServices implementation.
                 return new HttpNotFoundResult();
             }
