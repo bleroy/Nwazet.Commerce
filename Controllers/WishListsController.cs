@@ -61,19 +61,27 @@ namespace Nwazet.Commerce.Controllers {
         private const string ExtensionPrefix = "ext.";
 
         [OutputCache(Duration = 0)]
-        public ActionResult Index(string uName, int id = 0) {
-            //the uName string is there to allow accessing other user's wishlists
-            var user = string.IsNullOrWhiteSpace(uName) ? _wca.GetContext().CurrentUser
-                : _membershipService.GetUser(uName);
+        public ActionResult Index(string userName, int id = 0) {
+            //the userName string is there to allow accessing other user's wishlists
+            var user = string.IsNullOrWhiteSpace(userName) ? _wca.GetContext().CurrentUser
+                : _membershipService.GetUser(userName);
 
             WishListListPart selectedList;
-            if (_wishListServices.TryGetWishList(out selectedList, id)) {
-                if (!_orchardServices.Authorizer.Authorize(WishListPermissions.ViewWishLists, selectedList))
-                    return RedirectToAction("Index", new { id = 0 }); //redirect to own wish lists
-                return View(_contentManager.BuildDisplay(selectedList));
+            if (_wishListServices.TryGetWishList(user, out selectedList, id)) {
+                if (selectedList != null) {
+                    if (!_orchardServices.Authorizer.Authorize(WishListPermissions.ViewWishLists, selectedList))
+                        return RedirectToAction("Index", new { id = 0 }); //redirect to own wish lists
+                    return View(_contentManager.BuildDisplay(selectedList));
+                }
             }
 
-            return View(_contentManager.BuildDisplay(_wishListServices.GetDefaultWishList(_wca.GetContext().CurrentUser)));
+            selectedList = _wishListServices.GetDefaultWishList(_wca.GetContext().CurrentUser);
+            if (selectedList == null) {
+                //the user has no wish list, not even the default one.
+                //This does not happen with the default IWishListServices implementation.
+                return new HttpNotFoundResult();
+            }
+            return RedirectToAction("Index", new { id = 0 }); //doing a redirect to default "cleans" the browser URL bar form the query string
         }
 
         public ActionResult Create() {
