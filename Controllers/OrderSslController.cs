@@ -12,6 +12,7 @@ using Orchard.Localization;
 using Orchard.Mvc;
 using Orchard.Themes;
 using Orchard.UI.Notify;
+using System.Collections.Generic;
 
 namespace Nwazet.Commerce.Controllers {
     [Themed]
@@ -26,6 +27,7 @@ namespace Nwazet.Commerce.Controllers {
         private readonly IShoppingCart _shoppingCart;
         private readonly IOrchardServices _orchardServices;
         private readonly ICurrencyProvider _currencyProvider;
+        private readonly IEnumerable<ICartLifeCycleEventHandler> _cartLifeCycleEventHandlers;
 
         public OrderSslController(
             IOrderService orderService,
@@ -36,7 +38,8 @@ namespace Nwazet.Commerce.Controllers {
             INotifier notifier,
             IShoppingCart shoppingCart,
             IOrchardServices orchardServices,
-            ICurrencyProvider currencyProvider) {
+            ICurrencyProvider currencyProvider,
+            IEnumerable<ICartLifeCycleEventHandler> cartLifeCycleEventHandlers) {
 
             _orderService = orderService;
             _contentManager = contentManager;
@@ -49,6 +52,7 @@ namespace Nwazet.Commerce.Controllers {
             T = NullLocalizer.Instance;
             _orchardServices = orchardServices;
             _currencyProvider = currencyProvider;
+            _cartLifeCycleEventHandlers = cartLifeCycleEventHandlers;
         }
 
         public Localizer T { get; set; }
@@ -88,6 +92,9 @@ namespace Nwazet.Commerce.Controllers {
                 PurchaseOrder: order.PurchaseOrder,
                 Password: order.Password,
                 CurrencyCode: string.IsNullOrWhiteSpace(order.CurrencyCode) ? _currencyProvider.CurrencyCode : order.CurrencyCode);
+            foreach (var handler in _cartLifeCycleEventHandlers) {
+                handler.Finalized();
+            }
             _shoppingCart.Clear();
             return new ShapeResult(this, shape);
         }

@@ -52,14 +52,14 @@
       <HintPath>..\..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath> 
       <Private>True</Private> 
     </Reference> 
-   <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"> 
+      <HintPath>..\..\..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath> 
+      <Private>True</Private> 
+    </Reference> 
     <ProjectReference Include="..\..\..\Orchard.Web\Modules\Orchard.Autoroute\Orchard.Autoroute.csproj"> 
       <Project>{66fccd76-2761-47e3-8d11-b45d0001ddaa}</Project> 
       <Name>Orchard.Autoroute</Name> 
-     </ProjectReference>
+    </ProjectReference> 
     <ProjectReference Include="..\..\..\Orchard.Web\Core\Orchard.Core.csproj"> 
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project> 
       <Name>Orchard.Core</Name> 
@@ -108,10 +108,10 @@
       <SpecificVersion>False</SpecificVersion> 
       <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath> 
     </Reference> 
-    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"> 
+      <HintPath>..\..\..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath> 
+      <Private>True</Private> 
+    </Reference> 
     <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"> 
       <SpecificVersion>False</SpecificVersion> 
       <HintPath>..\..\..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath> 
@@ -304,7 +304,7 @@
     <Compile Include="Models\Reporting\ReportData.cs" /> 
     <Compile Include="Models\Reporting\ReportDataPoint.cs" /> 
     <Compile Include="Models\Reporting\TimePeriod.cs" /> 
-    <Compile Include="Models\ShoppingCartBase.cs" />
+    <Compile Include="Models\ShoppingCartBase.cs" /> 
     <Compile Include="Models\ZipCodeTaxPart.cs" /> 
     <Compile Include="Models\StateOrCountryTaxPart.cs" /> 
     <Compile Include="Models\StateOrCountryTaxPartRecord.cs" /> 
@@ -359,11 +359,13 @@
     <Compile Include="Services\BundleProductLocalizationBundleService.cs" /> 
     <Compile Include="Services\BundleProductLocalizationServices.cs" /> 
     <Compile Include="Services\BundleServiceBase.cs" /> 
+    <Compile Include="Services\CartLifeCycleEventHandler.cs" /> 
     <Compile Include="Services\CommerceLocalStorageSettings.cs" /> 
     <Compile Include="Services\CurrencyProviderBase.cs" /> 
     <Compile Include="Services\IBundleAutocompleteService.cs" /> 
     <Compile Include="Services\IBundleProductLocalizationServices.cs" /> 
     <Compile Include="Services\IBundleService.cs" /> 
+    <Compile Include="Services\ICartLifeCycleEventHandler.cs" /> 
     <Compile Include="Services\ILocalStorageSettings.cs" /> 
     <Compile Include="Services\InventoriesAreNotSynchronizedBySKU.cs" /> 
     <Compile Include="Services\InventoryBySKUProductInventoryService.cs" /> 
@@ -571,7 +573,7 @@
   </ItemGroup> 
   <ItemGroup> 
     <None Include="app.config" /> 
-    <None Include="bundleconfig.json" />
+    <None Include="bundleconfig.json" /> 
     <None Include="packages.config" /> 
     <None Include="Views\DefinitionTemplates\BundleProductSettings.cshtml" /> 
     <None Include="Views\EditorTemplates\Parts\BundleAutocomplete.cshtml" /> 
@@ -597,20 +599,20 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" /> 
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" /> 
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" /> 
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.    
-       Other similar extension points exist, see Microsoft.Common.targets.   
-  <Target Name="BeforeBuild">   
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.   
+       Other similar extension points exist, see Microsoft.Common.targets.  
+  <Target Name="BeforeBuild">  
   </Target> --> 
   <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler"> 
     <PropertyGroup> 
       <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir> 
     </PropertyGroup> 
-    <!-- If this is an area child project, uncomment the following line:   
-    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />   
+    <!-- If this is an area child project, uncomment the following line:  
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />  
     --> 
-    <!-- If this is an area parent project, uncomment the following lines:   
-    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />   
-    <CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" />   
+    <!-- If this is an area parent project, uncomment the following lines:  
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />  
+    <CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" />  
     --> 
   </Target> 
   <Target Name="AfterBuildCompiler" Condition="'$(MvcBuildViews)'=='true'"> 
