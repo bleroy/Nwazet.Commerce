@@ -92,8 +92,8 @@ namespace Nwazet.Commerce.Controllers {
                 PurchaseOrder: order.PurchaseOrder,
                 Password: order.Password,
                 CurrencyCode: string.IsNullOrWhiteSpace(order.CurrencyCode) ? _currencyProvider.CurrencyCode : order.CurrencyCode);
-            foreach (var han in _cartLifeCycleEventHandlers) {
-                han.Finalized();
+            foreach (var handler in _cartLifeCycleEventHandlers) {
+                handler.Finalized();
             }
             _shoppingCart.Clear();
             return new ShapeResult(this, shape);

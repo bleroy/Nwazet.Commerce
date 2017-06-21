@@ -130,8 +130,8 @@ namespace Nwazet.Commerce.Controllers {
             _shoppingCart.Add(id, quantity, productattributes);
 
             var newItem = new ShoppingCartItem(id, quantity, productattributes);
-            foreach (var han in _cartLifeCycleEventHandlers) {
-                han.ItemAdded(newItem);
+            foreach (var handler in _cartLifeCycleEventHandlers) {
+                handler.ItemAdded(newItem);
             }
 
             // Test isAjaxRequest too because iframe posts won't return true for Request.IsAjaxRequest()
@@ -385,10 +385,10 @@ namespace Nwazet.Commerce.Controllers {
 
             if (items == null) {
                 //removed all items
-                foreach (var han in _cartLifeCycleEventHandlers) {
+                foreach (var handler in _cartLifeCycleEventHandlers) {
                     //we raise the ItemRemoved event for all the removed items.
                     //The ShoppingCartItem objects also contain the quantity of the variation
-                    han.Updated(new List<ShoppingCartItem>(0), oldItems);
+                    handler.Updated(new List<ShoppingCartItem>(0), oldItems);
                 }
                 return;
             }
@@ -442,8 +442,8 @@ namespace Nwazet.Commerce.Controllers {
                 oldItems.Where(sci => !itemsInBoth.Any(isci => ShoppingCartItem.ItemsAreEqual(isci.Value, sci)))
                 );
 
-            foreach (var han in _cartLifeCycleEventHandlers) {
-                han.Updated(addedItems, removedItems);
+            foreach (var handler in _cartLifeCycleEventHandlers) {
+                handler.Updated(addedItems, removedItems);
             }
         }
 
