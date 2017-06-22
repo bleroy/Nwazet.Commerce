@@ -24,10 +24,10 @@ namespace Nwazet.Commerce.Controllers {
         private readonly IContentManager _contentManager;
         private readonly IEnumerable<IProductAttributeExtensionProvider> _attributeExtensionProviders;
         private readonly IShoppingCart _shoppingCart;
-        private readonly IWorkflowManager _workflowManager;
         private readonly IEnumerable<IWishListExtensionProvider> _wishListExtensionProviders;
         private readonly IOrchardServices _orchardServices;
         private readonly IMembershipService _membershipService;
+        private readonly IEnumerable<ICartLifeCycleEventHandler> _cartLifeCycleEventHandlers;
 
         public WishListsController(
             IWorkContextAccessor wca,
@@ -36,10 +36,10 @@ namespace Nwazet.Commerce.Controllers {
             IContentManager contentManager,
             IEnumerable<IProductAttributeExtensionProvider> attributeExtensionProviders,
             IShoppingCart shoppingCart,
-            IWorkflowManager workflowManager,
             IEnumerable<IWishListExtensionProvider> wishListExtensionProviders,
             IOrchardServices orchardServices,
-            IMembershipService membershipService) {
+            IMembershipService membershipService,
+            IEnumerable<ICartLifeCycleEventHandler> cartLifeCycleEventHandlers) {
 
             _wca = wca;
             _wishListServices = wishListServices;
@@ -47,10 +47,10 @@ namespace Nwazet.Commerce.Controllers {
             _contentManager = contentManager;
             _attributeExtensionProviders = attributeExtensionProviders;
             _shoppingCart = shoppingCart;
-            _workflowManager = workflowManager;
             _wishListExtensionProviders = wishListExtensionProviders;
             _orchardServices = orchardServices;
             _membershipService = membershipService;
+            _cartLifeCycleEventHandlers = cartLifeCycleEventHandlers;
 
             T = NullLocalizer.Instance;
         }
@@ -184,12 +184,11 @@ namespace Nwazet.Commerce.Controllers {
                     if (wishListItem != null) {
                         _shoppingCart.Add(wishListItem.Item.ProductId, quantity, wishListItem.Item.AttributeIdsToValues);
 
-                        _workflowManager.TriggerEvent("CartUpdated",
-                            _wca.GetContext().CurrentSite,
-                            () => new Dictionary<string, object> {
-                                {"Cart", _shoppingCart}
-                            });
-
+                        var newItem = new ShoppingCartItem(
+                            wishListItem.Item.ProductId, quantity, wishListItem.Item.AttributeIdsToValues);
+                        foreach (var handler in _cartLifeCycleEventHandlers) {
+                            handler.ItemAdded(newItem);
+                        }
 
                         return RedirectToAction("Index", new { controller = "ShoppingCart" });
                     }

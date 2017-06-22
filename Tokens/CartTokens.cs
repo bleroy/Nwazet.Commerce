@@ -7,15 +7,24 @@ using Orchard.Core.Title.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Tokens;
+using Nwazet.Commerce.Services;
 
 namespace Nwazet.Commerce.Tokens {
     [OrchardFeature("Nwazet.Commerce")]
     public class CartTokens : ITokenProvider {
         private readonly IShoppingCart _shoppingCart;
+        private readonly IContentManager _contentManager;
+        private readonly ICurrencyProvider _currencyProvider;
 
-        public CartTokens(IShoppingCart shoppingCart) {
+        public CartTokens(
+            IShoppingCart shoppingCart,
+            IContentManager contentManager,
+            ICurrencyProvider currencyProvider) {
+
             T = NullLocalizer.Instance;
             _shoppingCart = shoppingCart;
+            _contentManager = contentManager;
+            _currencyProvider = currencyProvider;
         }
 
         public Localizer T { get; set; }
@@ -42,6 +51,9 @@ namespace Nwazet.Commerce.Tokens {
             context.For("TaxAmount", T("Tax Amount"), T("Tax Amount"))
                 .Token("Name", T("Name"), T("Name of the tax"), "Text")
                 .Token("Amount", T("Amount"), T("Amount taxed"));
+
+            context.For("Item", T("Item for update"), T("Item for update"))
+                .Token("Format:*", T("Format:<item format>"), T("Formats the contents of the item using a format string that uses $quantity for the quantity, $product for the product name (with attributes), and $price for the price. For example {Item.Format:$quantity x (&sku) $product}"), "Text");
         }
 
         public void Evaluate(EvaluateContext context) {
@@ -53,13 +65,13 @@ namespace Nwazet.Commerce.Tokens {
                 .Token("ZipCode", c => (c ?? _shoppingCart).ZipCode)
                 .Token("Shipping", c => (c ?? _shoppingCart).ShippingOption.ToString())
                 .Chain("Shipping", "ShippingOption", c => (c ?? _shoppingCart).ShippingOption)
-                .Token("Subtotal", c => (c ?? _shoppingCart).Subtotal().ToString("C"))
+                .Token("Subtotal", c => _currencyProvider.GetPriceString((c ?? _shoppingCart).Subtotal()))
                 .Token("Taxes", c => {
                     var taxes = (c ?? _shoppingCart).Taxes();
-                    return taxes == null ? 0.ToString("C") : taxes.Amount.ToString("C");
+                    return taxes == null ? _currencyProvider.GetPriceString(0.0) : _currencyProvider.GetPriceString(taxes.Amount);
                 })
-                .Chain("Taxes", "TaxAmount", c => (c ?? _shoppingCart).Taxes() ?? new TaxAmount {Amount = 0, Name = ""})
-                .Token("Total", c => (c ?? _shoppingCart).Total().ToString("C"))
+                .Chain("Taxes", "TaxAmount", c => (c ?? _shoppingCart).Taxes() ?? new TaxAmount { Amount = 0, Name = "" })
+                .Token("Total", c => _currencyProvider.GetPriceString((c ?? _shoppingCart).Total()))
                 .Token("Count", c => (c ?? _shoppingCart).ItemCount());
 
             context.For<IEnumerable<ShoppingCartQuantityProduct>>("CartItems")
@@ -80,12 +92,18 @@ namespace Nwazet.Commerce.Tokens {
                             String.Format(format,
                                 qp.Quantity,
                                 qp.Product.Sku,
-                                qp.Product.As<TitlePart>().Title + " " + qp.AttributeDescription,
-                                qp.Price.ToString("C"))));
+                                qp.Product.As<TitlePart>().Title + " " +
+                                    string.Join(", ", 
+                                        qp.AttributeIdsToValues.Select(kvp => 
+                                            "[{{" + kvp.Key + "}} " +
+                                            _contentManager.GetItemMetadata(_contentManager.Get(kvp.Key)).DisplayText
+                                            + ": " + kvp.Value.ToString() + "]")
+                                    ),
+                                _currencyProvider.GetPriceString(qp.Price))));
                     });
 
             context.For<ShippingOption>("ShippingOption")
-                .Token("Price", option => option.Price.ToString("C"))
+                .Token("Price", option => _currencyProvider.GetPriceString(option.Price))
                 .Token("Description", option => option.Description)
                 .Chain("Description", "Text", option => option.Description)
                 .Token("Company", option => option.ShippingCompany)
@@ -94,7 +112,33 @@ namespace Nwazet.Commerce.Tokens {
             context.For<TaxAmount>("TaxAmount")
                 .Token("Name", amount => amount.Name)
                 .Chain("Name", "Text", amount => amount.Name)
-                .Token("Amount", amount => amount.Amount.ToString("C"));
+                .Token("Amount", amount => _currencyProvider.GetPriceString(amount.Amount));
+
+            context.For<ShoppingCartItem>("Item")
+                .Token(s => s.StartsWith("Format:", StringComparison.OrdinalIgnoreCase) ? s.Substring("Format:".Length) : null,
+                    (s, sci) => {
+                        var colonIndex = s.IndexOf(':');
+                        if (colonIndex != -1 && s.Length > colonIndex + 1) {
+                            s = s.Substring(colonIndex + 1);
+                        }
+                        var format = s
+                            .Replace("$quantity", "{0}")
+                            .Replace("$sku", "{1}")
+                            .Replace("$product", "{2}")
+                            .Replace("$price", "{3}");
+                        var product = _contentManager.Get<ProductPart>(sci.ProductId);
+                        return string.Format(format, 
+                            sci.Quantity,
+                            product.Sku,
+                            product.As<TitlePart>().Title + " " +
+                                    string.Join(", ",
+                                        sci.AttributeIdsToValues.Select(kvp =>
+                                            "[{{" + kvp.Key + "}} " +
+                                            _contentManager.GetItemMetadata(_contentManager.Get(kvp.Key)).DisplayText
+                                            + ": " + kvp.Value.ToString() + "]")
+                                    ),
+                             _currencyProvider.GetPriceString(product.Price));
+                    });
         }
     }
 }

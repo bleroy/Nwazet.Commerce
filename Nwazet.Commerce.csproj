@@ -381,11 +381,13 @@
     <Compile Include="Services\BundleProductLocalizationBundleService.cs" /> 
     <Compile Include="Services\BundleProductLocalizationServices.cs" /> 
     <Compile Include="Services\BundleServiceBase.cs" /> 
+    <Compile Include="Services\CartLifeCycleEventHandler.cs" /> 
     <Compile Include="Services\CommerceLocalStorageSettings.cs" /> 
     <Compile Include="Services\CurrencyProviderBase.cs" /> 
     <Compile Include="Services\IBundleAutocompleteService.cs" /> 
     <Compile Include="Services\IBundleProductLocalizationServices.cs" /> 
     <Compile Include="Services\IBundleService.cs" /> 
+    <Compile Include="Services\ICartLifeCycleEventHandler.cs" /> 
     <Compile Include="Services\ILocalStorageSettings.cs" /> 
     <Compile Include="Services\InventoriesAreNotSynchronizedBySKU.cs" /> 
     <Compile Include="Services\InventoryBySKUProductInventoryService.cs" /> 
