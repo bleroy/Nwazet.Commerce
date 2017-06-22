@@ -101,3 +101,8 @@ Features:
 		Description: Enables persistent database storage of a user's shopping cart
 		Category: Commerce
 		Dependencies: Nwazet.Commerce
+	Nwazet.WishLists:
+		Name: Nwazet WishLists
+		Description: Enables wish lists for authenticated users
+		Category: Commerce
+		Dependencies: Nwazet.Commerce

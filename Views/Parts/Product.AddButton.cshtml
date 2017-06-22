@@ -1,29 +1,31 @@
 ﻿@{
     var productId = (int)Model.ProductId;
 
-    Script.Require("jQuery");    
+    Script.Require("jQuery");
 }
 
 @using (Html.BeginFormAntiForgeryPost(
-    Url.Action("Add", "ShoppingCart",
-               new {area = "Nwazet.Commerce", id = productId}),
-    FormMethod.Post,
-    new Dictionary<string, object> {
+                            Url.Action("Add", "ShoppingCart",
+                                       new { area = "Nwazet.Commerce", id = productId }),
+                            FormMethod.Post,
+                            new Dictionary<string, object> {
         {"class", "addtocart"},
         {"data-productid", productId},
         {"enctype", "multipart/form-data"}
-    })) {
+                            })) {
 
     if (Model.ProductAttributes != null) {
-        foreach (var productAttributeShape in Model.ProductAttributes) {
-            @Display(productAttributeShape)
-        }
+        <div id="add-to-cart-attributes">
+            @foreach (var productAttributeShape in Model.ProductAttributes) {
+                @Display(productAttributeShape)
+            }
+        </div>
     }
 
     int quantityValue = Model.MinimumOrderQuantity > 1 ? Model.MinimumOrderQuantity : 1;
-    
+
     <div class="addtocart-quantity-and-button">
-        <input name="id" value="@productId" type="hidden"/>
+        <input name="id" value="@productId" type="hidden" />
         <input name="quantity" value="@quantityValue" class="addtocart-quantity" type="number" min="0" />
         <button type="submit" class="addtocart-button">@T("Add to cart")</button>
         @if ((int)Model.MinimumOrderQuantity > 1) {

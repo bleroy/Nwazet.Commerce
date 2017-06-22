@@ -18,7 +18,7 @@ namespace Nwazet.Commerce.Models {
             }
         }
 
-        public ShoppingCartItem() { }
+        public ShoppingCartItem() {}
 
         public ShoppingCartItem(int productId, int quantity = 1, IDictionary<int, ProductAttributeValueExtended> attributeIdsToValues = null) {
             ProductId = productId;
@@ -48,7 +48,7 @@ namespace Nwazet.Commerce.Models {
             return A.ProductId == B.ProductId
                 && B.AttributeIdsToValues != null
                 && B.AttributeIdsToValues.Count == A.AttributeIdsToValues.Count
-            && B.AttributeIdsToValues.All(A.AttributeIdsToValues.Contains);
+                && B.AttributeIdsToValues.All(A.AttributeIdsToValues.Contains);
         }
     }
 }

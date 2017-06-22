@@ -40,5 +40,17 @@
     "inputFiles": [
       "Scripts/ship.js"
     ]
+  },
+  {
+    "outputFileName": "Styles/wishlists.nwazet-commerce.min.css",
+    "inputFiles": [
+      "Styles/wishlists.nwazet-commerce.css"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/wishlists.min.js",
+    "inputFiles": [
+      "Scripts/wishlists.js"
+    ]
   }
 ]

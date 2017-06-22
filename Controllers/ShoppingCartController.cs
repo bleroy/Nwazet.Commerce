@@ -26,7 +26,6 @@ namespace Nwazet.Commerce.Controllers {
         private readonly IEnumerable<ICheckoutService> _checkoutServices;
         private readonly IEnumerable<IShippingMethodProvider> _shippingMethodProviders;
         private readonly IEnumerable<IExtraCartInfoProvider> _extraCartInfoProviders;
-        private readonly IWorkflowManager _workflowManager;
         private readonly INotifier _notifier;
         private readonly IEnumerable<IProductAttributeExtensionProvider> _attributeExtensionProviders;
         private readonly ICurrencyProvider _currencyProvider;
@@ -60,7 +59,6 @@ namespace Nwazet.Commerce.Controllers {
             _wca = wca;
             _checkoutServices = checkoutServices;
             _extraCartInfoProviders = extraCartInfoProviders;
-            _workflowManager = workflowManager;
             _notifier = notifier;
             _attributeExtensionProviders = attributeExtensionProviders;
             _currencyProvider = currencyProvider;

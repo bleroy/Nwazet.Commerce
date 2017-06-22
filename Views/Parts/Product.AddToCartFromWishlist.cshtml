@@ -1,0 +1,24 @@
+﻿@using Nwazet.Commerce.Models
+@{
+    Style.Include("wishlists.nwazet-commerce.css", "wishlists.nwazet-commerce.min.css");
+
+    var wishListItemId = (int)Model.WishListItemId;
+    var wishListId = (int)Model.WishListId;
+    var quantityValue = Math.Max((int)Model.MinimumOrderQuantity, 1);
+}
+
+@using (Html.BeginFormAntiForgeryPost(
+        Url.Action("AddToCart", "WishLists",
+                    new { area = "Nwazet.Commerce" }),
+        FormMethod.Post,
+        new Dictionary<string, object> {
+            {"class", "addtocart"},
+            {"enctype", "multipart/form-data"}
+        })) {
+    <div class="wishlist-addtocart-button">
+        <input name="wishListItemId" value="@wishListItemId" type="hidden" />
+        <input name="wishListId" value="@wishListId" type="hidden" />
+        <input name="quantity" value="@quantityValue" class="addtocart-quantity" type="hidden" />
+        <button type="submit" class="addtocart-button">@T("Add to cart")</button>
+    </div>
+}
