@@ -27,6 +27,9 @@ namespace Nwazet.Commerce.Models {
                 if (AttributeIdsToValues == null || !AttributeIdsToValues.Any()) {
                     return "";
                 }
+                return "(" + string.Join(", ",
+                    AttributeIdsToValues.ToList().Select(kvp => kvp.Key + " " + kvp.Value.ToString())) 
+                    + ")";
                 return "(" + string.Join(", ", AttributeIdsToValues.Values) + ")";
             }
         }

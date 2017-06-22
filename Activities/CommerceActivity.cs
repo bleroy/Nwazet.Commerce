@@ -43,4 +43,37 @@ namespace Nwazet.Commerce.Activities {
             get { return T("The shopping cart has been updated."); }
         }
     }
+
+    [OrchardFeature("Nwazet.Commerce")]
+    public class CartItemAdded : CommerceActivity {
+        public override string Name {
+            get { return "CartItemAdded"; }
+        }
+
+        public override LocalizedString Description {
+            get { return T("An item has been added to the cart."); }
+        }
+    }
+
+    [OrchardFeature("Nwazet.Commerce")]
+    public class CartItemRemoved : CommerceActivity {
+        public override string Name {
+            get { return "CartItemRemoved"; }
+        }
+
+        public override LocalizedString Description {
+            get { return T("An item has been removed from the cart."); }
+        }
+    }
+
+    [OrchardFeature("Nwazet.Commerce")]
+    public class CartFinalized : CommerceActivity {
+        public override string Name {
+            get { return "CartFinalized"; }
+        }
+
+        public override LocalizedString Description {
+            get { return T("The shopping cart has been finalized (e.g. by completing an order)."); }
+        }
+    }
 }
