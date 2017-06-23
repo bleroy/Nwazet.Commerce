@@ -77,6 +77,9 @@
     <Reference Include="Orchard.MediaLibrary">
       <HintPath>..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.MediaLibrary\bin\Orchard.MediaLibrary.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Projections">
+      <HintPath>..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Projections\bin\Orchard.Projections.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Roles">
       <HintPath>..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Roles\bin\Orchard.Roles.dll</HintPath>
     </Reference>
@@ -233,6 +236,19 @@
     <Compile Include="Extensions\DefaultHqlExpressionFactoryExtension.cs" />
     <Compile Include="Features\CurrencyProviderBySiteSettingFeature.cs" />
     <Compile Include="Features\InventoryBySKUFeature.cs" />
+    <Compile Include="Filters\FilterHelper.cs" />
+    <Compile Include="Filters\ProductDiscountPriceFilter.cs" />
+    <Compile Include="Filters\ProductDiscountPriceFilterForm.cs" />
+    <Compile Include="Filters\ProductInventoryFilter.cs" />
+    <Compile Include="Filters\ProductInventoryFilterForm.cs" />
+    <Compile Include="Filters\ProductPriceFilter.cs" />
+    <Compile Include="Filters\ProductPriceFilterForm.cs" />
+    <Compile Include="Filters\ProductSizeFilter.cs" />
+    <Compile Include="Filters\ProductSizeFilterForm.cs" />
+    <Compile Include="Filters\ProductSkuFilter.cs" />
+    <Compile Include="Filters\ProductSkuFilterForm.cs" />
+    <Compile Include="Filters\ProductWeightFilter.cs" />
+    <Compile Include="Filters\ProductWeightFilterForm.cs" />
     <Compile Include="Filters\ReferrerFilter.cs" />
     <Compile Include="Handlers\AdvancedSKUManagementHandler.cs" />
     <Compile Include="Handlers\AdvancedSKUsSiteSettingPartHandler.cs" />
