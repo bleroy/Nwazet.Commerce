@@ -1,0 +1,20 @@
+﻿@using Nwazet.Commerce.Models
+@using Orchard.ContentManagement
+@using Orchard.Core.Common.Models
+@{
+    var wishLists = (IEnumerable<WishListListPart>)Model.WishLists;
+}
+<div id="your-wish-lists-title">
+    @T("Your Wish Lists:")
+</div>
+
+<div id="list-of-wish-lists">
+    <ul>
+        @foreach (var wishList in wishLists) {
+            <li>
+                @Html.ActionLink(Html.ItemDisplayText((IContent)(wishList.ContentItem)),
+                    "Index", new { controller = "WishLists", area = "Nwazet.Commerce", id = wishList.ContentItem.Id, userName = wishList.ContentItem.As<CommonPart>().Owner.UserName })
+            </li>
+        }
+    </ul>
+</div>

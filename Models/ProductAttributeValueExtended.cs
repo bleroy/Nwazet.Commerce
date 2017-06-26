@@ -21,5 +21,9 @@ namespace Nwazet.Commerce.Models {
                 this.ExtendedValue == other.ExtendedValue &&
                 this.ExtensionProvider == other.ExtensionProvider;
         }
+
+        public override string ToString() {
+            return $"({Value}, {ExtendedValue}, {ExtensionProvider})";
+        }
     }
 }

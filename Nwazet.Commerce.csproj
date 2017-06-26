@@ -177,9 +177,17 @@
     <Content Include="Scripts\shoppingcart.min.js"> 
       <DependentUpon>shoppingcart.js</DependentUpon> 
     </Content> 
+    <Content Include="Scripts\wishlists.js" />
+    <Content Include="Scripts\wishlists.min.js">
+      <DependentUpon>wishlists.js</DependentUpon>
+    </Content>
     <Content Include="Styles\bundle.nwazet-commerce-admin.css" /> 
     <Content Include="Styles\attribute.nwazet-commerce-admin.css" /> 
     <Content Include="Styles\reports-admin.css" /> 
+    <Content Include="Styles\wishlists.nwazet-commerce.css" /> 
+    <Content Include="Styles\wishlists.nwazet-commerce.min.css"> 
+      <DependentUpon>wishlists.nwazet-commerce.css</DependentUpon> 
+    </Content> 
     <Content Include="Styles\workflows-activity-order-status-changed-product.css" /> 
     <Content Include="Styles\workflows-activity-order-tracking-url-changed.css" /> 
     <Content Include="Styles\workflows-activity-new-order.css" /> 
@@ -193,6 +201,7 @@
     <Content Include="Styles\order-admin.min.css"> 
       <DependentUpon>order-admin.less</DependentUpon> 
     </Content> 
+    <None Include="Views\Parts\WishListsActions.cshtml" />
     <Content Include="Web.config" /> 
     <Content Include="Scripts\Web.config" /> 
     <Content Include="Properties\AssemblyInfo.cs" /> 
@@ -216,6 +225,7 @@
     <Compile Include="Controllers\ShippingAdminController.cs" /> 
     <Compile Include="Controllers\ShoppingCartController.cs" /> 
     <Compile Include="Controllers\StripeController.cs" /> 
+    <Compile Include="Controllers\WishListsController.cs" /> 
     <Compile Include="Drivers\AdvancedSKUProductPartDriver.cs" /> 
     <Compile Include="Drivers\AdvancedSKUsSiteSettingPartDriver.cs" /> 
     <Compile Include="Drivers\AttributeLocalizationProductAttributesPartDriver.cs" /> 
@@ -225,8 +235,11 @@
     <Compile Include="Drivers\InventoryBySKUProductPartDriver.cs" /> 
     <Compile Include="Drivers\InventoryBySKUSiteSettingsPartDriver.cs" /> 
     <Compile Include="Drivers\OrderPartDriver.cs" /> 
+    <Compile Include="Drivers\ProductPartWishListDriver.cs" /> 
     <Compile Include="Drivers\ProductSettingsPartDriver.cs" /> 
     <Compile Include="Drivers\ProductsListPartDriver.cs" /> 
+    <Compile Include="Drivers\WishListItemPartDriver.cs" />
+    <Compile Include="Drivers\WishListListPartDriver.cs" /> 
     <Compile Include="Drivers\ZipCodeTaxPartDriver.cs" /> 
     <Compile Include="Drivers\StateOrCountryTaxPartDriver.cs" /> 
     <Compile Include="Drivers\UspsShippingMethodPartDriver.cs" /> 
@@ -277,6 +290,8 @@
     <Compile Include="Handlers\SizeBasedShippingMethodPartHandler.cs" /> 
     <Compile Include="Handlers\WeightBasedShippingMethodPartHandler.cs" /> 
     <Compile Include="Handlers\ProductPartHandler.cs" /> 
+    <Compile Include="Handlers\WishListItemPartHandler.cs" />
+    <Compile Include="Handlers\WishListListPartHandler.cs" /> 
     <Compile Include="Menus\ECommerceSettingsAdminMenu.cs" /> 
     <Compile Include="Menus\ReportsAdminMenu.cs" /> 
     <Compile Include="Menus\ProductSettingsAdminMenu.cs" /> 
@@ -297,6 +312,7 @@
     <Compile Include="Migrations\UspsMigrations.cs" /> 
     <Compile Include="Migrations\DiscountMigrations.cs" /> 
     <Compile Include="Migrations\ShippingMigrations.cs" /> 
+    <Compile Include="Migrations\WishListMigrations.cs" /> 
     <Compile Include="Models\Address.cs" /> 
     <Compile Include="Models\AdvancedSKUsSiteSettingPart.cs" /> 
     <Compile Include="Models\CheckoutError.cs" /> 
@@ -322,6 +338,9 @@
     <Compile Include="Models\Reporting\ReportDataPoint.cs" /> 
     <Compile Include="Models\Reporting\TimePeriod.cs" /> 
     <Compile Include="Models\ShoppingCartBase.cs" /> 
+    <Compile Include="Models\WishListItemPart.cs" />
+    <Compile Include="Models\WishListItemPartRecord.cs" />
+    <Compile Include="Models\WishListListPartRecord.cs" /> 
     <Compile Include="Models\ZipCodeTaxPart.cs" /> 
     <Compile Include="Models\StateOrCountryTaxPart.cs" /> 
     <Compile Include="Models\StateOrCountryTaxPartRecord.cs" /> 
@@ -361,6 +380,7 @@
     <Compile Include="Permissions\CommercePermissions.cs" /> 
     <Compile Include="Permissions\ReportPermissions.cs" /> 
     <Compile Include="Permissions\OrderPermissions.cs" /> 
+    <Compile Include="Permissions\WishListPermissions.cs" />
     <Compile Include="Reports\AverageSaleAmountReport.cs" /> 
     <Compile Include="Reports\BaseSalesReport.cs" /> 
     <Compile Include="Reports\SalesByBestSellingProductsReport.cs" /> 
@@ -372,15 +392,19 @@
     <Compile Include="Routes\StripeRoutes.cs" /> 
     <Compile Include="Routes\OrderRoutes.cs" /> 
     <Compile Include="Routes\CommerceRoutes.cs" /> 
+    <Compile Include="Routes\WishListRoutes.cs" /> 
+    <Compile Include="Security\WishListsAuthorizationEventHandler.cs" />
     <Compile Include="Services\BundleAutocompleteService.cs" /> 
     <Compile Include="Services\BundleProductLocalizationBundleService.cs" /> 
     <Compile Include="Services\BundleProductLocalizationServices.cs" /> 
     <Compile Include="Services\BundleServiceBase.cs" /> 
+    <Compile Include="Services\CartLifeCycleEventHandler.cs" /> 
     <Compile Include="Services\CommerceLocalStorageSettings.cs" /> 
     <Compile Include="Services\CurrencyProviderBase.cs" /> 
     <Compile Include="Services\IBundleAutocompleteService.cs" /> 
     <Compile Include="Services\IBundleProductLocalizationServices.cs" /> 
     <Compile Include="Services\IBundleService.cs" /> 
+    <Compile Include="Services\ICartLifeCycleEventHandler.cs" /> 
     <Compile Include="Services\ILocalStorageSettings.cs" /> 
     <Compile Include="Services\InventoriesAreNotSynchronizedBySKU.cs" /> 
     <Compile Include="Services\InventoryBySKUProductInventoryService.cs" /> 
@@ -390,6 +414,10 @@
     <Compile Include="Services\IProductInventoryService.cs" /> 
     <Compile Include="Services\ISKUGenerationServices.cs" /> 
     <Compile Include="Services\ISKUUniquenessHelper.cs" /> 
+    <Compile Include="Services\IWishListExtensionProvider.cs" /> 
+    <Compile Include="Services\IWishListServices.cs" /> 
+    <Compile Include="Services\IWishListsPermissionsService.cs" />
+    <Compile Include="Services\IWishListsUIServices.cs" />
     <Compile Include="Services\LatestProductAttributeAdminServices.cs" /> 
     <Compile Include="Services\LocalizationSKUUniquenessHelper.cs" /> 
     <Compile Include="Services\IProductAttributeNameService.cs" /> 
@@ -424,6 +452,9 @@
     <Compile Include="Services\TextProductAttributeExtensionProvider.cs" /> 
     <Compile Include="Services\UseCurrencyFromSiteCultureProvider.cs" /> 
     <Compile Include="Services\UseCurrencyFromSiteSettingsProvider.cs" /> 
+    <Compile Include="Services\WishListsArePrivatePermissionsService.cs" />
+    <Compile Include="Services\WishListServices.cs" /> 
+    <Compile Include="Services\WishListsUIServices.cs" />
     <Compile Include="Services\ZipCodeTaxProvider.cs" /> 
     <Compile Include="Services\StateOrCountryTaxProvider.cs" /> 
     <Compile Include="Services\StripeWebService.cs" /> 
@@ -487,6 +518,9 @@
     <Compile Include="ViewModels\ShippingMethodIndexViewModel.cs" /> 
     <Compile Include="ViewModels\StripeCheckoutViewModel.cs" /> 
     <Compile Include="ViewModels\UpdateShoppingCartItemViewModel.cs" /> 
+    <Compile Include="Models\WishListListPart.cs" /> 
+    <Compile Include="ViewModels\WishListElementViewModel.cs" /> 
+    <Compile Include="ViewModels\WishListListViewModel.cs" /> 
   </ItemGroup> 
   <ItemGroup> 
     <Content Include="Content\Web.config" /> 
@@ -590,9 +624,16 @@
     <None Include="app.config" /> 
     <None Include="bundleconfig.json" /> 
     <None Include="packages.config" /> 
+    <None Include="Views\WishListEditor.cshtml" />
     <None Include="Views\DefinitionTemplates\BundleProductSettings.cshtml" /> 
     <None Include="Views\EditorTemplates\Parts\BundleAutocomplete.cshtml" /> 
     <None Include="Views\EditorTemplates\Parts\ProductLocalizationBundle.cshtml" /> 
+    <None Include="Views\Parts\ListOfWishLists.cshtml" />
+    <None Include="Views\Parts\Product.AddToCartFromWishlist.cshtml" /> 
+    <None Include="Views\Parts\Product.AddToWishlistButton.cshtml" /> 
+    <None Include="Views\Parts\Product.RemoveFromWishList.cshtml" /> 
+    <None Include="Views\Parts\WishListItem.cshtml" />
+    <None Include="Views\Parts\WishListList.cshtml" /> 
     <None Include="Views\ProductAttributesAdminList.cshtml" /> 
     <None Include="Views\ProductAttributesAdminListItem.cshtml" /> 
     <None Include="Views\DefinitionTemplates\BundleProductLocalizationSettings.cshtml" /> 
@@ -605,6 +646,8 @@
     <None Include="Views\EditorTemplates\SiteSettings\Currency.cshtml" /> 
     <None Include="Views\EditorTemplates\SiteSettings\InventoryBySKU.cshtml" /> 
     <None Include="Views\ProductAttributesLocalizationAdminListItem.cshtml" /> 
+    <None Include="Views\WishListsSettings.cshtml" /> 
+    <None Include="Views\WishLists\Index.cshtml" /> 
   </ItemGroup> 
   <ItemGroup /> 
   <PropertyGroup> 
@@ -614,20 +657,20 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" /> 
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" /> 
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" /> 
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.     
-       Other similar extension points exist, see Microsoft.Common.targets.    
-  <Target Name="BeforeBuild">    
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.   
+       Other similar extension points exist, see Microsoft.Common.targets.  
+  <Target Name="BeforeBuild">  
   </Target> --> 
   <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler"> 
     <PropertyGroup> 
       <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir> 
     </PropertyGroup> 
-    <!-- If this is an area child project, uncomment the following line:    
-    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />    
+    <!-- If this is an area child project, uncomment the following line:  
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />  
     --> 
-    <!-- If this is an area parent project, uncomment the following lines:    
-    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />    
-    <CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" />    
+    <!-- If this is an area parent project, uncomment the following lines:  
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />  
+    <CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" />  
     --> 
   </Target> 
   <Target Name="AfterBuildCompiler" Condition="'$(MvcBuildViews)'=='true'"> 

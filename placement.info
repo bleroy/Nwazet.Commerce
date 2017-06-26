@@ -5,6 +5,13 @@
   <Place Parts_Product="Content:3.1"/>
   <Place Parts_Product_PriceTiers="Content:3.2"/>
   <Place Parts_Product_AddButton="Content:3.3"/>
+  <Place Parts_Product_AddToWishListButton="Content:3.3"/>
+  <Place Parts_Product_AddToCartFromWishList="Content:3.3"/>
+  <Place Parts_Product_RemoveFromWishList="Content:3.3"/>
+  <Place Parts_WishListList="Content:3.1"/>
+  <Place Parts_WishListItem="Content:3.2"/>
+  <Place Parts_ListOfWishLists="/AsideFirst:3.2"/>
+  <Place Parts_WishListsActions="Content:before"/>
   <Place ShoppingCartWidget="Content:0" />
   <Place Parts_Usps_Settings="Content:5"/>
   <Place Parts_Stripe_Settings="Content:5"/>
@@ -28,6 +35,7 @@
   <Match DisplayType="SummaryAdmin">
     <Place Parts_Product="Content:2;Alternate=ProductSummaryAdmin"/>
     <Place Parts_Product_AddButton="-"/>
+    <Place Parts_Product_AddToWishlistButton="-"/>
     <Place Parts_Product_PriceTiers="-"/>
     <Place Parts_Bundle="Content:3;Alternate=BundleSummaryAdmin"/>
     <Place Parts_ProductAttributes="-"/>
@@ -44,6 +52,7 @@
     <Place Parts_Product="Content:3"/>
     <Place Parts_Bundle="-"/>
     <Place Parts_Product_AddButton="-"/>
+    <Place Parts_Product_AddToWishlistButton="-"/>
     <Place Parts_Product_PriceTiers="-"/>
     <Place Parts_Common_Body_Summary="-"/>
     <Place Parts_ProductAttributes="-"/>
