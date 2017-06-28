@@ -5,6 +5,7 @@ using Orchard.Localization;
 using Orchard.Projections.Descriptors.Filter;
 using Orchard.Projections.FilterEditors.Forms;
 using Orchard.Projections.Services;
+using Nwazet.Commerce.Extensions;
 
 namespace Nwazet.Commerce.Filters {
     public class ProductSkuFilter : IFilterProvider {
@@ -29,7 +30,9 @@ namespace Nwazet.Commerce.Filters {
             var op = (StringOperator)Enum.Parse(typeof(StringOperator), Convert.ToString(context.State.Operator));
             var filterExpression = FilterHelper.GetFilterPredicateString(op, "Sku", value);
             var query = (IHqlQuery)context.Query;
-            context.Query = query.Where(x => x.ContentPartRecord<ProductPartRecord>(), filterExpression);
+            context.Query = query
+              .Where(x => x.ContentPartRecord<ProductPartVersionRecord>(), filterExpression)
+              .Where(y => y.ContentItem(), z => z.Not(w => w.InSubquery("Id", "select id from Nwazet.Commerce.Models.BundlePartRecord")));           // .Where(p => p.ContentPartRecord<BundlePartRecord>(), y => y.IsNull("Id"))
             return;
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using Nwazet.Commerce.Extensions;
 using Nwazet.Commerce.Models;
 using Orchard.ContentManagement;
 using Orchard.Environment;
@@ -34,7 +35,9 @@ namespace Nwazet.Commerce.Filters {
             var op = (NumericOperator)Enum.Parse(typeof(NumericOperator), Convert.ToString(context.State.Operator));
             var filterExpression = FilterHelper.GetFilterPredicateNumeric(op, "Weight", value, min, max);
             var query = (IHqlQuery)context.Query;
-            context.Query = query.Where(x => x.ContentPartRecord<ProductPartRecord>(), filterExpression);
+            context.Query = query
+                    .Where(x => x.ContentPartRecord<ProductPartVersionRecord>(), filterExpression)
+                    .Where(y => y.ContentItem(), z => z.Not(w => w.InSubquery("Id", "select id from Nwazet.Commerce.Models.BundlePartRecord")));    
             return;
         }
 
