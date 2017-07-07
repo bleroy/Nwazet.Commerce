@@ -31,8 +31,7 @@ namespace Nwazet.Commerce.Filters {
             var filterExpression = FilterHelper.GetFilterPredicateString(op, "Size", value);
             var query = (IHqlQuery)context.Query;
             context.Query = query
-                .Where(x => x.ContentPartRecord<ProductPartVersionRecord>(), filterExpression)
-                .Where(y => y.ContentItem(), z => z.Not(w => w.InSubquery("Id", "select id from Nwazet.Commerce.Models.BundlePartRecord")));
+                .Where(x => x.ContentPartRecord<ProductPartVersionRecord>(), filterExpression);
             return;
         }
 
