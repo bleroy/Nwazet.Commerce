@@ -170,6 +170,12 @@ namespace Nwazet.Commerce.Drivers {
                 decimal.TryParse(priceAttr.Value, NumberStyles.Currency, CultureInfo.InvariantCulture, out price)) {
                 part.Price = price;
             }
+            var discountPriceAttr = el.Attribute("DiscountPrice");
+            decimal discountPrice;
+            if (discountPriceAttr != null &&
+                decimal.TryParse(discountPriceAttr.Value, NumberStyles.Currency, CultureInfo.InvariantCulture, out discountPrice)) {
+                part.DiscountPrice = discountPrice;
+            }
             var priceTiersAttr = el.Attribute("PriceTiers");
             if (priceTiersAttr != null) {
                 part.PriceTiers = PriceTier.DeserializePriceTiers(priceTiersAttr.Value);
@@ -188,7 +194,6 @@ namespace Nwazet.Commerce.Drivers {
             el
                 .With(part)
                 .ToAttr(p => p.Sku)
-                .ToAttr(p => _productInventoryService.GetInventory(p))
                 .ToAttr(p => p.OutOfStockMessage)
                 .ToAttr(p => p.AllowBackOrder)
                 .ToAttr(p => p.IsDigital)
@@ -197,7 +202,9 @@ namespace Nwazet.Commerce.Drivers {
                 .ToAttr(p => p.OverrideTieredPricing)
                 .ToAttr(p => p.MinimumOrderQuantity)
                 .ToAttr(p => p.AuthenticationRequired);
+            el.SetAttributeValue("Inventory", _productInventoryService.GetInventory(part));
             el.SetAttributeValue("Price", part.Price.ToString("C", CultureInfo.InvariantCulture));
+            el.SetAttributeValue("DiscountPrice", part.DiscountPrice.ToString("C", CultureInfo.InvariantCulture));
             el.SetAttributeValue("PriceTiers", PriceTier.SerializePriceTiers(part.PriceTiers));
             if (part.ShippingCost != null) {
                 el.SetAttributeValue(
