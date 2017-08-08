@@ -46,7 +46,7 @@ namespace Nwazet.Commerce.Features {
         }
 
         public void Installing(Feature feature) {
-            throw new NotImplementedException();        }
+        }
 
         public void Uninstalled(Feature feature) {
         }
