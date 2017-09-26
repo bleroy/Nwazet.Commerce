@@ -6,7 +6,7 @@ using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 namespace Nwazet.Commerce.Tests.Stubs {
     public class ProductStub : ProductPart {
         public ProductStub(int id = -1, IEnumerable<int> attributeIds = null) {
-            ContentHelpers.PreparePart<ProductPart, ProductPartRecord>(this, "Product", id);
+            ContentHelpers.PreparePart<ProductPart, ProductPartVersionRecord>(this, "Product", id);
             ContentItem.Weld(new InfosetPart());
             ShippingCost = -1;
             if (attributeIds != null) {

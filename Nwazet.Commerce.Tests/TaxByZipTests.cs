@@ -4,13 +4,48 @@ using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
 using Nwazet.Commerce.Tests.Helpers;
 using System;
+using System.Linq;
 
 namespace Nwazet.Commerce.Tests
 {
     class TaxByZipTests
     {
-        private const string CsvRates = "52411,.07\r\n52627,.05\r\n52405,.1\r\n52412,.08";
-        private const string TabRates = "52411\t.07\n52627\t.05\n52405\t.1\n52412\t.08";
+        private string CsvRates {
+            get {
+                return "52411," + (.07M).ToString() +
+                    "\r\n52627," + (.05M).ToString() + 
+                    "\r\n52405," + (.1M).ToString() + 
+                    "\r\n52412," + (.08M).ToString();
+            }
+        }
+        private string TabRates {
+            get {
+                return "52411\t" + (.07M).ToString() + 
+                    "\n52627\t" + (.05M).ToString() + 
+                    "\n52405\t" + (.1M).ToString() + 
+                    "\n52412\t" + (.08M).ToString();
+            }
+        }
+
+        [Test]
+        public void CsvRatesAreParsedCorrectly() {
+            var csvZipTax = new ZipCodeTaxPart();
+            ContentHelpers.PreparePart(csvZipTax, "Tax");
+            csvZipTax.Rates = CsvRates;
+
+            var Rates = csvZipTax.GetRates();
+            var rKeys = Rates.Keys.ToArray();
+            var rValues = Rates.Values.ToArray();
+            Assert.That(Rates.Count, Is.EqualTo(4));
+            Assert.That(rKeys[0], Is.EqualTo("52411"));
+            Assert.That(rValues[0], Is.EqualTo(.07M));
+            Assert.That(rKeys[1], Is.EqualTo("52627"));
+            Assert.That(rValues[1], Is.EqualTo(.05M));
+            Assert.That(rKeys[2], Is.EqualTo("52405"));
+            Assert.That(rValues[2], Is.EqualTo(.1M));
+            Assert.That(rKeys[3], Is.EqualTo("52412"));
+            Assert.That(rValues[3], Is.EqualTo(.08M));
+        }
 
         [Test]
         public void RightTaxAppliesToCsvRates() {
@@ -24,7 +59,27 @@ namespace Nwazet.Commerce.Tests
             cart.Country = "United States";
             cart.ZipCode = "52627";
 
-            CheckTaxes(cart.Taxes().Amount, 6.95);
+            CheckTaxes(cart.Taxes().Amount, 6.95M);
+        }
+
+        [Test]
+        public void TabRatesAreParsedCorrectly() {
+            var tabZipTax = new ZipCodeTaxPart();
+            ContentHelpers.PreparePart(tabZipTax, "Tax");
+            tabZipTax.Rates = TabRates;
+
+            var Rates = tabZipTax.GetRates();
+            var rKeys = Rates.Keys.ToArray();
+            var rValues = Rates.Values.ToArray();
+            Assert.That(Rates.Count, Is.EqualTo(4));
+            Assert.That(rKeys[0], Is.EqualTo("52411"));
+            Assert.That(rValues[0], Is.EqualTo(.07M));
+            Assert.That(rKeys[1], Is.EqualTo("52627"));
+            Assert.That(rValues[1], Is.EqualTo(.05M));
+            Assert.That(rKeys[2], Is.EqualTo("52405"));
+            Assert.That(rValues[2], Is.EqualTo(.1M));
+            Assert.That(rKeys[3], Is.EqualTo("52412"));
+            Assert.That(rValues[3], Is.EqualTo(.08M));
         }
 
         [Test]
@@ -39,7 +94,7 @@ namespace Nwazet.Commerce.Tests
             cart.Country = "United States";
             cart.ZipCode = "52412";
 
-            CheckTaxes(cart.Taxes().Amount, 11.12);
+            CheckTaxes(cart.Taxes().Amount, 11.12M);
         }
 
         [Test]
@@ -59,7 +114,7 @@ namespace Nwazet.Commerce.Tests
             Assert.IsNull(taxes.Name);
         }
 
-        private static void CheckTaxes(double actualTax, double expectedTax) {
+        private static void CheckTaxes(decimal actualTax, decimal expectedTax) {
             const double epsilon = 0.001;
             Assert.That(
                     Math.Abs(expectedTax - actualTax),

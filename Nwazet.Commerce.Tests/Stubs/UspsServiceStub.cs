@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
 using Nwazet.Commerce.Tests.Helpers;
@@ -9,9 +10,9 @@ namespace Nwazet.Commerce.Tests.Stubs {
         private readonly string _originZip;
         private readonly bool _commercialPrices;
         private readonly bool _commercialPlusPrices;
-        private readonly double _price;
+        private readonly decimal _price;
 
-        public UspsServiceStub(string uspsUserId, string originZip, bool commercialPrices, bool commercialPlusPrices, double price = 10) {
+        public UspsServiceStub(string uspsUserId, string originZip, bool commercialPrices, bool commercialPlusPrices, decimal price = 10) {
             _uspsUserId = uspsUserId;
             _originZip = originZip;
             _commercialPrices = commercialPrices;
@@ -37,7 +38,7 @@ namespace Nwazet.Commerce.Tests.Stubs {
             return settings;
         }
 
-        public IEnumerable<ShippingOption> Prices(string userId, double weightInOunces, double valueOfContents, string container,
+        public IEnumerable<ShippingOption> Prices(string userId, double weightInOunces, decimal valueOfContents, string container,
                                   string serviceNameValidationExpression, string serviceNameExclusionExpression, string country,
                                   int lengthInInches, int widthInInches, int heightInInches, string originZip, string destinationZip,
                                   bool commercialPrices, bool commercialPlusPrices, bool registeredMail, bool insurance,

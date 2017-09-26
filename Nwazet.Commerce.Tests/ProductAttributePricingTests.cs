@@ -116,7 +116,7 @@ namespace Nwazet.Commerce.Tests {
             return cart;
         }
 
-        private static void CheckCart(IShoppingCart cart, double expectedSubTotal) {
+        private static void CheckCart(IShoppingCart cart, decimal expectedSubTotal) {
             const double epsilon = 0.001;
             Assert.That(Math.Abs(cart.Subtotal() - expectedSubTotal), Is.LessThan(epsilon));
         }

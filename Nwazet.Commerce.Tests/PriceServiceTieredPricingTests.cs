@@ -60,7 +60,7 @@ namespace Nwazet.Commerce.Tests {
         public void AbsolutePriceIsUsedIfBothAbsoluteAndPercentageExist() {
             var cart = PrepareCart(WorkContextAccessorSiteWideDisabledOverrideEnabled);
             cart.Add(5, 11);
-            CheckCart(cart, 97.9);
+            CheckCart(cart, 97.9M);
         }
 
         [Test]
@@ -138,23 +138,23 @@ namespace Nwazet.Commerce.Tests {
             new ProductStub(1) {Price = 10, 
                                 OverrideTieredPricing = true, 
                                 PriceTiers = new List<PriceTier> {
-                                    new PriceTier { Quantity = 10, Price = 9.0 },
-                                    new PriceTier { Quantity = 50, Price = 8.0 },
-                                    new PriceTier { Quantity = 100, Price = 5.0 }
+                                    new PriceTier { Quantity = 10, Price = 9.0M },
+                                    new PriceTier { Quantity = 50, Price = 8.0M },
+                                    new PriceTier { Quantity = 100, Price = 5.0M }
                                 }},
             new ProductStub(2) {Price = 10, 
                                 OverrideTieredPricing = true, 
                                 PriceTiers = new List<PriceTier> {
-                                    new PriceTier { Quantity = 5, Price = 9.0 },
-                                    new PriceTier { Quantity = 10, Price = 8.0 },
-                                    new PriceTier { Quantity = 15, Price = 7.0 }
+                                    new PriceTier { Quantity = 5, Price = 9.0M },
+                                    new PriceTier { Quantity = 10, Price = 8.0M },
+                                    new PriceTier { Quantity = 15, Price = 7.0M }
                                 }},
             new ProductStub(3) {Price = 10, 
                                 OverrideTieredPricing = false, 
                                 PriceTiers = new List<PriceTier> {
-                                    new PriceTier { Quantity = 10, Price = 9.0 },
-                                    new PriceTier { Quantity = 50, Price = 8.0 },
-                                    new PriceTier { Quantity = 100, Price = 5.0 }
+                                    new PriceTier { Quantity = 10, Price = 9.0M },
+                                    new PriceTier { Quantity = 50, Price = 8.0M },
+                                    new PriceTier { Quantity = 100, Price = 5.0M }
                                 }},
             new ProductStub(4) {Price = 10, 
                                 OverrideTieredPricing = true, 
@@ -166,7 +166,7 @@ namespace Nwazet.Commerce.Tests {
             new ProductStub(5) {Price = 10, 
                                 OverrideTieredPricing = true, 
                                 PriceTiers = new List<PriceTier> {
-                                    new PriceTier { Quantity = 10, Price = 8.9, PricePercent = 90 }
+                                    new PriceTier { Quantity = 10, Price = 8.9M, PricePercent = 90 }
                                 }},
             new ProductStub(6) {Price = 10, 
                                 OverrideTieredPricing = false, 
@@ -189,7 +189,7 @@ namespace Nwazet.Commerce.Tests {
             return cart;
         }
 
-        private static void CheckCart(IShoppingCart cart, double expectedSubTotal) {
+        private static void CheckCart(IShoppingCart cart, decimal expectedSubTotal) {
             const double epsilon = 0.001;
             Assert.That(Math.Abs(cart.Subtotal() - expectedSubTotal), Is.LessThan(epsilon));
         }
