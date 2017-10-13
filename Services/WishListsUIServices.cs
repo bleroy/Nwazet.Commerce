@@ -39,7 +39,7 @@ namespace Nwazet.Commerce.Services {
 
         public dynamic CreateShape(IUser user, ProductPart product = null) {
             if (user == null) {
-                throw new ArgumentNullException("user");
+                return null;
             }
 
             var productId = 0;
@@ -67,7 +67,7 @@ namespace Nwazet.Commerce.Services {
 
         public dynamic SettingsShape(IUser user, int wishListId = 0) {
             if (user == null) {
-                throw new ArgumentNullException("user");
+                return null;
             }
             //build the settings shape for each wishlist
             var settingsShapes = new List<dynamic>();
