@@ -55,7 +55,7 @@
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"> 
       <HintPath>..\..\..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath> 
       <Private>True</Private> 
-    </Reference> 
+    </Reference>
     <ProjectReference Include="..\..\..\Orchard.Web\Modules\Orchard.Autoroute\Orchard.Autoroute.csproj"> 
       <Project>{66fccd76-2761-47e3-8d11-b45d0001ddaa}</Project> 
       <Name>Orchard.Autoroute</Name> 
@@ -80,6 +80,10 @@
       <Project>{73a7688a-5bd3-4f7e-adfa-ce36c5a10e3b}</Project> 
       <Name>Orchard.MediaLibrary</Name> 
     </ProjectReference> 
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Projections\Orchard.Projections.csproj">
+      <Project>{5531E894-D259-45A3-AA61-26DBE720C1CE}</Project>
+      <Name>Orchard.Projections</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Orchard.Web\Modules\Orchard.Roles\Orchard.Roles.csproj"> 
       <Project>{d10ad48f-407d-4db5-a328-173ec7cb010f}</Project> 
       <Name>Orchard.Roles</Name> 
@@ -253,6 +257,19 @@
     <Compile Include="Extensions\DefaultHqlExpressionFactoryExtension.cs" /> 
     <Compile Include="Features\CurrencyProviderBySiteSettingFeature.cs" /> 
     <Compile Include="Features\InventoryBySKUFeature.cs" /> 
+    <Compile Include="Filters\FilterHelper.cs" /> 
+    <Compile Include="Filters\ProductDiscountPriceFilter.cs" /> 
+    <Compile Include="Filters\ProductDiscountPriceFilterForm.cs" /> 
+    <Compile Include="Filters\ProductInventoryFilter.cs" /> 
+    <Compile Include="Filters\ProductInventoryFilterForm.cs" /> 
+    <Compile Include="Filters\ProductPriceFilter.cs" /> 
+    <Compile Include="Filters\ProductPriceFilterForm.cs" /> 
+    <Compile Include="Filters\ProductSizeFilter.cs" /> 
+    <Compile Include="Filters\ProductSizeFilterForm.cs" /> 
+    <Compile Include="Filters\ProductSkuFilter.cs" /> 
+    <Compile Include="Filters\ProductSkuFilterForm.cs" /> 
+    <Compile Include="Filters\ProductWeightFilter.cs" /> 
+    <Compile Include="Filters\ProductWeightFilterForm.cs" /> 
     <Compile Include="Filters\ReferrerFilter.cs" /> 
     <Compile Include="Handlers\AdvancedSKUManagementHandler.cs" /> 
     <Compile Include="Handlers\AdvancedSKUsSiteSettingPartHandler.cs" /> 
