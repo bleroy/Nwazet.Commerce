@@ -108,13 +108,13 @@ namespace Nwazet.Commerce.Tests
         public void HigherPriorityWins() {
             var frenchTax1 = GetFrenchTax();
             frenchTax1.Priority = 1;
-            frenchTax1.Rate = 0.1;
+            frenchTax1.Rate = 0.1M;
             var anyCountryTax = GetAnyCountryTax();
             anyCountryTax.Priority = 2;
-            anyCountryTax.Rate = 0.2;
+            anyCountryTax.Rate = 0.2M;
             var frenchTax2 = GetFrenchTax();
             frenchTax2.Priority = 3;
-            frenchTax2.Rate = 0.3;
+            frenchTax2.Rate = 0.3M;
             var taxProvider = new FakeTaxProvider(new[] { frenchTax1, frenchTax2, anyCountryTax });
             var cart = ShoppingCartHelpers.PrepareCart(null, new[] { taxProvider });
             cart.Country = frenchTax1.Country;
@@ -146,7 +146,7 @@ namespace Nwazet.Commerce.Tests
         public void NoNegativeTax()
         {
             var frenchTax = GetFrenchTax();
-            frenchTax.Rate = -0.5;
+            frenchTax.Rate = -0.5M;
             var taxProvider = new FakeTaxProvider(new[] { frenchTax });
             var cart = ShoppingCartHelpers.PrepareCart(null, new[] { taxProvider });
 
@@ -163,7 +163,7 @@ namespace Nwazet.Commerce.Tests
             ContentHelpers.PreparePart<StateOrCountryTaxPart, StateOrCountryTaxPartRecord>(anyStateTax, "Tax");
             anyStateTax.Country = Country.UnitedStates;
             anyStateTax.State = "*";
-            anyStateTax.Rate = 0.05;
+            anyStateTax.Rate = 0.05M;
             return anyStateTax;
         }
 
@@ -172,7 +172,7 @@ namespace Nwazet.Commerce.Tests
             var anyCountryTax = new StateOrCountryTaxPart();
             ContentHelpers.PreparePart<StateOrCountryTaxPart, StateOrCountryTaxPartRecord>(anyCountryTax, "Tax");
             anyCountryTax.Country = "*";
-            anyCountryTax.Rate = 0.07;
+            anyCountryTax.Rate = 0.07M;
             return anyCountryTax;
         }
 
@@ -182,7 +182,7 @@ namespace Nwazet.Commerce.Tests
             ContentHelpers.PreparePart<StateOrCountryTaxPart, StateOrCountryTaxPartRecord>(oregonTax, "Tax");
             oregonTax.Country = Country.UnitedStates;
             oregonTax.State = "OR";
-            oregonTax.Rate = 0.15;
+            oregonTax.Rate = 0.15M;
             return oregonTax;
         }
 
@@ -191,7 +191,7 @@ namespace Nwazet.Commerce.Tests
             ContentHelpers.PreparePart<StateOrCountryTaxPart, StateOrCountryTaxPartRecord>(washingtonTax, "Tax");
             washingtonTax.Country = Country.UnitedStates;
             washingtonTax.State = "WA";
-            washingtonTax.Rate = 0.095;
+            washingtonTax.Rate = 0.095M;
             return washingtonTax;
         }
 
@@ -199,7 +199,7 @@ namespace Nwazet.Commerce.Tests
             var frenchTax = new StateOrCountryTaxPart();
             ContentHelpers.PreparePart<StateOrCountryTaxPart, StateOrCountryTaxPartRecord>(frenchTax, "Tax");
             frenchTax.Country = "France";
-            frenchTax.Rate = 0.19;
+            frenchTax.Rate = 0.19M;
             return frenchTax;
         }
 
@@ -208,7 +208,7 @@ namespace Nwazet.Commerce.Tests
             var britishTax = new StateOrCountryTaxPart();
             ContentHelpers.PreparePart<StateOrCountryTaxPart, StateOrCountryTaxPartRecord>(britishTax, "Tax");
             britishTax.Country = "United Kingdom (Great Britain and Northern Ireland)";
-            britishTax.Rate = 0.15;
+            britishTax.Rate = 0.15M;
             return britishTax;
         }
 

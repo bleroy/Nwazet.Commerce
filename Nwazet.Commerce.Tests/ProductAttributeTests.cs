@@ -237,7 +237,7 @@ namespace Nwazet.Commerce.Tests {
 
         private static readonly ProductStub[] Products = {
             new ProductStub(1, new[] {10, 11}) {Price = 10},
-            new ProductStub(2, new int[0]) {Price = 1.5},
+            new ProductStub(2, new int[0]) {Price = 1.5M},
             new ProductStub(3, new[] {11}) {Price = 20},
             new ProductStub(4, new int[0]) {Price = 15},
             new ProductStub(5, new[] {10, 11}) {Price = 27} 

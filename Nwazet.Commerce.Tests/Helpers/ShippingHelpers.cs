@@ -8,7 +8,7 @@ using Orchard;
 namespace Nwazet.Commerce.Tests.Helpers {
     public class ShippingHelpers {
         public static WeightBasedShippingMethodPart BuildWeightBasedShippingMethod(
-            double price,
+            decimal price,
             double minimumWeight = 0,
             double maximumWeight = double.PositiveInfinity) {
 
@@ -22,7 +22,7 @@ namespace Nwazet.Commerce.Tests.Helpers {
         }
 
         public static SizeBasedShippingMethodPart BuildSizeBasedShippingMethod(
-            double price,
+            decimal price,
             string size = null,
             int priority = 0) {
 
@@ -55,7 +55,7 @@ namespace Nwazet.Commerce.Tests.Helpers {
 
         public static IWorkContextAccessor GetUspsWorkContextAccessor(string originZip,
             bool commercialPrices,
-            bool commercialPlusPrices, double price = 10) {
+            bool commercialPlusPrices, decimal price = 10) {
             return new WorkContextAccessorStub(new Dictionary<Type, object> {
                 {
                     typeof (IUspsService),

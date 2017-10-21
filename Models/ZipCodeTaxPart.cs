@@ -31,7 +31,7 @@ namespace Nwazet.Commerce.Models {
             var rates = new Dictionary<string, decimal>();
             string[] rateLines = Rates.Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
             foreach(var rateLine in rateLines) {
-                var rateSplit = rateLine.Split(new string[] { ",", "\t" }, StringSplitOptions.None);
+                var rateSplit = rateLine.Split(new string[] { ",", "\t" }, 2, StringSplitOptions.None);
                 rates.Add(rateSplit[0], Convert.ToDecimal(rateSplit[1]));
             }
 

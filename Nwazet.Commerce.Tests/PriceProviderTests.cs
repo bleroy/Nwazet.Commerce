@@ -30,7 +30,7 @@ namespace Nwazet.Commerce.Tests {
             };
             var cart = ShoppingCartHelpers.PrepareCart(new[] {discount});
 
-            CheckDiscount(cart, 0.7, discount.Comment);
+            CheckDiscount(cart, 0.7M, discount.Comment);
         }
 
         [Test]
@@ -49,7 +49,7 @@ namespace Nwazet.Commerce.Tests {
             };
             var cart = ShoppingCartHelpers.PrepareCart(new[] { mediocreDiscount, bestDiscount, betterDiscount });
 
-            CheckDiscount(cart, 0.8, bestDiscount.Comment);
+            CheckDiscount(cart, 0.8M, bestDiscount.Comment);
         }
 
         [Test]
@@ -81,7 +81,7 @@ namespace Nwazet.Commerce.Tests {
             };
             var cart = ShoppingCartHelpers.PrepareCart(new[] { currentDiscount });
 
-            CheckDiscount(cart, 0.95, currentDiscount.Comment);
+            CheckDiscount(cart, 0.95M, currentDiscount.Comment);
         }
 
         [Test]
@@ -113,7 +113,7 @@ namespace Nwazet.Commerce.Tests {
             };
             var cart = ShoppingCartHelpers.PrepareCart(new[] { wideEnoughDiscount });
 
-            CheckDiscount(cart, 0.9, wideEnoughDiscount.Comment);
+            CheckDiscount(cart, 0.9M, wideEnoughDiscount.Comment);
         }
 
         [Test]
@@ -126,7 +126,7 @@ namespace Nwazet.Commerce.Tests {
             };
             var cart = ShoppingCartHelpers.PrepareCart(new[] { selectiveDiscount });
 
-            CheckDiscounts(cart, new[] { 1, 0.9, 0.9 }, new[] { "", selectiveDiscount.Comment, selectiveDiscount.Comment });
+            CheckDiscounts(cart, new[] { 1, 0.9M, 0.9M }, new[] { "", selectiveDiscount.Comment, selectiveDiscount.Comment });
         }
 
         [Test]
@@ -138,7 +138,7 @@ namespace Nwazet.Commerce.Tests {
             };
             var cart = ShoppingCartHelpers.PrepareCart(new[] { patternDiscount });
 
-            CheckDiscounts(cart, new[] { 0.9, 1, 0.9 }, new[] { patternDiscount.Comment, "", patternDiscount.Comment });
+            CheckDiscounts(cart, new[] { 0.9M, 1, 0.9M }, new[] { patternDiscount.Comment, "", patternDiscount.Comment });
         }
 
         [Test]
@@ -150,7 +150,7 @@ namespace Nwazet.Commerce.Tests {
             };
             var cart = ShoppingCartHelpers.PrepareCart(new[] { patternDiscount });
 
-            CheckDiscounts(cart, new[] { 1, 0.9, 1 }, new[] { "", patternDiscount.Comment, "" });
+            CheckDiscounts(cart, new[] { 1, 0.9M, 1 }, new[] { "", patternDiscount.Comment, "" });
         }
 
         [Test]
@@ -163,7 +163,7 @@ namespace Nwazet.Commerce.Tests {
             };
             var cart = ShoppingCartHelpers.PrepareCart(new[] { patternDiscount });
 
-            CheckDiscounts(cart, new[] { 0.9, 1, 1 }, new[] { patternDiscount.Comment, "", "" });
+            CheckDiscounts(cart, new[] { 0.9M, 1, 1 }, new[] { patternDiscount.Comment, "", "" });
         }
 
         [Test]
@@ -187,7 +187,7 @@ namespace Nwazet.Commerce.Tests {
             };
             var cart = ShoppingCartHelpers.PrepareCart(new[] { roleDiscount });
 
-            CheckDiscount(cart, 0.9, roleDiscount.Comment);
+            CheckDiscount(cart, 0.9M, roleDiscount.Comment);
         }
 
         [Test]
@@ -198,17 +198,17 @@ namespace Nwazet.Commerce.Tests {
             };
             var cart = ShoppingCartHelpers.PrepareCart(new[] { absoluteDiscount });
 
-            CheckDiscounts(cart, new[] {0, 0, 0.5}, new[] {absoluteDiscount.Comment, absoluteDiscount.Comment, absoluteDiscount.Comment});
+            CheckDiscounts(cart, new[] {0, 0, 0.5M}, new[] {absoluteDiscount.Comment, absoluteDiscount.Comment, absoluteDiscount.Comment});
         }
 
         [Test]
         public void ProductDiscountApplies() {
             var cart = ShoppingCartHelpers.PrepareCart(new DiscountStub[] {}, applyProductDiscounts: true);
 
-            CheckDiscounts(cart, new[] { 1, 1, 0.5 }, new[] { "", "", "" });
+            CheckDiscounts(cart, new[] { 1, 1, 0.5M }, new[] { "", "", "" });
         }
 
-        private static void CheckDiscount(IShoppingCart cart, double discountRate, string comment) {
+        private static void CheckDiscount(IShoppingCart cart, decimal discountRate, string comment) {
             const double epsilon = 0.001;
             var expectedSubTotal = Math.Round(ShoppingCartHelpers.OriginalQuantities.Sum(q => q.Quantity * Math.Round(q.Product.Price * discountRate, 2)), 2);
             Assert.That(Math.Abs(cart.Subtotal() - expectedSubTotal), Is.LessThan(epsilon));
@@ -221,11 +221,11 @@ namespace Nwazet.Commerce.Tests {
             }
         }
 
-        private static void CheckDiscounts(IShoppingCart cart, double[] discountRates, string[] comments) {
+        private static void CheckDiscounts(IShoppingCart cart, decimal[] discountRates, string[] comments) {
             const double epsilon = 0.001;
             var cartContents = cart.GetProducts().ToList();
             var i = 0;
-            var expectedSubTotal = 0.0;
+            var expectedSubTotal = 0.0M;
             foreach (var shoppingCartQuantityProduct in cartContents) {
                 var discountedPrice = Math.Round(shoppingCartQuantityProduct.Product.Price*discountRates[i], 2);
                 Assert.That(

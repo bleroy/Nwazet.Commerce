@@ -12,7 +12,7 @@ using Orchard.UI.Notify;
 
 namespace Nwazet.Commerce.Tests.Helpers {
     public class ShoppingCartHelpers {
-        private static readonly double[] Prices = { 10, 1.5, 20 };
+        private static readonly decimal[] Prices = { 10, 1.5M, 20 };
         private static readonly int[] Quantities = { 3, 6, 5 };
         private static readonly string[] Paths = {"foo/bar", "bar/baz", "foo/baz/glop"};
 
@@ -75,7 +75,7 @@ namespace Nwazet.Commerce.Tests.Helpers {
             return cart;
         }
 
-        public static double CartPriceOf(IProduct product, IEnumerable<ShoppingCartQuantityProduct> quantities) {
+        public static decimal CartPriceOf(IProduct product, IEnumerable<ShoppingCartQuantityProduct> quantities) {
             return quantities.First(i => i.Product == product).Price;
         }
     }
