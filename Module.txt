@@ -106,3 +106,6 @@ Features:
 		Description: Enables wish lists for authenticated users
 		Category: Commerce
 		Dependencies: Nwazet.Commerce
+	Territories:
+		Name: Territories
+		Description: Flexible advanced handling of hierarchies of territories and regions

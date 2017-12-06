@@ -1,0 +1,32 @@
+﻿@using Nwazet.Commerce.Models
+
+@{ 
+    var items = (IEnumerable<TerritoryInternalRecord>)Model.Territories;
+}
+@using (Html.BeginFormAntiForgeryPost()) {
+    <fieldset class="contentItems bulk-items">
+        <table class="items" summary="@T("Territories table")">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" class="check-all" /></th>
+                    <th>@T("Name")</th>
+                    <th>@T("Actions")</th>
+                </tr>
+            </thead>
+            @foreach (var tir in items) {
+                <tr>
+                    <td><input type="checkbox" value="@tir.Id" name="itemIds"/></td>
+                    <td>@Html.Encode(tir.Name)</td>
+                    <td>
+                        @Html.ActionLink(T("Edit").Text, "EditTerritoryInternal", "TerritoriesAdmin", new { id = tir.Id }, null) |
+                        @Html.ActionLink(T("Delete").Text, "DeleteTerritoryInternal", "TerritoriesAdmin", new { id = tir.Id }, new { itemprop = "RemoveUrl UnsafeUrl" })
+                    </td>
+                </tr>
+            }
+        </table>
+    </fieldset>
+}
+
+@Display(Model.Pager)
+
+@Html.AntiForgeryTokenOrchard()

@@ -1,0 +1,12 @@
+﻿@{ Layout.Title = T("Create New Hierarchy").ToString(); }
+
+@foreach (var type in Model.HierarchyTypes) {
+    <p>
+        @Html.ActionLink((string)type.DisplayName,
+          "CreateHierarchy",
+          new {
+              Area = "Nwazet.Commerce",
+              id = Html.Encode((string)type.Name),
+              ReturnUrl = Request.QueryString["ReturnUrl"] })
+    </p>
+}

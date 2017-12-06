@@ -1,0 +1,13 @@
+﻿@model Nwazet.Commerce.ViewModels.TerritoryHierarchyPartSettingsViewModel
+
+<fieldset>
+    <div>
+        @Html.DropDownListFor(m => m.Settings.TerritoryType, Model.ListItems())
+        <label for="@Html.FieldIdFor(m => m.Settings.TerritoryType)" class="forcheckbox">@T("Select the TerritoryType for this type of Hierarchy.")</label>
+    </div>
+    <div>
+        @Html.CheckBoxFor(m => m.Settings.MayChangeTerritoryTypeOnItem)
+        <label for="@Html.FieldIdFor(m => m.Settings.MayChangeTerritoryTypeOnItem)" class="forcheckbox">@T("Allow selecting TerritoryType on items.")</label>
+        <span class="hint">@T("Check to enable users to select on each content item a different TerritoryType from the one specified in the type definition. Changing this will not affect existing content items of this type.")</span>
+    </div>
+</fieldset>

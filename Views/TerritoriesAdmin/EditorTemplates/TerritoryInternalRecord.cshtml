@@ -1,0 +1,8 @@
+﻿@model Nwazet.Commerce.Models.TerritoryInternalRecord
+
+<div>
+    @Html.LabelFor(x => x.Name)
+    @Html.TextBoxFor(x => x.Name, new { @class = "text large" })
+    @Html.ValidationMessageFor(x => x.Name)
+    <span class="hint">@T("Name of the territory")</span>
+</div>

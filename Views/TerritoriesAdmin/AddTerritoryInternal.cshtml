@@ -1,0 +1,14 @@
+﻿@model Nwazet.Commerce.Models.TerritoryInternalRecord
+
+@Html.ValidationSummary()
+
+@using (Html.BeginFormAntiForgeryPost()) {
+    <fieldset>
+        <legend>@T("Add new Territory.")</legend>
+        @Html.EditorForModel()
+    </fieldset>
+
+    <fieldset class="save-button">
+        <button class="primaryAction" type="submit" name="submit.Save" value="submit.Save">Save</button>
+    </fieldset>
+}
