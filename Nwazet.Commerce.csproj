@@ -1,61 +1,61 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{909ACC2C-D672-4752-B75B-6822E05FE0E3}</ProjectGuid>
-    <ProjectTypeGuids>{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nwazet.Commerce</RootNamespace>
-    <AssemblyName>Nwazet.Commerce</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <MvcBuildViews>false</MvcBuildViews>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <OldToolsVersion>4.0</OldToolsVersion>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-    <LangVersion>6</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-    <DebugSymbols>true</DebugSymbols>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+﻿<?xml version="1.0" encoding="utf-8"?> 
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003"> 
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" /> 
+  <PropertyGroup> 
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration> 
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform> 
+    <ProductVersion>9.0.30729</ProductVersion> 
+    <SchemaVersion>2.0</SchemaVersion> 
+    <ProjectGuid>{909ACC2C-D672-4752-B75B-6822E05FE0E3}</ProjectGuid> 
+    <ProjectTypeGuids>{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids> 
+    <OutputType>Library</OutputType> 
+    <AppDesignerFolder>Properties</AppDesignerFolder> 
+    <RootNamespace>Nwazet.Commerce</RootNamespace> 
+    <AssemblyName>Nwazet.Commerce</AssemblyName> 
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion> 
+    <MvcBuildViews>false</MvcBuildViews> 
+    <FileUpgradeFlags> 
+    </FileUpgradeFlags> 
+    <OldToolsVersion>4.0</OldToolsVersion> 
+    <UpgradeBackupLocation> 
+    </UpgradeBackupLocation> 
+    <TargetFrameworkProfile /> 
+    <NuGetPackageImportStamp> 
+    </NuGetPackageImportStamp> 
+  </PropertyGroup> 
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' "> 
+    <DebugSymbols>true</DebugSymbols> 
+    <DebugType>full</DebugType> 
+    <Optimize>false</Optimize> 
+    <OutputPath>bin\</OutputPath> 
+    <DefineConstants>DEBUG;TRACE</DefineConstants> 
+    <ErrorReport>prompt</ErrorReport> 
+    <WarningLevel>4</WarningLevel> 
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet> 
+    <Prefer32Bit>false</Prefer32Bit> 
+    <LangVersion>6</LangVersion> 
+  </PropertyGroup> 
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' "> 
+    <DebugType>full</DebugType> 
+    <Optimize>false</Optimize> 
+    <OutputPath>bin\</OutputPath> 
+    <DefineConstants>TRACE</DefineConstants> 
+    <ErrorReport>prompt</ErrorReport> 
+    <WarningLevel>4</WarningLevel> 
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet> 
+    <Prefer32Bit>false</Prefer32Bit> 
+    <DebugSymbols>true</DebugSymbols> 
+  </PropertyGroup> 
+  <ItemGroup> 
+    <Reference Include="Microsoft.CSharp" /> 
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"> 
+      <HintPath>..\..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath> 
+      <Private>True</Private> 
+    </Reference> 
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"> 
       <HintPath>..\..\..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath> 
-      <Private>True</Private>
-    </Reference>
+      <Private>True</Private> 
+    </Reference> 
     <ProjectReference Include="..\..\..\Orchard.Web\Modules\Orchard.Autoroute\Orchard.Autoroute.csproj"> 
       <Project>{66fccd76-2761-47e3-8d11-b45d0001ddaa}</Project> 
       <Name>Orchard.Autoroute</Name> 
@@ -96,49 +96,49 @@
       <Project>{7059493c-8251-4764-9c1e-2368b8b485bc}</Project> 
       <Name>Orchard.Workflows</Name> 
     </ProjectReference> 
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.ComponentModel.DataAnnotations">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Abstractions" />
-    <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="System" /> 
+    <Reference Include="System.Data" /> 
+    <Reference Include="System.ComponentModel.DataAnnotations"> 
+      <RequiredTargetFramework>3.5</RequiredTargetFramework> 
+    </Reference> 
+    <Reference Include="System.Web" /> 
+    <Reference Include="System.Web.Abstractions" /> 
+    <Reference Include="System.Web.DynamicData" /> 
+    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"> 
+      <SpecificVersion>False</SpecificVersion> 
       <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath> 
-    </Reference>
-    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    </Reference> 
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"> 
       <HintPath>..\..\..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath> 
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+      <Private>True</Private> 
+    </Reference> 
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"> 
+      <SpecificVersion>False</SpecificVersion> 
       <HintPath>..\..\..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath> 
-    </Reference>
-    <Reference Include="System.Web.Routing" />
-    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    </Reference> 
+    <Reference Include="System.Web.Routing" /> 
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"> 
+      <SpecificVersion>False</SpecificVersion> 
       <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath> 
-    </Reference>
-    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    </Reference> 
+    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"> 
+      <SpecificVersion>False</SpecificVersion> 
       <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath> 
-    </Reference>
-    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    </Reference> 
+    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"> 
+      <SpecificVersion>False</SpecificVersion> 
       <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath> 
-    </Reference>
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Xml.Linq" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Content\accepted-cards.png" />
-    <Content Include="Content\checkout-with-stripe.png" />
-    <Content Include="Content\menu.nwazet-commerce.png" />
-    <Content Include="Content\move.gif" />
-    <Content Include="LICENSE.txt" />
+    </Reference> 
+    <Reference Include="System.Xml" /> 
+    <Reference Include="System.Configuration" /> 
+    <Reference Include="System.Xml.Linq" /> 
+  </ItemGroup> 
+  <ItemGroup> 
+    <Content Include="Content\accepted-cards.png" /> 
+    <Content Include="Content\checkout-with-stripe.png" /> 
+    <Content Include="Content\menu.nwazet-commerce.png" /> 
+    <Content Include="Content\move.gif" /> 
+    <Content Include="LICENSE.txt" /> 
     <Content Include="Recipes\World.recipe.xml" />
     <Content Include="Scripts\attribute-admin.js" />
     <Content Include="Scripts\chartjs.js" />
@@ -186,8 +186,8 @@
     <Content Include="Scripts\wishlists.min.js">
       <DependentUpon>wishlists.js</DependentUpon>
     </Content>
-    <Content Include="Styles\bundle.nwazet-commerce-admin.css" />
-    <Content Include="Styles\attribute.nwazet-commerce-admin.css" />
+    <Content Include="Styles\bundle.nwazet-commerce-admin.css" /> 
+    <Content Include="Styles\attribute.nwazet-commerce-admin.css" /> 
     <Content Include="Styles\images\move.gif" />
     <Content Include="Styles\reports-admin.css" />
     <Content Include="Styles\territory-hierarchies-admin.css" />
@@ -270,20 +270,20 @@
     <Compile Include="Drivers\TerritoryHierarchyPartDriver.cs" />
     <Compile Include="Drivers\TerritoryPartDriver.cs" />
     <Compile Include="Drivers\WishListItemPartDriver.cs" />
-    <Compile Include="Drivers\WishListListPartDriver.cs" />
-    <Compile Include="Drivers\ZipCodeTaxPartDriver.cs" />
-    <Compile Include="Drivers\StateOrCountryTaxPartDriver.cs" />
-    <Compile Include="Drivers\UspsShippingMethodPartDriver.cs" />
-    <Compile Include="Drivers\UspsSettingsPartDriver.cs" />
-    <Compile Include="Drivers\StripeSettingsPartDriver.cs" />
-    <Compile Include="Drivers\ProductAttributesPartDriver.cs" />
-    <Compile Include="Drivers\ProductAttributePartDriver.cs" />
-    <Compile Include="Drivers\DiscountPartDriver.cs" />
-    <Compile Include="Drivers\SizeBasedShippingMethodPartDriver.cs" />
-    <Compile Include="Drivers\ProductPartDriver.cs" />
-    <Compile Include="Drivers\ShoppingCartWidgetDriver.cs" />
-    <Compile Include="Drivers\WeightBasedShippingMethodPartDriver.cs" />
-    <Compile Include="Exceptions\StripeException.cs" />
+    <Compile Include="Drivers\WishListListPartDriver.cs" /> 
+    <Compile Include="Drivers\ZipCodeTaxPartDriver.cs" /> 
+    <Compile Include="Drivers\StateOrCountryTaxPartDriver.cs" /> 
+    <Compile Include="Drivers\UspsShippingMethodPartDriver.cs" /> 
+    <Compile Include="Drivers\UspsSettingsPartDriver.cs" /> 
+    <Compile Include="Drivers\StripeSettingsPartDriver.cs" /> 
+    <Compile Include="Drivers\ProductAttributesPartDriver.cs" /> 
+    <Compile Include="Drivers\ProductAttributePartDriver.cs" /> 
+    <Compile Include="Drivers\DiscountPartDriver.cs" /> 
+    <Compile Include="Drivers\SizeBasedShippingMethodPartDriver.cs" /> 
+    <Compile Include="Drivers\ProductPartDriver.cs" /> 
+    <Compile Include="Drivers\ShoppingCartWidgetDriver.cs" /> 
+    <Compile Include="Drivers\WeightBasedShippingMethodPartDriver.cs" /> 
+    <Compile Include="Exceptions\StripeException.cs" /> 
     <Compile Include="Exceptions\TerritoryInternalDuplicateException.cs" />
     <Compile Include="Extensions\AttributeNameUtilities.cs" />
     <Compile Include="Extensions\DefaultHqlExpressionFactoryExtension.cs" />
@@ -313,16 +313,16 @@
     <Compile Include="Handlers\WeightBasedShippingMethodPartHandler.cs" />
     <Compile Include="Handlers\ProductPartHandler.cs" />
     <Compile Include="Handlers\WishListItemPartHandler.cs" />
-    <Compile Include="Handlers\WishListListPartHandler.cs" />
-    <Compile Include="Menus\ECommerceSettingsAdminMenu.cs" />
-    <Compile Include="Menus\ReportsAdminMenu.cs" />
-    <Compile Include="Menus\ProductSettingsAdminMenu.cs" />
-    <Compile Include="Menus\AttributeAdminMenu.cs" />
-    <Compile Include="Menus\OrderAdminMenu.cs" />
-    <Compile Include="Menus\TaxAdminMenu.cs" />
-    <Compile Include="Menus\PromotionAdminMenu.cs" />
-    <Compile Include="Menus\ProductAdminMenu.cs" />
-    <Compile Include="Menus\ShippingAdminMenu.cs" />
+    <Compile Include="Handlers\WishListListPartHandler.cs" /> 
+    <Compile Include="Menus\ECommerceSettingsAdminMenu.cs" /> 
+    <Compile Include="Menus\ReportsAdminMenu.cs" /> 
+    <Compile Include="Menus\ProductSettingsAdminMenu.cs" /> 
+    <Compile Include="Menus\AttributeAdminMenu.cs" /> 
+    <Compile Include="Menus\OrderAdminMenu.cs" /> 
+    <Compile Include="Menus\TaxAdminMenu.cs" /> 
+    <Compile Include="Menus\PromotionAdminMenu.cs" /> 
+    <Compile Include="Menus\ProductAdminMenu.cs" /> 
+    <Compile Include="Menus\ShippingAdminMenu.cs" /> 
     <Compile Include="Menus\TerritoriesAdminMenu.cs" />
     <Compile Include="Migrations\AttributesLocalizationExtensionsMigrations.cs" />
     <Compile Include="Migrations\BundleMigrations.cs" />
@@ -369,44 +369,44 @@
     <Compile Include="Models\TerritoryPartRecord.cs" />
     <Compile Include="Models\WishListItemPart.cs" />
     <Compile Include="Models\WishListItemPartRecord.cs" />
-    <Compile Include="Models\WishListListPartRecord.cs" />
-    <Compile Include="Models\ZipCodeTaxPart.cs" />
-    <Compile Include="Models\StateOrCountryTaxPart.cs" />
-    <Compile Include="Models\StateOrCountryTaxPartRecord.cs" />
-    <Compile Include="Models\CreditCardCharge.cs" />
-    <Compile Include="Models\TaxAmount.cs" />
-    <Compile Include="Models\ShippingException.cs" />
-    <Compile Include="Models\UspsShippingMethodPartRecord.cs" />
-    <Compile Include="Models\UspsSettingsPart.cs" />
-    <Compile Include="Models\ShippingOption.cs" />
-    <Compile Include="Models\UspsShippingOptionList.cs" />
-    <Compile Include="Models\UspsShippingMethodPart.cs" />
-    <Compile Include="Models\StripeSettingsPart.cs" />
-    <Compile Include="Models\ProductAttributesPart.cs" />
-    <Compile Include="Models\ProductAttributesPartRecord.cs" />
-    <Compile Include="Models\ProductAttributePart.cs" />
-    <Compile Include="Models\ProductAttributePartRecord.cs" />
-    <Compile Include="Models\BundlePart.cs" />
-    <Compile Include="Models\BundlePartRecord.cs" />
-    <Compile Include="Models\BundleProductsRecord.cs" />
-    <Compile Include="Models\DiscountPart.cs" />
-    <Compile Include="Models\DiscountPartRecord.cs" />
-    <Compile Include="Models\SizeBasedShippingMethodPart.cs" />
-    <Compile Include="Models\SizeBasedShippingMethodPartRecord.cs" />
-    <Compile Include="Models\ProductPartQuantity.cs" />
-    <Compile Include="Models\ProductQuantity.cs" />
-    <Compile Include="Models\WeightBasedShippingMethodPart.cs" />
-    <Compile Include="Models\WeightBasedShippingMethodPartRecord.cs" />
-    <Compile Include="Models\IProduct.cs" />
-    <Compile Include="Models\IShoppingCart.cs" />
-    <Compile Include="Models\ProductPart.cs" />
-    <Compile Include="Models\ProductPartRecord.cs" />
-    <Compile Include="Models\ShippingArea.cs" />
-    <Compile Include="Models\ShoppingCart.cs" />
-    <Compile Include="Models\ShoppingCartItem.cs" />
-    <Compile Include="Models\ShoppingCartQuantityProduct.cs" />
-    <Compile Include="Models\ShoppingCartWidgetPart.cs" />
-    <Compile Include="Permissions\CommercePermissions.cs" />
+    <Compile Include="Models\WishListListPartRecord.cs" /> 
+    <Compile Include="Models\ZipCodeTaxPart.cs" /> 
+    <Compile Include="Models\StateOrCountryTaxPart.cs" /> 
+    <Compile Include="Models\StateOrCountryTaxPartRecord.cs" /> 
+    <Compile Include="Models\CreditCardCharge.cs" /> 
+    <Compile Include="Models\TaxAmount.cs" /> 
+    <Compile Include="Models\ShippingException.cs" /> 
+    <Compile Include="Models\UspsShippingMethodPartRecord.cs" /> 
+    <Compile Include="Models\UspsSettingsPart.cs" /> 
+    <Compile Include="Models\ShippingOption.cs" /> 
+    <Compile Include="Models\UspsShippingOptionList.cs" /> 
+    <Compile Include="Models\UspsShippingMethodPart.cs" /> 
+    <Compile Include="Models\StripeSettingsPart.cs" /> 
+    <Compile Include="Models\ProductAttributesPart.cs" /> 
+    <Compile Include="Models\ProductAttributesPartRecord.cs" /> 
+    <Compile Include="Models\ProductAttributePart.cs" /> 
+    <Compile Include="Models\ProductAttributePartRecord.cs" /> 
+    <Compile Include="Models\BundlePart.cs" /> 
+    <Compile Include="Models\BundlePartRecord.cs" /> 
+    <Compile Include="Models\BundleProductsRecord.cs" /> 
+    <Compile Include="Models\DiscountPart.cs" /> 
+    <Compile Include="Models\DiscountPartRecord.cs" /> 
+    <Compile Include="Models\SizeBasedShippingMethodPart.cs" /> 
+    <Compile Include="Models\SizeBasedShippingMethodPartRecord.cs" /> 
+    <Compile Include="Models\ProductPartQuantity.cs" /> 
+    <Compile Include="Models\ProductQuantity.cs" /> 
+    <Compile Include="Models\WeightBasedShippingMethodPart.cs" /> 
+    <Compile Include="Models\WeightBasedShippingMethodPartRecord.cs" /> 
+    <Compile Include="Models\IProduct.cs" /> 
+    <Compile Include="Models\IShoppingCart.cs" /> 
+    <Compile Include="Models\ProductPart.cs" /> 
+    <Compile Include="Models\ProductPartRecord.cs" /> 
+    <Compile Include="Models\ShippingArea.cs" /> 
+    <Compile Include="Models\ShoppingCart.cs" /> 
+    <Compile Include="Models\ShoppingCartItem.cs" /> 
+    <Compile Include="Models\ShoppingCartQuantityProduct.cs" /> 
+    <Compile Include="Models\ShoppingCartWidgetPart.cs" /> 
+    <Compile Include="Permissions\CommercePermissions.cs" /> 
     <Compile Include="Permissions\ITerritoriesPermissionProvider.cs" />
     <Compile Include="Permissions\ReportPermissions.cs" />
     <Compile Include="Permissions\OrderPermissions.cs" />
@@ -428,26 +428,26 @@
     <Compile Include="Security\HierachiesAuthorizationEventHandler.cs" />
     <Compile Include="Security\TerritoriesAuthorizationEventHandler.cs" />
     <Compile Include="Security\WishListsAuthorizationEventHandler.cs" />
-    <Compile Include="Services\BundleAutocompleteService.cs" />
-    <Compile Include="Services\BundleProductLocalizationBundleService.cs" />
-    <Compile Include="Services\BundleProductLocalizationServices.cs" />
-    <Compile Include="Services\BundleServiceBase.cs" />
-    <Compile Include="Services\CartLifeCycleEventHandler.cs" />
-    <Compile Include="Services\CommerceLocalStorageSettings.cs" />
-    <Compile Include="Services\CurrencyProviderBase.cs" />
-    <Compile Include="Services\IBundleAutocompleteService.cs" />
-    <Compile Include="Services\IBundleProductLocalizationServices.cs" />
-    <Compile Include="Services\IBundleService.cs" />
-    <Compile Include="Services\ICartLifeCycleEventHandler.cs" />
-    <Compile Include="Services\ILocalStorageSettings.cs" />
-    <Compile Include="Services\InventoriesAreNotSynchronizedBySKU.cs" />
-    <Compile Include="Services\InventoryBySKUProductInventoryService.cs" />
-    <Compile Include="Services\IPersistentShoppingCartServices.cs" />
-    <Compile Include="Services\IProductAttributeAdminServices.cs" />
-    <Compile Include="Services\IProductAttributeLocalizationServices.cs" />
-    <Compile Include="Services\IProductInventoryService.cs" />
-    <Compile Include="Services\ISKUGenerationServices.cs" />
-    <Compile Include="Services\ISKUUniquenessHelper.cs" />
+    <Compile Include="Services\BundleAutocompleteService.cs" /> 
+    <Compile Include="Services\BundleProductLocalizationBundleService.cs" /> 
+    <Compile Include="Services\BundleProductLocalizationServices.cs" /> 
+    <Compile Include="Services\BundleServiceBase.cs" /> 
+    <Compile Include="Services\CartLifeCycleEventHandler.cs" /> 
+    <Compile Include="Services\CommerceLocalStorageSettings.cs" /> 
+    <Compile Include="Services\CurrencyProviderBase.cs" /> 
+    <Compile Include="Services\IBundleAutocompleteService.cs" /> 
+    <Compile Include="Services\IBundleProductLocalizationServices.cs" /> 
+    <Compile Include="Services\IBundleService.cs" /> 
+    <Compile Include="Services\ICartLifeCycleEventHandler.cs" /> 
+    <Compile Include="Services\ILocalStorageSettings.cs" /> 
+    <Compile Include="Services\InventoriesAreNotSynchronizedBySKU.cs" /> 
+    <Compile Include="Services\InventoryBySKUProductInventoryService.cs" /> 
+    <Compile Include="Services\IPersistentShoppingCartServices.cs" /> 
+    <Compile Include="Services\IProductAttributeAdminServices.cs" /> 
+    <Compile Include="Services\IProductAttributeLocalizationServices.cs" /> 
+    <Compile Include="Services\IProductInventoryService.cs" /> 
+    <Compile Include="Services\ISKUGenerationServices.cs" /> 
+    <Compile Include="Services\ISKUUniquenessHelper.cs" /> 
     <Compile Include="Services\ITerritoriesHierarchyService.cs" />
     <Compile Include="Services\ITerritoriesRepositoryService.cs" />
     <Compile Include="Services\ITerritoriesService.cs" />
@@ -455,37 +455,37 @@
     <Compile Include="Services\IWishListServices.cs" />
     <Compile Include="Services\IWishListsPermissionsService.cs" />
     <Compile Include="Services\IWishListsUIServices.cs" />
-    <Compile Include="Services\LatestProductAttributeAdminServices.cs" />
-    <Compile Include="Services\LocalizationSKUUniquenessHelper.cs" />
-    <Compile Include="Services\IProductAttributeNameService.cs" />
-    <Compile Include="Services\PersistentCartLocalStorageSettings.cs" />
-    <Compile Include="Services\PersistentShoppingCartServices.cs" />
-    <Compile Include="Services\ProductAttributeAdminServices.cs" />
-    <Compile Include="Services\ProductAttributeLocalizationServices.cs" />
-    <Compile Include="Services\ProductAttributeNameService.cs" />
-    <Compile Include="Services\Currency.cs" />
-    <Compile Include="Services\ICurrencyProvider.cs" />
-    <Compile Include="Services\ProductInventoryService.cs" />
-    <Compile Include="Services\ProductInventoryServiceBase.cs" />
-    <Compile Include="Services\ProductResolverSelector.cs" />
-    <Compile Include="Services\AddressFormatter.cs" />
-    <Compile Include="Services\BundleService.cs" />
-    <Compile Include="Services\Country.cs" />
-    <Compile Include="Services\IProductAttributeExtensionProvider.cs" />
-    <Compile Include="Services\IOrderService.cs" />
-    <Compile Include="Services\IProductAttributeService.cs" />
-    <Compile Include="Services\IStripeWebService.cs" />
-    <Compile Include="Services\ITax.cs" />
-    <Compile Include="Services\ITaxProvider.cs" />
-    <Compile Include="Services\ITieredPriceProvider.cs" />
-    <Compile Include="Services\IUspsService.cs" />
-    <Compile Include="Services\IUspsWebService.cs" />
-    <Compile Include="Services\OrderService.cs" />
-    <Compile Include="Services\ProductAttributeService.cs" />
-    <Compile Include="Services\ProductDiscountPriceProvider.cs" />
-    <Compile Include="Services\ShippingService.cs" />
-    <Compile Include="Services\ShoppingCartInfosetPartStorage.cs" />
-    <Compile Include="Services\SKUGenerationServices.cs" />
+    <Compile Include="Services\LatestProductAttributeAdminServices.cs" /> 
+    <Compile Include="Services\LocalizationSKUUniquenessHelper.cs" /> 
+    <Compile Include="Services\IProductAttributeNameService.cs" /> 
+    <Compile Include="Services\PersistentCartLocalStorageSettings.cs" /> 
+    <Compile Include="Services\PersistentShoppingCartServices.cs" /> 
+    <Compile Include="Services\ProductAttributeAdminServices.cs" /> 
+    <Compile Include="Services\ProductAttributeLocalizationServices.cs" /> 
+    <Compile Include="Services\ProductAttributeNameService.cs" /> 
+    <Compile Include="Services\Currency.cs" /> 
+    <Compile Include="Services\ICurrencyProvider.cs" /> 
+    <Compile Include="Services\ProductInventoryService.cs" /> 
+    <Compile Include="Services\ProductInventoryServiceBase.cs" /> 
+    <Compile Include="Services\ProductResolverSelector.cs" /> 
+    <Compile Include="Services\AddressFormatter.cs" /> 
+    <Compile Include="Services\BundleService.cs" /> 
+    <Compile Include="Services\Country.cs" /> 
+    <Compile Include="Services\IProductAttributeExtensionProvider.cs" /> 
+    <Compile Include="Services\IOrderService.cs" /> 
+    <Compile Include="Services\IProductAttributeService.cs" /> 
+    <Compile Include="Services\IStripeWebService.cs" /> 
+    <Compile Include="Services\ITax.cs" /> 
+    <Compile Include="Services\ITaxProvider.cs" /> 
+    <Compile Include="Services\ITieredPriceProvider.cs" /> 
+    <Compile Include="Services\IUspsService.cs" /> 
+    <Compile Include="Services\IUspsWebService.cs" /> 
+    <Compile Include="Services\OrderService.cs" /> 
+    <Compile Include="Services\ProductAttributeService.cs" /> 
+    <Compile Include="Services\ProductDiscountPriceProvider.cs" /> 
+    <Compile Include="Services\ShippingService.cs" /> 
+    <Compile Include="Services\ShoppingCartInfosetPartStorage.cs" /> 
+    <Compile Include="Services\SKUGenerationServices.cs" /> 
     <Compile Include="Services\TerritoriesHierarchyService.cs" />
     <Compile Include="Services\TerritoriesService.cs" />
     <Compile Include="Services\TerritoryRepositoryService.cs" />
@@ -493,44 +493,44 @@
     <Compile Include="Services\UseCurrencyFromSiteCultureProvider.cs" />
     <Compile Include="Services\UseCurrencyFromSiteSettingsProvider.cs" />
     <Compile Include="Services\WishListsArePrivatePermissionsService.cs" />
-    <Compile Include="Services\WishListServices.cs" />
+    <Compile Include="Services\WishListServices.cs" /> 
     <Compile Include="Services\WishListsUIServices.cs" />
-    <Compile Include="Services\ZipCodeTaxProvider.cs" />
-    <Compile Include="Services\StateOrCountryTaxProvider.cs" />
-    <Compile Include="Services\StripeWebService.cs" />
-    <Compile Include="Services\TieredPriceProvider.cs" />
-    <Compile Include="Services\UspsContainer.cs" />
-    <Compile Include="Services\UspsService.cs" />
-    <Compile Include="Services\UspsShippingMethodProvider.cs" />
-    <Compile Include="Services\IAddressFormatter.cs" />
-    <Compile Include="Services\StripeService.cs" />
-    <Compile Include="Services\IStripeService.cs" />
-    <Compile Include="Services\Discount.cs" />
-    <Compile Include="Services\DiscountPriceProvider.cs" />
-    <Compile Include="Services\IProductAttributesDriver.cs" />
-    <Compile Include="Services\IPriceProvider.cs" />
-    <Compile Include="Services\IPriceService.cs" />
-    <Compile Include="Services\IPromotion.cs" />
-    <Compile Include="Services\IShoppingCartStorage.cs" />
-    <Compile Include="Services\PriceService.cs" />
-    <Compile Include="Services\ShoppingCartSessionStorage.cs" />
-    <Compile Include="Services\SizeBasedShippingMethodProvider.cs" />
-    <Compile Include="Services\CoreShippingAreas.cs" />
-    <Compile Include="Services\IExtraCartInfoProvider.cs" />
-    <Compile Include="Services\IShippingMethodProvider.cs" />
-    <Compile Include="Services\ReferrerCartInfoProvider.cs" />
-    <Compile Include="Services\ICheckoutService.cs" />
-    <Compile Include="Services\IShippingAreaProvider.cs" />
-    <Compile Include="Services\IShippingMethod.cs" />
-    <Compile Include="Services\UspsWebService.cs" />
-    <Compile Include="Services\WeightBasedShippingMethodProvider.cs" />
-    <Compile Include="Services\UnitedStates.cs" />
-    <Compile Include="Settings\BundleProductEditorEvents.cs" />
-    <Compile Include="Settings\BundleProductLocalizationEditorEvents.cs" />
-    <Compile Include="Settings\BundleProductLocalizationSettings.cs" />
-    <Compile Include="Settings\BundleProductSettings.cs" />
-    <Compile Include="Settings\ProductAttributeLocalizationEditorEvents.cs" />
-    <Compile Include="Settings\ProductAttributeLocalizationSettings.cs" />
+    <Compile Include="Services\ZipCodeTaxProvider.cs" /> 
+    <Compile Include="Services\StateOrCountryTaxProvider.cs" /> 
+    <Compile Include="Services\StripeWebService.cs" /> 
+    <Compile Include="Services\TieredPriceProvider.cs" /> 
+    <Compile Include="Services\UspsContainer.cs" /> 
+    <Compile Include="Services\UspsService.cs" /> 
+    <Compile Include="Services\UspsShippingMethodProvider.cs" /> 
+    <Compile Include="Services\IAddressFormatter.cs" /> 
+    <Compile Include="Services\StripeService.cs" /> 
+    <Compile Include="Services\IStripeService.cs" /> 
+    <Compile Include="Services\Discount.cs" /> 
+    <Compile Include="Services\DiscountPriceProvider.cs" /> 
+    <Compile Include="Services\IProductAttributesDriver.cs" /> 
+    <Compile Include="Services\IPriceProvider.cs" /> 
+    <Compile Include="Services\IPriceService.cs" /> 
+    <Compile Include="Services\IPromotion.cs" /> 
+    <Compile Include="Services\IShoppingCartStorage.cs" /> 
+    <Compile Include="Services\PriceService.cs" /> 
+    <Compile Include="Services\ShoppingCartSessionStorage.cs" /> 
+    <Compile Include="Services\SizeBasedShippingMethodProvider.cs" /> 
+    <Compile Include="Services\CoreShippingAreas.cs" /> 
+    <Compile Include="Services\IExtraCartInfoProvider.cs" /> 
+    <Compile Include="Services\IShippingMethodProvider.cs" /> 
+    <Compile Include="Services\ReferrerCartInfoProvider.cs" /> 
+    <Compile Include="Services\ICheckoutService.cs" /> 
+    <Compile Include="Services\IShippingAreaProvider.cs" /> 
+    <Compile Include="Services\IShippingMethod.cs" /> 
+    <Compile Include="Services\UspsWebService.cs" /> 
+    <Compile Include="Services\WeightBasedShippingMethodProvider.cs" /> 
+    <Compile Include="Services\UnitedStates.cs" /> 
+    <Compile Include="Settings\BundleProductEditorEvents.cs" /> 
+    <Compile Include="Settings\BundleProductLocalizationEditorEvents.cs" /> 
+    <Compile Include="Settings\BundleProductLocalizationSettings.cs" /> 
+    <Compile Include="Settings\BundleProductSettings.cs" /> 
+    <Compile Include="Settings\ProductAttributeLocalizationEditorEvents.cs" /> 
+    <Compile Include="Settings\ProductAttributeLocalizationSettings.cs" /> 
     <Compile Include="Settings\TerritoryHierarchyPartEditorEvents.cs" />
     <Compile Include="Settings\TerritoryHierarchyPartSettings.cs" />
     <Compile Include="Shapes\ProductAttributesLocalizationAdminShapeProvider.cs" />
@@ -681,60 +681,60 @@
     <None Include="Views\TerritoriesAdmin\TerritoriesIndex.cshtml" />
     <None Include="Views\TerritoriesAdmin\TerritoriesListPartial.cshtml" />
     <None Include="Views\WishListEditor.cshtml" />
-    <None Include="Views\DefinitionTemplates\BundleProductSettings.cshtml" />
-    <None Include="Views\EditorTemplates\Parts\BundleAutocomplete.cshtml" />
-    <None Include="Views\EditorTemplates\Parts\ProductLocalizationBundle.cshtml" />
+    <None Include="Views\DefinitionTemplates\BundleProductSettings.cshtml" /> 
+    <None Include="Views\EditorTemplates\Parts\BundleAutocomplete.cshtml" /> 
+    <None Include="Views\EditorTemplates\Parts\ProductLocalizationBundle.cshtml" /> 
     <None Include="Views\Parts\ListOfWishLists.cshtml" />
-    <None Include="Views\Parts\Product.AddToCartFromWishlist.cshtml" />
-    <None Include="Views\Parts\Product.AddToWishlistButton.cshtml" />
-    <None Include="Views\Parts\Product.RemoveFromWishList.cshtml" />
+    <None Include="Views\Parts\Product.AddToCartFromWishlist.cshtml" /> 
+    <None Include="Views\Parts\Product.AddToWishlistButton.cshtml" /> 
+    <None Include="Views\Parts\Product.RemoveFromWishList.cshtml" /> 
     <None Include="Views\Parts\WishListItem.cshtml" />
-    <None Include="Views\Parts\WishListList.cshtml" />
-    <None Include="Views\ProductAttributesAdminList.cshtml" />
-    <None Include="Views\ProductAttributesAdminListItem.cshtml" />
-    <None Include="Views\DefinitionTemplates\BundleProductLocalizationSettings.cshtml" />
-    <None Include="Views\DefinitionTemplates\ProductAttributeLocalizationSettings.cshtml" />
-    <None Include="Views\ECommerceSettingsAdmin\Index.cshtml" />
-    <None Include="Views\EditorTemplates\Parts\AdvancedSKUProduct.cshtml" />
-    <None Include="Views\EditorTemplates\Parts\AttributeLocalizationProductAttributes.cshtml" />
-    <None Include="Views\EditorTemplates\Parts\InventoryBySKUProduct.cshtml" />
-    <None Include="Views\EditorTemplates\SiteSettings\AdvancedSKUs.cshtml" />
-    <None Include="Views\EditorTemplates\SiteSettings\Currency.cshtml" />
-    <None Include="Views\EditorTemplates\SiteSettings\InventoryBySKU.cshtml" />
-    <None Include="Views\ProductAttributesLocalizationAdminListItem.cshtml" />
-    <None Include="Views\WishListsSettings.cshtml" />
-    <None Include="Views\WishLists\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup />
-  <PropertyGroup>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
-    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-  </PropertyGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+    <None Include="Views\Parts\WishListList.cshtml" /> 
+    <None Include="Views\ProductAttributesAdminList.cshtml" /> 
+    <None Include="Views\ProductAttributesAdminListItem.cshtml" /> 
+    <None Include="Views\DefinitionTemplates\BundleProductLocalizationSettings.cshtml" /> 
+    <None Include="Views\DefinitionTemplates\ProductAttributeLocalizationSettings.cshtml" /> 
+    <None Include="Views\ECommerceSettingsAdmin\Index.cshtml" /> 
+    <None Include="Views\EditorTemplates\Parts\AdvancedSKUProduct.cshtml" /> 
+    <None Include="Views\EditorTemplates\Parts\AttributeLocalizationProductAttributes.cshtml" /> 
+    <None Include="Views\EditorTemplates\Parts\InventoryBySKUProduct.cshtml" /> 
+    <None Include="Views\EditorTemplates\SiteSettings\AdvancedSKUs.cshtml" /> 
+    <None Include="Views\EditorTemplates\SiteSettings\Currency.cshtml" /> 
+    <None Include="Views\EditorTemplates\SiteSettings\InventoryBySKU.cshtml" /> 
+    <None Include="Views\ProductAttributesLocalizationAdminListItem.cshtml" /> 
+    <None Include="Views\WishListsSettings.cshtml" /> 
+    <None Include="Views\WishLists\Index.cshtml" /> 
+  </ItemGroup> 
+  <ItemGroup /> 
+  <PropertyGroup> 
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion> 
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath> 
+  </PropertyGroup> 
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" /> 
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" /> 
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" /> 
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.   
        Other similar extension points exist, see Microsoft.Common.targets.  
   <Target Name="BeforeBuild">  
-  </Target> -->
-  <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
-    <PropertyGroup>
-      <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir>
-    </PropertyGroup>
+  </Target> --> 
+  <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler"> 
+    <PropertyGroup> 
+      <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir> 
+    </PropertyGroup> 
     <!-- If this is an area child project, uncomment the following line:  
     <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />  
-    -->
+    --> 
     <!-- If this is an area parent project, uncomment the following lines:  
     <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />  
     <CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" />  
-    -->
-  </Target>
-  <Target Name="AfterBuildCompiler" Condition="'$(MvcBuildViews)'=='true'">
-    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)\..\$(ProjectName)" />
-  </Target>
-  <ProjectExtensions />
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
-</Project>
+    --> 
+  </Target> 
+  <Target Name="AfterBuildCompiler" Condition="'$(MvcBuildViews)'=='true'"> 
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)\..\$(ProjectName)" /> 
+  </Target> 
+  <ProjectExtensions /> 
+  <PropertyGroup> 
+    <PostBuildEvent> 
+    </PostBuildEvent> 
+  </PropertyGroup> 
+</Project> 
