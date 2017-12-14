@@ -160,7 +160,7 @@ namespace Nwazet.Commerce.Tests.Territories {
             // 2. territory.Record is null
             territory = _contentManager.Create<TerritoryPart>("TerritoryType0");
             territory.Record = null;
-            Assert.Throws<ArgumentNullException>(() => _territoriesHierarchyService.AddTerritory(territory, hierarchy));
+            Assert.Throws<ArgumentException>(() => _territoriesHierarchyService.AddTerritory(territory, hierarchy));
             // 3. hierarchy is null
             territory = _contentManager.Create<TerritoryPart>("TerritoryType0");
             hierarchy = null;
@@ -168,7 +168,7 @@ namespace Nwazet.Commerce.Tests.Territories {
             // 4. hierarchy.Record is null
             hierarchy = _contentManager.Create<TerritoryHierarchyPart>("HierarchyType0");
             hierarchy.Record = null;
-            Assert.Throws<ArgumentNullException>(() => _territoriesHierarchyService.AddTerritory(territory, hierarchy));
+            Assert.Throws<ArgumentException>(() => _territoriesHierarchyService.AddTerritory(territory, hierarchy));
 
             // Sanity check: the following should succeed
             territory = _contentManager.Create<TerritoryPart>("TerritoryType0");
@@ -240,7 +240,7 @@ namespace Nwazet.Commerce.Tests.Territories {
             // 2. territory.Record is null
             var territory = _contentManager.Create<TerritoryPart>("TerritoryType0");
             territory.Record = null;
-            Assert.Throws<ArgumentNullException>(() =>
+            Assert.Throws<ArgumentException>(() =>
                 _territoriesHierarchyService.AssignParent(territory, parent));
             // 3. parent is null
             territory = _contentManager.Create<TerritoryPart>("TerritoryType0");
@@ -248,18 +248,18 @@ namespace Nwazet.Commerce.Tests.Territories {
                 _territoriesHierarchyService.AssignParent(territory, null));
             // 4. parent.Record is null
             parent.Record = null;
-            Assert.Throws<ArgumentNullException>(() =>
+            Assert.Throws<ArgumentException>(() =>
                 _territoriesHierarchyService.AssignParent(territory, parent));
             // 5. territory.Record.Hierarchy is null
             var hierarchy = _contentManager.Create<TerritoryHierarchyPart>("HierarchyType0");
             parent = _contentManager.Create<TerritoryPart>("TerritoryType0");
             _territoriesHierarchyService.AddTerritory(parent, hierarchy);
-            Assert.Throws<ArgumentNullException>(() =>
+            Assert.Throws<ArgumentException>(() =>
                 _territoriesHierarchyService.AssignParent(territory, parent));
             // 6. parent.Record.Hierachy is null
             _territoriesHierarchyService.AddTerritory(territory, hierarchy);
             parent = _contentManager.Create<TerritoryPart>("TerritoryType0");
-            Assert.Throws<ArgumentNullException>(() =>
+            Assert.Throws<ArgumentException>(() =>
                 _territoriesHierarchyService.AssignParent(territory, parent));
 
             // Sanity check
@@ -378,11 +378,11 @@ namespace Nwazet.Commerce.Tests.Territories {
             // 2. territory.Record is null
             var territory = _contentManager.Create<TerritoryPart>("TerritoryType0");
             territory.Record = null;
-            Assert.Throws<ArgumentNullException>(() =>
+            Assert.Throws<ArgumentException>(() =>
                 _territoriesHierarchyService.AssignInternalRecord(territory, "Name0"));
             // 3. no record was found
             territory = _contentManager.Create<TerritoryPart>("TerritoryType0");
-            Assert.Throws<ArgumentNullException>(() =>
+            Assert.Throws<ArgumentException>(() =>
                 _territoriesHierarchyService.AssignInternalRecord(territory, "Name1"));
 
             // sanity check
@@ -399,11 +399,11 @@ namespace Nwazet.Commerce.Tests.Territories {
             // 2. territory.Record is null
             var territory = _contentManager.Create<TerritoryPart>("TerritoryType0");
             territory.Record = null;
-            Assert.Throws<ArgumentNullException>(() =>
+            Assert.Throws<ArgumentException>(() =>
                 _territoriesHierarchyService.AssignInternalRecord(territory, 1));
             // 3. no record was found
             territory = _contentManager.Create<TerritoryPart>("TerritoryType0");
-            Assert.Throws<ArgumentNullException>(() =>
+            Assert.Throws<ArgumentException>(() =>
                 _territoriesHierarchyService.AssignInternalRecord(territory, 2));
 
             // sanity check
@@ -421,7 +421,7 @@ namespace Nwazet.Commerce.Tests.Territories {
             // 2. territory.Record is null
             var territory = _contentManager.Create<TerritoryPart>("TerritoryType0");
             territory.Record = null;
-            Assert.Throws<ArgumentNullException>(() =>
+            Assert.Throws<ArgumentException>(() =>
                 _territoriesHierarchyService.AssignInternalRecord(territory, existingTerritory));
             // 3. no record was found
             territory = _contentManager.Create<TerritoryPart>("TerritoryType0");

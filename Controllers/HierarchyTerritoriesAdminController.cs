@@ -89,7 +89,7 @@ namespace Nwazet.Commerce.Controllers {
             var hierarchyItem = _contentManager.Get(id, VersionOptions.Latest);
             var hierarchyPart = hierarchyItem.As<TerritoryHierarchyPart>();
             
-            var firstLevelOfHierarchy = _territoriesService
+            var topLevelOfHierarchy = _territoriesService
                 .GetTerritoriesQuery(hierarchyPart, null, VersionOptions.Latest)
                 .List().ToList();
                        
@@ -97,7 +97,7 @@ namespace Nwazet.Commerce.Controllers {
             var model = new TerritoryHierarchyTerritoriesViewModel {
                 HierarchyPart = hierarchyPart,
                 HierarchyItem = hierarchyItem,
-                FirstLevelNodes = firstLevelOfHierarchy.Select(MakeANode).ToList(),
+                TopLevelNodes = topLevelOfHierarchy.Select(MakeANode).ToList(),
                 Nodes = _territoriesService.
                     GetTerritoriesQuery(hierarchyPart, VersionOptions.Latest)
                     .List().Select(MakeANode).ToList(),
@@ -340,25 +340,9 @@ namespace Nwazet.Commerce.Controllers {
                         _transactionManager.Cancel();
                         return View(model);
                     }
-
-                    string previousRoute = null;
-                    if (item.Has<IAliasAspect>()
-                        && !string.IsNullOrWhiteSpace(returnUrl)
-                        && Request.IsLocalUrl(returnUrl)
-                        // only if the original returnUrl is the content itself
-                        && String.Equals(returnUrl, Url.ItemDisplayUrl(item), StringComparison.OrdinalIgnoreCase)
-                        ) {
-                        previousRoute = item.As<IAliasAspect>().Path;
-                    }
-
+                    
                     conditionallyPublish(item);
-
-                    if (!string.IsNullOrWhiteSpace(returnUrl)
-                        && previousRoute != null
-                        && !String.Equals(item.As<IAliasAspect>().Path, previousRoute, StringComparison.OrdinalIgnoreCase)) {
-                        returnUrl = Url.ItemDisplayUrl(item);
-                    }
-
+                    
                     _notifier.Information(string.IsNullOrWhiteSpace(item.TypeDefinition.DisplayName)
                         ? T("Your content has been updated.")
                         : T("Your {0} has been updated.", item.TypeDefinition.DisplayName));

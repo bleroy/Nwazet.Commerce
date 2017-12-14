@@ -16,7 +16,7 @@ namespace Nwazet.Commerce.Commands {
         }
 
         [CommandName("territories import")]
-        [CommandHelp("territories import <name>\r\n\t" + "Creates the TerritoriyInternalRecord with the given name.")]
+        [CommandHelp("territories import <name>\r\n\t" + "Imports the territory with the given name to be used as a reference.")]
         public void Import(string territoryName) {
             if (_territoriesRepositoryService.GetTerritoryInternal(territoryName) == null) {
                 _territoriesRepositoryService.AddTerritory(new TerritoryInternalRecord { Name = territoryName });

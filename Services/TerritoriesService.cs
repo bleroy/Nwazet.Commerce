@@ -1,4 +1,5 @@
-﻿using Nwazet.Commerce.Models;
+﻿using Nwazet.Commerce.Extensions;
+using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Permissions;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
@@ -72,9 +73,7 @@ namespace Nwazet.Commerce.Services {
         }
 
         public IContentQuery<TerritoryPart, TerritoryPartRecord> GetTerritoriesQuery(TerritoryHierarchyPart hierarchyPart, VersionOptions versionOptions) {
-            if (hierarchyPart == null || hierarchyPart.Record == null) {
-                throw new ArgumentNullException("hierarchyPart");
-            }
+            TerritoriesUtilities.ValidateArgument(hierarchyPart, nameof(hierarchyPart));
 
             versionOptions = versionOptions ??
                 (hierarchyPart.ContentItem.IsPublished() ? VersionOptions.Published : VersionOptions.Latest);
@@ -109,9 +108,8 @@ namespace Nwazet.Commerce.Services {
 
         private IEnumerable<TerritoryInternalRecord> _availableTerritoryInternals; // cache results of following method
         public IEnumerable<TerritoryInternalRecord> GetAvailableTerritoryInternals(TerritoryHierarchyPart hierarchyPart) {
-            if (hierarchyPart == null || hierarchyPart.Record == null) {
-                throw new ArgumentNullException("hierarchyPart");
-            }
+            TerritoriesUtilities.ValidateArgument(hierarchyPart, nameof(hierarchyPart));
+
             if (_availableTerritoryInternals == null) {
                 _availableTerritoryInternals = _territoriesRepositoryService
                     .GetTerritories()

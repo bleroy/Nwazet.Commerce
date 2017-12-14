@@ -1,7 +1,7 @@
 ﻿@model Nwazet.Commerce.ViewModels.TerritoryHierarchyTerritoryManagerViewModel
 
 <div>
-    @T("This hierarchy currently contains {0} territories, of which {1} as first level.", Model.TerritoriesCount, Model.FirstLevelCount)
+    @T("This hierarchy currently contains {0} territories, of which {1} as first level.", Model.TerritoriesCount, Model.TopLevelCount)
 
     @Html.ActionLink(T("Manage territories."),
         "Index",

@@ -88,7 +88,7 @@ namespace Nwazet.Commerce.Handlers {
 
         void RemoveTerritoriesInHierarchy(RemoveContentContext context, TerritoryHierarchyPart part) {
             // I need to only invoke this on the first level. Those TerritoryPart will Remove their children.
-            foreach (var item in part.FirstLevel) {
+            foreach (var item in part.TopLevel) {
                 _contentManager.Remove(item);
             }
         }

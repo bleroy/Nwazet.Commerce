@@ -71,7 +71,7 @@ namespace Nwazet.Commerce.Models {
         /// <param name="other">The TerritoryPart whose TerritoryInternalRecord will be compared with the current one.</param>
         /// <returns>True if both TerritoryParts have a valid TerritoryInternalRecord, and the Ids of those match. False in 
         /// every other case.</returns>
-        public bool Matches(TerritoryPart other) {
+        public bool IsSameAs(TerritoryPart other) {
             if (this.Record != null && this.Record.TerritoryInternalRecord != null
                 && other.Record != null && other.Record.TerritoryInternalRecord != null
                 && this.Record.TerritoryInternalRecord.Id == other.Record.TerritoryInternalRecord.Id) {

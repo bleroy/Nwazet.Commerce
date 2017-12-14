@@ -16,6 +16,7 @@ using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
 using Orchard.Security;
+using Orchard.Security.Permissions;
 using Orchard.Tests.Modules;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Notify;
@@ -44,6 +45,8 @@ namespace Nwazet.Commerce.Tests.Territories {
             _contentManager = _container.Resolve<IContentManager>();
             _territoriesHierarchyService = _container.Resolve<ITerritoriesHierarchyService>();
             _transactionManager = _container.Resolve<ITransactionManager>();
+
+            _currentUser = null;
         }
 
         public override void Register(ContainerBuilder builder) {
@@ -71,7 +74,30 @@ namespace Nwazet.Commerce.Tests.Territories {
 
             //for Authorizer
             builder.RegisterInstance(new Mock<INotifier>().Object);
-            builder.RegisterType<AuthorizationServiceStub>().As<IAuthorizationService>();
+            //builder.RegisterType<AuthorizationServiceStub>().As<IAuthorizationService>();
+            var mockAuthorizationService = new Mock<IAuthorizationService>();
+            mockAuthorizationService
+                .Setup(mas => mas.TryCheckAccess(
+                    It.Is<Permission>(p => p.Name.Contains("Territor")),
+                    It.Is<IUser>(u => u == null), // if I don't set a user for tests => as if unauthenticated user had all permissions
+                    It.IsAny<IContent>()))
+                .Returns(true);
+            mockAuthorizationService
+                .Setup(mas => mas.TryCheckAccess(
+                    It.Is<Permission>(p => p.Name.Contains("Territor")),
+                    It.Is<IUser>(u => u != null), // if I set a user for tests
+                    It.IsAny<IContent>()))
+                .Returns<Permission, IUser, IContent>((permission, user, content) => {
+                    //get the number from the permission name: it's the last character in these tests,
+                    //because of how the types are named in MockTypeDefinitions() and the way TerritoriesPermissions
+                    //computes dynamic permission names.
+                    var number = int.Parse(permission.Name.Last().ToString());
+                    if (user.UserName.Contains(number.ToString())) {
+                        return true;
+                    }
+                    return false;
+                });
+            builder.RegisterInstance(mockAuthorizationService.Object);
 
             //For DefaultContentManager
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
@@ -151,19 +177,15 @@ namespace Nwazet.Commerce.Tests.Territories {
         private IUser _currentUser;
 
         [Test]
-        public void HierarchyManagePermissionsAreSameNumberAsHierarchyTypesForAdmin() {
-
-            _currentUser = new FakeUser() { UserName = "admin" };
-
+        public void HierarchyManagePermissionsAreSameNumberAsHierarchyTypesForUserWithAllPermissions() {
+            
             Assert.That(_territoriesService.GetHierarchyTypes().Count(), Is.EqualTo(3));
             Assert.That(_permissionProvider.ListHierarchyTypePermissions().Count(), Is.EqualTo(3));
         }
 
         [Test]
-        public void TerritoryManagePermissionsAreSameNumberAsTerritoryTypesForAdmin() {
-
-            _currentUser = new FakeUser() { UserName = "admin" };
-
+        public void TerritoryManagePermissionsAreSameNumberAsTerritoryTypesForUserWithAllPermissions() {
+            
             Assert.That(_territoriesService.GetTerritoryTypes().Count(), Is.EqualTo(3));
             Assert.That(_permissionProvider.ListTerritoryTypePermissions().Count(), Is.EqualTo(3));
         }
@@ -281,7 +303,7 @@ namespace Nwazet.Commerce.Tests.Territories {
 
             var hierarchy = _contentManager.Create<TerritoryHierarchyPart>("HierarchyType0");
             hierarchy.Record = null;
-            Assert.Throws<ArgumentNullException>(() => _territoriesService.GetTerritoriesQuery(hierarchy));
+            Assert.Throws<ArgumentException>(() => _territoriesService.GetTerritoriesQuery(hierarchy));
         }
 
         [Test]
@@ -336,7 +358,7 @@ namespace Nwazet.Commerce.Tests.Territories {
 
             var hierarchy = _contentManager.Create<TerritoryHierarchyPart>("HierarchyType0");
             hierarchy.Record = null;
-            Assert.Throws<ArgumentNullException>(() => _territoriesService.GetAvailableTerritoryInternals(hierarchy));
+            Assert.Throws<ArgumentException>(() => _territoriesService.GetAvailableTerritoryInternals(hierarchy));
         }
 
         #region These tests would require the 1-to-many relationships to work in the test db

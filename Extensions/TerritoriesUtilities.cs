@@ -1,4 +1,6 @@
-﻿using Orchard.Localization;
+﻿using Nwazet.Commerce.Models;
+using Orchard.Localization;
+using System;
 
 namespace Nwazet.Commerce.Extensions {
     public static class TerritoriesUtilities {
@@ -22,6 +24,43 @@ namespace Nwazet.Commerce.Extensions {
 
         public static string SpecificTerritory401Message(string typeName) {
             return T("Not authorized to manage territories of type \"{0}\"", typeName).Text;
+        }
+
+        /// <summary>
+        /// This method verifies that neither the passed territory is valid. In case it's not, it will 
+        /// throw the corresponding exception.
+        /// </summary>
+        /// <param name="territory">The TerritoryPart argument to validate.</param>
+        /// <param name="name">The name of the argument being validated.</param>
+        /// <exception cref="ArgumentNullException">Throws an ArgumentNullException if the TerritoryPart
+        /// argument is null.</exception>
+        /// <exception cref="ArgumentException">Throws an ArgumentException if the TerritoryPart
+        /// argument has a null underlying record.</exception>
+        public static void ValidateArgument(TerritoryPart territory, string name) {
+            if (territory == null) {
+                throw new ArgumentNullException(name);
+            }
+            if (territory.Record == null) {
+                throw new ArgumentException(T("Part record cannot be null.").Text, name);
+            }
+        }
+        /// <summary>
+        /// This method verifies that neither the passed territory is valid. In case it's not, it will 
+        /// throw the corresponding exception.
+        /// </summary>
+        /// <param name="hierarchy">The TerritoryHierarchyPart argument to validate.</param>
+        /// <param name="name">The name of the argument being validated.</param>
+        /// <exception cref="ArgumentNullException">Throws an ArgumentNullException if the TerritoryHierarchyPart
+        /// argument is null.</exception>
+        /// <exception cref="ArgumentException">Throws an ArgumentException if the TerritoryHierarchyPart
+        /// argument has a null underlying record.</exception>
+        public static void ValidateArgument(TerritoryHierarchyPart hierarchy, string name) {
+            if (hierarchy == null) {
+                throw new ArgumentNullException(name);
+            }
+            if (hierarchy.Record == null) {
+                throw new ArgumentException(T("Part record cannot be null.").Text, name);
+            }
         }
     }
 }

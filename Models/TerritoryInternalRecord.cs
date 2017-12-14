@@ -17,24 +17,24 @@ namespace Nwazet.Commerce.Models {
         public virtual IList<TerritoryPartRecord> TerritoryParts { get; set; }
 
         /// <summary>
-        /// Returns a deep copy of the TerritoryInternalRecord passed as parameter.
+        /// Returns a copy of the TerritoryInternalRecord passed as parameter.
         /// </summary>
         /// <param name="tir">The object to duplicate</param>
-        /// <returns>A deep copy of the TerritoryInternalRecord passed as parameter.</returns>
+        /// <returns>A copy of the TerritoryInternalRecord passed as parameter that can be safely manipulated.</returns>
         public static TerritoryInternalRecord Copy(TerritoryInternalRecord tir) {
             return new TerritoryInternalRecord {
                 Id = tir.Id,
                 Name = tir.Name,
                 TerritoryParts = tir.TerritoryParts
             };
-            //this allows us to safely pass stuff alog without affecting the data in the db
+            //this allows us to safely pass stuff along without affecting the data in the db
         }
 
         /// <summary>
-        /// Returns a deep copy of the TerritoryInternalRecords passed as parameter.
+        /// Returns a copy of the TerritoryInternalRecords passed as parameter.
         /// </summary>
         /// <param name="tir">The object to duplicate</param>
-        /// <returns>A deep copy of the TerritoryInternalRecords passed as parameter.</returns>
+        /// <returns>A copy of the TerritoryInternalRecords passed as parameter that can be safely manipulated.</returns>
         public static IEnumerable<TerritoryInternalRecord> Copy(IEnumerable<TerritoryInternalRecord> records) {
             var copy = new List<TerritoryInternalRecord>(records.Count());
             copy.AddRange(records.Select(tir => Copy(tir)));

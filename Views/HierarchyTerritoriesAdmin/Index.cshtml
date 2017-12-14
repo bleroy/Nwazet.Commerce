@@ -46,7 +46,7 @@
             <div class="container">
                 <div class="territories-list">
                     @if (Model.Nodes.Any()) {
-                        @RenderTerritories(Model.FirstLevelNodes, 0, 0, nodesList)
+                        @RenderTerritories(Model.TopLevelNodes, 0, 0, nodesList)
                     }
                 </div>
             </div>

@@ -97,7 +97,6 @@
     <Compile Include="PriceServiceTieredPricingTests.cs" />
     <Compile Include="ProductAttributePricingTests.cs" />
     <Compile Include="ShippingServiceTest.cs" />
-    <Compile Include="Stubs\AuthorizationServiceStub.cs" />
     <Compile Include="Stubs\FakeUser.cs" />
     <Compile Include="Stubs\ShapeFactoryStub.cs" />
     <Compile Include="Stubs\SiteStub.cs" />

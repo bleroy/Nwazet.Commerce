@@ -36,7 +36,7 @@ namespace Nwazet.Commerce.Permissions {
         };
 
         public static readonly Permission ManageInternalTerritories = new Permission {
-            Description = "Manage the Territories' internal structure",
+            Description = "Manage the definitions of the allowed Territories.",
             Name = "ManageInternalTerritories"
         };
         #endregion

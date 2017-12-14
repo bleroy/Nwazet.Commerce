@@ -12,7 +12,7 @@ namespace Nwazet.Commerce.ViewModels {
 
         // First level of the tree of territories in this hierarchy
         // It may contain further levels, as each node's Nodes property gets populated.
-        public IList<TerritoryHierarchyTreeNode> FirstLevelNodes { get; set; }
+        public IList<TerritoryHierarchyTreeNode> TopLevelNodes { get; set; }
 
         public IList<TerritoryHierarchyTreeNode> Nodes { get; set; }
 
@@ -20,7 +20,7 @@ namespace Nwazet.Commerce.ViewModels {
 
         public TerritoryHierarchyTerritoriesViewModel() {
             Nodes = new List<TerritoryHierarchyTreeNode>();
-            FirstLevelNodes = new List<TerritoryHierarchyTreeNode>();
+            TopLevelNodes = new List<TerritoryHierarchyTreeNode>();
         }
 
     }

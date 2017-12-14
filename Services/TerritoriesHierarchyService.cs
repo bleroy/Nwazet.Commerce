@@ -1,4 +1,5 @@
 ﻿using Nwazet.Commerce.Exceptions;
+using Nwazet.Commerce.Extensions;
 using Nwazet.Commerce.Models;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Environment.Extensions;
@@ -27,12 +28,8 @@ namespace Nwazet.Commerce.Services {
         public Localizer T;
 
         public void AddTerritory(TerritoryPart territory, TerritoryHierarchyPart hierarchy) {
-            if (territory == null || territory.Record == null) {
-                throw new ArgumentNullException("territory");
-            }
-            if (hierarchy == null || hierarchy.Record == null) {
-                throw new ArgumentNullException("hierarchy");
-            }
+            TerritoriesUtilities.ValidateArgument(territory, nameof(territory));
+            TerritoriesUtilities.ValidateArgument(hierarchy, nameof(hierarchy));
             // check that types are correct
             if (territory.ContentItem.ContentType != hierarchy.TerritoryType) {
                 var territoryTypeText = territory.ContentItem
@@ -84,12 +81,8 @@ namespace Nwazet.Commerce.Services {
         }
 
         public void AssignParent(TerritoryPart territory, TerritoryPart parent) {
-            if (territory == null || territory.Record == null) {
-                throw new ArgumentNullException("territory");
-            }
-            if (parent == null || parent.Record == null) {
-                throw new ArgumentNullException("parent");
-            }
+            TerritoriesUtilities.ValidateArgument(territory, nameof(territory));
+            TerritoriesUtilities.ValidateArgument(parent, nameof(parent));
 
             // verify parent != territory
             if (parent.Record.Id == territory.Record.Id) {
@@ -108,10 +101,10 @@ namespace Nwazet.Commerce.Services {
             }
             // verify hierarchies.
             if (territory.Record.Hierarchy == null) {
-                throw new ArgumentNullException("territory", T("The hierarchy for the Territory must not be null.").Text);
+                throw new ArgumentException(T("The hierarchy for the Territory must not be null.").Text, nameof(territory));
             }
             if (parent.Record.Hierarchy == null) {
-                throw new ArgumentNullException("parent", T("The hierarchy for the Territory must not be null.").Text);
+                throw new ArgumentException(T("The hierarchy for the Territory must not be null.").Text, nameof(parent));
             }
             if (parent.Record.Hierarchy.Id != territory.Record.Hierarchy.Id) {
                 throw new ArrayTypeMismatchException(T("The two territories must belong to the same hierarchy.").Text);
@@ -133,7 +126,7 @@ namespace Nwazet.Commerce.Services {
         public void AssignInternalRecord(TerritoryPart territory, string name) {
             var internalRecord = _territoriesRepositoryService.GetTerritoryInternal(name);
             if (internalRecord == null) {
-                throw new ArgumentNullException("name", T("No TerritoryInternalRecord exists with the name provided (\"{0}\")", name).Text);
+                throw new ArgumentException(nameof(name), T("No TerritoryInternalRecord exists with the name provided (\"{0}\")", name).Text);
             }
             AssignInternalRecord(territory, internalRecord);
         }
@@ -141,17 +134,15 @@ namespace Nwazet.Commerce.Services {
         public void AssignInternalRecord(TerritoryPart territory, int id) {
             var internalRecord = _territoriesRepositoryService.GetTerritoryInternal(id);
             if (internalRecord == null) {
-                throw new ArgumentNullException("id", T("No TerritoryInternalRecord exists with the id provided (\"{0}\")", id).Text);
+                throw new ArgumentException(nameof(id), T("No TerritoryInternalRecord exists with the id provided (\"{0}\")", id).Text);
             }
             AssignInternalRecord(territory, internalRecord);
         }
 
         public void AssignInternalRecord(TerritoryPart territory, TerritoryInternalRecord internalRecord) {
-            if (territory == null || territory.Record == null) {
-                throw new ArgumentNullException("territory");
-            }
+            TerritoriesUtilities.ValidateArgument(territory, nameof(territory));
             if (internalRecord == null || _territoriesRepositoryService.GetTerritoryInternal(internalRecord.Id) == null) {
-                throw new ArgumentNullException("internalRecord");
+                throw new ArgumentNullException(nameof(internalRecord));
             }
             // check that the internal record does not exist yet in the same hierarchy
             var hierarchyRecord = territory.Record.Hierarchy;

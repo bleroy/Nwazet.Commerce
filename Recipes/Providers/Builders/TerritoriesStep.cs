@@ -205,7 +205,7 @@ namespace Nwazet.Commerce.Recipes.Providers.Builders {
             var root = new XElement("Command");
             root.Add(Environment.NewLine);
             foreach (var tir in _territoriesRepositoryService.GetTerritories()) {
-                root.Add(string.Format("territories import \"{0}\"", tir.Name) + Environment.NewLine);
+                root.Add($"territories import \"{tir.Name}\"" + Environment.NewLine);
             }
             return root;
         }

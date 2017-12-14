@@ -23,7 +23,7 @@ namespace Nwazet.Commerce.Models {
             //set { _territories.Value = value; }
         }
 
-        public IEnumerable<ContentItem> FirstLevel {
+        public IEnumerable<ContentItem> TopLevel {
             get {
                 return Territories
                   .Where(ci => ci.As<TerritoryPart>().Record.ParentTerritory == null);

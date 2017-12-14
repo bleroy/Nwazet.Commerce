@@ -53,7 +53,7 @@ namespace Nwazet.Commerce.Drivers {
                             () => shapeHelper.EditorTemplate(
                                 TemplateName: "Parts/TerritoryHierarchyTerritoryManager",
                                 Model: new TerritoryHierarchyTerritoryManagerViewModel(part) {
-                                    FirstLevelCount = _territoriesService
+                                    TopLevelCount = _territoriesService
                                         .GetTerritoriesQuery(part, null, VersionOptions.Latest)
                                         .Count()
                                 },
@@ -95,7 +95,7 @@ namespace Nwazet.Commerce.Drivers {
         }
 
         private bool MayChangeTerritoryType(TerritoryHierarchyPart part) {
-            return !part.Territories.Any() &&
+            return !(part.Territories?.Any() ?? false) &&
                 part.Settings.GetModel<TerritoryHierarchyPartSettings>().MayChangeTerritoryTypeOnItem;
         }
 

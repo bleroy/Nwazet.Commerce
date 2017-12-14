@@ -11,7 +11,7 @@ namespace Nwazet.Commerce.ViewModels {
 
         public int TerritoriesCount { get; set; }
 
-        public int FirstLevelCount { get; set; }
+        public int TopLevelCount { get; set; }
 
         public TerritoryHierarchyTerritoryManagerViewModel(
             TerritoryHierarchyPart part) {
@@ -19,7 +19,7 @@ namespace Nwazet.Commerce.ViewModels {
             Part = part;
             ContentItem = part.ContentItem;
 
-            TerritoriesCount = part.Territories.Count();
+            TerritoriesCount = part.Territories?.Count() ?? 0;
         }
     }
 }

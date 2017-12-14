@@ -3,6 +3,7 @@ using NUnit.Framework;
 using Nwazet.Commerce.Exceptions;
 using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
+using Orchard.ContentManagement.Records;
 using Orchard.Data;
 using Orchard.Tests;
 using System;
@@ -30,7 +31,12 @@ namespace Nwazet.Commerce.Tests.Territories {
         protected override IEnumerable<Type> DatabaseTypes {
             get {
                 return new[] {
-                    typeof(TerritoryInternalRecord)
+                    typeof(TerritoryInternalRecord),
+                    typeof(TerritoryPartRecord),
+                    typeof(TerritoryHierarchyPartRecord),
+                    typeof(ContentItemRecord),
+                    typeof(ContentItemVersionRecord),
+                    typeof(ContentTypeRecord)
                 };
             }
         }
