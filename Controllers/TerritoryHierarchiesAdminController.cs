@@ -138,11 +138,7 @@ namespace Nwazet.Commerce.Controllers {
                     return CreateHierarchy(typeDefinition);
                 }
             }
-            if (AllowedHierarchyTypes.Count() == 1) {
-                return CreateHierarchy(AllowedHierarchyTypes.FirstOrDefault());
-            } else {
-                return CreatableHierarchiesList();
-            }
+            return CreatableHierarchiesList();
         }
 
         [HttpPost, ActionName("CreateHierarchy")]
@@ -214,7 +210,7 @@ namespace Nwazet.Commerce.Controllers {
                         ? T("Your content has been created.")
                         : T("Your {0} has been created.", item.TypeDefinition.DisplayName));
 
-                    return this.RedirectLocal(returnUrl, () => 
+                    return this.RedirectLocal(returnUrl, () =>
                         RedirectToAction("EditHierarchy", new RouteValueDictionary { { "Id", item.Id } }));
                 }
             });
