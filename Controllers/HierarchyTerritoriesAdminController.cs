@@ -203,6 +203,9 @@ namespace Nwazet.Commerce.Controllers {
                 var territoryItem = _contentManager.New(id);
                 // Cannot insert Territory in the Hierarchy here, because its records do not exist yet.
                 // We will have to do it in the POST call.
+                // We can and should tell the drivers for the TerritoryPart what is the hierarchy we are
+                // creating territories for:
+                territoryItem.As<TerritoryPart>().CreationHierarchy = hierarchyPart;
                 // Allow user to Edit stuff
                 var model = _contentManager.BuildEditor(territoryItem);
                 return View(model.Hierarchy(hierarchyItem));
@@ -247,6 +250,10 @@ namespace Nwazet.Commerce.Controllers {
                 ExecutionAction = item => {
                     _contentManager.Create(item, VersionOptions.Draft);
 
+                    // We can and should tell the drivers for the TerritoryPart what is the hierarchy we are
+                    // creating territories for:
+                    item.As<TerritoryPart>().CreationHierarchy = _contentManager
+                        .Get(hierarchyId, VersionOptions.Latest)?.As<TerritoryHierarchyPart>();
                     var model = _contentManager.UpdateEditor(item, this);
 
                     if (!ModelState.IsValid) {

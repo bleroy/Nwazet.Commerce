@@ -1,4 +1,5 @@
-﻿using Nwazet.Commerce.Models;
+﻿using Nwazet.Commerce.Extensions;
+using Nwazet.Commerce.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
@@ -39,9 +40,9 @@ namespace Nwazet.Commerce.Handlers {
                 return;
 
             context.Metadata.EditorRouteValues = new RouteValueDictionary {
-                {"Area", "Nwazet.Commerce"},
-                {"Controller", "HierarchyTerritoriesAdmin"},
-                {"Action", "EditTerritory"},
+                {"Area", TerritoriesUtilities.Area},
+                {"Controller", TerritoriesUtilities.TerritoryEditController},
+                {"Action", TerritoriesUtilities.TerritoryEditAction},
                 {"Id", context.ContentItem.Id}
             };
         }

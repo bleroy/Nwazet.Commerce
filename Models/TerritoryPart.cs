@@ -80,5 +80,12 @@ namespace Nwazet.Commerce.Models {
             }
             return false;
         }
+
+        /// <summary>
+        /// This property is set in the controller calling for the creation of a ContentnItem that has the TerritoryPart
+        /// to basically pass to the TerritoryPartDriver the information about the hierarchy this part is being created
+        /// into.
+        /// </summary>
+        public TerritoryHierarchyPart CreationHierarchy { get; set; }
     }
 }

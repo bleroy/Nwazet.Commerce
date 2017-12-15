@@ -23,7 +23,7 @@
         handle: 'div',
         helper: 'clone',
         items: 'li',
-        maxLevels: 6,
+        maxLevels:0,
         opacity: 1,
         placeholder: 'territory-placeholder',
         revert: 50,

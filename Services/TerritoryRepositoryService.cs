@@ -1,4 +1,5 @@
 ﻿using Nwazet.Commerce.Exceptions;
+using Nwazet.Commerce.Extensions;
 using Nwazet.Commerce.Models;
 using Orchard.Data;
 using Orchard.Environment.Extensions;
@@ -26,7 +27,7 @@ namespace Nwazet.Commerce.Services {
         public TerritoryInternalRecord GetTerritoryInternal(int id) {
             var tir = _territoryInternalRecord.Get(id);
             return tir == null ? null :
-                TerritoryInternalRecord.Copy(tir);
+                tir.CreateSafeDuplicate();
         }
 
         public TerritoryInternalRecord GetTerritoryInternal(string name) {
@@ -34,7 +35,7 @@ namespace Nwazet.Commerce.Services {
             try {
                 var tir = _territoryInternalRecord.Get(x => x.Name == name);
                 return tir == null ? null :
-                    TerritoryInternalRecord.Copy(tir);
+                    tir.CreateSafeDuplicate();
             } catch (Exception) {
                 //sqlCE doe not support using strings properly when their length is such that the column
                 //in the record is of type ntext.
@@ -42,7 +43,7 @@ namespace Nwazet.Commerce.Services {
                     x.Name.StartsWith(name) && x.Name.EndsWith(name));
                 var tir = tirs.ToList().Where(rr => rr.Name == name).FirstOrDefault();
                 return tir == null ? null :
-                    TerritoryInternalRecord.Copy(tir);
+                    tir.CreateSafeDuplicate();
             }
         }
 
@@ -51,15 +52,15 @@ namespace Nwazet.Commerce.Services {
                 .Skip(startIndex >= 0 ? startIndex : 0);
 
             if (pageSize > 0) {
-                return TerritoryInternalRecord.Copy(result.Take(pageSize));
+                return result.Take(pageSize).CreateSafeDuplicate();
             }
-            return TerritoryInternalRecord.Copy(result.ToList());
+            return result.ToList().CreateSafeDuplicate();
         }
 
         public IEnumerable<TerritoryInternalRecord> GetTerritories(int[] itemIds) {
-            return TerritoryInternalRecord.Copy(
-                _territoryInternalRecord.Fetch(x => itemIds.Contains(x.Id))
-                );
+            return _territoryInternalRecord
+                .Fetch(x => itemIds.Contains(x.Id))
+                .CreateSafeDuplicate(); 
         }
 
         public int GetTerritoriesCount() {
@@ -73,7 +74,7 @@ namespace Nwazet.Commerce.Services {
                 throw new TerritoryInternalDuplicateException(T("Cannot create duplicate names. A territory with the same name already exists."));
             }
             _territoryInternalRecord.Create(tir);
-            return TerritoryInternalRecord.Copy(tir);
+            return tir.CreateSafeDuplicate();
         }
 
         public TerritoryInternalRecord Update(TerritoryInternalRecord tir) {
@@ -83,7 +84,7 @@ namespace Nwazet.Commerce.Services {
                 throw new TerritoryInternalDuplicateException(T("A territory with the same name already exists."));
             }
             _territoryInternalRecord.Update(tir);
-            return TerritoryInternalRecord.Copy(tir);
+            return tir.CreateSafeDuplicate();
         }
 
         public void Delete(int id) {
@@ -111,7 +112,7 @@ namespace Nwazet.Commerce.Services {
                     .Where(x => x.Name == name && (tir.Id == 0 || tir.Id != x.Id)) //can have same name as its own self
                     .ToList() //force execution of the query so it can fail in sqlCE
                     .Select(x => x.Id);
-            } catch (Exception ex) {
+            } catch (Exception) {
                 //sqlCE doe not support using strings properly when their length is such that the column
                 //in the record is of type ntext.
                 var tirs = _territoryInternalRecord.Fetch(x =>

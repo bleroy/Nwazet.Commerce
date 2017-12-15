@@ -1,6 +1,8 @@
 ﻿using Nwazet.Commerce.Models;
 using Orchard.Localization;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Nwazet.Commerce.Extensions {
     public static class TerritoriesUtilities {
@@ -61,6 +63,26 @@ namespace Nwazet.Commerce.Extensions {
             if (hierarchy.Record == null) {
                 throw new ArgumentException(T("Part record cannot be null.").Text, name);
             }
+        }
+
+        // The following constants are used to define the editor routes for hierarchies and territories
+        // (see in the respective handlers)
+        public static string Area = "Nwazet.Commerce";
+        public static string HierarchyEditController = "TerritoryHierarchiesAdmin";
+        public static string TerritoryEditController = "HierarchyTerritoriesAdmin";
+        public static string HierarchyEditAction = "EditHierarchy";
+        public static string TerritoryEditAction = "EditTerritory";
+
+        /// <summary>
+        /// Returns a copy of the TerritoryInternalRecords
+        /// </summary>
+        /// <param name="records"></param>
+        /// <returns>A copy of the Ienumerable whose elements can be safely manipulated without affecting 
+        /// records in the database.</returns>
+        public static IEnumerable<TerritoryInternalRecord> CreateSafeDuplicate(this IEnumerable<TerritoryInternalRecord> records) {
+            var copy = new List<TerritoryInternalRecord>(records.Count());
+            copy.AddRange(records.Select(tir => tir.CreateSafeDuplicate()));
+            return copy;
         }
     }
 }
