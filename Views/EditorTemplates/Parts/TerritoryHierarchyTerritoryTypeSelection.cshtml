@@ -1,0 +1,14 @@
+﻿@model Nwazet.Commerce.ViewModels.TerritoryHierarchyTypeSelectionViewModel
+
+@Html.HiddenFor(m => m.MayChangeTerritoryType)
+
+<div>
+    @if (Model.MayChangeTerritoryType) {
+        @Html.DropDownListFor(m => m.TerritoryType, Model.ListItems())
+        <label for="@Html.FieldIdFor(m => m.TerritoryType)" class="forcheckbox">
+            @T("Select the TerritoryType for this Hierarchy.")
+        </label>
+    } else {
+        @T("This Hierarchy allows territories of type \"{0}\"", Model.TerritoryType)
+    }
+</div>

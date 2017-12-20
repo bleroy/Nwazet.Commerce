@@ -1,0 +1,100 @@
+﻿@using Nwazet.Commerce.ViewModels
+
+@model TerritoryHierarchyTerritoriesViewModel
+
+@{
+    Script.Require("jQuery");
+    Style.Include("territory-hierarchies-admin.css", "territory-hierarchies-admin.min.css");
+
+    Script.Require("jQueryUI_Sortable").AtFoot();
+    Script.Include("jquery.mjs.nestedSortable.js", "jquery.mjs.nestedSortable.min.js").AtFoot();
+    Script.Include("territory-hierarchies-admin.js", "territory-hierarchies-admin.min.js").AtFoot();
+
+    Layout.Title(T("Manage Hierarchy"));
+
+    var hierarchyItem = Model.HierarchyItem;
+    var itemDisplayText = hierarchyItem.ContentManager.GetItemMetadata(hierarchyItem).DisplayText;
+
+    var nodesList = Model.Nodes.ToList(); // need this for FindIndex
+}
+
+<h1>@T("Territories for {0}", itemDisplayText)</h1>
+
+@Html.ValidationSummary()
+
+<div id="save-message" class="message message-Warning">@T("You need to hit \"Save All\" in order to save your changes.")</div>
+
+<div class="manage">
+    @Html.ItemEditLink(T("Back to Hierarchy").Text, hierarchyItem, null, new { @class = "button primaryAction" })
+    @if (Model.CanAddMoreTerritories) {
+        @Html.ActionLink(T("Add a Territory").Text,
+                "CreateTerritory",
+                new {
+                    Area = "Nwazet.Commerce",
+                    ReturnUrl = Request.RawUrl,
+                    id = Model.HierarchyPart.TerritoryType,
+                    hierarchyId = hierarchyItem.Id
+                },
+                new { @class = "button primaryAction" })
+    }
+    
+</div>
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.Hidden("hierarchyId", Model.HierarchyPart.Record.Id)
+    <div class="sections">
+        <div class="primary">
+            <div class="container">
+                <div class="territories-list">
+                    @if (Model.Nodes.Any()) {
+                        @RenderTerritories(Model.TopLevelNodes, 0, 0, nodesList)
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <fieldset class="actions">
+            <button id="saveButton" type="submit" class="button">@T("Save All")</button>
+        </fieldset>
+}
+
+@helper RenderTerritories(IList<TerritoryHierarchyTreeNode> nodes, int parent, int level, List<TerritoryHierarchyTreeNode> nodesList) { 
+
+    @:<ol>
+
+    bool first = true;
+    foreach (var node in nodes
+        .Where(tht => tht.ParentId == parent)) {
+
+        var index = nodesList.FindIndex(tht => tht.Id == node.Id);
+        // render the node, then its children
+        @:<li class="territories-list-item" data-index="@node.Id">
+            <div>
+                <h2>@Html.Encode(node.DisplayText)</h2>
+                <span class="territory-type">(@Html.Encode(node.TerritoryItem.TypeDefinition.DisplayName))</span>
+                <span class="territory-parent"><input type="text" class="text" name="@Html.NameOf(m => m.Nodes[index].ParentId)" value="@node.ParentId" /></span>
+                <span class="territory-actions">
+                    <input type="hidden" name="@Html.NameOf(m => m.Nodes[index].Id)" value="@node.Id" />
+                    @Html.ItemEditLink(T("Edit").Text, node.TerritoryItem, new { ReturnUrl = Request.RawUrl })@T(" | ")
+                    @Html.ActionLink(T("Delete").Text, "DeleteTerritory", new { id = node.Id }, new { @class = "remove", itemprop = "RemoveUrl UnsafeUrl" })
+                </span>
+            </div>
+
+            // children
+            if (Model.Nodes.Any(tht => tht.ParentId == node.Id)) {
+                    @RenderTerritories(Model.Nodes.Where(tht => tht.ParentId == node.Id).ToList(), node.Id, level + 1, nodesList)
+            }
+        @:</li>
+
+    }
+    @:</ol>
+}
+
+@using (Script.Foot()) {
+    <script type="text/javascript">
+    //<![CDATA[
+    var leaveConfirmation = '@HttpUtility.JavaScriptStringEncode(T("Some items where not saved.").Text)';
+
+    //]]>
+    </script>
+}

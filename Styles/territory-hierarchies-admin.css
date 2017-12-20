@@ -1,0 +1,103 @@
+﻿#save-message {
+    display: none;
+}
+
+.territories-list ol ol {
+	margin: 0;
+	padding: 0;
+	padding-left: 30px; /* gap between each level */
+}
+
+.territories-list ol.sortable, .territories-list ol.sortable ol {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+.territories-list li {
+	margin: 0;
+	padding: 0;
+}
+
+.territories-list li div  {
+	border: 1px solid #ccc;
+	cursor: move;
+	padding: 3px 10px 3px 30px;
+	margin: 2px;
+	background: #eee;
+	display: inline-block;
+	min-width: 200px;
+	width: 100%;
+}
+
+.territories-list li div:hover  {
+	background: #eee url(images/move.gif) no-repeat 9px 7px;
+	border: 1px solid #999;
+}
+
+.territories-list-item h2 
+{
+    display: inline;
+    font-size:1.077em;
+}
+
+.territory-parent
+{
+    display: none;
+}
+
+
+.territory-actions
+{
+    float: right;
+}
+
+/* style for the dynamically created placeholder */
+.territories-list li.territory-placeholder
+{ 
+    background: #dadada; 
+}
+
+
+/* layout */
+
+.primary 
+{
+    float: left;
+    width: 100%;
+}
+
+.container
+{
+    margin-right:350px;
+}
+
+.dir-rtl .territories-list li div  {
+	padding: 3px 30px 3px 10px;
+}
+.dir-rtl .territories-list li div:hover  {
+	background: #eee url(images/move.gif) no-repeat right 7px;
+}
+.dir-rtl .territory-actions {
+    float: left;
+}
+.dir-rtl .primary {
+    float: right;
+}
+.dir-rtl .secondary {
+    float: left;
+    margin: 2px -300px 0 0;
+}
+.dir-rtl .container {
+    margin: 0 0 0 350px;
+}
+
+.dir-rtl .menu-items-zone li {
+    padding-right: 5px;
+    padding-left: 65px;
+}
+
+    .dir-rtl div.menu-item-actions {
+        left:10px;
+        right: inherit;
+    }

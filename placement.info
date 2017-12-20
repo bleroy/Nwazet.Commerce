@@ -32,6 +32,11 @@
   <Place Parts_ProductAttribute_Edit="Content:2"/>
   <Place Parts_ProductAttributes_Edit="Content:3.3"/>
   <Place Parts_Order_Edit="Content:1"/>
+  <Place Parts_TerritoryHierarchy_SummaryAdmin="-"/>
+  <Place Parts_TerritoryHierarchy_TerritoryManager="Content:2.1"/>
+  <Place Parts_TerritoryHierarchy_TerritoryTypeSelection="Content:2.2"/>
+  <Place Parts_TerritoryPart_Creation="Content:2.1"/>
+  <Place Parts_TerritoryPart_Edit="Content:2.1"/>
   <Match DisplayType="SummaryAdmin">
     <Place Parts_Product="Content:2;Alternate=ProductSummaryAdmin"/>
     <Place Parts_Product_AddButton="-"/>
@@ -46,6 +51,7 @@
         Parts_Contents_Clone_SummaryAdmin="-"
         Parts_Common_Metadata_SummaryAdmin="-"/>
     </Match>
+    <Place Parts_TerritoryHierarchy_SummaryAdmin="Content:2"/>
   </Match>
   <Match DisplayType="Thumbnail">
     <Place Parts_Title="Content:2;Alternate=TitleWithLink"/>

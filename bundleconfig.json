@@ -52,5 +52,23 @@
     "inputFiles": [
       "Scripts/wishlists.js"
     ]
+  },
+  {
+    "outputFileName": "Styles/territory-hierarchies-admin.min.css",
+    "inputFiles": [
+      "Styles/territory-hierarchies-admin.css"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/jquery.mjs.nestedSortable.min.js",
+    "inputFiles": [
+      "Scripts/jquery.mjs.nestedSortable.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/territory-hierarchies-admin.min.js",
+    "inputFiles": [
+      "Scripts/territory-hierarchies-admin.js"
+    ]
   }
 ]

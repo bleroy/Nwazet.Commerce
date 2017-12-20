@@ -1,0 +1,37 @@
+﻿@using Orchard.ContentManagement
+@model Nwazet.Commerce.Models.TerritoryInternalRecord
+
+@Html.ValidationSummary()
+
+@using (Html.BeginFormAntiForgeryPost()) {
+    <fieldset>
+        <legend>@T("Edit Territory.")</legend>
+        @Html.EditorForModel()
+    </fieldset>
+
+    if (Model.TerritoryParts != null && Model.TerritoryParts.Any()) {
+        IContentManager contentManager;
+        if (WorkContext.TryResolve<IContentManager>(out contentManager)) {
+            <fieldset>
+                <legend>@T("Connected territories:")</legend>
+                <div>
+                    <ul>
+                        @foreach (var tpr in Model.TerritoryParts) {
+                            var ci = contentManager.Get(tpr.ContentItemRecord.Id, VersionOptions.Latest);
+                            var displayText = contentManager.GetItemMetadata(ci).DisplayText;
+                            displayText = string.IsNullOrWhiteSpace(displayText) ?
+                                T("Connected Territory").Text : Html.Encode(displayText);
+                            <li>
+                                @Html.ItemEditLinkWithReturnUrl(displayText, ci)
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </fieldset>
+        }
+    }
+
+    <fieldset class="save-button">
+        <button class="primaryAction" type="submit" name="submit.Save" value="submit.Save">Save</button>
+    </fieldset>
+}

@@ -1,0 +1,21 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.Utility.Extensions
+
+@{
+    ContentItem contentItem = Model.ContentItem;
+    var territoryTypeDisplayName = contentItem.TypeDefinition.DisplayName ?? contentItem.ContentType.CamelFriendly();
+    ContentItem hierarchyItem = Model.Hierarchy;
+    var hierarchyTitle = hierarchyItem.ContentManager.GetItemMetadata(hierarchyItem).DisplayText;
+
+    if (string.IsNullOrWhiteSpace(hierarchyTitle)) {
+        Layout.Title = T("Edit {0}", Html.Raw(territoryTypeDisplayName)).Text;
+    } else {
+        Layout.Title = T("Edit {0} for {1}", Html.Raw(territoryTypeDisplayName), Html.Raw(hierarchyTitle)).Text;
+    }
+}
+@using (Html.BeginFormAntiForgeryPost(Url.Action("EditTerritory", new { ReturnUrl = Request.QueryString["ReturnUrl"] }), FormMethod.Post, new { enctype = "multipart/form-data", @class = "no-multisubmit" })) {
+    @Html.ValidationSummary()
+    // Model is a Shape, calling Display() so that it is rendered using the most specific template for its Shape type
+    @Display(Model)
+
+}

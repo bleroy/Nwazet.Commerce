@@ -1,0 +1,27 @@
+﻿
+
+@model Nwazet.Commerce.ViewModels.HierarchyAdminIndexViewModel
+
+@{
+    Layout.Title(T("Manage Territory Hierarchies"));
+}
+
+<h1>@T("Territory Hierarchies")</h1>
+
+@Html.ValidationSummary()
+
+@if (Model.AllowedHierarchyTypes.Any()) {
+    <div class="manage">
+        @Html.ActionLink(T("Add a Hierarchy").Text,
+                "CreateHierarchy",
+                new {
+                    Area = "Nwazet.Commerce",
+                    ReturnUrl = Request.RawUrl,
+                    id = Model.AllowedHierarchyTypes.Count() == 1 ? Model.AllowedHierarchyTypes.FirstOrDefault().Name : ""
+                },
+                new { @class = "button primaryAction" })
+    </div>
+}
+
+
+@Html.Partial("HierarchiesListPartial")
