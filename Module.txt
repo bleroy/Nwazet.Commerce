@@ -109,3 +109,13 @@ Features:
 	Territories:
 		Name: Territories
 		Description: Flexible advanced handling of hierarchies of territories and regions
+	Nwazet.BaseTaxImplementations:
+		Name: Nwazet Base Tax Implementations
+		Description: Basic tax configuration options
+        Category: Commerce
+		Dependencies: Nwazet.Taxes
+	Nwazet.AdvancedVAT:
+		Name: Nwazet Advanced VAT or Sales Tax
+		Description: Provides advanced options to set up management of VAT or sales taxes.
+		Category: Commerce
+		Dependencies: Nwazet.Taxes, Nwazet.Orders, Territories

@@ -18,5 +18,12 @@ namespace Nwazet.Commerce.ViewModels {
         public string UserName { get; set; }
         public bool UserNameNeeded { get; set; }
         public string CurrencyCode { get; set; }
+
+        public IEnumerable<dynamic> AdditionalMetadataShapes { get; set; }
+        public IEnumerable<dynamic> AdditionalStatusShapes { get; set; }
+        public IEnumerable<dynamic> AdditionalAddressesShapes { get; set; }
+        public IEnumerable<dynamic> AdditionalProductShapes { get; set; }
+        public IEnumerable<OrderEditorAdditionalProductInfoViewModel> AdditionalProductInformation { get; set; }
+        public IEnumerable<dynamic> AdditionalOrderTrackingShapes { get; set; }
     }
 }

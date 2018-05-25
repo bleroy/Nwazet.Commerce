@@ -23,7 +23,9 @@
                     <th class="quantity"><abbr title="@T("Quantity")">@T("Qty")</abbr></th>
                     <th class="description">@T("Product")</th>
                     <th class="price">@T("Price")</th>
-                    <th class="adjustment">@T("Adjustment")</th>
+                    @if (items.Any(it => it.LinePriceAdjustment != 0)) {
+                        <th class="adjustment">@T("Adjustment")</th>
+                    }
                 </tr>
             </thead>
             <tbody>
@@ -32,7 +34,9 @@
                         <td class="quantity">@item.Quantity &times;</td>
                         <td class="description"><a href="@Url.ItemDisplayUrl((IContent) Model.Products[item.ProductId])">@item.Title</a></td>
                         <td class="price">@currencyInUse.PriceAsString(item.Price, cultureInUse)</td>
-                        <td class="price">@currencyInUse.PriceAsString(item.LinePriceAdjustment, cultureInUse)</td>
+                        @if (item.LinePriceAdjustment != 0) {
+                            <td class="price">@currencyInUse.PriceAsString(item.LinePriceAdjustment, cultureInUse)</td>
+                        }
                     </tr>
                 }
             </tbody>
@@ -46,7 +50,7 @@
                     <td class="price"@currencyInUse.PriceAsString(Model.Taxes.Amount, cultureInUse)></td>
                 </tr>
                 <tr class="shipping">
-                    <td colspan="2" class="label">@T("{0} {1}", Model.ShippingOption.ShippingCompany, Model.ShippingOption.Description)</td>
+                    <td colspan="2" class="label">@T("Shipping: {0} {1}", Model.ShippingOption.ShippingCompany, Model.ShippingOption.Description)</td>
                     <td class="price">@currencyInUse.PriceAsString(Model.ShippingOption.Price, cultureInUse)</td>
                 </tr>
                 <tr class="total">

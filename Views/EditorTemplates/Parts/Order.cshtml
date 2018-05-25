@@ -22,6 +22,9 @@
             @Html.TextBoxFor(m => m.Order.PurchaseOrder, new { @class = "text-medium order-purchase-order-edit-field" })
             <span class="hint">@T("Associate this order with a purchase order, invoice or other order.")</span>
         </div>
+        @foreach (var additionalShape in Model.AdditionalMetadataShapes) {
+            @Display(additionalShape)
+        }
     </fieldset>
     <fieldset class="order-status">
         <legend>@T("Status:")</legend>
@@ -34,6 +37,9 @@
                 </li>
             }
         </ul>
+        @foreach (var additionalShape in Model.AdditionalStatusShapes) {
+            @Display(additionalShape)
+        }
     </fieldset>
 
     <div class="addresses">
@@ -77,21 +83,30 @@
     
         <p>@T("E-mail:") <a href="@("mailto:" + Model.Order.CustomerEmail)">@Model.Order.CustomerEmail</a></p>
         <p>@T("Phone:") <a href="@("tel:" + Model.Order.CustomerPhone)">@Model.Order.CustomerPhone</a></p>
+
+        @foreach (var additionalShape in Model.AdditionalAddressesShapes) {
+            @Display(additionalShape)
+        }
     </div>
 
     <fieldset class="order-items">
         <legend>@T("Products:")</legend>
-        <table>
+        <table id="order_products_table">
             <thead>
                 <tr>
                     <th class="quantity"><abbr title="@T("Quantity")">@T("Qty")</abbr></th>
                     <th class="description">@T("Product")</th>
                     <th class="price">@T("Original price")</th>
                     <th class="price">@T("Price")</th>
-                    <th class="price">@T("Adjustment")</th>
+                    @if (Model.OrderItems.Any(oi => oi.LinePriceAdjustment != 0)) {
+                        <th class="price">@T("Adjustment")</th>
+                    }
+                    @foreach (var additionalInfo in Model.AdditionalProductInformation) {
+                        <th @(string.IsNullOrEmpty(additionalInfo.HeaderClass) ? "" : "class=\"" + additionalInfo.HeaderClass + "\"")>@additionalInfo.Title</th>
+                    }
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="order_products_table_body">
                 @foreach (var item in Model.OrderItems) {
 
                     string originalPrice = "";
@@ -100,12 +115,21 @@
                         originalPrice = String.Format("<strike>{0}</strike>", currencyInUse.PriceAsString(item.OriginalPrice, cultureInUse));
                     }
 
-                    <tr>
+                    <tr id="@string.Format("order_products_table_row-product_{0}", item.ProductId)">
                         <td class="quantity">@item.Quantity &times;</td>
                         <td class="description"><a href="@Url.ItemDisplayUrl(Model.Products[item.ProductId])">@item.Title</a></td>
                         <td class="price">@Html.Raw(originalPrice)</td>
                         <td class="price">@currencyInUse.PriceAsString(item.Price, cultureInUse)</td>
-                        <td class="price">@currencyInUse.PriceAsString(item.LinePriceAdjustment, cultureInUse)</td>
+                        @if (item.LinePriceAdjustment != 0) {
+                            <td class="price">@currencyInUse.PriceAsString(item.LinePriceAdjustment, cultureInUse)</td>
+                        }
+                        @foreach (var additionalInfo in Model.AdditionalProductInformation) {
+                            <td @(string.IsNullOrEmpty(additionalInfo.InformationClass) ? "" : "class=\"" + additionalInfo.InformationClass + "\"")>
+                                @if (additionalInfo.Information.ContainsKey(item.ProductId)) {
+		                            @additionalInfo.Information[item.ProductId]
+	                            }
+                            </td>
+                        }
                     </tr>
                     if (item.Attributes != null && item.Attributes.Any(a => a.Value.ExtensionProviderInstance != null)) {
                         <tr>
@@ -146,6 +170,9 @@
                 </tr>
             </tfoot>
         </table>
+        @foreach (var additionalShape in Model.AdditionalProductShapes) {
+            @Display(additionalShape)
+        }
     </fieldset>
 
     <fieldset>
@@ -166,6 +193,10 @@
             @Html.TextBoxFor(m => m.Order.TrackingUrl, new {@class="text-medium order-tracking-edit-field"})
             <button class="cancel-button link">@T("Cancel")</button>
         </div>
+
+        @foreach (var additionalShape in Model.AdditionalOrderTrackingShapes) {
+            @Display(additionalShape)
+        }
     </fieldset>
 
     @if (!string.IsNullOrWhiteSpace(Model.Order.SpecialInstructions)) {

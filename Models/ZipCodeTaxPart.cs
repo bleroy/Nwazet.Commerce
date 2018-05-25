@@ -6,7 +6,7 @@ using Orchard.Environment.Extensions;
 using System.ComponentModel.DataAnnotations;
 
 namespace Nwazet.Commerce.Models {
-    [OrchardFeature("Nwazet.Taxes")]
+    [OrchardFeature("Nwazet.BaseTaxImplementations")]
     public class ZipCodeTaxPart : ContentPart, ITax {
 
         public string Name {

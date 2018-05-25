@@ -26,7 +26,13 @@
 <label for="@Html.Id(prefix + ".PostalCode")">@T("Postal or ZIP code")</label>
 <input id="@Html.Id(prefix + ".PostalCode")" type="text" name="@Html.Name(prefix + ".PostalCode")" value="@address.PostalCode" class="input-small"/>
 @if (Model.IncludeCountry == true) {
-    <label for="@Html.Id(prefix + ".Country")">@T("Country")</label>
-    <input id="@Html.Id(prefix + ".Country")" type="text" name="@Html.Name(prefix + ".Country")" value="@address.Country" class="input-medium"/>
-    <div class="hint">@T("You may leave this blank for the United States.")</div>
+    if (string.IsNullOrWhiteSpace(address.Country)) {
+        <label for="@Html.Id(prefix + ".Country")">@T("Country")</label>
+        <input id="@Html.Id(prefix + ".Country")" type="text" name="@Html.Name(prefix + ".Country")" value="@address.Country" class="input-medium" />
+        <div class="hint">@T("You may leave this blank for the United States.")</div>
+    } else {
+        <label for="@Html.Id(prefix + ".Country")">@T("Country")</label>
+        <input id="@Html.Id(prefix + ".Country")" type="hidden" name="@Html.Name(prefix + ".Country")" value="@address.Country" class="input-medium" />
+        <input id="@Html.Id(prefix + ".Country.Input")" type="text" name="@Html.Name(prefix + ".Country.Input")" value="@address.Country" class="input-medium" disabled />
+    }
 }

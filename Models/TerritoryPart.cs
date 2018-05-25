@@ -2,6 +2,7 @@
 using Orchard.ContentManagement.Utilities;
 using Orchard.Environment.Extensions;
 using System.Collections.Generic;
+using System;
 
 namespace Nwazet.Commerce.Models {
     [OrchardFeature("Territories")]
@@ -87,5 +88,18 @@ namespace Nwazet.Commerce.Models {
         /// into.
         /// </summary>
         public TerritoryHierarchyPart CreationHierarchy { get; set; }
+
+        public class TerritoryPartComparer : IEqualityComparer<TerritoryPart> {
+            public bool Equals(TerritoryPart x, TerritoryPart y) {
+                return x.IsSameAs(y);
+            }
+
+            public int GetHashCode(TerritoryPart obj) {
+                if (obj == null) {
+                    return 0;
+                }
+                return obj.Record.TerritoryInternalRecord.Id;
+            }
+        }
     }
 }

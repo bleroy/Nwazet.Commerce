@@ -5,7 +5,7 @@ using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 
 namespace Nwazet.Commerce.Models {
-    [OrchardFeature("Nwazet.Taxes")]
+    [OrchardFeature("Nwazet.BaseTaxImplementations")]
     public class StateOrCountryTaxPart : ContentPart<StateOrCountryTaxPartRecord>, ITax {
         public string State {
             get { return Retrieve(r => r.State); }

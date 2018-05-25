@@ -2,6 +2,7 @@
 @using Orchard.ContentManagement
 @using Orchard.Core.Title.Models
 @using Orchard.Utility.Extensions
+@using Orchard.Core.Contents
 @model TaxIndexViewModel
 
 @{
@@ -43,10 +44,14 @@
             @foreach (var tax in Model.Taxes) { 
                 <tr>
                     <td>
-                        @Html.ItemEditLinkWithReturnUrl(tax.Name, tax) 
+                        @Html.ItemEditLinkWithReturnUrl(tax.ContentItem.ContentManager.GetItemMetadata(tax.ContentItem).DisplayText, tax) 
                     </td>
                     <td>
-                        @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(tax, new {returnUrl}), new {itemprop = "RemoveUrl UnsafeUrl"})
+                        @if (Authorizer.Authorize(Permissions.DeleteContent, tax)) {
+                            @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(tax, new { returnUrl }), new { itemprop = "RemoveUrl UnsafeUrl" })
+                        }else {
+                            @T("Not allowed to delete")
+                        }
                     </td>
                 </tr>
             }

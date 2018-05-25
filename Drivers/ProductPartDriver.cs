@@ -20,6 +20,7 @@ namespace Nwazet.Commerce.Drivers {
         private readonly ITieredPriceProvider _tieredPriceProvider;
         private readonly ICurrencyProvider _currencyProvider;
         private readonly IProductInventoryService _productInventoryService;
+        private readonly IProductPriceService _productPriceService;
 
         public ProductPartDriver(
             IWorkContextAccessor wca,
@@ -27,6 +28,7 @@ namespace Nwazet.Commerce.Drivers {
             IEnumerable<IProductAttributesDriver> attributeProviders,
             ICurrencyProvider currencyProvider,
             IProductInventoryService productInventoryService,
+            IProductPriceService productPriceService,
             ITieredPriceProvider tieredPriceProvider = null) {
 
             _wca = wca;
@@ -35,6 +37,7 @@ namespace Nwazet.Commerce.Drivers {
             _tieredPriceProvider = tieredPriceProvider;
             _currencyProvider = currencyProvider;
             _productInventoryService = productInventoryService;
+            _productPriceService = productPriceService;
         }
 
         protected override string Prefix
@@ -54,8 +57,8 @@ namespace Nwazet.Commerce.Drivers {
                 "Parts_Product",
                 () => shapeHelper.Parts_Product(
                     Sku: part.Sku,
-                    Price: part.Price,
-                    DiscountedPrice: discountedPriceQuantity.Price,
+                    Price: _productPriceService.GetPrice(part),
+                    DiscountedPrice: _productPriceService.GetPrice(part, discountedPriceQuantity.Price),
                     DiscountComment: discountedPriceQuantity.Comment,
                     Inventory: inventory,
                     OutOfStockMessage: part.OutOfStockMessage,
