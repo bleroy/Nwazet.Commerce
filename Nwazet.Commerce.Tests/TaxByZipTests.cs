@@ -54,7 +54,8 @@ namespace Nwazet.Commerce.Tests
             csvZipTax.Rates = CsvRates;
             
             var taxProvider = new FakeTaxProvider(new[] { csvZipTax });
-            var cart = ShoppingCartHelpers.PrepareCart(null, new[] { taxProvider });
+            var taxHelper = new ZipCodeTaxComputationHelper();
+            var cart = ShoppingCartHelpers.PrepareCart(null, new[] { taxProvider }, false, new[] { taxHelper });
             
             cart.Country = "United States";
             cart.ZipCode = "52627";
@@ -89,7 +90,8 @@ namespace Nwazet.Commerce.Tests
             tabZipTax.Rates = TabRates;
 
             var taxProvider = new FakeTaxProvider(new[] { tabZipTax });
-            var cart = ShoppingCartHelpers.PrepareCart(null, new[] { taxProvider });
+            var taxHelper = new ZipCodeTaxComputationHelper();
+            var cart = ShoppingCartHelpers.PrepareCart(null, new[] { taxProvider }, false, new[] { taxHelper });
 
             cart.Country = "United States";
             cart.ZipCode = "52412";

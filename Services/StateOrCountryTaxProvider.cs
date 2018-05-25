@@ -5,7 +5,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Localization;
 
 namespace Nwazet.Commerce.Services {
-    [OrchardFeature("Nwazet.Taxes")]
+    [OrchardFeature("Nwazet.BaseTaxImplementations")]
     public class StateOrCountryTaxProvider : ITaxProvider {
         private readonly IContentManager _contentManager;
         private Localizer T { get; set; }

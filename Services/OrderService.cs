@@ -16,11 +16,18 @@ namespace Nwazet.Commerce.Services {
         private readonly IContentManager _contentManager;
         private readonly UrlHelper _url;
         private readonly ICurrencyProvider _currencyProvider;
+        private readonly IEnumerable<IOrderAdditionalInformationProvider> _orderAdditionalInformationProviders;
 
-        public OrderService(IContentManager contentManager, UrlHelper url, ICurrencyProvider currencyProvider) {
+        public OrderService(
+            IContentManager contentManager, 
+            UrlHelper url, 
+            ICurrencyProvider currencyProvider,
+            IEnumerable<IOrderAdditionalInformationProvider> orderAdditionalInformationProviders) {
+
             _contentManager = contentManager;
             _url = url;
             _currencyProvider = currencyProvider;
+            _orderAdditionalInformationProviders = orderAdditionalInformationProviders;
 
             T = NullLocalizer.Instance;
         }
@@ -71,6 +78,14 @@ namespace Nwazet.Commerce.Services {
             order.Password = Convert.ToBase64String(random);
 
             _contentManager.Publish(order.ContentItem);
+
+
+            // TODO: Here we have created the order, so we may use it (and its ContentItem)
+            // to create additional records that will contain further information. We do this
+            // through the implementations of IOrderAdditionalInformationProvider
+            foreach (var oaip in _orderAdditionalInformationProviders) {
+                oaip.StoreAdditionalInformation(order);
+            }
 
             return order;
         }

@@ -1,0 +1,21 @@
+﻿@using Orchard.ContentManagement
+@model Nwazet.Commerce.ViewModels.VatConfigurationSiteSettingsPartViewModel
+
+<fieldset>
+    <legend>@T("VAT configuration.")</legend>
+    <div>
+        @if (Model.DefaultVatConfigurationPart == null) {
+            <p>@T("You need to configure a default VAT category for your products.")</p>
+        } else {
+            <p>
+                @T("The default VAT category is: ")@Html.ItemEditLink(Model.DefaultVatConfigurationPart.Name, Model.DefaultVatConfigurationPart)
+            </p>
+	    }
+    </div>
+    <div>
+        @Html.DropDownListFor(m => m.DefaultTerritoryForVatId, Model.ListTerritories())
+        <span for="@Html.FieldIdFor(m => m.DefaultTerritoryForVatId)" class="hint forcheckbox">
+            @T("Select the default territory for VAT purposes. This territory is the one that will be considered as the default destination when computing VAT to display the correct prices. Selecting \"None\" means that the prices displayed on the front end will be before tax.")
+        </span>
+    </div>
+</fieldset>

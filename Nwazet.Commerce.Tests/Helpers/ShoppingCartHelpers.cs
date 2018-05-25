@@ -56,7 +56,8 @@ namespace Nwazet.Commerce.Tests.Helpers {
         public static ShoppingCart PrepareCart(
             IEnumerable<DiscountStub> discounts,
             IEnumerable<ITaxProvider> taxProviders = null,
-            bool applyProductDiscounts = false
+            bool applyProductDiscounts = false,
+            IEnumerable<ITaxComputationHelper> taxComputationHelpers = null
             ) {
             var products = applyProductDiscounts ? ProductsWithDiscounts : Products;
             var contentItems = discounts == null ? products : products.Cast<IContent>().Union(discounts);
@@ -69,7 +70,15 @@ namespace Nwazet.Commerce.Tests.Helpers {
                 new ProductDiscountPriceProvider()
             };
             var priceService = new PriceService(priceProviders, null);
-            var cart = new ShoppingCart(contentManager, cartStorage, priceService, null, taxProviders, new Notifier());
+            var cart = new ShoppingCart(
+                contentManager, 
+                cartStorage, 
+                priceService, 
+                null, 
+                taxProviders, 
+                new Notifier(), 
+                new BaseTaxProviderService(taxComputationHelpers ?? Enumerable.Empty<ITaxComputationHelper>()), 
+                new ProductPriceService());
             FillCart(cart);
 
             return cart;

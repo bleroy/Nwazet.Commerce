@@ -1,0 +1,11 @@
+﻿@model Nwazet.Commerce.ViewModels.ProductVatConfigurationPartEditorViewModel
+
+<fieldset>
+    <legend>@T("VAT Category.")</legend>
+    <div>
+        @Html.DropDownListFor(m => m.VatConfigurationId, Model.ListConfigurations())
+        <span for="@Html.FieldIdFor(m => m.VatConfigurationId)" class="hint forcheckbox">
+            @T("Select the VAT category configuration.")
+        </span>
+    </div>
+</fieldset>

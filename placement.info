@@ -19,6 +19,7 @@
   <Place SiteSettings_AdvancedSKUs="Content:5"/>
   <Place SiteSettings_Currency="Content:4"/>
   <Place SiteSettings_InventoryBySKU="Content:5"/>
+  <Place SiteSettings_VatConfiguration="Content:4.5" />
   <Place Parts_UspsShippingMethod_Edit="Content:2"/>
   <Place UspsShippingTestForm="Content:6"/>
   <Place Parts_WeightBasedShippingMethod_Edit="Content:2"/>
@@ -37,6 +38,10 @@
   <Place Parts_TerritoryHierarchy_TerritoryTypeSelection="Content:2.2"/>
   <Place Parts_TerritoryPart_Creation="Content:2.1"/>
   <Place Parts_TerritoryPart_Edit="Content:2.1"/>
+  <Place Parts_VatConfiguration_Edit="Content:2"/>
+  <Place Parts_HierarchyVatConfiguration_Edit="Content:2.3"/>
+  <Place Parts_TerritoryVatConfiguration_Edit="Content:2.3"/>
+  <Place Parts_ProductVatConfiguration_Edit="Content:3.5" />
   <Match DisplayType="SummaryAdmin">
     <Place Parts_Product="Content:2;Alternate=ProductSummaryAdmin"/>
     <Place Parts_Product_AddButton="-"/>

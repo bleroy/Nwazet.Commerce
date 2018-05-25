@@ -24,19 +24,22 @@ namespace Nwazet.Commerce.Services {
         private readonly ICacheManager _cacheManager;
         private readonly ISignals _signals;
         private readonly dynamic _shapeFactory;
+        private readonly IProductPriceService _productPriceService;
 
         public StripeService(
             IStripeWebService webService,
             IWorkContextAccessor wca,
             ICacheManager cacheManager,
             ISignals signals,
-            IShapeFactory shapeFactory) {
+            IShapeFactory shapeFactory,
+            IProductPriceService productPriceService) {
 
             _webService = webService;
             _wca = wca;
             _cacheManager = cacheManager;
             _signals = signals;
             _shapeFactory = shapeFactory;
+            _productPriceService = productPriceService;
         }
 
         public string Name {get { return "Stripe"; }}
@@ -72,7 +75,8 @@ namespace Nwazet.Commerce.Services {
                 productShapeList.Select(p => new CheckoutItem {
                     ProductId = p.Product.Id,
                     Quantity = p.Quantity,
-                    Price = p.DiscountedPrice,
+                    OriginalPrice = _productPriceService.GetOriginalPrice(p.Product), //p.Product.Price,
+                    Price = p.DiscountedPrice, // when computing shapes this already includes everything it has to
                     LinePriceAdjustment = p.LinePriceAdjustment,
                     PromotionId = p.Promotion == null ? 0 : p.Promotion.Id,
                     Title = p.Title

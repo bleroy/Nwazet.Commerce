@@ -106,12 +106,10 @@ namespace Nwazet.Commerce.Services {
             }
         }
 
-        private IEnumerable<TerritoryInternalRecord> _availableTerritoryInternals; // cache results of following method
         public IEnumerable<TerritoryInternalRecord> GetAvailableTerritoryInternals(TerritoryHierarchyPart hierarchyPart) {
             TerritoriesUtilities.ValidateArgument(hierarchyPart, nameof(hierarchyPart));
 
-            if (_availableTerritoryInternals == null) {
-                _availableTerritoryInternals = _territoriesRepositoryService
+            return _territoriesRepositoryService
                     .GetTerritories()
                     .Where(tir => !hierarchyPart
                         .Record.Territories //.Territories 
@@ -126,8 +124,6 @@ namespace Nwazet.Commerce.Services {
                         //    .Id)
                         .Contains(tir.Id)
                     );
-            }
-            return _availableTerritoryInternals;
         }
     }
 }

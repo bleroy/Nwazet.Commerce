@@ -184,7 +184,8 @@ namespace Nwazet.Commerce.Tests {
                 }
             };
             var priceService = new PriceService(priceProviders, new ProductAttributeService(contentManager), new TieredPriceProvider(wca));
-            var cart = new ShoppingCart(contentManager, cartStorage, priceService, null, taxProviders, new Notifier());
+            var cart = new ShoppingCart(
+                contentManager, cartStorage, priceService, null, taxProviders, new Notifier(), null, new ProductPriceService());
 
             return cart;
         }

@@ -20,7 +20,7 @@ namespace Nwazet.Commerce.Models {
         /// </summary>
         /// <returns>>A copy of this TerritoryInternalRecord that can be safely manipulated
         /// without affecting records in the database.</returns>
-        public TerritoryInternalRecord CreateSafeDuplicate() {
+        public virtual TerritoryInternalRecord CreateSafeDuplicate() {
             return new TerritoryInternalRecord {
                 Id = this.Id,
                 Name = this.Name,

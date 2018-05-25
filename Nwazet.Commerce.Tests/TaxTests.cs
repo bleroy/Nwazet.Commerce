@@ -4,16 +4,15 @@ using Nwazet.Commerce.Models;
 using Nwazet.Commerce.Services;
 using Nwazet.Commerce.Tests.Helpers;
 
-namespace Nwazet.Commerce.Tests
-{
-    class TaxTests
-    {
+namespace Nwazet.Commerce.Tests {
+    class TaxTests {
         [Test]
         public void RightTaxAppliesToRightState() {
             var oregonTax = GetOregonTax();
             var washingtonTax = GetWashingtonTax();
-            var taxProvider = new FakeTaxProvider(new[] {oregonTax, washingtonTax});
-            var cart = ShoppingCartHelpers.PrepareCart(null, new[] {taxProvider});
+            var taxProvider = new FakeTaxProvider(new[] { oregonTax, washingtonTax });
+            var taxHelper = new StateOrCountryTaxComputationHelper();
+            var cart = ShoppingCartHelpers.PrepareCart(null, new[] { taxProvider }, false, new[] { taxHelper });
             cart.Country = Country.UnitedStates;
             var subtotal = cart.Subtotal();
 
@@ -31,12 +30,12 @@ namespace Nwazet.Commerce.Tests
         }
 
         [Test]
-        public void AnyStateTaxAppliesToAnyStateButNotOtherCountries()
-        {
+        public void AnyStateTaxAppliesToAnyStateButNotOtherCountries() {
             var anyStateTax = GetAnyStateTax();
             var frenchTax = GetFrenchTax();
             var taxProvider = new FakeTaxProvider(new[] { anyStateTax, frenchTax });
-            var cart = ShoppingCartHelpers.PrepareCart(null, new[] { taxProvider });
+            var taxHelper = new StateOrCountryTaxComputationHelper();
+            var cart = ShoppingCartHelpers.PrepareCart(null, new[] { taxProvider }, false, new[] { taxHelper });
             cart.Country = Country.UnitedStates;
             var subtotal = cart.Subtotal();
 
@@ -51,11 +50,11 @@ namespace Nwazet.Commerce.Tests
         }
 
         [Test]
-        public void AnyCountryTaxAppliesToAnyCountry()
-        {
+        public void AnyCountryTaxAppliesToAnyCountry() {
             var anyCountryTax = GetAnyCountryTax();
             var taxProvider = new FakeTaxProvider(new[] { anyCountryTax });
-            var cart = ShoppingCartHelpers.PrepareCart(null, new[] { taxProvider });
+            var taxHelper = new StateOrCountryTaxComputationHelper();
+            var cart = ShoppingCartHelpers.PrepareCart(null, new[] { taxProvider }, false, new[] { taxHelper });
             var subtotal = cart.Subtotal();
 
             cart.Country = Country.UnitedStates;
@@ -67,14 +66,14 @@ namespace Nwazet.Commerce.Tests
         }
 
         [Test]
-        public void RightTaxAppliesToRightCountry()
-        {
+        public void RightTaxAppliesToRightCountry() {
             var frenchTax = GetFrenchTax();
             var britishTax = GetBritishTax();
             var washingtonTax = GetWashingtonTax();
             var oregonTax = GetOregonTax();
             var taxProvider = new FakeTaxProvider(new[] { washingtonTax, britishTax, frenchTax, oregonTax });
-            var cart = ShoppingCartHelpers.PrepareCart(null, new[] { taxProvider });
+            var taxHelper = new StateOrCountryTaxComputationHelper();
+            var cart = ShoppingCartHelpers.PrepareCart(null, new[] { taxProvider }, false, new[] { taxHelper });
             var subtotal = cart.Subtotal();
 
             cart.Country = frenchTax.Country;
@@ -91,8 +90,7 @@ namespace Nwazet.Commerce.Tests
         }
 
         [Test]
-        public void TaxDoesntApplyToDifferentCountry()
-        {
+        public void TaxDoesntApplyToDifferentCountry() {
             var oregonTax = GetOregonTax();
             var taxProvider = new FakeTaxProvider(new[] { oregonTax });
             var cart = ShoppingCartHelpers.PrepareCart(null, new[] { taxProvider });
@@ -116,7 +114,8 @@ namespace Nwazet.Commerce.Tests
             frenchTax2.Priority = 3;
             frenchTax2.Rate = 0.3M;
             var taxProvider = new FakeTaxProvider(new[] { frenchTax1, frenchTax2, anyCountryTax });
-            var cart = ShoppingCartHelpers.PrepareCart(null, new[] { taxProvider });
+            var taxHelper = new StateOrCountryTaxComputationHelper();
+            var cart = ShoppingCartHelpers.PrepareCart(null, new[] { taxProvider }, false, new[] { taxHelper });
             cart.Country = frenchTax1.Country;
             var subtotal = cart.Subtotal();
 
@@ -143,8 +142,7 @@ namespace Nwazet.Commerce.Tests
         }
 
         [Test]
-        public void NoNegativeTax()
-        {
+        public void NoNegativeTax() {
             var frenchTax = GetFrenchTax();
             frenchTax.Rate = -0.5M;
             var taxProvider = new FakeTaxProvider(new[] { frenchTax });
@@ -157,8 +155,7 @@ namespace Nwazet.Commerce.Tests
             Assert.That(taxes.Amount, Is.EqualTo(0));
         }
 
-        private static StateOrCountryTaxPart GetAnyStateTax()
-        {
+        private static StateOrCountryTaxPart GetAnyStateTax() {
             var anyStateTax = new StateOrCountryTaxPart();
             ContentHelpers.PreparePart<StateOrCountryTaxPart, StateOrCountryTaxPartRecord>(anyStateTax, "Tax");
             anyStateTax.Country = Country.UnitedStates;
@@ -167,8 +164,7 @@ namespace Nwazet.Commerce.Tests
             return anyStateTax;
         }
 
-        private static StateOrCountryTaxPart GetAnyCountryTax()
-        {
+        private static StateOrCountryTaxPart GetAnyCountryTax() {
             var anyCountryTax = new StateOrCountryTaxPart();
             ContentHelpers.PreparePart<StateOrCountryTaxPart, StateOrCountryTaxPartRecord>(anyCountryTax, "Tax");
             anyCountryTax.Country = "*";
@@ -176,8 +172,7 @@ namespace Nwazet.Commerce.Tests
             return anyCountryTax;
         }
 
-        private static StateOrCountryTaxPart GetOregonTax()
-        {
+        private static StateOrCountryTaxPart GetOregonTax() {
             var oregonTax = new StateOrCountryTaxPart();
             ContentHelpers.PreparePart<StateOrCountryTaxPart, StateOrCountryTaxPartRecord>(oregonTax, "Tax");
             oregonTax.Country = Country.UnitedStates;
@@ -203,8 +198,7 @@ namespace Nwazet.Commerce.Tests
             return frenchTax;
         }
 
-        private static StateOrCountryTaxPart GetBritishTax()
-        {
+        private static StateOrCountryTaxPart GetBritishTax() {
             var britishTax = new StateOrCountryTaxPart();
             ContentHelpers.PreparePart<StateOrCountryTaxPart, StateOrCountryTaxPartRecord>(britishTax, "Tax");
             britishTax.Country = "United Kingdom (Great Britain and Northern Ireland)";
@@ -214,7 +208,7 @@ namespace Nwazet.Commerce.Tests
 
         private class FakeTaxProvider : ITaxProvider {
             private readonly IEnumerable<StateOrCountryTaxPart> _taxes;
- 
+
             public FakeTaxProvider(IEnumerable<StateOrCountryTaxPart> taxes) {
                 _taxes = taxes;
             }
