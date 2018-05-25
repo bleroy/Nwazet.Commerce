@@ -1,0 +1,80 @@
+﻿@model Nwazet.Commerce.ViewModels.VatConfigurationPartViewModel
+
+<fieldset>
+    <div>
+        @Html.LabelFor(m => m.TaxProductCategory, T("Category").Text, new { @class = "sub" })
+        @Html.TextBoxFor(m => m.TaxProductCategory, new { @class = "text text-medium", title = T("Product category") })
+        <div>
+            @if (Model.IsDefaultCategory) {
+                @T("This is the default category.")
+                @Html.HiddenFor(m => m.IsDefaultCategory)
+            } else {
+                <span class="checkbox-and-label">
+                    @Html.CheckBoxFor(m => m.IsDefaultCategory)
+                    @Html.LabelFor(m => m.IsDefaultCategory, T("Set this as the default category: ").Text, new { @class = "forcheckbox" })
+                </span>
+                <span class="hint">@T("Check to set this category as the default one.")</span>
+            }
+        </div>
+        <span class="hint">@T("The product category this VAT will be applied to. The default category will apply to all products where a category was not specified.")</span>
+    </div>
+    <div>
+        @Html.LabelFor(m => m.Priority, T("Priority").Text, new { @class = "sub" })
+        @Html.TextBoxFor(m => m.Priority, new { @class = "text text-small", pattern = "[0-9]", @type = "number" })
+        <span class="hint">@T("The priority to apply this tax. The highest priority wins. This makes it possible to create a hierarchy of taxes.")</span>
+    </div>
+    <div>
+        @Html.LabelFor(m => m.DefaultRate, T("Default Rate for territories outside the hierarchy").Text, new { @class = "sub" })
+        @Html.TextBoxFor(m => m.DefaultRate, new { @class = "text text-small", @type = "number" })
+        <span class="hint">@T("The default percent rate for this VAT that will be applied when the destination for products is not found in any of the hierarchies for territories selected for this VAT configuration.")</span>
+    </div>
+    <div>
+        @if (Model.ItemizedSummary.Any()) {
+            @T("This VAT category is configured for the following regions:")
+            <table class="vatConfigurationSummaryTable vatHierarchySummaryTable">
+                <thead>
+                    <tr>
+                        <th>@T("Region")</th>
+                        <th>@T("Rate")</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ItemizedSummary) {
+                        // since we do not need to edit any of these, we can work with the IEnumerable
+                        // rather than being force by MVC binding to use indexes
+                        <tr class="vatHierarchySummaryRow">
+                            <td>
+                                @Html.ItemEditLink(item.Name, item.Item)
+                            </td>
+                            <td>
+                                @T("{0} %", item.Rate)
+                            </td>
+                        </tr>
+                        if (item.SubRegions.Any()) {
+                            // These are the territories whose configuration is different than the
+                            // default for the hierarchy
+                            <tr class="vatHierarchySummaryTerritoriesRow">
+                                <td colspan="2" class="vatHierarchySummaryTerritoriesRow">
+                                    <table class="vatTerritorySummaryTable">
+                                        @foreach (var subitem in item.SubRegions) {
+                                            <tr class="vatTerritorySummaryRow">
+                                                <td>
+                                                    @Html.ItemEditLink(subitem.Name, subitem.Item)
+                                                </td>
+                                                <td>
+                                                    @T("{0} %", subitem.Rate)
+                                                </td>
+                                            </tr>
+                                        }
+                                    </table>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        } else {
+            @T("There are no hierarchy configurations for this VAT category.")
+        }
+    </div>
+</fieldset>

@@ -1,0 +1,56 @@
+﻿@model Nwazet.Commerce.ViewModels.HierarchyVatConfigurationPartViewModel
+@{
+    Script.Require("jQuery");
+}
+<fieldset>
+    <legend>Configuration for VAT Categories</legend>
+    @if (Model.AllVatConfigurations.Any()) {
+        <div>
+            @T("Removing a VAT category will also cause all its configurations relative to a specific territory to be lost.")
+        </div>
+        <table class="vatConfigurationTable hierarchyVatConfigurationTable">
+            <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>@T("VAT Category")</th>
+                    <th>@T("Applied Rate")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.AllVatConfigurations.Length; i++) {
+                    <tr>
+                        <td>
+                            @Html.CheckBoxFor(m => m.AllVatConfigurations[i].IsSelected)
+                        </td>
+                        <td>
+                            @Model.AllVatConfigurations[i].VatConfigurationPartText
+                            @Html.HiddenFor(m => m.AllVatConfigurations[i].VatConfigurationPartId)
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(m => m.AllVatConfigurations[i].RateString, "{0:F2}", new { @class = "text text-small" @**, @type = "number", @min = 0, @step = "any"**@ })
+                        </td>
+                    </tr>
+                    using (Script.Foot()) {
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                var checkbox = $('#@Html.IdFor(m => m.AllVatConfigurations[i].IsSelected)');
+                                var dependent = $('#@Html.IdFor(m => m.AllVatConfigurations[i].RateString)');
+                                if (checkbox.attr('checked') !== undefined){
+                                   dependent.show();
+                                } else {
+                                    dependent.hide();
+                                }
+
+                                checkbox.change(function(e){
+                                    dependent.toggle();
+                                });
+                            });
+                        </script>
+                    }
+                }
+            </tbody>
+        </table>
+    } else {
+        <div>@T("No VAT category has been configured.")</div>
+    }
+</fieldset>

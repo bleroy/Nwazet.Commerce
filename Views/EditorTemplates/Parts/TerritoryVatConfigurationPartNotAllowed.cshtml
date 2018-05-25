@@ -1,0 +1,33 @@
+﻿@model Nwazet.Commerce.ViewModels.TerritoryVatConfigurationPartViewModel
+
+<fieldset>
+    <legend>Configuration for VAT Categories</legend>
+    @if (Model.AllVatConfigurations.Any()) {
+        <table>
+            <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>@T("VAT Category")</th>
+                    <th>@T("Applied Rate")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.AllVatConfigurations.Length; i++) {
+                    <tr>
+                        <td>
+                            @Html.CheckBoxFor(m => m.AllVatConfigurations[i].IsSelected, new { disabled = true })
+                        </td>
+                        <td>
+                            @Model.AllVatConfigurations[i].VatConfigurationPartText
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(m => m.AllVatConfigurations[i].RateString, "{0:F2}", new { @class = "text text-small", @disabled = true })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    } else {
+        <div>@T("No VAT category has been configured in the hierarchy.")</div>
+    }
+</fieldset>
